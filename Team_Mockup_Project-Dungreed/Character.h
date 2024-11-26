@@ -10,16 +10,11 @@ protected:
 
 	int hp;
 	float speed;
-	sf::Vector2f velocity;
 	sf::Vector2f direction;
-
-	std::string textureId;
 	
 public:
 	Character(const std::string& name = "");
 	virtual ~Character() = default;
-
-	void SetTextureId(const std::string& id) { textureId = id; }
 
 	virtual void SetPosition(const sf::Vector2f& pos) override = 0;
 	virtual void SetRotation(float angle) override = 0;
