@@ -1,27 +1,46 @@
 #pragma once
 #include "Character.h"
+
+
 class Player : public Character
 {
-protected:
-	sf::Vector2f velocity;
-
-	bool isJumping;
-	bool isGrounded;
 public:
-	Player(const std::string& name = "");
+	enum class Status
+	{
+		Ground,
+		Jump,
+
+	};
+
+protected:
+	Status status;
+
+	sf::Vector2f velocity;
+	sf::Vector2f gravity = { 0.f,300.f };
+	std::string playerId = "Dungreed Resources/Sprite/CharWalk0.png";
+
+	float jumpForce;
+public:
+	Player(const std::string& name = "Player");
 	virtual ~Player() = default;
 
-	virtual void SetPosition(const sf::Vector2f& pos) override;
-	virtual void SetRotation(float angle) override;
-	virtual void SetScale(const sf::Vector2f& scale) override;
+	void SetPosition(const sf::Vector2f& pos) override;
+	void SetRotation(float angle) override;
+	void SetScale(const sf::Vector2f& scale) override;
 
-	virtual void SetOrigin(Origins preset) override;
-	virtual void SetOrigin(const sf::Vector2f& newOrigin) override;
+	void SetOrigin(Origins preset) override;
+	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
-	virtual void Init() override;
-	virtual void Release() override;
-	virtual void Reset() override;
-	virtual void Update(float dt) override;
-	virtual void Draw(sf::RenderWindow& window) override;
+	void Init() override;
+	void Release() override;
+	void Reset() override;
+	void Update(float dt) override;
+	void LateUpdate(float dt) override;
+	void Draw(sf::RenderWindow& window) override;
+
+	void SetStatus(Status status);
+	void UpdateGrounded(float dt);
+	void UpdateJump(float dt);
+
 };
 
