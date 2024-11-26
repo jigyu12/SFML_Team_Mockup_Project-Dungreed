@@ -1,17 +1,17 @@
 #include "stdafx.h"
-#include "SceneDev2.h"
+#include "SceneDev3.h"
 
-SceneDev2::SceneDev2() : Scene(SceneIds::Dev2)
+SceneDev3::SceneDev3() : Scene(SceneIds::Dev2)
 {
 
 }
 
-void SceneDev2::Init()
+void SceneDev3::Init()
 {
 	Scene::Init();
 }
 
-void SceneDev2::Enter()
+void SceneDev3::Enter()
 {
 	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
 
@@ -26,17 +26,17 @@ void SceneDev2::Enter()
 	Scene::Enter();
 }
 
-void SceneDev2::Exit()
+void SceneDev3::Exit()
 {
 	Scene::Exit();
 }
 
-void SceneDev2::Update(float dt)
+void SceneDev3::Update(float dt)
 {
 	Scene::Update(dt);
 }
 
-void SceneDev2::Draw(sf::RenderWindow& window)
+void SceneDev3::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
 }

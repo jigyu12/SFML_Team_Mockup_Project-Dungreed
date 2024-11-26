@@ -150,6 +150,7 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Framework\DataTableMgr.cpp" />
     <ClCompile Include="Framework\DataTable.cpp" />
+    <ClCompile Include="Framework\SceneDev3.cpp" />
     <ClCompile Include="Framework\SoundMgr.cpp" />
     <ClCompile Include="Framework\StringTable.cpp" />
     <ClCompile Include="SaveData.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Framework\Scene.h" />
     <ClInclude Include="Framework\SceneDev1.h" />
     <ClInclude Include="Framework\SceneDev2.h" />
+    <ClInclude Include="Framework\SceneDev3.h" />
     <ClInclude Include="Framework\SceneMgr.h" />
     <ClInclude Include="Framework\Singleton.h" />
     <ClInclude Include="Framework\SpriteGo.h" />
