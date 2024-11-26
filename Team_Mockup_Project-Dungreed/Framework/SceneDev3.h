@@ -1,9 +1,12 @@
 #pragma once
-#include "Scene.h"
+
+class Room;
 
 class SceneDev3 : public Scene
 {
 protected:
+
+	Room* room;
 
 public:
 	SceneDev3();

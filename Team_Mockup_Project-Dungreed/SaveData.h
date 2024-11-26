@@ -1,10 +1,5 @@
 #pragma once
 
-namespace sf
-{
-	NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(sf::Vector2f, x, y)
-}
-
 struct SaveZombie
 {
 	int type = 0;
