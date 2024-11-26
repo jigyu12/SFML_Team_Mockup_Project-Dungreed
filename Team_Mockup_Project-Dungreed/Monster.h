@@ -1,6 +1,6 @@
 #pragma once
 
-class Monster : public GameObject
+class Monster : public Character
 {
 
 };

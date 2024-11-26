@@ -38,3 +38,5 @@ using json = nlohmann::json;
 #include "Scene.h"
 #include "ObjectPool.h"
 #include "SoundMgr.h"
+#include "Character.h"
+#include "Monster.h"
