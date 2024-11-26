@@ -152,6 +152,7 @@
     <ClCompile Include="Framework\DataTable.cpp" />
     <ClCompile Include="Framework\SoundMgr.cpp" />
     <ClCompile Include="Framework\StringTable.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="SaveData.cpp" />
     <ClCompile Include="SaveLoadMgr.cpp" />
     <ClCompile Include="Framework\Variables.cpp" />
@@ -205,6 +206,8 @@
     <ClInclude Include="Framework\TextGo.h" />
     <ClInclude Include="Framework\SoundMgr.h" />
     <ClInclude Include="Framework\StringTable.h" />
+    <ClInclude Include="Monster.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SaveData.h" />
     <ClInclude Include="SaveLoadMgr.h" />
     <ClInclude Include="Framework\Utils.h" />
@@ -218,6 +221,9 @@
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Framework\Variables.h" />
     <ClInclude Include="Framework\HitBox.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Team_Mockup_Project-Dungreed.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
