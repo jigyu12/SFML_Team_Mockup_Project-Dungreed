@@ -19,8 +19,6 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
-	FRAMEWORK.GetWindow().setMouseCursorVisible(false);
-
 	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
 
 	uiView.setSize(size);
@@ -36,9 +34,6 @@ void SceneGame::Enter()
 
 void SceneGame::Exit()
 {
-	FRAMEWORK.GetWindow().setMouseCursorVisible(true);
-
-
 	Scene::Exit();
 }
 
