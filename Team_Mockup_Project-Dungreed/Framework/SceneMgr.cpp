@@ -2,6 +2,7 @@
 #include "SceneMgr.h"
 #include "SceneDev1.h"
 #include "SceneDev2.h"
+#include "SceneDev3.h"
 #include "SceneGame.h"
 
 void SceneMgr::Init()
