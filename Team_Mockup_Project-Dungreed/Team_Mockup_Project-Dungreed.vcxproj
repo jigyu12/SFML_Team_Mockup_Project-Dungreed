@@ -157,6 +157,7 @@
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Room.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SaveData.cpp" />
     <ClCompile Include="SaveLoadMgr.cpp" />
     <ClCompile Include="Framework\Variables.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="Framework\StringTable.h" />
     <ClInclude Include="MapData.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="SaveData.h" />
