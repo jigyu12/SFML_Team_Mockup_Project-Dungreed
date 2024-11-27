@@ -1,28 +1,8 @@
 #pragma once
 
-struct GateData
-{
-	sf::FloatRect up;
-	sf::FloatRect down;
-	sf::FloatRect left;
-	sf::FloatRect right;
-
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(GateData, up, down, left, right)
-};
-
-struct PlayerSpawnData
-{
-	sf::Vector2f up;
-	sf::Vector2f down;
-	sf::Vector2f left;
-	sf::Vector2f right;
-
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(PlayerSpawnData, up, down, left, right)
-};
-
 struct TileMapData
 {
-	std::string texId ;
+	std::string texId;
 	std::string name;
 	sf::Vector2f cellsize;
 	sf::Vector2i cellcount;
@@ -41,37 +21,55 @@ struct ObjectData
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(ObjectData, type, position, origin)
 };
 
+
+
 struct HitBoxData
 {
+	enum class Type
+	{
+		PortalUp,
+		PortalDown,
+		PortalLeft,
+		PortalRight,
+		Immovable,
+		Downable,
+	};
+
 	sf::Vector2f size;
 	sf::Vector2f origin;
-	float rotation;
+	float rotation = 0.f;
 
-	int type;
+	Type type;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(HitBoxData, size, origin, rotation,type)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(HitBoxData, size, origin, rotation, type)
 };
 
 struct MapData
 {
 public:
+	enum class Direction {
+		Up,
+		Down,
+		Left,
+		Right,
+	};
+
 	int version = 0;
 	virtual MapData* VersionUp() = 0;
 };
 
 struct MapDataV1 : public MapData
 {
-	MapDataV1() { version = 1; }
+	MapDataV1();
 
-	GateData gateData;
-	PlayerSpawnData playerSpawnData;
+	std::vector<sf::Vector2f> playerStartPoint;
 	TileMapData tileMapData;
 	std::vector<ObjectData> objectData;
 	std::vector<HitBoxData> hitBoxData;
 
 	MapData* VersionUp() override { return nullptr; }
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(MapDataV1, version, gateData, playerSpawnData, tileMapData, objectData, hitBoxData)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(MapDataV1, version, playerStartPoint, tileMapData, objectData, hitBoxData)
 };
 
 typedef MapDataV1 MapDataVC;

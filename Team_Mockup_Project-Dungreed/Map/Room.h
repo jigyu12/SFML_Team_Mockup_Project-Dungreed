@@ -2,17 +2,10 @@
 #include "MapData.h"
 
 class TileMap;
+class Player;
 
 class Room : public GameObject
 {
-public:
-	enum class HitboxAttribute
-	{
-		Immovable,
-		Downable,
-		Portal,
-	};
-
 protected:
 
 	TileMap* tileMap;
@@ -21,7 +14,13 @@ protected:
 
 	std::vector<std::pair<HitBox*, HitBoxData>> hitBoxes;
 
+	std::vector<sf::Sprite> objects;
+
 	std::function<void()> change;
+
+	Player* player;
+
+	std::vector<Room*> connectedRoom;
 public:
 	Room(const std::string& name = "");
 	~Room() = default;
@@ -42,6 +41,9 @@ public:
 	void LoadMapData(const std::string& path);
 	void SaveMapData(const std::string& path);
 
+	void SetConnectedRoom(Room* room, HitBoxData::Type connection);
+
 	const std::vector<std::pair<HitBox*, HitBoxData>>& GetHitBoxes() const;
 	void EnterPortal(HitBox* portal);
+	void ExitPortal(HitBoxData::Type connection);
 };

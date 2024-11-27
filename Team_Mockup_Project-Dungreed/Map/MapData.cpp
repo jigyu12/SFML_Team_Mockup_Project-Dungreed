@@ -56,3 +56,9 @@ bool MapDataLoader::Load(const std::string& path)
 	delete saveData;
 
 }
+
+MapDataV1::MapDataV1()
+{
+	version = 1;
+	playerStartPoint.resize(4);
+}
