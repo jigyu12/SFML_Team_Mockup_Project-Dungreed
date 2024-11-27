@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SceneDev1.h"
+#include "Player.h"
 
 SceneDev1::SceneDev1() : Scene(SceneIds::Dev1)
 {
@@ -7,7 +8,7 @@ SceneDev1::SceneDev1() : Scene(SceneIds::Dev1)
 
 void SceneDev1::Init()
 {
-
+	player = AddGo(new Player("palyer"));
 	Scene::Init();
 }
 
