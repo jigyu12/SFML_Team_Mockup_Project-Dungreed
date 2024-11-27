@@ -24,8 +24,8 @@ void SceneDev3::Enter()
 	uiView.setSize(size);
 	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);
 
-	size.x /= 6.f;
-	size.y /= 6.f;
+	size.x /= 4.f;
+	size.y /= 4.f;
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
 
@@ -42,17 +42,23 @@ void SceneDev3::Update(float dt)
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad7))
 	{
-		room->SaveMapData("map.json");
+		room->SaveMapData("1fenter.json");
 	
 	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad8))
 	{
-		room->LoadMapData("map.json");
+		room->LoadMapData("1fenter.json");
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad4))
+	{
+		room->SaveMapData("1froom1.json");
+
+	}
+
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad5))
 	{
-		Variables::isDrawHitBox = !Variables::isDrawHitBox;
+		room->LoadMapData("1froom1.json");
 	}
 
 }

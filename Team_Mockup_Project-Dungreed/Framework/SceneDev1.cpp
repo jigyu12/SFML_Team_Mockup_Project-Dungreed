@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneDev1.h"
 #include "Player.h"
+#include "Room.h";
 
 SceneDev1::SceneDev1() : Scene(SceneIds::Dev1)
 {
@@ -8,7 +9,9 @@ SceneDev1::SceneDev1() : Scene(SceneIds::Dev1)
 
 void SceneDev1::Init()
 {
-	player = AddGo(new Player("palyer"));
+	player = AddGo(new Player("player"));
+	room = AddGo(new Room("tilemap"));
+
 	Scene::Init();
 }
 
@@ -25,6 +28,8 @@ void SceneDev1::Enter()
 	size.y /= 6.f;
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
+	room->SaveMapData("map.json");
+	room->LoadMapData("map.json");
 
 }
 
@@ -34,7 +39,7 @@ void SceneDev1::Exit()
 }
 
 void SceneDev1::Update(float dt)
-{ 
+{
 	Scene::Update(dt);
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
