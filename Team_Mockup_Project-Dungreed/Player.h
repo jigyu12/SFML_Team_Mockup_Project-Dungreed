@@ -18,7 +18,7 @@ protected:
 	sf::Vector2f velocity;
 	sf::Vector2f gravity = { 0.f,300.f };
 	sf::Vector2f look;
-	std::string playerId = "Dungreed Resources/Sprite/CharWalk0.png";
+	std::string playerId = "graphics/player/CharWalk0.png";
 
 	float jumpForce;
 public:
@@ -32,6 +32,15 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
+	virtual sf::FloatRect GetLocalBounds() const 
+	{
+		return body.getLocalBounds();
+	}
+	virtual sf::FloatRect GetGlobalBounds() const
+	{
+		return body.getGlobalBounds();
+	}
+
 	void Init() override;
 	void Release() override;
 	void Reset() override;
@@ -42,10 +51,4 @@ public:
 	void SetStatus(Status status);
 	void UpdateGrounded(float dt);
 	void UpdateJump(float dt);
-
-	virtual void Init() override;
-	virtual void Release() override;
-	virtual void Reset() override;
-	virtual void Update(float dt) override;
-	virtual void Draw(sf::RenderWindow& window) override;
 };

@@ -11,13 +11,10 @@ void SceneDev2::Init()
 {
 	{
 		player = AddGo(new Player());
-		player->SetOrigin(Origins::MC);
-		player->SetPosition({ 0.f,0.f });
 	}
 	{
 		Bat* bat = AddGo(new Bat());
-		bat->SetPosition({ 0.f, 0.f });
-		bat->SetOrigin(Origins::MC);
+		bat->SetPosition({ 140.f, -80.f });
 		batList.push_back(bat);
 	}
 
