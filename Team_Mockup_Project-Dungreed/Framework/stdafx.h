@@ -40,3 +40,4 @@ using json = nlohmann::json;
 #include "SoundMgr.h"
 #include "Character.h"
 #include "Monster.h"
+#include "Player.h"

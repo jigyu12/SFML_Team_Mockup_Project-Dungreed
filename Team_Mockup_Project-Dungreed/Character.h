@@ -6,8 +6,6 @@ protected:
 	sf::Sprite body;
 	Animator animator;
 
-	std::vector<AnimationClip> animations;
-
 	int hp;
 	float speed;
 	sf::Vector2f direction;

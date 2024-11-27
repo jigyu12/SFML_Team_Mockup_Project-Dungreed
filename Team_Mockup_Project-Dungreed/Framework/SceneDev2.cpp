@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SceneDev2.h"
+#include "Bat.h"
 
 SceneDev2::SceneDev2() : Scene(SceneIds::Dev2)
 {
@@ -8,6 +9,18 @@ SceneDev2::SceneDev2() : Scene(SceneIds::Dev2)
 
 void SceneDev2::Init()
 {
+	{
+		player = AddGo(new Player());
+		player->SetOrigin(Origins::MC);
+		player->SetPosition({ 0.f,0.f });
+	}
+	{
+		Bat* bat = AddGo(new Bat());
+		bat->SetPosition({ 0.f, 0.f });
+		bat->SetOrigin(Origins::MC);
+		batList.push_back(bat);
+	}
+
 	Scene::Init();
 }
 
