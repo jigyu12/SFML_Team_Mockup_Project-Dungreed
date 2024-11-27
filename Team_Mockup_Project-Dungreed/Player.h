@@ -1,6 +1,6 @@
 #pragma once
-#include "Character.h"
 
+#include "Character.h"
 
 class Player : public Character
 {
@@ -57,5 +57,9 @@ public:
 	void UpdateGrounded(float dt);
 	void UpdateJump(float dt);
 
+	virtual void Init() override;
+	virtual void Release() override;
+	virtual void Reset() override;
+	virtual void Update(float dt) override;
+	virtual void Draw(sf::RenderWindow& window) override;
 };
-

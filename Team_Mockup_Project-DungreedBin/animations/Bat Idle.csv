@@ -1,0 +1,10 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Idle,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+Dungreed Resources/Sprite/Bat0.png,0,"0",31,11,0
+Dungreed Resources/Sprite/Bat1.png,0,"0",31,11,0
+Dungreed Resources/Sprite/Bat2.png,0,"0",31,11,0
+Dungreed Resources/Sprite/Bat3.png,0,"0",31,11,0
+Dungreed Resources/Sprite/Bat4.png,0,"0",31,11,0
+Dungreed Resources/Sprite/Bat5.png,0,"0",31,11,0

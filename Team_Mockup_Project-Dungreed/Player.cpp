@@ -1,8 +1,4 @@
 #include "stdafx.h"
-#include "Player.h"
-#include "SceneDev1.h"
-#include "SceneDev3.h"
-#include "Room.h"
 
 Player::Player(const std::string& name)
 	:Character(name), velocity({ 0.f,0.f })
@@ -43,32 +39,10 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 	origin = Utils::SetOrigin(body, originPreset);
 }
 
-Player::CollisionState Player::GetCollsionState(const sf::FloatRect& player, const sf::FloatRect& stage)
-{
-	Player::CollisionState state;
-	if (stage.top + stage.height > player.top
-		&& player.top + player.height > stage.top + stage.height)
-		state.Up = true;
-	if (stage.left + stage.width > player.left
-		&& player.left + player.width > stage.left + stage.width)
-		state.Left = true;
-	if (player.left + player.width > stage.left
-		&& stage.left > player.left)
-		state.Right = true;
-	if (player.top + player.height > stage.top
-		&& stage.top > player.top)
-		state.Down = true;
-
-	return state;
-}
-
 void Player::Init()
 {
 	speed = 100.f;
-	jumpForce = 400.f;
-	gravity = 300.f;
-	sortingLayer = SortingLayers::Foreground;
-	sortingOrder = 2;
+	jumpForce = 200.f;
 }
 
 void Player::Release()
@@ -79,10 +53,6 @@ void Player::Release()
 void Player::Reset()
 {
 	body.setTexture(TEXTURE_MGR.Get(playerId));
-	sword.setTexture(TEXTURE_MGR.Get(swordId));
-
-	sword.setOrigin(Utils::SetOrigin(sword, Origins::BC));
-
 
 	SetPosition({ 0.f,0.f });
 	SetOrigin(Origins::BC);
@@ -106,47 +76,28 @@ void Player::Update(float dt)
 	}
 
 	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
-	direction.x = horizontalInput;
-	velocity.x = direction.x * speed;
+	//if (horizontalInput != 0.f)
+	//{
+	//	if (horizontalInput > 0.f)
+	//	{
+	//		SetScale(sf::Vector2f(scale.x, scale.y));
+	//	}
+	//}
+	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+	sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
+	look = Utils::GetNormal(mouseworldPos - position);
+	SetRotation(Utils::Angle(look));
 
 
 	SetPosition(position + velocity * dt);
-	sword.setPosition({ body.getPosition().x ,body.getPosition().y - 9 });
 
-
-	sf::Vector2i mousePos = InputMgr::GetMousePosition();
-	sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
-	look = Utils::GetNormal(mouseworldPos - sword.getPosition());
-	sword.setRotation(Utils::Angle(look) + 90);
-	SetOrigin(Origins::BC);
-	
-	hitbox.SetColor(sf::Color::Blue);
-	hitbox.UpdateTr(body, GetGlobalBounds());
-
-	auto hitboxBounds = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
-	for (auto& startHitBox : hitboxBounds)
+	if (position.y > 0.f)
 	{
-		if (Utils::CheckCollision(startHitBox.first, hitbox))
-		{
-			Player::CollisionState state = GetCollsionState(hitbox.rect.getGlobalBounds(), startHitBox.first.rect.getGlobalBounds());
-			if (state.Up)
-			{
-				if (velocity.y < 0)
-					velocity.y *= -0.8f;
-			}
-			if (state.Down)
-			{
-				Player::Status::Ground;
-				position.y = startHitBox.first.rect.getGlobalBounds().top;
-				SetPosition(position);
-				velocity.y = 0.f;
-			}
-
-			
-			
-		}
+		position.y = 0.f;
+		SetStatus(Status::Ground);
 	}
 
+	SetOrigin(Origins::BC);
 }
 
 void Player::LateUpdate(float dt)
@@ -165,7 +116,7 @@ void Player::SetStatus(Status status)
 		break;
 	case Player::Status::Jump:
 		velocity.y = -jumpForce;
-		jumpTimer = 0.f;
+
 		break;
 	default:
 		break;
@@ -175,26 +126,34 @@ void Player::SetStatus(Status status)
 
 void Player::UpdateGrounded(float dt)
 {
+	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
+	if (horizontalInput != 0.f)
+	{
+		SetScale(horizontalInput > 0.f ? sf::Vector2f(1.f, 1.f) : sf::Vector2f(-1.f, 1.f));
+	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
 	{
 		SetStatus(Player::Status::Jump);
 	}
-
+	else
+	{
+		direction.x = horizontalInput;
+		velocity.x = direction.x * speed;
+	}
 }
 
 void Player::UpdateJump(float dt)
 {
 	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
+	velocity += gravity * dt;
 
-	jumpTimer += dt;
 
-	if (jumpTimer < 1.f && InputMgr::GetKey(sf::Keyboard::Space))
+	if (InputMgr::GetKeyUp(sf::Keyboard::Space))
 	{
-		velocity.y = -jumpForce;
-	}
-	else
-	{
-		velocity.y += gravity * dt;
+
+		//velocity.y = jumpForce;
+
+
 	}
 
 
@@ -204,6 +163,4 @@ void Player::UpdateJump(float dt)
 void Player::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
-	window.draw(sword);
-	hitbox.Draw(window);
 }
