@@ -10,6 +10,10 @@ protected:
 	std::vector<Scene*> scenes;
 
 	SceneIds startScene = SceneIds::Dev2;
+	SceneIds startScene = SceneIds::Dev2;
+=========
+	SceneIds startScene = SceneIds::Dev1;
+>>>>>>>>> Temporary merge branch 2
 	SceneIds currentScene;
 
 	SceneIds nextScene = SceneIds::None;
