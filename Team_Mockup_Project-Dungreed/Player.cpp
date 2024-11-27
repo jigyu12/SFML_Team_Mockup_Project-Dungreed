@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "Player.h"
 
 Player::Player(const std::string& name)
 	:Character(name), velocity({ 0.f,0.f })

@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="AnimationClip.cpp" />
     <ClCompile Include="Animator.cpp" />
+    <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Framework\DataTableMgr.cpp" />
     <ClCompile Include="Framework\DataTable.cpp" />
@@ -191,6 +192,7 @@
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
     <ClInclude Include="Animator.h" />
+    <ClInclude Include="Bat.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Framework\DefineJson.h" />
     <ClInclude Include="Framework\DataTableMgr.h" />

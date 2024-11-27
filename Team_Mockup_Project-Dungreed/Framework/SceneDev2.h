@@ -1,9 +1,13 @@
 #pragma once
 #include "Scene.h"
 
+class Bat;
+
 class SceneDev2 : public Scene
 {
 protected:
+	Player* player;
+	std::vector<Bat*> batList;
 
 public:
 	SceneDev2();
