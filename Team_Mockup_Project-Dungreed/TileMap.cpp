@@ -53,22 +53,10 @@ sf::FloatRect TileMap::GetGlobalBounds() const
 	return transform.transformRect(bounds);
 }
 
-sf::FloatRect TileMap::GetMapBounds() const
-{
-	sf::FloatRect bounds = GetGlobalBounds();
-	bounds.left += cellSize.x;
-	bounds.top += cellSize.y;
-	bounds.width -= cellSize.x * 2;
-	bounds.height -= cellSize.y * 2;
-	return bounds;
-}
-
 void TileMap::Init()
 {
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = -1;
-
-	Set({ 50, 50 }, { 50.f, 50.f });
 }
 
 void TileMap::Release()
@@ -77,10 +65,10 @@ void TileMap::Release()
 
 void TileMap::Reset()
 {
-	texture = &TEXTURE_MGR.Get(spriteSheetId);
+
 	SetOrigin(Origins::MC);
 	SetScale({ 1.f, 1.f });
-	SetPosition( {0.f, 0.f });
+	SetPosition({ 0.f, 0.f });
 }
 
 void TileMap::Update(float dt)
@@ -91,12 +79,15 @@ void TileMap::Update(float dt)
 void TileMap::Draw(sf::RenderWindow& window)
 {
 	sf::RenderStates state;
-	state.texture = texture;
+	if (texture != nullptr)
+	{
+		state.texture = texture;
+	}
 	state.transform = transform;
 	window.draw(va, state);
 }
 
-void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
+void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<sf::Vector2f>& tileData)
 {
 	cellCount = count;
 	cellSize = size;
@@ -113,24 +104,11 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 		{ 0.f, size.y },
 	};
 
-	sf::Vector2f texCoords[4] =
-	{
-		{ 0, 0 },
-		{ 50.f, 0 },
-		{ 50.f, 50.f },
-		{ 0, 50.f },
-	};
-
 	for (int i = 0; i < count.y; ++i)
 	{
 		for (int j = 0; j < count.x; ++j)
 		{
-			int texIndex = Utils::RandomRange(0, 2);
-			if (i == 0 || i == count.y - 1 || j == 0 || j == count.x - 1)
-			{
-				texIndex = 3;
-			}
-			
+
 			int quadIndex = i * count.x + j;
 			sf::Vector2f quadPos(j * size.x, i * size.y);
 
@@ -138,11 +116,17 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 			{
 				int vertexIndex = quadIndex * 4 + k;
 				va[vertexIndex].position = quadPos + posOffset[k];
-				va[vertexIndex].texCoords = texCoords[k];
-				va[vertexIndex].texCoords.y += texIndex * 50.f;
+				if (quadIndex < tileData.size())
+					va[vertexIndex].texCoords = tileData[quadIndex] + posOffset[k];
 			}
 		}
 	}
+}
+
+void TileMap::SetTexture(const std::string& texId)
+{
+	this->texId = texId;
+	texture = &TEXTURE_MGR.Get(this->texId);
 }
 
 void TileMap::UpdateTransform()
