@@ -1,17 +1,29 @@
 #pragma once
 
-#include "Character.h"
+#include "Monster.h"
 
-class Player : public Character
+class Bat : public Monster
 {
-protected:
-	sf::Vector2f velocity;
-
-	bool isJumping;
-	bool isGrounded;
 public:
-	Player(const std::string& name = "");
-	virtual ~Player() = default;
+	enum class BatState
+	{
+		None = -1,
+
+		Idle,
+		Move,
+		Attack,
+		Hit,
+		Death,
+
+		Count
+	};
+
+protected:
+
+
+public:
+	Bat(const std::string& name = "Bat");
+	virtual ~Bat() = default;
 
 	virtual void SetPosition(const sf::Vector2f& pos) override;
 	virtual void SetRotation(float angle) override;
@@ -21,8 +33,18 @@ public:
 	virtual void SetOrigin(const sf::Vector2f& newOrigin) override;
 
 	virtual void Init() override;
-	virtual void Release() override;
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
+	virtual void LateUpdate(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
+	virtual void Release() override;
+
+	virtual sf::FloatRect GetLocalBounds() const 
+	{
+		return body.getLocalBounds();
+	}
+	virtual sf::FloatRect GetGlobalBounds() const
+	{
+		return body.getGlobalBounds();
+	}
 };
