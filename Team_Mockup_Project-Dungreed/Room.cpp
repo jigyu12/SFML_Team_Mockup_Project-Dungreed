@@ -67,6 +67,8 @@ void Room::Init()
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = 0;
 	tileMap = new TileMap("");
+	sortingLayer = SortingLayers::Background;
+	sortingOrder = 0;
 }
 
 void Room::Release()

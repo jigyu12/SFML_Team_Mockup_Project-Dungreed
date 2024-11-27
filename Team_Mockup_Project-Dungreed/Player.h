@@ -12,15 +12,29 @@ public:
 
 	};
 
+	struct CollisionState
+	{
+		bool Up = false;
+		bool Down = false;
+		bool Left = false;
+		bool Right = false;
+	};
+
 protected:
 	Status status;
+	sf::Sprite sword;
 
 	sf::Vector2f velocity;
-	sf::Vector2f gravity = { 0.f,300.f };
 	sf::Vector2f look;
 	std::string playerId = "graphics/player/CharWalk0.png";
+	
+	
+	std::string playerId = "Dungreed Resources/Sprite/CharWalk0.png";
+	std::string swordId = "Dungreed Resources/Sprite/Sword.png";
 
+	float gravity;
 	float jumpForce;
+	float jumpTimer;
 public:
 	Player(const std::string& name = "Player");
 	virtual ~Player() = default;
@@ -41,6 +55,8 @@ public:
 		return body.getGlobalBounds();
 	}
 
+	Player::CollisionState GetCollsionState(const sf::FloatRect& player, const sf::FloatRect& stage);
+	
 	void Init() override;
 	void Release() override;
 	void Reset() override;
