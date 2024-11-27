@@ -16,7 +16,7 @@ void Player::SetPosition(const sf::Vector2f& pos)
 void Player::SetRotation(float angle)
 {
 	rotation = angle;
-	body.setRotation(rotation);
+	body.setRotation(angle);
 }
 
 void Player::SetScale(const sf::Vector2f& scale)
@@ -57,6 +57,7 @@ void Player::Reset()
 
 	SetPosition({ 0.f,0.f });
 	SetOrigin(Origins::BC);
+	SetRotation(0.f);
 }
 
 void Player::Update(float dt)
@@ -76,10 +77,18 @@ void Player::Update(float dt)
 	}
 
 	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
-	if (horizontalInput != 0.f)
-	{
-		SetScale(horizontalInput > 0.f ? sf::Vector2f(scale.x, scale.y) : sf::Vector2f(-scale.x, scale.y));
-	}
+	//if (horizontalInput != 0.f)
+	//{
+	//	if (horizontalInput > 0.f)
+	//	{
+	//		SetScale(sf::Vector2f(scale.x, scale.y));
+	//	}
+	//}
+	sf::Vector2i mousePos = InputMgr::GetMousePosition();
+	sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
+	look = Utils::GetNormal(mouseworldPos - position);
+	SetRotation(Utils::Angle(look));
+
 
 	SetPosition(position + velocity * dt);
 

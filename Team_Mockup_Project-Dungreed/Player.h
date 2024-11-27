@@ -17,6 +17,7 @@ protected:
 
 	sf::Vector2f velocity;
 	sf::Vector2f gravity = { 0.f,300.f };
+	sf::Vector2f look;
 	std::string playerId = "Dungreed Resources/Sprite/CharWalk0.png";
 
 	float jumpForce;
