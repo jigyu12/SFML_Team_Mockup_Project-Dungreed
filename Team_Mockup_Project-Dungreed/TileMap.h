@@ -4,7 +4,7 @@ class TileMap : public GameObject
 {
 protected:
 	sf::VertexArray va;
-	std::string spriteSheetId = "graphics/background_sheet.png";
+	std::string texId;
 	sf::Texture* texture = nullptr;
 	sf::Transform transform;
 
@@ -24,7 +24,6 @@ public:
 
 	sf::FloatRect GetLocalBounds() const override;
 	sf::FloatRect GetGlobalBounds() const override;
-	sf::FloatRect GetMapBounds() const;
 
 	void Init() override;
 	void Release() override;
@@ -32,6 +31,7 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void Set(const sf::Vector2i& count, const sf::Vector2f& size);
+	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<sf::Vector2f>& tileData);
+	void SetTexture(const std::string& texId);
 	void UpdateTransform();
 };

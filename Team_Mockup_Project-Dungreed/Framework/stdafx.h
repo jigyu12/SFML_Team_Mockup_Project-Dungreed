@@ -18,6 +18,7 @@
 using json = nlohmann::json;
 
 #include "Defines.h"
+#include "DefineJson.h"
 #include "Variables.h"
 #include "DebugBox.h"
 #include "HitBox.h"

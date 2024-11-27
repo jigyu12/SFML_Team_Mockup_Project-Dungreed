@@ -155,7 +155,9 @@
     <ClCompile Include="Framework\SceneDev3.cpp" />
     <ClCompile Include="Framework\SoundMgr.cpp" />
     <ClCompile Include="Framework\StringTable.cpp" />
+    <ClCompile Include="MapData.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Room.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SaveData.cpp" />
     <ClCompile Include="SaveLoadMgr.cpp" />
@@ -192,6 +194,7 @@
     <ClInclude Include="Animator.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Framework\DefineJson.h" />
     <ClInclude Include="Framework\DataTableMgr.h" />
     <ClInclude Include="Framework\DataTable.h" />
     <ClInclude Include="Framework\DebugBox.h" />
@@ -213,9 +216,11 @@
     <ClInclude Include="Framework\TextGo.h" />
     <ClInclude Include="Framework\SoundMgr.h" />
     <ClInclude Include="Framework\StringTable.h" />
+    <ClInclude Include="MapData.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Room.h" />
     <ClInclude Include="SaveData.h" />
     <ClInclude Include="SaveLoadMgr.h" />
     <ClInclude Include="Framework\Utils.h" />
