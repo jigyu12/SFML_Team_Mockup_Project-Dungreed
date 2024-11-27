@@ -10,6 +10,7 @@ public:
 	{
 		Immovable,
 		Downable,
+		Portal,
 	};
 
 protected:
@@ -18,8 +19,9 @@ protected:
 
 	MapDataVC mapData;
 
-	std::vector<std::pair<HitBox,HitBoxData>> hitBoxes;
+	std::vector<std::pair<HitBox*, HitBoxData>> hitBoxes;
 
+	std::function<void()> change;
 public:
 	Room(const std::string& name = "");
 	~Room() = default;
@@ -39,4 +41,7 @@ public:
 
 	void LoadMapData(const std::string& path);
 	void SaveMapData(const std::string& path);
+
+	const std::vector<std::pair<HitBox*, HitBoxData>>& GetHitBoxes() const;
+	void EnterPortal(HitBox* portal);
 };

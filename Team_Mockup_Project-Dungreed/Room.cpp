@@ -13,7 +13,7 @@ void Room::SetPosition(const sf::Vector2f& pos)
 	tileMap->SetPosition(position);
 	for (auto& hitBox : hitBoxes)
 	{
-		hitBox.first.rect.setPosition(position);
+		hitBox.first->rect.setPosition(position);
 	}
 }
 
@@ -23,7 +23,7 @@ void Room::SetRotation(float angle)
 	tileMap->SetRotation(rotation);
 	for (auto& hitBox : hitBoxes)
 	{
-		hitBox.first.rect.setRotation(rotation);
+		hitBox.first->rect.setRotation(rotation);
 	}
 }
 
@@ -33,7 +33,7 @@ void Room::SetScale(const sf::Vector2f& s)
 	tileMap->SetScale(scale);
 	for (auto& hitBox : hitBoxes)
 	{
-		hitBox.first.rect.setScale(scale);
+		hitBox.first->rect.setScale(scale);
 	}
 }
 
@@ -46,7 +46,7 @@ void Room::SetOrigin(Origins preset)
 		origin = tileMap->GetOrigin();
 		for (auto& hitBox : hitBoxes)
 		{
-			hitBox.first.rect.setOrigin(-hitBox.second.origin + origin);
+			hitBox.first->rect.setOrigin(-hitBox.second.origin + origin);
 		}
 	}
 }
@@ -58,7 +58,7 @@ void Room::SetOrigin(const sf::Vector2f& newOrigin)
 	tileMap->SetOrigin(origin);
 	for (auto& hitBox : hitBoxes)
 	{
-		hitBox.first.rect.setOrigin(origin);
+		hitBox.first->rect.setOrigin(origin);
 	}
 }
 
@@ -71,6 +71,12 @@ void Room::Init()
 
 void Room::Release()
 {
+	for (auto& hitbox : hitBoxes)
+	{
+		delete hitbox.first;
+	}
+	hitBoxes.clear();
+
 	delete tileMap;
 }
 
@@ -90,7 +96,7 @@ void Room::Draw(sf::RenderWindow& window)
 	{
 		for (auto& hitBox : hitBoxes)
 		{
-			window.draw(hitBox.first.rect);
+			window.draw(hitBox.first->rect);
 		}
 	}
 }
@@ -105,13 +111,33 @@ void Room::LoadMapData(const std::string& path)
 	tileMap->SetTexture(mapData.tileMapData.texId);
 	tileMap->Set(mapData.tileMapData.cellcount, mapData.tileMapData.cellsize, mapData.tileMapData.tile);
 
+	for (auto& hitbox : hitBoxes)
+	{
+		delete hitbox.first;
+	}
+	hitBoxes.clear();
+
 	for (const HitBoxData& hitBoxDatum : mapData.hitBoxData)
 	{
-		HitBox hitbox;
+		HitBox* hitbox = new HitBox();
 
-		hitbox.rect.setSize(hitBoxDatum.size);
-		hitbox.rect.setOrigin(hitBoxDatum.origin);
-		hitbox.rect.setRotation(hitBoxDatum.rotation);
+		hitbox->rect.setSize(hitBoxDatum.size);
+		hitbox->rect.setOrigin(hitBoxDatum.origin);
+		hitbox->rect.setRotation(hitBoxDatum.rotation);
+		switch (hitBoxDatum.type)
+		{
+		case (int)HitboxAttribute::Immovable:
+			hitbox->rect.setOutlineColor(sf::Color::Red);
+			break;
+		case (int)HitboxAttribute::Downable:
+			hitbox->rect.setOutlineColor(sf::Color::Yellow);
+			break;
+		case (int)HitboxAttribute::Portal:
+			hitbox->rect.setOutlineColor(sf::Color::Cyan);
+			break;
+		default:
+			break;
+		}
 		hitBoxes.push_back({ hitbox,hitBoxDatum });
 	}
 	SetOrigin(Origins::MC);
@@ -123,9 +149,6 @@ void Room::SaveMapData(const std::string& path)
 
 	MapDataVC& mapData = loader.Get();
 	mapData = this->mapData;
-
-
-
 
 	mapData.tileMapData.texId = "Dungreed Resources/Texture2D/Map.png";
 	if (path == "1fenter.json")
@@ -672,4 +695,20 @@ void Room::SaveMapData(const std::string& path)
 		};
 	}
 	loader.Save(path);
+}
+
+const std::vector<std::pair<HitBox*, HitBoxData>>& Room::GetHitBoxes() const
+{
+	return hitBoxes;
+}
+
+void Room::EnterPortal(HitBox* portal)
+{
+	for (auto& hitbox : hitBoxes)
+	{
+		if (hitbox.first == portal)
+		{
+
+		}
+	}
 }
