@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "SceneDev2.h"
-#include "Bat.h"
 #include "Room.h"
+#include "Bat.h"
+#include "SkeletonDog.h"
 
 SceneDev2::SceneDev2() : Scene(SceneIds::Dev2)
 {
@@ -21,6 +22,11 @@ void SceneDev2::Init()
 		bat->SetPosition({ 140.f, -80.f });
 		batList.push_back(bat);
 	}
+	{
+		SkeletonDog* skeletonDog = AddGo(new SkeletonDog());
+		skeletonDog->SetPosition({ -140.f, 0.f });
+		skeletonDogList.push_back(skeletonDog);
+	}
 
 	Scene::Init();
 }
@@ -37,6 +43,9 @@ void SceneDev2::Enter()
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
 
+	//room->SaveMapData("1froom1.json");
+	//room->LoadMapData("1froom1.json");
+	
 	Scene::Enter();
 }
 

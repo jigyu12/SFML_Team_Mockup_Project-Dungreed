@@ -65,7 +65,7 @@ void Bat::Reset()
 
 	hp = 6;
 	speed = 30.f;
-	originalDamage = 10;
+	originalDamage = 5;
 
 	attackAccumSpeed = 0.f;
 	attackSpeedDelay = 1.f;
@@ -94,7 +94,7 @@ void Bat::Reset()
 	movableBound = {-FRAMEWORK.GetWindowBounds().width / 2.f / 6.f, -FRAMEWORK.GetWindowBounds().height / 2.f / 6.f,FRAMEWORK.GetWindowBounds().width / 6.f, FRAMEWORK.GetWindowBounds().height / 6.f };
 
 	detectionRange.setFillColor(sf::Color::Transparent);
-	detectionRange.setOutlineColor(sf::Color::Green);
+	detectionRange.setOutlineColor(sf::Color::Blue);
 	detectionRange.setOutlineThickness(1.f);
 	detectionRange.setPosition(body.getPosition());
 	detectionRange.setRadius(80.f);
@@ -248,12 +248,16 @@ void Bat::Update(float dt)
 		break;
 	case Bat::BatState::Death: 
 	{
-
+		deathAccumTime += dt;
+		if (deathAccumTime > deathTimeDelay)
+		{
+			SCENE_MGR.GetCurrentScene()->RemoveGo(this);
+		}
 	}
 		break;
 	}
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 	{
 		OnDamaged();
 	}
@@ -275,16 +279,9 @@ void Bat::Update(float dt)
 			animator.Play("animations/Monster Die.csv");
 			isDead = true;
 		}
-		else
-		{
-			deathAccumTime += dt;
-			if (deathAccumTime > deathTimeDelay)
-			{
-				SCENE_MGR.GetCurrentScene()->RemoveGo(this);
-			}
-		}
 	}
 
+	
 	animator.Update(dt);
 
 	hitbox.UpdateTr(body, GetLocalBounds());
@@ -310,7 +307,8 @@ void Bat::Draw(sf::RenderWindow& window)
 		window.draw(body, &shader);
 	}
 
-	window.draw(detectionRange);
+	if (Variables::isDrawHitBox)
+		window.draw(detectionRange);
 
 	hitbox.Draw(window);
 }
