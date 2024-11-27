@@ -37,7 +37,6 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
-	const std::vector<std::pair<HitBox, HitBoxData>> GetHitBoxes() { return hitBoxes; }
 
 	void LoadMapData(const std::string& path);
 	void SaveMapData(const std::string& path);
