@@ -126,9 +126,9 @@ void Player::Update(float dt)
 	auto hitboxBounds = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
 	for (auto& startHitBox : hitboxBounds)
 	{
-		if (Utils::CheckCollision(startHitBox.first, hitbox))
+		if (Utils::CheckCollision(*startHitBox.first, hitbox))
 		{
-			Player::CollisionState state = GetCollsionState(hitbox.rect.getGlobalBounds(), startHitBox.first.rect.getGlobalBounds());
+			Player::CollisionState state = GetCollsionState(hitbox.rect.getGlobalBounds(), startHitBox.first->rect.getGlobalBounds());
 			if (state.Up)
 			{
 				if (velocity.y < 0)
@@ -137,7 +137,7 @@ void Player::Update(float dt)
 			if (state.Down)
 			{
 				Player::Status::Ground;
-				position.y = startHitBox.first.rect.getGlobalBounds().top;
+				position.y = startHitBox.first->rect.getGlobalBounds().top;
 				SetPosition(position);
 				velocity.y = 0.f;
 			}

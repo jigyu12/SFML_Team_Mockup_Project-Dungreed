@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SFML-2.6.1\include;.\Framework;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SFML-2.6.1\include;.\Framework;.\Map;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SFML-2.6.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SFML-2.6.1\include;.\Framework;.\Map;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,9 +155,10 @@
     <ClCompile Include="Framework\SceneDev3.cpp" />
     <ClCompile Include="Framework\SoundMgr.cpp" />
     <ClCompile Include="Framework\StringTable.cpp" />
-    <ClCompile Include="MapData.cpp" />
+    <ClCompile Include="Map\MapObject.cpp" />
+    <ClCompile Include="Map\MapData.cpp" />
     <ClCompile Include="Monster.cpp" />
-    <ClCompile Include="Room.cpp" />
+    <ClCompile Include="Map\Room.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SaveData.cpp" />
     <ClCompile Include="SaveLoadMgr.cpp" />
@@ -184,7 +185,7 @@
     <ClCompile Include="Snippets\XXXGo.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="Map\TileMap.cpp" />
     <ClCompile Include="Framework\HitBox.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -216,11 +217,12 @@
     <ClInclude Include="Framework\TextGo.h" />
     <ClInclude Include="Framework\SoundMgr.h" />
     <ClInclude Include="Framework\StringTable.h" />
-    <ClInclude Include="MapData.h" />
+    <ClInclude Include="Map\MapObject.h" />
+    <ClInclude Include="Map\MapData.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Room.h" />
+    <ClInclude Include="Map\Room.h" />
     <ClInclude Include="SaveData.h" />
     <ClInclude Include="SaveLoadMgr.h" />
     <ClInclude Include="Framework\Utils.h" />
@@ -231,7 +233,7 @@
     <ClInclude Include="Snippets\XXXGo.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="TileMap.h" />
+    <ClInclude Include="Map\TileMap.h" />
     <ClInclude Include="Framework\Variables.h" />
     <ClInclude Include="Framework\HitBox.h" />
   </ItemGroup>
