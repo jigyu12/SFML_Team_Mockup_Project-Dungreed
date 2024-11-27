@@ -19,7 +19,6 @@ public:
 
 protected:
 	BatState state;
-	sf::Color originColor;
 
 	float idleAccumTime;
 	float idleTimeDelay;
@@ -38,6 +37,8 @@ protected:
 	sf::CircleShape detectionRange;
 
 	sf::FloatRect movableBound;
+
+	sf::Shader shader;
 
 public:
 	Bat(const std::string& name = "Bat");

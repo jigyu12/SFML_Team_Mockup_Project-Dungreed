@@ -77,7 +77,7 @@ void Bat::Reset()
 	isRandMoving = false;
 
 	hitAccumTime = 0.f;
-	hitTimeDelay = 0.5f;
+	hitTimeDelay = 0.1f;
 	isDamaged = false;
 
 	deathAccumTime = 0.f;
@@ -90,7 +90,6 @@ void Bat::Reset()
 	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 
 	state = BatState::Idle;
-	originColor = body.getColor();
 
 	movableBound = {-FRAMEWORK.GetWindowBounds().width / 2.f / 6.f, -FRAMEWORK.GetWindowBounds().height / 2.f / 6.f,FRAMEWORK.GetWindowBounds().width / 6.f, FRAMEWORK.GetWindowBounds().height / 6.f };
 
@@ -100,6 +99,8 @@ void Bat::Reset()
 	detectionRange.setPosition(body.getPosition());
 	detectionRange.setRadius(80.f);
 	detectionRange.setOrigin({ detectionRange.getLocalBounds().width / 2.f, detectionRange.getLocalBounds().height / 2.f });
+
+	shader.loadFromFile("shader/red.frag", sf::Shader::Type::Fragment);
 }
 
 void Bat::Update(float dt)
@@ -260,19 +261,16 @@ void Bat::Update(float dt)
 	if (isDamaged && hp > 0)
 	{
 		hitAccumTime += dt;
-		body.setColor(sf::Color::Red);
 		if (hitAccumTime >= hitTimeDelay)
 		{
 			isDamaged = false;
 			hitAccumTime = 0.f;
-			body.setColor(originColor);
 		}
 	}
 	else if (isDamaged && hp <= 0)
 	{
 		if (!isDead)
 		{
-			body.setColor(originColor);
 			state = BatState::Death;
 			animator.Play("animations/Monster Die.csv");
 			isDead = true;
@@ -299,7 +297,18 @@ void Bat::LateUpdate(float dt)
 
 void Bat::Draw(sf::RenderWindow& window)
 {
-	window.draw(body);
+	if (!isDamaged && hp > 0)
+	{
+		window.draw(body);
+	}
+	else if (isDamaged && hp <= 0)
+	{
+		window.draw(body);
+	}
+	else
+	{
+		window.draw(body, &shader);
+	}
 
 	window.draw(detectionRange);
 

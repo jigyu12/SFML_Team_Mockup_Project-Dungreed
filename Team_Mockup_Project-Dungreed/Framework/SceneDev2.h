@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 
+class Room;
 class Bat;
 
 class SceneDev2 : public Scene
@@ -8,6 +9,7 @@ class SceneDev2 : public Scene
 protected:
 	Player* player;
 	std::vector<Bat*> batList;
+	Room* room;
 
 public:
 	SceneDev2();

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneDev2.h"
 #include "Bat.h"
+#include "Room.h"
 
 SceneDev2::SceneDev2() : Scene(SceneIds::Dev2)
 {
@@ -9,6 +10,9 @@ SceneDev2::SceneDev2() : Scene(SceneIds::Dev2)
 
 void SceneDev2::Init()
 {
+	{
+		room = AddGo(new Room("tilemap"));
+	}
 	{
 		player = AddGo(new Player());
 	}
