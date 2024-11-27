@@ -64,6 +64,8 @@ void Room::SetOrigin(const sf::Vector2f& newOrigin)
 
 void Room::Init()
 {
+	sortingLayer = SortingLayers::Background;
+	sortingOrder = 0;
 	tileMap = new TileMap("");
 }
 
@@ -122,55 +124,333 @@ void Room::SaveMapData(const std::string& path)
 	MapDataVC& mapData = loader.Get();
 	mapData = this->mapData;
 
-	HitBoxData hitBoxData;
-	hitBoxData.origin = { 0.f,0.f };
-	hitBoxData.size = { 18 * 16.f,1 * 16.f };
-	hitBoxData.rotation = 0.f;
-	hitBoxData.type = (int)HitboxAttribute::Immovable;
-	mapData.hitBoxData.push_back(hitBoxData);
 
-	hitBoxData.origin = { 0.f,0.f };
-	hitBoxData.size = { 1 * 16.f,9 * 16.f };
-	hitBoxData.rotation = 0.f;
-	hitBoxData.type = (int)HitboxAttribute::Immovable;
-	mapData.hitBoxData.push_back(hitBoxData);
 
-	hitBoxData.origin = { 17 * 16.f,0.f };
-	hitBoxData.size = { 2 * 16.f,4 * 16.f };
-	hitBoxData.rotation = 0.f;
-	hitBoxData.type = (int)HitboxAttribute::Immovable;
-	mapData.hitBoxData.push_back(hitBoxData);
 
-	hitBoxData.origin = { 0 * 16.f,8 * 16.f };
-	hitBoxData.size = { 19 * 16.f,1 * 16.f };
-	hitBoxData.rotation = 0.f;
-	hitBoxData.type = (int)HitboxAttribute::Immovable;
-	mapData.hitBoxData.push_back(hitBoxData);
+	mapData.tileMapData.texId = "Dungreed Resources/Texture2D/Map.png";
+	if (path == "1fenter.json")
+	{
 
-	mapData.tileMapData.texId = "graphics/map/Map.png";
-	mapData.tileMapData.name = "1fEnter";
-	mapData.tileMapData.cellcount = { 19,9 };
-	mapData.tileMapData.cellsize = { 16.f,16.f };
-	mapData.tileMapData.tile = { {48.f,160.f},
+		HitBoxData hitBoxData;
+		hitBoxData.origin = { 0.f,0.f };
+		hitBoxData.size = { 18 * 16.f,1 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 0.f,0.f };
+		hitBoxData.size = { 1 * 16.f,9 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 17 * 16.f,0.f };
+		hitBoxData.size = { 2 * 16.f,4 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 0 * 16.f,8 * 16.f };
+		hitBoxData.size = { 19 * 16.f,1 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+
+
+		mapData.tileMapData.name = "1fEnter";
+		mapData.tileMapData.cellcount = { 19,9 };
+		mapData.tileMapData.cellsize = { 16.f,16.f };
+		mapData.tileMapData.tile = { {48.f,160.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{128.f,32.f},
+	{64.f,160.f},
+	{0.f,64.f},
+
+	{32.f,176.f},
+	{128.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{144.f,336.f},
+	{176.f,336.f},
+	{0.f,176.f},
+	{0.f,64.f},
+
+	{32.f,176.f},
+	{96.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{80.f,336.f},
+	{0.f,176.f},
+	{0.f,64.f},
+
+	{32.f,176.f},
+	{96.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{80.f,336.f},
+	{112.f,32.f},
+	{128.f,32.f},
+
+	{32.f,176.f},
+	{96.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{176.f,352.f},
+	{144.f,336.f},
+	{176.f,336.f},
+
+	{32.f,176.f},
+	{96.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{0.f,336.f},
+	{80.f,336.f},
+
+	{ 32.f,176.f },
+	{ 96.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 80.f,336.f },
+
+	{ 32.f,176.f },
+	{ 96.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 0.f,336.f },
+	{ 80.f,336.f },
+
+	{ 48.f,176.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+	{ 16.f,144.f },
+		};
+	}
+	else if (path == "1froom1.json")
+	{
+
+		HitBoxData hitBoxData;
+		hitBoxData.origin = { 0.f,0.f };
+		hitBoxData.size = { 8 * 16.f,2 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 0.f,0.f };
+		hitBoxData.size = { 2 * 16.f,8 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 12 * 16.f,0.f };
+		hitBoxData.size = { 7 * 16.f,2 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 0 * 16.f,12 * 16.f };
+		hitBoxData.size = { 19 * 16.f,1 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 18 * 16.f,0 * 16.f };
+		hitBoxData.size = { 1 * 16.f,13 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 4 * 16.f,5 * 16.f };
+		hitBoxData.size = { 3 * 16.f,0.25f * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Downable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 8 * 16.f,5 * 16.f };
+		hitBoxData.size = { 4 * 16.f,0.25f * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Downable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 13 * 16.f,5 * 16.f };
+		hitBoxData.size = { 3 * 16.f,0.25f * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Downable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 9 * 16.f,8 * 16.f };
+		hitBoxData.size = { 2 * 16.f,0.25f * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Downable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 8 * 16.f,10 * 16.f };
+		hitBoxData.size = { 4 * 16.f,0.25f * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = (int)HitboxAttribute::Downable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		mapData.tileMapData.name = "1froom1";
+		mapData.tileMapData.cellcount = { 19,14 };
+		mapData.tileMapData.cellsize = { 16.f,16.f };
+		mapData.tileMapData.tile = {
+			{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
+{32.f,176.f},
+{96.f,336.f},
+{0.f,336.f},
+{0.f,336.f},
+{80.f,336.f},
+{0.f,176.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
+
+{0.f,64.f},
+{48.f,160.f},
 {128.f,32.f},
 {128.f,32.f},
 {128.f,32.f},
 {128.f,32.f},
 {128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
+{144.f,32.f},
+{96.f,336.f},
+{0.f,336.f},
+{0.f,336.f},
+{80.f,336.f},
+{112.f,32.f},
 {128.f,32.f},
 {128.f,32.f},
 {128.f,32.f},
 {128.f,32.f},
 {128.f,32.f},
 {64.f,160.f},
-{0.f,64.f},
 
+{0.f,64.f},
 {32.f,176.f},
 {128.f,336.f},
 {144.f,336.f},
@@ -178,84 +458,47 @@ void Room::SaveMapData(const std::string& path)
 {144.f,336.f},
 {144.f,336.f},
 {144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{176.f,336.f},
-{0.f,176.f},
-{0.f,64.f},
-
-{32.f,176.f},
-{96.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{80.f,336.f},
-{0.f,176.f},
-{0.f,64.f},
-
-{32.f,176.f},
-{96.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{80.f,336.f},
-{112.f,32.f},
-{128.f,32.f},
-
-{32.f,176.f},
-{96.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
+{128.f,352.f},
 {0.f,336.f},
 {0.f,336.f},
 {176.f,352.f},
 {144.f,336.f},
+{144.f,336.f},
+{144.f,336.f},
+{144.f,336.f},
+{144.f,336.f},
 {176.f,336.f},
+{0.f,176.f},
 
+{0.f,64.f},
+{32.f,176.f},
+{96.f,336.f},
+{0.f,336.f},
+{16.f,336.f},
+{0.f,336.f},
+{0.f,336.f},
+{0.f,336.f},
+{0.f,336.f},
+{0.f,336.f},
+{0.f,336.f},
+{16.f,352.f},
+{0.f,336.f},
+{16.f,336.f},
+{0.f,336.f},
+{0.f,336.f},
+{0.f,336.f},
+{80.f,336.f},
+{0.f,176.f},
+
+{0.f,64.f},
 {32.f,176.f},
 {96.f,336.f},
 {0.f,336.f},
 {0.f,336.f},
 {0.f,336.f},
+{16.f,352.f},
+{0.f,336.f},
+{16.f,336.f},
 {0.f,336.f},
 {0.f,336.f},
 {0.f,336.f},
@@ -263,55 +506,150 @@ void Room::SaveMapData(const std::string& path)
 {0.f,336.f},
 {0.f,336.f},
 {0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
+{16.f,336.f},
 {80.f,336.f},
+{0.f,176.f},
 
+{0.f,64.f},
+{32.f,176.f},
+{96.f,336.f},
+{80.f,336.f},
+{48.f,288.f},
+{48.f,288.f},
+{48.f,288.f},
+{160.f,352.f},
+{48.f,288.f},
+{48.f,288.f},
+{48.f,288.f},
+{48.f,288.f},
+{160.f,352.f},
+{48.f,288.f},
+{48.f,288.f},
+{48.f,288.f},
+{96.f,336.f},
+{80.f,336.f},
+{0.f,176.f},
+
+{ 0.f,64.f },
 { 32.f,176.f },
 { 96.f,336.f },
+{ 80.f,336.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 160.f,352.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 160.f,352.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 96.f,336.f },
+{ 80.f,336.f },
+{ 0.f,176.f },
+
+{ 128.f,32.f },
+{ 144.f,32.f },
+{ 96.f,336.f },
+{ 80.f,336.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 160.f,352.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 160.f,352.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 96.f,336.f },
+{ 80.f,336.f },
+{ 0.f,176.f },
+
+{ 144.f,336.f },
+{ 144.f,336.f },
+{ 128.f,352.f },
+{ 80.f,336.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 160.f,352.f },
+{ 0.f,64.f },
+{ 48.f,288.f },
+{ 48.f,288.f },
+{ 0.f,64.f },
+{ 160.f,352.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 96.f,336.f },
+{ 80.f,336.f },
+{ 0.f,176.f },
+
 { 0.f,336.f },
 { 0.f,336.f },
 { 0.f,336.f },
+{ 80.f,336.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 160.f,352.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 160.f,352.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
+{ 96.f,336.f },
+{ 80.f,336.f },
+{ 0.f,176.f },
+
 { 0.f,336.f },
 { 0.f,336.f },
 { 0.f,336.f },
+{ 176.f,352.f },
+{ 0.f,400.f },
+{ 96.f,400.f },
+{ 32.f,400.f },
+{ 176.f,368.f },
+{ 0.f,400.f },
+{ 16.f,400.f },
+{ 16.f,400.f },
+{ 32.f,400.f },
+{ 176.f,368.f },
+{ 0.f,400.f },
+{ 16.f,400.f },
+{ 32.f,400.f },
+{ 128.f,352.f },
+{ 80.f,336.f },
+{ 0.f,176.f },
+
 { 0.f,336.f },
 { 0.f,336.f },
 { 0.f,336.f },
+{ 16.f,352.f },
+{ 0.f,336.f },
+{ 16.f,336.f },
 { 0.f,336.f },
 { 0.f,336.f },
 { 0.f,336.f },
+{ 32.f,384.f },
+{ 48.f,384.f },
+{ 0.f,336.f },
+{ 16.f,336.f },
 { 0.f,336.f },
 { 0.f,336.f },
 { 0.f,336.f },
 { 0.f,336.f },
 { 80.f,336.f },
+{ 0.f,176.f },
 
-{ 32.f,176.f },
-{ 96.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 80.f,336.f },
-
-{ 48.f,176.f },
 { 16.f,144.f },
 { 16.f,144.f },
 { 16.f,144.f },
@@ -330,7 +668,8 @@ void Room::SaveMapData(const std::string& path)
 { 16.f,144.f },
 { 16.f,144.f },
 { 16.f,144.f },
-	};
-
-	loader.Save("map.json");
+{ 64.f,176.f },
+		};
+	}
+	loader.Save(path);
 }
