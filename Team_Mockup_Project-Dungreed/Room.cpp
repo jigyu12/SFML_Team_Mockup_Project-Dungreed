@@ -65,6 +65,8 @@ void Room::SetOrigin(const sf::Vector2f& newOrigin)
 void Room::Init()
 {
 	tileMap = new TileMap("");
+	sortingLayer = SortingLayers::Background;
+	sortingOrder = 0;
 }
 
 void Room::Release()

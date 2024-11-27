@@ -46,6 +46,8 @@ public:
 	void ApplyAddGo();
 	void ApplyRemoveGO();
 
+	sf::Vector2f GetWorldViewCenter() const { return worldView.getCenter(); }
+
 	sf::Vector2f ScreenToWorld(sf::Vector2i screenPos);
 	sf::Vector2i WorldToScreen(sf::Vector2f worldPos);
 	sf::Vector2f ScreenToUi(sf::Vector2i screenPos);

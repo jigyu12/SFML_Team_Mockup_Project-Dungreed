@@ -1,20 +1,14 @@
 #pragma once
 #include "Scene.h"
 
+class Room;
 class Player;
-
-struct person {
-	std::string name;
-	std::string address;
-	int age;
-
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(person, name, address, age)
-};
 
 class SceneDev1 : public Scene
 {
 protected:
 	Player* player;
+	Room* room;
 
 public:
 	SceneDev1();
@@ -23,6 +17,7 @@ public:
 	void Init() override;
 	void Enter() override;
 	void Exit() override;
+	
 
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
