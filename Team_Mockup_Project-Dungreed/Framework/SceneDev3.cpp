@@ -3,6 +3,7 @@
 #include "MapData.h"
 #include "TileMap.h"
 #include "Room.h";
+#include "Player.h"
 
 SceneDev3::SceneDev3() : Scene(SceneIds::Dev2)
 {
@@ -11,7 +12,9 @@ SceneDev3::SceneDev3() : Scene(SceneIds::Dev2)
 
 void SceneDev3::Init()
 {
-	room = AddGo(new Room("tilemap"));
+	roome = AddGo(new Room("roome"));
+	room1 = AddGo(new Room("room1"));
+	player = AddGo(new Player("player"));
 
 	Scene::Init();
 }
@@ -29,6 +32,9 @@ void SceneDev3::Enter()
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
 
+
+	roome->SetConnectedRoom(room1, HitBoxData::Type::PortalRight);
+	room1->SetConnectedRoom(roome, HitBoxData::Type::PortalLeft);
 }
 
 void SceneDev3::Exit()
@@ -42,23 +48,51 @@ void SceneDev3::Update(float dt)
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad7))
 	{
-		room->SaveMapData("1fenter.json");
-	
+		roome->SaveMapData("1fenter.json");
 	}
-
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad8))
 	{
-		room->LoadMapData("1fenter.json");
+		room1->SetActive(false);
+		roome->SetActive(true);
+		roome->LoadMapData("1fenter.json");
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad4))
 	{
-		room->SaveMapData("1froom1.json");
-
+		room1->SaveMapData("1froom1.json");
 	}
-
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad5))
 	{
-		room->LoadMapData("1froom1.json");
+		roome->SetActive(false);
+		room1->SetActive(true);
+		room1->LoadMapData("1froom1.json");
+	}
+
+	sf::Vector2f playerpos = player->GetPosition();
+	if (roome->IsActive())
+	{
+		const std::vector<std::pair<HitBox*, HitBoxData>>& hitboxes = roome->GetHitBoxes();
+		for (auto& hitbox : hitboxes)
+		{
+			if (hitbox.second.type >= HitBoxData::Type::PortalUp
+				&& hitbox.second.type <= HitBoxData::Type::PortalRight
+				&& hitbox.first->rect.getGlobalBounds().contains(playerpos))
+			{
+				roome->EnterPortal(hitbox.first);
+			}
+		}
+	}
+	else if (room1->IsActive())
+	{
+		const std::vector<std::pair<HitBox*, HitBoxData>>& hitboxes = room1->GetHitBoxes();
+		for (auto& hitbox : hitboxes)
+		{
+			if (hitbox.second.type >= HitBoxData::Type::PortalUp
+				&& hitbox.second.type <= HitBoxData::Type::PortalRight
+				&& hitbox.first->rect.getGlobalBounds().contains(playerpos))
+			{
+				room1->EnterPortal(hitbox.first);
+			}
+		}
 	}
 
 }

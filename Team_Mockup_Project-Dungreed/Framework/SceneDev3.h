@@ -1,12 +1,16 @@
 #pragma once
 
 class Room;
+class Player;
 
 class SceneDev3 : public Scene
 {
 protected:
 
-	Room* room;
+	Room* roome;
+	Room* room1;
+
+	Player* player;
 
 public:
 	SceneDev3();
@@ -18,5 +22,6 @@ public:
 
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
 };
 

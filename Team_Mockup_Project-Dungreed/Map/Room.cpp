@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Room.h"
 #include "TileMap.h"
+#include "Player.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -67,8 +68,7 @@ void Room::Init()
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = 0;
 	tileMap = new TileMap("");
-	sortingLayer = SortingLayers::Background;
-	sortingOrder = 0;
+	connectedRoom.resize(4);
 }
 
 void Room::Release()
@@ -84,6 +84,7 @@ void Room::Release()
 
 void Room::Reset()
 {
+	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("player"));
 }
 
 void Room::Update(float dt)
@@ -105,6 +106,12 @@ void Room::Draw(sf::RenderWindow& window)
 
 void Room::LoadMapData(const std::string& path)
 {
+	for (auto& hitbox : hitBoxes)
+	{
+		delete hitbox.first;
+	}
+	hitBoxes.clear();
+
 	MapDataLoader loader;
 	loader.Load(path);
 	mapData = loader.Get();
@@ -112,12 +119,6 @@ void Room::LoadMapData(const std::string& path)
 	const MapDataVC& mapData = loader.Get();
 	tileMap->SetTexture(mapData.tileMapData.texId);
 	tileMap->Set(mapData.tileMapData.cellcount, mapData.tileMapData.cellsize, mapData.tileMapData.tile);
-
-	for (auto& hitbox : hitBoxes)
-	{
-		delete hitbox.first;
-	}
-	hitBoxes.clear();
 
 	for (const HitBoxData& hitBoxDatum : mapData.hitBoxData)
 	{
@@ -128,14 +129,17 @@ void Room::LoadMapData(const std::string& path)
 		hitbox->rect.setRotation(hitBoxDatum.rotation);
 		switch (hitBoxDatum.type)
 		{
-		case (int)HitboxAttribute::Immovable:
+		case HitBoxData::Type::PortalUp:
+		case HitBoxData::Type::PortalDown:
+		case HitBoxData::Type::PortalLeft:
+		case HitBoxData::Type::PortalRight:
+			hitbox->rect.setOutlineColor(sf::Color::Cyan);
+			break;
+		case HitBoxData::Type::Immovable:
 			hitbox->rect.setOutlineColor(sf::Color::Red);
 			break;
-		case (int)HitboxAttribute::Downable:
+		case HitBoxData::Type::Downable:
 			hitbox->rect.setOutlineColor(sf::Color::Yellow);
-			break;
-		case (int)HitboxAttribute::Portal:
-			hitbox->rect.setOutlineColor(sf::Color::Cyan);
 			break;
 		default:
 			break;
@@ -152,36 +156,46 @@ void Room::SaveMapData(const std::string& path)
 	MapDataVC& mapData = loader.Get();
 	mapData = this->mapData;
 
-	mapData.tileMapData.texId = "Dungreed Resources/Texture2D/Map.png";
+	mapData.tileMapData.texId = "graphics/map/Map.png";
 	if (path == "1fenter.json")
 	{
+
+
+		mapData.playerStartPoint[(int)MapData::Direction::Down] = { 5 * 16.f,7.f * 16.f };
 
 		HitBoxData hitBoxData;
 		hitBoxData.origin = { 0.f,0.f };
 		hitBoxData.size = { 18 * 16.f,1 * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		hitBoxData.type = HitBoxData::Type::Immovable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 0.f,0.f };
 		hitBoxData.size = { 1 * 16.f,9 * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		hitBoxData.type = HitBoxData::Type::Immovable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 17 * 16.f,0.f };
 		hitBoxData.size = { 2 * 16.f,4 * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		hitBoxData.type = HitBoxData::Type::Immovable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 0 * 16.f,8 * 16.f };
 		hitBoxData.size = { 19 * 16.f,1 * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		hitBoxData.type = HitBoxData::Type::Immovable;
+
+
 		mapData.hitBoxData.push_back(hitBoxData);
 
+		hitBoxData.origin = { 18 * 16.f ,4 * 16.f };
+		hitBoxData.size = { 1 * 16.f,4 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = HitBoxData::Type::PortalRight;
 
+		mapData.hitBoxData.push_back(hitBoxData);
 
 		mapData.tileMapData.name = "1fEnter";
 		mapData.tileMapData.cellcount = { 19,9 };
@@ -370,65 +384,75 @@ void Room::SaveMapData(const std::string& path)
 	else if (path == "1froom1.json")
 	{
 
+
+		mapData.playerStartPoint[(int)MapData::Direction::Down] = { 5 * 16.f,7.f * 16.f };
+
+
 		HitBoxData hitBoxData;
 		hitBoxData.origin = { 0.f,0.f };
 		hitBoxData.size = { 8 * 16.f,2 * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		hitBoxData.type = HitBoxData::Type::Immovable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 0.f,0.f };
 		hitBoxData.size = { 2 * 16.f,8 * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		hitBoxData.type = HitBoxData::Type::Immovable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 12 * 16.f,0.f };
 		hitBoxData.size = { 7 * 16.f,2 * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		hitBoxData.type = HitBoxData::Type::Immovable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 0 * 16.f,12 * 16.f };
 		hitBoxData.size = { 19 * 16.f,1 * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		hitBoxData.type = HitBoxData::Type::Immovable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 18 * 16.f,0 * 16.f };
 		hitBoxData.size = { 1 * 16.f,13 * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Immovable;
+		hitBoxData.type = HitBoxData::Type::Immovable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 4 * 16.f,5 * 16.f };
 		hitBoxData.size = { 3 * 16.f,0.25f * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Downable;
+		hitBoxData.type = HitBoxData::Type::Downable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 8 * 16.f,5 * 16.f };
 		hitBoxData.size = { 4 * 16.f,0.25f * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Downable;
+		hitBoxData.type = HitBoxData::Type::Downable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 13 * 16.f,5 * 16.f };
 		hitBoxData.size = { 3 * 16.f,0.25f * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Downable;
+		hitBoxData.type = HitBoxData::Type::Downable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 9 * 16.f,8 * 16.f };
 		hitBoxData.size = { 2 * 16.f,0.25f * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Downable;
+		hitBoxData.type = HitBoxData::Type::Downable;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		hitBoxData.origin = { 8 * 16.f,10 * 16.f };
 		hitBoxData.size = { 4 * 16.f,0.25f * 16.f };
 		hitBoxData.rotation = 0.f;
-		hitBoxData.type = (int)HitboxAttribute::Downable;
+		hitBoxData.type = HitBoxData::Type::Downable;
+		mapData.hitBoxData.push_back(hitBoxData);
+
+		hitBoxData.origin = { 0 * 16.f,8 * 16.f };
+		hitBoxData.size = { 1 * 16.f,4 * 16.f };
+		hitBoxData.rotation = 0.f;
+		hitBoxData.type = HitBoxData::Type::PortalLeft;
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		mapData.tileMapData.name = "1froom1";
@@ -699,6 +723,11 @@ void Room::SaveMapData(const std::string& path)
 	loader.Save(path);
 }
 
+void Room::SetConnectedRoom(Room* room, HitBoxData::Type connection)
+{
+	connectedRoom[(int)connection] = room;
+}
+
 const std::vector<std::pair<HitBox*, HitBoxData>>& Room::GetHitBoxes() const
 {
 	return hitBoxes;
@@ -710,7 +739,16 @@ void Room::EnterPortal(HitBox* portal)
 	{
 		if (hitbox.first == portal)
 		{
-
+			active = false;
+			
+			connectedRoom[(int)hitbox.second.type]->ExitPortal(hitbox.second.type);
 		}
 	}
+}
+
+void Room::ExitPortal(HitBoxData::Type connection)
+{
+	active = true;
+	player->SetPosition(mapData.playerStartPoint[(int)connection]);
+
 }
