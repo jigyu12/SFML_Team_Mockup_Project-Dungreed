@@ -2,6 +2,7 @@
 #include "Room.h"
 #include "TileMap.h"
 #include "Player.h"
+#include "MapObject.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -16,6 +17,10 @@ void Room::SetPosition(const sf::Vector2f& pos)
 	{
 		hitBox.first->rect.setPosition(position);
 	}
+	for (auto& obj : objects)
+	{
+		obj.first->SetPosition(position);
+	}
 }
 
 void Room::SetRotation(float angle)
@@ -25,6 +30,10 @@ void Room::SetRotation(float angle)
 	for (auto& hitBox : hitBoxes)
 	{
 		hitBox.first->rect.setRotation(rotation);
+	}
+	for (auto& obj : objects)
+	{
+		obj.first->SetRotation(rotation);
 	}
 }
 
@@ -36,6 +45,10 @@ void Room::SetScale(const sf::Vector2f& s)
 	{
 		hitBox.first->rect.setScale(scale);
 	}
+	for (auto& obj : objects)
+	{
+		obj.first->SetScale(scale);
+	}
 }
 
 void Room::SetOrigin(Origins preset)
@@ -43,11 +56,16 @@ void Room::SetOrigin(Origins preset)
 	originPreset = preset;
 	if (originPreset != Origins::Custom)
 	{
+		Utils::SetOrigin(subBackground,originPreset);
 		tileMap->SetOrigin(originPreset);
 		origin = tileMap->GetOrigin();
 		for (auto& hitBox : hitBoxes)
 		{
 			hitBox.first->rect.setOrigin(-hitBox.second.origin + origin);
+		}
+		for (auto& obj : objects)
+		{
+			obj.first->SetOrigin(-obj.second.origin + origin);
 		}
 	}
 }
@@ -79,12 +97,21 @@ void Room::Release()
 	}
 	hitBoxes.clear();
 
+	for (auto& obj : objects)
+	{
+		delete obj.first;
+	}
+	objects.clear();
+
 	delete tileMap;
 }
 
 void Room::Reset()
 {
 	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("player"));
+
+	subBackground.setTexture(TEXTURE_MGR.Get("graphics/map/SubBG.png"));
+	SetOrigin(Origins::MC);
 }
 
 void Room::Update(float dt)
@@ -93,8 +120,13 @@ void Room::Update(float dt)
 
 void Room::Draw(sf::RenderWindow& window)
 {
+	window.draw(subBackground);
 	tileMap->Draw(window);
 
+	for (auto& obj : objects)
+	{
+		obj.first->Draw(window);
+	}
 	if (Variables::isDrawHitBox)
 	{
 		for (auto& hitBox : hitBoxes)
@@ -119,6 +151,17 @@ void Room::LoadMapData(const std::string& path)
 	const MapDataVC& mapData = loader.Get();
 	tileMap->SetTexture(mapData.tileMapData.texId);
 	tileMap->Set(mapData.tileMapData.cellcount, mapData.tileMapData.cellsize, mapData.tileMapData.tile);
+
+	for (const ObjectData& objData : mapData.objectData)
+	{
+		MapObject* obj = new MapObject();
+
+		obj->Init();
+		obj->Reset();
+		obj->Set(objData.type);
+
+		objects.push_back({ obj,objData });
+	}
 
 	for (const HitBoxData& hitBoxDatum : mapData.hitBoxData)
 	{
@@ -159,8 +202,6 @@ void Room::SaveMapData(const std::string& path)
 	mapData.tileMapData.texId = "graphics/map/Map.png";
 	if (path == "1fenter.json")
 	{
-
-
 		mapData.playerStartPoint[(int)MapData::Direction::Down] = { 5 * 16.f,7.f * 16.f };
 
 		HitBoxData hitBoxData;
@@ -218,7 +259,7 @@ void Room::SaveMapData(const std::string& path)
 	{128.f,32.f},
 	{128.f,32.f},
 	{64.f,160.f},
-	{0.f,64.f},
+	{16.f,176.f},
 
 	{32.f,176.f},
 	{128.f,336.f},
@@ -238,7 +279,7 @@ void Room::SaveMapData(const std::string& path)
 	{144.f,336.f},
 	{176.f,336.f},
 	{0.f,176.f},
-	{0.f,64.f},
+	{16.f,176.f},
 
 	{32.f,176.f},
 	{96.f,336.f},
@@ -258,7 +299,7 @@ void Room::SaveMapData(const std::string& path)
 	{0.f,336.f},
 	{80.f,336.f},
 	{0.f,176.f},
-	{0.f,64.f},
+	{16.f,176.f},
 
 	{32.f,176.f},
 	{96.f,336.f},
@@ -387,6 +428,71 @@ void Room::SaveMapData(const std::string& path)
 
 		mapData.playerStartPoint[(int)MapData::Direction::Down] = { 5 * 16.f,7.f * 16.f };
 
+		ObjectData objData;
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 64.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 80.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 96.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 128.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 144.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 160.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 176.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 208.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 224.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 240.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 144.f,128.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 160.f,128.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 128.f,160.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 144.f,160.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 160.f,160.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 176.f,160.f };
+		mapData.objectData.push_back(objData);
 
 		HitBoxData hitBoxData;
 		hitBoxData.origin = { 0.f,0.f };
@@ -459,27 +565,27 @@ void Room::SaveMapData(const std::string& path)
 		mapData.tileMapData.cellcount = { 19,14 };
 		mapData.tileMapData.cellsize = { 16.f,16.f };
 		mapData.tileMapData.tile = {
-			{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
+			{16.f,176.f},
+{16.f,176.f},
+{16.f,176.f},
+{16.f,176.f},
+{16.f,176.f},
+{16.f,176.f},
+{16.f,176.f},
 {32.f,176.f},
 {96.f,336.f},
 {0.f,336.f},
 {0.f,336.f},
 {80.f,336.f},
 {0.f,176.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
+{16.f,176.f},
+{16.f,176.f},
+{16.f,176.f},
+{16.f,176.f},
+{16.f,176.f},
+{16.f,176.f},
 
-{0.f,64.f},
+{16.f,176.f},
 {48.f,160.f},
 {128.f,32.f},
 {128.f,32.f},
@@ -499,7 +605,7 @@ void Room::SaveMapData(const std::string& path)
 {128.f,32.f},
 {64.f,160.f},
 
-{0.f,64.f},
+{16.f,176.f},
 {32.f,176.f},
 {128.f,336.f},
 {144.f,336.f},
@@ -519,7 +625,7 @@ void Room::SaveMapData(const std::string& path)
 {176.f,336.f},
 {0.f,176.f},
 
-{0.f,64.f},
+{16.f,176.f},
 {32.f,176.f},
 {96.f,336.f},
 {0.f,336.f},
@@ -539,7 +645,7 @@ void Room::SaveMapData(const std::string& path)
 {80.f,336.f},
 {0.f,176.f},
 
-{0.f,64.f},
+{16.f,176.f},
 {32.f,176.f},
 {96.f,336.f},
 {0.f,336.f},
@@ -559,27 +665,27 @@ void Room::SaveMapData(const std::string& path)
 {80.f,336.f},
 {0.f,176.f},
 
-{0.f,64.f},
+{16.f,176.f},
 {32.f,176.f},
 {96.f,336.f},
 {80.f,336.f},
-{48.f,288.f},
-{48.f,288.f},
-{48.f,288.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
 {160.f,352.f},
-{48.f,288.f},
-{48.f,288.f},
-{48.f,288.f},
-{48.f,288.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
 {160.f,352.f},
-{48.f,288.f},
-{48.f,288.f},
-{48.f,288.f},
+{0.f,64.f},
+{0.f,64.f},
+{0.f,64.f},
 {96.f,336.f},
 {80.f,336.f},
 {0.f,176.f},
 
-{ 0.f,64.f },
+{ 16.f,176.f },
 { 32.f,176.f },
 { 96.f,336.f },
 { 80.f,336.f },
@@ -628,8 +734,8 @@ void Room::SaveMapData(const std::string& path)
 { 0.f,64.f },
 { 160.f,352.f },
 { 0.f,64.f },
-{ 48.f,288.f },
-{ 48.f,288.f },
+{ 0.f,64.f },
+{ 0.f,64.f },
 { 0.f,64.f },
 { 160.f,352.f },
 { 0.f,64.f },

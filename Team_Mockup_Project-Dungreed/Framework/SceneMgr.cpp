@@ -4,6 +4,7 @@
 #include "SceneDev2.h"
 #include "SceneDev3.h"
 #include "SceneGame.h"
+#include "SceneMapEdit.h"
 
 void SceneMgr::Init()
 {

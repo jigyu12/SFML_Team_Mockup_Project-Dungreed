@@ -1,5 +1,7 @@
 #pragma once
 
+#include "MapData.h"
+
 class MapObject : public GameObject
 {
 protected:
@@ -23,4 +25,6 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void Set(ObjectData::Type objData);
 };

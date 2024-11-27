@@ -36,12 +36,12 @@ bool MapDataLoader::Load(const std::string& path)
 		saveData = new MapDataV1(v1);
 		break;
 	}
-	//case 2:
-	//{
-	//	SaveDataV2 v2 = j.get<SaveDataV2>();
-	//	saveData = new SaveDataV2(v2);
-	//	break;
-	//}
+	case 2:
+	{
+		MapDataV2 v2 = j.get<MapDataV2>();
+		saveData = new MapDataV2(v2);
+		break;
+	}
 	}
 	f.close();
 
@@ -60,5 +60,23 @@ bool MapDataLoader::Load(const std::string& path)
 MapDataV1::MapDataV1()
 {
 	version = 1;
+	playerStartPoint.resize(4);
+}
+
+MapData* MapDataV1::VersionUp()
+{
+	MapDataV2* newData = new MapDataV2();
+
+	newData->hitBoxData = hitBoxData;
+	newData->objectData = objectData;
+	newData->playerStartPoint = playerStartPoint;
+	newData->tileMapData = tileMapData;
+
+	return newData;
+}
+
+MapDataV2::MapDataV2()
+{
+	version = 2;
 	playerStartPoint.resize(4);
 }
