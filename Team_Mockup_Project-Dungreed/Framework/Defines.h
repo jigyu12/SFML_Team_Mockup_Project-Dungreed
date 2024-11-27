@@ -1,5 +1,8 @@
 #pragma once
 
+#define ABS(X) ((X) < 0 ? -(X) : (X))
+#define EPSILON 0.000001
+
 enum class Languages
 {
 	Korean,

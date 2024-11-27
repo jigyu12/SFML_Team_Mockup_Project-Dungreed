@@ -11,15 +11,33 @@ public:
 
 		Idle,
 		Move,
-		Attack,
-		Hit,
+		//Attack,
 		Death,
 
 		Count
 	};
 
 protected:
+	BatState state;
+	sf::Color originColor;
 
+	float idleAccumTime;
+	float idleTimeDelay;
+	float idleRandMoveAccumTime;
+	float idleRandMoveTimeDelay;
+	bool isRandMoving;
+	
+	float hitAccumTime;
+	float hitTimeDelay;
+	bool isDamaged;
+
+	float deathAccumTime;
+	float deathTimeDelay;
+	bool isDead;
+
+	sf::CircleShape detectionRange;
+
+	sf::FloatRect movableBound;
 
 public:
 	Bat(const std::string& name = "Bat");
@@ -47,4 +65,6 @@ public:
 	{
 		return body.getGlobalBounds();
 	}
+
+	void OnDamaged();
 };
