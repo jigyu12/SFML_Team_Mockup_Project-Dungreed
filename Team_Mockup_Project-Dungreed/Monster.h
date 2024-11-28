@@ -41,4 +41,5 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override = 0;
 
 	MonsterType GetMonsterType() const { return monsterType; }
+	int GetOriginalDamage() const { return originalDamage; }
 };

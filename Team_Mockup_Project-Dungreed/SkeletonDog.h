@@ -2,30 +2,40 @@
 
 #include "Monster.h"
 
-class Bat : public Monster
+class SkeletonDog : public Monster
 {
 public:
-	enum class BatState
+	enum class SkeleDogState
 	{
 		None = -1,
 
 		Idle,
 		Move,
-		//Attack,
+		Attack,
 		Death,
 
 		Count
 	};
 
 protected:
-	BatState state;
+	SkeleDogState state;
 
 	float idleAccumTime;
 	float idleTimeDelay;
-	float idleRandMoveAccumTime;
-	float idleRandMoveTimeDelay;
-	bool isRandMoving;
-	
+	bool isIdle;
+
+	float moveAccumTime;
+	float moveTimeDelay;
+	bool isMoving;
+
+	float attackAccumTime;
+	float attackTimeDelay;
+	bool isAttack;
+
+	float attackMoveAccumTime;
+	float attackMoveTimeDelay;
+	bool isAttackMove;
+
 	float hitAccumTime;
 	float hitTimeDelay;
 	bool isDamaged;
@@ -34,15 +44,22 @@ protected:
 	float deathTimeDelay;
 	bool isDead;
 
-	sf::CircleShape detectionRange;
+	sf::RectangleShape detectionRange;
+
+	sf::RectangleShape detectionLine;
 
 	sf::FloatRect movableBound;
 
 	sf::Shader shader;
 
+	float velocityY;
+	float gravity;
+	float jumpSpeed;
+	bool isOnGround;
+
 public:
-	Bat(const std::string& name = "Bat");
-	virtual ~Bat() = default;
+	SkeletonDog(const std::string& name = "SkeletonDog");
+	virtual ~SkeletonDog() = default;
 
 	virtual void SetPosition(const sf::Vector2f& pos) override;
 	virtual void SetRotation(float angle) override;
@@ -58,7 +75,7 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
 
-	virtual sf::FloatRect GetLocalBounds() const 
+	virtual sf::FloatRect GetLocalBounds() const
 	{
 		return body.getLocalBounds();
 	}
@@ -67,5 +84,15 @@ public:
 		return body.getGlobalBounds();
 	}
 
+	/// <summary>
+	/// 각 Scene의 Scene::Enter(); 의 뒤에 사용해야 적용됨.
+	/// </summary>
+	void SetStartDirectionX(const float dirX)
+	{
+		direction = Utils::GetNormal({ dirX, 0.f });
+		detectionLine.setPosition(body.getPosition() + direction * -10.f);
+	}
+
 	void OnDamaged();
+	void Jump();
 };

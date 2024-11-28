@@ -179,6 +179,7 @@
     <ClCompile Include="Framework\TextGo.cpp" />
     <ClCompile Include="Framework\Utils.cpp" />
     <ClCompile Include="SceneGame.cpp" />
+    <ClCompile Include="SkeletonDog.cpp" />
     <ClCompile Include="Snippets\SceneXXX.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -227,6 +228,7 @@
     <ClInclude Include="SaveLoadMgr.h" />
     <ClInclude Include="Framework\Utils.h" />
     <ClInclude Include="SceneGame.h" />
+    <ClInclude Include="SkeletonDog.h" />
     <ClInclude Include="Snippets\SceneXXX.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
