@@ -58,6 +58,7 @@ void TileMap::Init()
 {
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = -1;
+	tileIndexes.resize(1);
 }
 
 void TileMap::Release()
@@ -92,15 +93,15 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 {
 	cellCount = count;
 	cellSize = size;
-	this->tileIndex = tileIndex;
+	this->tileIndexes = tileIndex;
 	va.clear();
 	va.setPrimitiveType(sf::Quads);
 	va.resize(count.x * count.y * 4);
 
-	this->tileIndex.resize(count.y);
-	for (int i = 0;i < this->tileIndex.size();++i)
+	this->tileIndexes.resize(count.y);
+	for (int i = 0;i < this->tileIndexes.size();++i)
 	{
-		this->tileIndex[i].resize(count.x, -1);
+		this->tileIndexes[i].resize(count.x, -1);
 	}
 
 	sf::Vector2f posOffset[4] =
@@ -123,9 +124,9 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 			{
 				int vertexIndex = quadIndex * 4 + k;
 				va[vertexIndex].position = quadPos + posOffset[k];
-				if (i < this->tileIndex.size() && j < this->tileIndex[0].size())
+				if (i < this->tileIndexes.size() && j < this->tileIndexes[0].size())
 				{
-					va[vertexIndex].texCoords = TILE_TABLE->Get(this->tileIndex[i][j]).startpos + posOffset[k];
+					va[vertexIndex].texCoords = TILE_TABLE->Get(this->tileIndexes[i][j]).startpos + posOffset[k];
 				}
 				else
 				{
@@ -139,7 +140,7 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 void TileMap::Set(const TileMapData& tileMapData)
 {
 	SetTexture(tileMapData.texId);
-	Set(tileMapData.cellcount, tileMapData.cellsize, tileMapData.tileIndex);
+	Set(tileMapData.cellcount, tileMapData.cellsize, tileMapData.tileIndexes);
 }
 
 void TileMap::SetTexture(const std::string& texId)
@@ -150,9 +151,9 @@ void TileMap::SetTexture(const std::string& texId)
 
 void TileMap::SetTile(const sf::Vector2f& mousepos, const TileDatum& tile)
 {
-	sf::Vector2i cellpos = GetTileIndex(mousepos);
+	sf::Vector2i cellpos = GetTilePosition(mousepos);
 
-	tileIndex[cellpos.y][cellpos.x] = tile.index;
+	tileIndexes[cellpos.y][cellpos.x] = tile.index;
 
 	int quadindex = (cellpos.y * cellCount.x + cellpos.x) * 4;
 	va[quadindex + 0].texCoords = { tile.startpos.x,tile.startpos.y };
@@ -168,16 +169,47 @@ TileMapData TileMap::GetTileMapData()
 	data.cellcount = this->cellCount;
 	data.cellsize = this->cellSize;
 	data.texId = this->texId;
-	data.tileIndex = this->tileIndex;
+	data.tileIndexes = this->tileIndexes;
 
 	return data;
 }
 
-sf::Vector2i TileMap::GetTileIndex(const sf::Vector2f& mousepos)
+sf::Vector2i TileMap::GetTilePosition(const sf::Vector2f& mousepos)
 {
 	sf::Transform inverse = transform.getInverse();
 	sf::Vector2f localPoint = inverse.transformPoint(mousepos);
 	return { (int)(localPoint.x / cellSize.x),(int)(localPoint.y / cellSize.y) };
+}
+
+int TileMap::GetTileIndex(const sf::Vector2f& mousepos)
+{
+	sf::Vector2i tilepos = GetTilePosition(mousepos);
+	if (tilepos.y < tileIndexes.size() && tilepos.x < tileIndexes[0].size())
+	{
+		return tileIndexes[tilepos.y][tilepos.x];
+	}
+	return -1;
+}
+
+void TileMap::Resize(const sf::Vector2i& count)
+{
+	std::vector<std::vector<int>> oldData = tileIndexes;
+	int minx = std::min((int)oldData[0].size(), count.x);
+	int miny = std::min((int)oldData.size(), count.y);
+	tileIndexes.resize(count.y);
+	for (int i = 0;i < tileIndexes.size();++i)
+	{
+		tileIndexes[i].resize(count.x, -1);
+	}
+
+	for (int j = 0;j < miny;++j)
+	{
+		for (int i = 0;i < minx;++i)
+		{
+			tileIndexes[j][i] = oldData[j][i];
+		}
+	}
+	Set(count, cellSize, tileIndexes);
 }
 
 void TileMap::UpdateTransform()

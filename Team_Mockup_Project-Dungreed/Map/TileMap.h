@@ -13,7 +13,7 @@ protected:
 	sf::Vector2i cellCount;
 	sf::Vector2f cellSize;
 
-	std::vector<std::vector<int>> tileIndex;
+	std::vector<std::vector<int>> tileIndexes;
 
 public:
 	TileMap(const std::string& name = "");
@@ -25,6 +25,7 @@ public:
 
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
+	void UpdateTransform();
 
 	sf::FloatRect GetLocalBounds() const override;
 	sf::FloatRect GetGlobalBounds() const override;
@@ -35,11 +36,15 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<std::vector<int>>& tileData);
-	void Set(const TileMapData& tileMapData);
 	void SetTexture(const std::string& texId);
+	void Set(const TileMapData& tileMapData);
+	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<std::vector<int>>& tileData);
 	void SetTile(const sf::Vector2f& mousepos, const TileDatum& tile);
+	
 	TileMapData GetTileMapData();
-	sf::Vector2i GetTileIndex(const sf::Vector2f& mousepos);
-	void UpdateTransform();
+	sf::Vector2i GetTilePosition(const sf::Vector2f& mousepos);
+	int GetTileIndex(const sf::Vector2f& mousepos);
+
+	const sf::Vector2i& GetCellCount() { return cellCount; }
+	void Resize(const sf::Vector2i& size);
 };

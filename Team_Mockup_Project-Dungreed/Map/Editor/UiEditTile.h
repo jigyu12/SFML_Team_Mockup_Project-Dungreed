@@ -9,9 +9,17 @@ protected:
 	sf::Sprite selectedTile;
 	sf::Sprite saveButton;
 	sf::Sprite loadButton;
+
+	sf::Sprite xUpButton;
+	sf::Sprite xDownButton;
+
+	sf::Sprite yUpButton;
+	sf::Sprite yDownButton;
+
 	TileMap* tileMap;
-	std::vector<std::vector<int>> tileIndexes;
+
 	int selectedTileIndex;
+	int pagenumber;
 
 public:
 	UiEditTile(const std::string& name = "");

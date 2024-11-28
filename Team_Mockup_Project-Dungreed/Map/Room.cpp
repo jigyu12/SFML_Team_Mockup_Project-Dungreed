@@ -232,7 +232,7 @@ void Room::SaveMapData(const std::string& path)
 		mapData.tileMapData.name = "1fEnter";
 		mapData.tileMapData.cellcount = { 19,9 };
 		mapData.tileMapData.cellsize = { 16.f,16.f };
-		mapData.tileMapData.tileIndex = { {35, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 36, 8},
+		mapData.tileMapData.tileIndexes = { {35, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 36, 8},
 {9, 148, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 151, 7, 8},
 {9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145, 7, 8},
 {9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145, 19, 20},
@@ -384,7 +384,7 @@ void Room::SaveMapData(const std::string& path)
 		mapData.tileMapData.name = "1froom1";
 		mapData.tileMapData.cellcount = { 19,14 };
 		mapData.tileMapData.cellsize = { 16.f,16.f };
-		mapData.tileMapData.tileIndex = { {8, 8, 8, 8, 8, 8, 8, 9, 146, 160, 160, 145, 7, 8, 8, 8, 8, 8, 8},
+		mapData.tileMapData.tileIndexes = { {8, 8, 8, 8, 8, 8, 8, 9, 146, 160, 160, 145, 7, 8, 8, 8, 8, 8, 8},
 {8, 35, 20, 20, 20, 20, 20, 21, 146, 160, 160, 145, 19, 20, 20, 20, 20, 20, 36},
 {8, 9, 148, 149, 149, 149, 149, 149, 156, 160, 160, 158, 149, 149, 149, 149, 149, 151, 7},
 {8, 9, 146, 160, 161, 160, 160, 160, 160, 160, 160, 163, 160, 161, 160, 160, 160, 145, 7},

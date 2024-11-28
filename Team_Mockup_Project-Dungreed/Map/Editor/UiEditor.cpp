@@ -56,7 +56,7 @@ void UiEditor::Reset()
 	uiEditTile->Reset();
 
 	sf::Vector2f windowsize =  FRAMEWORK.GetWindowSizeF();
-	editorWindow.setSize({ 300.f, windowsize.y });
+	editorWindow.setSize({ 480.f, windowsize.y });
 	editorWindow.setFillColor({ 100,100,100,255 });
 }
 

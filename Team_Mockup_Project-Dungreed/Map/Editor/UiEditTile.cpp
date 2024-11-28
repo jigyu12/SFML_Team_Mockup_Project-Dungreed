@@ -52,11 +52,14 @@ void UiEditTile::Reset()
 {
 	tileMap->Reset();
 
+	pagenumber = 0;
+
 	std::vector<sf::Vector2f> vectiledata;
 
 	const std::unordered_map<int, TileDatum>& tiletable = TILE_TABLE->GetTable();
 
-	tileIndexes.resize(10);
+	std::vector<std::vector<int>> tileIndexes(20);
+
 	for (int j = 0;j < tileIndexes.size();++j)
 	{
 		tileIndexes[j].resize(5);
@@ -67,11 +70,11 @@ void UiEditTile::Reset()
 		int j = cnt / tileIndexes[0].size();
 		int i = cnt % tileIndexes[0].size();
 
-		tileIndexes[j][i] = tiledata.first;
-		if (++cnt == tileIndexes.size() * tileIndexes[0].size())
+		if (++cnt > tileIndexes.size() * tileIndexes[0].size() || tiledata.first >= (pagenumber + 1) * 100)
 		{
 			break;
 		}
+		tileIndexes[j][i] = tiledata.first;
 	}
 	selectedTile.setTexture(TEXTURE_MGR.Get("graphics/map/Map.png"));
 	selectedTile.setTextureRect({ (sf::Vector2i)TILE_TABLE->Undefined.startpos , {16,16} });
@@ -86,8 +89,24 @@ void UiEditTile::Reset()
 	loadButton.setPosition(250.f, 100.f);
 	loadButton.setScale(0.25f, 0.25f);
 
+	xUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
+	xUpButton.setPosition(250.f, 100.f);
+	xUpButton.setScale(0.25f, 0.25f);
+
+	xDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
+	xDownButton.setPosition(250.f, 100.f);
+	xDownButton.setScale(0.25f, 0.25f);
+
+	yUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
+	yUpButton.setPosition(250.f, 100.f);
+	yUpButton.setScale(0.25f, 0.25f);
+
+	yDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
+	yDownButton.setPosition(250.f, 100.f);
+	yDownButton.setScale(0.25f, 0.25f);
+
 	tileMap->SetTexture("graphics/map/Map.png");
-	tileMap->Set({ 5,10 }, { 16.f,16.f }, tileIndexes);
+	tileMap->Set({ 5,20 }, { 16.f,16.f }, tileIndexes);
 	tileMap->SetScale({ 3.f, 3.f });
 
 	tileMap->SetPosition({ 50.f,200.f });
@@ -100,8 +119,7 @@ void UiEditTile::Update(float dt)
 		sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToUi(InputMgr::GetMousePosition());
 		if (tileMap->GetGlobalBounds().contains(mousepos))
 		{
-			sf::Vector2i tilepos = tileMap->GetTileIndex(mousepos);
-			selectedTileIndex = tileIndexes[tilepos.y][tilepos.x];
+			selectedTileIndex = tileMap->GetTileIndex(mousepos);
 			selectedTile.setTextureRect({ (sf::Vector2i)TILE_TABLE->Get(selectedTileIndex).startpos , {16,16} });
 		}
 		else if (saveButton.getGlobalBounds().contains(mousepos))
@@ -111,8 +129,8 @@ void UiEditTile::Update(float dt)
 		else if (loadButton.getGlobalBounds().contains(mousepos))
 		{
 			((SceneMapEdit*)SCENE_MGR.GetCurrentScene())->Load();
-
 		}
+		
 	}
 }
 
@@ -121,5 +139,9 @@ void UiEditTile::Draw(sf::RenderWindow& window)
 	window.draw(selectedTile);
 	window.draw(loadButton);
 	window.draw(saveButton);
+	window.draw(xUpButton);
+	window.draw(xDownButton);
+	window.draw(yUpButton);
+	window.draw(yDownButton);
 	tileMap->Draw(window);
 }

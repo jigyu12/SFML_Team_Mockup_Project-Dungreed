@@ -43,9 +43,12 @@ void SceneMapEdit::Update(float dt)
 {
 	Scene::Update(dt);
 
-	centerpos.x += InputMgr::GetAxis(Axis::Horizontal) * speed * dt;
-	centerpos.y += InputMgr::GetAxis(Axis::Vertical) * speed * dt;
-	worldView.setCenter(centerpos);
+	if (InputMgr::GetAxisRaw(Axis::Horizontal) != 0.f || InputMgr::GetAxisRaw(Axis::Vertical) != 0.f)
+	{
+		centerpos.x += InputMgr::GetAxis(Axis::Horizontal) * speed * dt;
+		centerpos.y += InputMgr::GetAxis(Axis::Vertical) * speed * dt;
+		worldView.setCenter(centerpos);
+	}
 
 	if (InputMgr::GetMouseButton(sf::Mouse::Left))
 	{
@@ -55,11 +58,31 @@ void SceneMapEdit::Update(float dt)
 			tileMap->SetTile(mousepos, TILE_TABLE->Get(uiEditor->GetSelectedTileIndex()));
 		}
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad6))
+	{
+		sf::Vector2i count = tileMap->GetCellCount();
+		tileMap->Resize({ count.x + 1, count.y });
+	}
+	else if (InputMgr::GetKeyDown(sf::Keyboard::Numpad4))
+	{
+		sf::Vector2i count = tileMap->GetCellCount();
+		tileMap->Resize({ count.x - 1, count.y });
+	}
+	else if (InputMgr::GetKeyDown(sf::Keyboard::Numpad2))
+	{
+		sf::Vector2i count = tileMap->GetCellCount();
+		tileMap->Resize({ count.x, count.y + 1 });
+	}
+	else if (InputMgr::GetKeyDown(sf::Keyboard::Numpad8))
+	{
+		sf::Vector2i count = tileMap->GetCellCount();
+		tileMap->Resize({ count.x , count.y - 1 });
+	}
 }
 
 void SceneMapEdit::Draw(sf::RenderWindow& window)
 {
-	window.clear({ 50,50,50,255 });
+	
 	Scene::Draw(window);
 }
 
@@ -74,5 +97,6 @@ void SceneMapEdit::Save()
 
 void SceneMapEdit::Load()
 {
+
 	tileMap->Set(MapDataLoader::Load("temp.json").tileMapData);
 }
