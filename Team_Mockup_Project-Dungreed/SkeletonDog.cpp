@@ -250,6 +250,7 @@ void SkeletonDog::Update(float dt)
 				velocityY = 0.0f;
 				isAttack = false;
 				isOnGround = true;
+				attackMoveAccumTime = 0.f;
 				animator.Play("animations/SkeletonDog Move.csv");
 				state = SkeleDogState::Move;
 			}
