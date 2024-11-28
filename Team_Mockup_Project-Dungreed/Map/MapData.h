@@ -6,7 +6,7 @@ struct TileMapData
 	std::string name;
 	sf::Vector2f cellsize;
 	sf::Vector2i cellcount;
-
+	
 	std::vector<std::vector<int>> tileIndexes;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TileMapData, texId, name, cellsize, cellcount, tileIndexes)
@@ -60,7 +60,6 @@ struct SpawnData
 	int wave;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(SpawnData, type, position, wave)
-
 };
 
 struct MapData
@@ -118,6 +117,8 @@ protected:
 	~MapDataLoader() = delete;
 public:
 	static void Save(MapDataVC mapData, const std::string& path = "");
+	static void Save(MapDataVC mapData, const std::wstring& path = L"");
 	static MapDataVC Load(const std::string& path);
+	static MapDataVC Load(const std::wstring& path);
 };
 

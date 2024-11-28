@@ -4,25 +4,34 @@
 
 void MapDataLoader::Save(MapDataVC mapData, const std::string& path)
 {
-	if (path == "NULL" && path == "")
+	Save(mapData, std::wstring().assign(path.begin(), path.end()));
+}
+
+void MapDataLoader::Save(MapDataVC mapData, const std::wstring& path)
+{
+	if (path == L"NULL" && path == L"")
 	{
 		return;
 	}
-
+	
 	json j = mapData;
-	std::ofstream f("maps/" + path);
+	std::ofstream f(path);
 	f << j.dump(4) << std::endl;
 	f.close();
 }
 
 MapDataVC MapDataLoader::Load(const std::string& path)
 {
-	if (_access(("maps/" + path).c_str(), 0) == -1)
+	return Load(std::wstring().assign(path.begin(), path.end()));
+}
+
+MapDataVC MapDataLoader::Load(const std::wstring& path)
+{
+	if (_access(std::string().assign(path.begin(), path.end()).c_str(), 0) == -1)
 	{
 		return MapDataVC();
 	}
-
-	std::ifstream f("maps/" + path);
+	std::ifstream f(path);
 	json j = json::parse(f);
 
 	int version = j["version"];

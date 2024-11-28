@@ -117,7 +117,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-network-d.lib;sfml-audio-d.lib
+      <AdditionalDependencies>propsys.lib;shlwapi.lib;comctl32.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-network-d.lib;sfml-audio-d.lib
 ;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\SFML-2.6.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -150,6 +150,7 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="Framework\FileDialog.cpp" />
     <ClCompile Include="Framework\DataTableMgr.cpp" />
     <ClCompile Include="Framework\DataTable.cpp" />
     <ClCompile Include="Framework\SceneDev3.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Animator.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Framework\FileDialog.h" />
     <ClInclude Include="Framework\DefineJson.h" />
     <ClInclude Include="Framework\DataTableMgr.h" />
     <ClInclude Include="Framework\DataTable.h" />

@@ -16,6 +16,7 @@ protected:
 	sf::Sprite yUpButton;
 	sf::Sprite yDownButton;
 
+	TileMap* tileList;
 	TileMap* tileMap;
 
 	int selectedTileIndex;

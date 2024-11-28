@@ -3,8 +3,9 @@
 #include "UiEditor.h"
 #include "TileMap.h"
 #include "MapData.h"
+#include "FileDialog.h"
 
-SceneMapEdit::SceneMapEdit() : Scene(SceneIds::Dev2)
+SceneMapEdit::SceneMapEdit() : Scene(SceneIds::MapEdit)
 {
 
 }
@@ -23,7 +24,7 @@ void SceneMapEdit::Enter()
 	Scene::Enter();
 	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
 	tileMap->SetTexture("graphics/map/Map.png");
-	tileMap->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>());
+	tileMap->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1,-1)));
 
 	uiView.setSize(size);
 	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);
@@ -58,45 +59,9 @@ void SceneMapEdit::Update(float dt)
 			tileMap->SetTile(mousepos, TILE_TABLE->Get(uiEditor->GetSelectedTileIndex()));
 		}
 	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad6))
-	{
-		sf::Vector2i count = tileMap->GetCellCount();
-		tileMap->Resize({ count.x + 1, count.y });
-	}
-	else if (InputMgr::GetKeyDown(sf::Keyboard::Numpad4))
-	{
-		sf::Vector2i count = tileMap->GetCellCount();
-		tileMap->Resize({ count.x - 1, count.y });
-	}
-	else if (InputMgr::GetKeyDown(sf::Keyboard::Numpad2))
-	{
-		sf::Vector2i count = tileMap->GetCellCount();
-		tileMap->Resize({ count.x, count.y + 1 });
-	}
-	else if (InputMgr::GetKeyDown(sf::Keyboard::Numpad8))
-	{
-		sf::Vector2i count = tileMap->GetCellCount();
-		tileMap->Resize({ count.x , count.y - 1 });
-	}
 }
 
 void SceneMapEdit::Draw(sf::RenderWindow& window)
 {
-	
 	Scene::Draw(window);
-}
-
-void SceneMapEdit::Save()
-{
-	MapDataVC mapData;
-
-	mapData.tileMapData = tileMap->GetTileMapData();
-
-	MapDataLoader::Save(mapData, "temp.json");
-}
-
-void SceneMapEdit::Load()
-{
-
-	tileMap->Set(MapDataLoader::Load("temp.json").tileMapData);
 }
