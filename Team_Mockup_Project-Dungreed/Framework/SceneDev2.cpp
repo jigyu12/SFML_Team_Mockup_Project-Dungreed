@@ -12,7 +12,7 @@ SceneDev2::SceneDev2() : Scene(SceneIds::Dev2)
 void SceneDev2::Init()
 {
 	{
-		room = AddGo(new Room("tilemap"));
+		room = AddGo(new Room("Room"));
 	}
 	{
 		player = AddGo(new Player());
