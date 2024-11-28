@@ -1,17 +1,21 @@
 #pragma once
 
-#include "MapData.h"
+class TileMap;
 
-class MapObject : public GameObject
+class UiEditTile : public GameObject
 {
 protected:
 
-	sf::Sprite body;
-	Animator animator;
+	sf::Sprite selectedTile;
+	sf::Sprite saveButton;
+	sf::Sprite loadButton;
+	TileMap* tileMap;
+	std::vector<std::vector<int>> tileIndexes;
+	int selectedTileIndex;
 
 public:
-	MapObject(const std::string& name = "");
-	~MapObject() = default;
+	UiEditTile(const std::string& name = "");
+	~UiEditTile() = default;
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float angle) override;
@@ -26,5 +30,5 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void Set(ObjectData::Type objData);
+	int GetSelectedTileIndex() { return selectedTileIndex; }
 };

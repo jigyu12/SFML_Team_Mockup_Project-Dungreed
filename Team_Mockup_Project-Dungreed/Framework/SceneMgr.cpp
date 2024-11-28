@@ -4,6 +4,7 @@
 #include "SceneDev2.h"
 #include "SceneDev3.h"
 #include "SceneGame.h"
+#include "SceneMapEdit.h"
 
 void SceneMgr::Init()
 {
@@ -11,6 +12,7 @@ void SceneMgr::Init()
 	scenes.push_back(new SceneDev1());	
 	scenes.push_back(new SceneDev2());
 	scenes.push_back(new SceneDev3());
+	scenes.push_back(new SceneMapEdit());
 
 	for (auto scene : scenes)
 	{

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TileMap.h"
+#include "MapData.h"
 
 TileMap::TileMap(const std::string& name)
 	: GameObject(name)
@@ -87,14 +88,20 @@ void TileMap::Draw(sf::RenderWindow& window)
 	window.draw(va, state);
 }
 
-void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<sf::Vector2f>& tileData)
+void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<std::vector<int>>& tileIndex)
 {
 	cellCount = count;
 	cellSize = size;
-
+	this->tileIndex = tileIndex;
 	va.clear();
 	va.setPrimitiveType(sf::Quads);
 	va.resize(count.x * count.y * 4);
+
+	this->tileIndex.resize(count.y);
+	for (int i = 0;i < this->tileIndex.size();++i)
+	{
+		this->tileIndex[i].resize(count.x, -1);
+	}
 
 	sf::Vector2f posOffset[4] =
 	{
@@ -116,17 +123,61 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 			{
 				int vertexIndex = quadIndex * 4 + k;
 				va[vertexIndex].position = quadPos + posOffset[k];
-				if (quadIndex < tileData.size())
-					va[vertexIndex].texCoords = tileData[quadIndex] + posOffset[k];
+				if (i < this->tileIndex.size() && j < this->tileIndex[0].size())
+				{
+					va[vertexIndex].texCoords = TILE_TABLE->Get(this->tileIndex[i][j]).startpos + posOffset[k];
+				}
+				else
+				{
+					va[vertexIndex].texCoords = TILE_TABLE->Undefined.startpos + posOffset[k];
+				}
 			}
 		}
 	}
+}
+
+void TileMap::Set(const TileMapData& tileMapData)
+{
+	SetTexture(tileMapData.texId);
+	Set(tileMapData.cellcount, tileMapData.cellsize, tileMapData.tileIndex);
 }
 
 void TileMap::SetTexture(const std::string& texId)
 {
 	this->texId = texId;
 	texture = &TEXTURE_MGR.Get(this->texId);
+}
+
+void TileMap::SetTile(const sf::Vector2f& mousepos, const TileDatum& tile)
+{
+	sf::Vector2i cellpos = GetTileIndex(mousepos);
+
+	tileIndex[cellpos.y][cellpos.x] = tile.index;
+
+	int quadindex = (cellpos.y * cellCount.x + cellpos.x) * 4;
+	va[quadindex + 0].texCoords = { tile.startpos.x,tile.startpos.y };
+	va[quadindex + 1].texCoords = { tile.startpos.x + cellSize.x,tile.startpos.y };
+	va[quadindex + 2].texCoords = { tile.startpos.x + cellSize.x,tile.startpos.y + cellSize.y };
+	va[quadindex + 3].texCoords = { tile.startpos.x,tile.startpos.y + cellSize.y };
+}
+
+TileMapData TileMap::GetTileMapData()
+{
+	TileMapData data;
+	data.name = this->name;
+	data.cellcount = this->cellCount;
+	data.cellsize = this->cellSize;
+	data.texId = this->texId;
+	data.tileIndex = this->tileIndex;
+
+	return data;
+}
+
+sf::Vector2i TileMap::GetTileIndex(const sf::Vector2f& mousepos)
+{
+	sf::Transform inverse = transform.getInverse();
+	sf::Vector2f localPoint = inverse.transformPoint(mousepos);
+	return { (int)(localPoint.x / cellSize.x),(int)(localPoint.y / cellSize.y) };
 }
 
 void TileMap::UpdateTransform()

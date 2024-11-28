@@ -37,6 +37,10 @@
     <ClCompile Include="Map\Room.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Map\TileMap.cpp" />
+    <ClCompile Include="Map\Editor\SceneMapEdit.cpp" />
+    <ClCompile Include="Map\Editor\UiEditor.cpp" />
+    <ClCompile Include="Map\TileTable.cpp" />
+    <ClCompile Include="Map\Editor\UiEditTile.cpp" />
     <ClCompile Include="Bat.cpp">
       <Filter>Monsters</Filter>
     </ClCompile>
@@ -87,6 +91,10 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Map\Room.h" />
     <ClInclude Include="Map\TileMap.h" />
+    <ClInclude Include="Map\Editor\SceneMapEdit.h" />
+    <ClInclude Include="Map\Editor\UiEditor.h" />
+    <ClInclude Include="Map\TileTable.h" />
+    <ClInclude Include="Map\Editor\UiEditTile.h" />
     <ClInclude Include="Bat.h">
       <Filter>Monsters</Filter>
     </ClInclude>

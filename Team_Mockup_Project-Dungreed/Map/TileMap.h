@@ -1,5 +1,7 @@
 #pragma once
 
+struct TileMapData;
+
 class TileMap : public GameObject
 {
 protected:
@@ -10,6 +12,8 @@ protected:
 
 	sf::Vector2i cellCount;
 	sf::Vector2f cellSize;
+
+	std::vector<std::vector<int>> tileIndex;
 
 public:
 	TileMap(const std::string& name = "");
@@ -31,7 +35,11 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<sf::Vector2f>& tileData);
+	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<std::vector<int>>& tileData);
+	void Set(const TileMapData& tileMapData);
 	void SetTexture(const std::string& texId);
+	void SetTile(const sf::Vector2f& mousepos, const TileDatum& tile);
+	TileMapData GetTileMapData();
+	sf::Vector2i GetTileIndex(const sf::Vector2f& mousepos);
 	void UpdateTransform();
 };
