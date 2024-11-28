@@ -180,6 +180,7 @@
     <ClCompile Include="Framework\Utils.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="Map\Editor\SceneMapEdit.cpp" />
+    <ClCompile Include="SkeletonDog.cpp" />
     <ClCompile Include="Snippets\SceneXXX.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -232,6 +233,7 @@
     <ClInclude Include="Framework\Utils.h" />
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="Map\Editor\SceneMapEdit.h" />
+    <ClInclude Include="SkeletonDog.h" />
     <ClInclude Include="Snippets\SceneXXX.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>

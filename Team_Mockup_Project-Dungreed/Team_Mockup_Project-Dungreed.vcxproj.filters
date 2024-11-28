@@ -30,7 +30,6 @@
     <ClCompile Include="Monster.cpp">
       <Filter>Monsters\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Framework\SceneDev3.cpp" />
     <ClCompile Include="Map\MapObject.cpp" />
@@ -42,6 +41,12 @@
     <ClCompile Include="Map\Editor\UiEditor.cpp" />
     <ClCompile Include="Map\TileTable.cpp" />
     <ClCompile Include="Map\Editor\UiEditTile.cpp" />
+    <ClCompile Include="Bat.cpp">
+      <Filter>Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonDog.cpp">
+      <Filter>Monsters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -78,7 +83,6 @@
     <ClInclude Include="Monster.h">
       <Filter>Monsters\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="Bat.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Framework\DefineJson.h" />
     <ClInclude Include="Framework\SceneDev3.h" />
@@ -91,6 +95,12 @@
     <ClInclude Include="Map\Editor\UiEditor.h" />
     <ClInclude Include="Map\TileTable.h" />
     <ClInclude Include="Map\Editor\UiEditTile.h" />
+    <ClInclude Include="Bat.h">
+      <Filter>Monsters</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonDog.h">
+      <Filter>Monsters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">
