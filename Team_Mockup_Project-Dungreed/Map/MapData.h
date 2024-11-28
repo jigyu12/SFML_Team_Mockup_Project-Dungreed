@@ -8,13 +8,14 @@ struct TileMapData
 	sf::Vector2i cellcount;
 
 	std::vector<sf::Vector2f> tile;
+	std::vector<std::vector<int>> tileIndex;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TileMapData, texId, name, cellsize, cellcount, tile)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TileMapData, texId, name, cellsize, cellcount, tile, tileIndex)
 };
 
 struct ObjectData
 {
-	enum class Type 
+	enum class Type
 	{
 		Platform,
 		Torch,
@@ -54,7 +55,7 @@ struct SpawnData
 	{
 		Bat,
 	};
-	
+
 	Type type;
 	sf::Vector2f position;
 	int wave;
@@ -85,7 +86,7 @@ struct MapDataV1 : public MapData
 	TileMapData tileMapData;
 	std::vector<ObjectData> objectData;
 	std::vector<HitBoxData> hitBoxData;
-	
+
 
 	MapData* VersionUp() override;
 
@@ -112,15 +113,12 @@ typedef MapDataV2 MapDataVC;
 
 class MapDataLoader
 {
-	const static int currentVersion = 2;
 protected:
-	MapDataVC mapData;
-	std::string path = "NULL";
+	const static int currentVersion = 2;
+	MapDataLoader() = delete;
+	~MapDataLoader() = delete;
 public:
-	void Save(const std::string& path = "");
-	bool Load(const std::string& path);
-
-	MapDataVC& Get() { return mapData; }
-	const MapDataVC& Get() const { return mapData; }
+	static void Save(MapDataVC mapData, const std::string& path = "");
+	static MapDataVC Load(const std::string& path);
 };
 

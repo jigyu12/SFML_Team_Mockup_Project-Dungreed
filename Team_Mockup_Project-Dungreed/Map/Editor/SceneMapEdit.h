@@ -1,8 +1,20 @@
 #pragma once
-#include "Scene.h"
+
+class UiEditor;
+class TileMap;
+
 class SceneMapEdit :
-    public Scene
+	public Scene
 {
+protected:
+	UiEditor* uiEditor;
+
+	TileMap* tileMap;
+	sf::VertexArray* rect;
+
+	sf::Vector2f centerpos;
+
+	float speed;
 
 public:
 	SceneMapEdit();

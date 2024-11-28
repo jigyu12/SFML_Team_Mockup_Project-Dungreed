@@ -191,6 +191,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Map\Editor\UiEditor.cpp" />
+    <ClCompile Include="Map\TileTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="Framework\Variables.h" />
     <ClInclude Include="Framework\HitBox.h" />
     <ClInclude Include="Map\Editor\UiEditor.h" />
+    <ClInclude Include="Map\TileTable.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Team_Mockup_Project-Dungreed.rc" />

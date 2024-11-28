@@ -2,9 +2,9 @@
 #include "MapData.h"
 #include <io.h>
 
-void MapDataLoader::Save(const std::string& path)
+void MapDataLoader::Save(MapDataVC mapData, const std::string& path)
 {
-	if (this->path == "NULL" && path == "")
+	if (path == "NULL" && path == "")
 	{
 		return;
 	}
@@ -15,15 +15,14 @@ void MapDataLoader::Save(const std::string& path)
 	f.close();
 }
 
-bool MapDataLoader::Load(const std::string& path)
+MapDataVC MapDataLoader::Load(const std::string& path)
 {
 	if (_access(path.c_str(), 0) == -1)
 	{
-		return false;
+		return MapDataVC();
 	}
 
-	this->path = path;
-	std::ifstream f(this->path);
+	std::ifstream f(path);
 	json j = json::parse(f);
 
 	int version = j["version"];
@@ -52,9 +51,9 @@ bool MapDataLoader::Load(const std::string& path)
 		delete oldData;
 	}
 
-	this->mapData = *((MapDataVC*)saveData);
+	MapDataVC mapData = *((MapDataVC*)saveData);
 	delete saveData;
-
+	return mapData;
 }
 
 MapDataV1::MapDataV1()

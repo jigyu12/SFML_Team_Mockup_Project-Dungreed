@@ -56,7 +56,7 @@ void Room::SetOrigin(Origins preset)
 	originPreset = preset;
 	if (originPreset != Origins::Custom)
 	{
-		Utils::SetOrigin(subBackground,originPreset);
+		Utils::SetOrigin(subBackground, originPreset);
 		tileMap->SetOrigin(originPreset);
 		origin = tileMap->GetOrigin();
 		for (auto& hitBox : hitBoxes)
@@ -144,11 +144,8 @@ void Room::LoadMapData(const std::string& path)
 	}
 	hitBoxes.clear();
 
-	MapDataLoader loader;
-	loader.Load(path);
-	mapData = loader.Get();
+	mapData = MapDataLoader::Load(path);
 
-	const MapDataVC& mapData = loader.Get();
 	tileMap->SetTexture(mapData.tileMapData.texId);
 	tileMap->Set(mapData.tileMapData.cellcount, mapData.tileMapData.cellsize, mapData.tileMapData.tile);
 
@@ -194,11 +191,6 @@ void Room::LoadMapData(const std::string& path)
 
 void Room::SaveMapData(const std::string& path)
 {
-	MapDataLoader loader;
-
-	MapDataVC& mapData = loader.Get();
-	mapData = this->mapData;
-
 	mapData.tileMapData.texId = "graphics/map/Map.png";
 	if (path == "1fenter.json")
 	{
@@ -826,7 +818,7 @@ void Room::SaveMapData(const std::string& path)
 { 64.f,176.f },
 		};
 	}
-	loader.Save(path);
+	MapDataLoader::Save(mapData, path);
 }
 
 void Room::SetConnectedRoom(Room* room, HitBoxData::Type connection)
@@ -846,7 +838,7 @@ void Room::EnterPortal(HitBox* portal)
 		if (hitbox.first == portal)
 		{
 			active = false;
-			
+
 			connectedRoom[(int)hitbox.second.type]->ExitPortal(hitbox.second.type);
 		}
 	}
