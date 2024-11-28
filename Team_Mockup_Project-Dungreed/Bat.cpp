@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Bat.h"
+#include "Room.h"
 
 Bat::Bat(const std::string& name)
 	: Monster(name)
@@ -57,11 +58,11 @@ void Bat::Reset()
 	{
 		std::cerr << "target player was nullptr" << std::endl;
 
-		return; 
+		return;
 	}
 	sortingOrder = target->sortingOrder - 1;
-	direction = Utils::GetNormal({ target->GetPosition().x - position.x , target->GetPosition().y - position.y - target->GetLocalBounds().height / 2.f});
-	
+	direction = Utils::GetNormal({ target->GetPosition().x - position.x , target->GetPosition().y - position.y - target->GetLocalBounds().height / 2.f });
+
 
 	hp = 6;
 	speed = 30.f;
@@ -83,7 +84,7 @@ void Bat::Reset()
 	deathAccumTime = 0.f;
 	deathTimeDelay = 1.f;
 	isDead = false;
-	
+
 	animator.SetTarget(&body);
 	animator.Play("animations/Bat Idle.csv");
 
@@ -91,13 +92,13 @@ void Bat::Reset()
 
 	state = BatState::Idle;
 
-	movableBound = {-FRAMEWORK.GetWindowBounds().width / 2.f / 6.f, -FRAMEWORK.GetWindowBounds().height / 2.f / 6.f,FRAMEWORK.GetWindowBounds().width / 6.f, FRAMEWORK.GetWindowBounds().height / 6.f };
+	movableBound = { -FRAMEWORK.GetWindowBounds().width / 2.f / 6.f, -FRAMEWORK.GetWindowBounds().height / 2.f / 6.f,FRAMEWORK.GetWindowBounds().width / 6.f, FRAMEWORK.GetWindowBounds().height / 6.f };
 
 	detectionRange.setFillColor(sf::Color::Transparent);
 	detectionRange.setOutlineColor(sf::Color::Blue);
 	detectionRange.setOutlineThickness(1.f);
 	detectionRange.setPosition(body.getPosition());
-	detectionRange.setRadius(50.f);
+	detectionRange.setRadius(20.f);
 	detectionRange.setOrigin({ detectionRange.getLocalBounds().width / 2.f, detectionRange.getLocalBounds().height / 2.f });
 
 	shader.loadFromFile("shader/red.frag", sf::Shader::Type::Fragment);
@@ -106,7 +107,7 @@ void Bat::Reset()
 void Bat::Update(float dt)
 {
 	detectionRange.setPosition(body.getPosition());
-	
+
 	switch (state)
 	{
 	case Bat::BatState::Idle:
@@ -160,7 +161,7 @@ void Bat::Update(float dt)
 						dirY = dirY < EPSILON ? -1 : 1;
 					}
 				}
-				direction = {dirX, dirY};
+				direction = { dirX, dirY };
 				float mag = Utils::Magnitude(direction);
 				if (mag > 1.f)
 				{
@@ -180,8 +181,45 @@ void Bat::Update(float dt)
 				idleRandMoveAccumTime += dt;
 				if (idleRandMoveAccumTime < idleRandMoveTimeDelay)
 				{
+					sf::Vector2f oldPos = position;
+
 					sf::Vector2f newPosition = position + direction * speed * dt;
-					if (newPosition.x - body.getLocalBounds().width / 2.f < movableBound.left )
+					SetPosition(newPosition);
+					hitbox.UpdateTr(body, GetLocalBounds());
+
+					auto& roomHitBoxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+					std::vector<std::pair<HitBox*, HitBoxData>> walls;
+					for (auto& hitBox : roomHitBoxes)
+					{
+						if (hitBox.second.type != HitBoxData::Type::Downable)
+						{
+							walls.push_back(hitBox);
+						}
+					}
+
+					for (const auto& wall : walls)
+					{
+						if (Utils::CheckCollision(hitbox, *wall.first))
+						{
+							direction = { -direction.x, -direction.y };
+
+							if (direction.x > 0)
+							{
+								SetScale({ 1.f, 1.f });
+							}
+							else
+							{
+								SetScale({ -1.f, 1.f });
+							}
+
+							oldPos = oldPos + direction * speed * dt;
+							SetPosition(oldPos);
+							hitbox.UpdateTr(body, GetLocalBounds());
+
+							return;
+						}
+					}
+					/*if (newPosition.x - body.getLocalBounds().width / 2.f < movableBound.left )
 					{
 						SetPosition({newPosition.x = movableBound.left + body.getLocalBounds().width / 2.f, newPosition.y});
 						direction = {-direction.x, -direction.y};
@@ -204,7 +242,7 @@ void Bat::Update(float dt)
 						SetPosition({ newPosition.x, newPosition.y = movableBound.top + movableBound.height - body.getLocalBounds().height / 2.f });
 						direction = { -direction.x, -direction.y };
 						isRandMoving = false;
-					}
+					}*/
 
 					SetPosition(newPosition);
 				}
@@ -217,7 +255,7 @@ void Bat::Update(float dt)
 			}
 		}
 	}
-		break;
+	break;
 	case Bat::BatState::Move:
 	{
 		if (Utils::Distance(detectionRange.getPosition(), { target->GetPosition().x,  target->GetPosition().y - target->GetLocalBounds().height / 2.f }) > target->GetLocalBounds().height / 2.f + detectionRange.getRadius())
@@ -245,8 +283,8 @@ void Bat::Update(float dt)
 		sf::Vector2f newPosition = position + direction * speed * dt;
 		SetPosition(newPosition);
 	}
-		break;
-	case Bat::BatState::Death: 
+	break;
+	case Bat::BatState::Death:
 	{
 		deathAccumTime += dt;
 		if (deathAccumTime > deathTimeDelay)
@@ -254,7 +292,7 @@ void Bat::Update(float dt)
 			SCENE_MGR.GetCurrentScene()->RemoveGo(this);
 		}
 	}
-		break;
+	break;
 	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
@@ -281,7 +319,7 @@ void Bat::Update(float dt)
 		}
 	}
 
-	
+
 	animator.Update(dt);
 
 	hitbox.UpdateTr(body, GetLocalBounds());

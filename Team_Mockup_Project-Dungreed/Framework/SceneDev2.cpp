@@ -19,7 +19,7 @@ void SceneDev2::Init()
 	}
 	{
 		Bat* bat = AddGo(new Bat());
-		bat->SetPosition({ 140.f, -80.f });
+		bat->SetPosition({ 100.f, -40.f });
 		batList.push_back(bat);
 	}
 	{
