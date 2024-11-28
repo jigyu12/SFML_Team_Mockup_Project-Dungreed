@@ -286,3 +286,22 @@ bool Utils::PolygonsIntersect(const std::vector<sf::Vector2f>& polygonA, const s
     }
     return true;
 }
+
+CollisionState Utils::GetCollsionState(const sf::FloatRect& player, const sf::FloatRect& stage)
+{
+    CollisionState state;
+    if (stage.top + stage.height > player.top
+        && player.top + player.height > stage.top + stage.height)
+        state.Up = true;
+    if (stage.left + stage.width > player.left
+        && player.left + player.width > stage.left + stage.width)
+        state.Left = true;
+    if (player.left + player.width > stage.left
+        && stage.left > player.left)
+        state.Right = true;
+    if (player.top + player.height > stage.top
+        && stage.top > player.top)
+        state.Down = true;
+
+    return state;
+}

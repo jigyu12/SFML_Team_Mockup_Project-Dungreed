@@ -60,5 +60,7 @@ public:
 	static std::vector<sf::Vector2f> GetRectanglePointsFromBounds(const sf::FloatRect& localBounds);
 	static bool PolygonsIntersect(const std::vector<sf::Vector2f>& polygonA, const sf::Transform& transformA,
 		const std::vector<sf::Vector2f>& polygonB, const sf::Transform& transformB);
+
+	static CollisionState GetCollsionState(const sf::FloatRect& player, const sf::FloatRect& stage);
 };
 

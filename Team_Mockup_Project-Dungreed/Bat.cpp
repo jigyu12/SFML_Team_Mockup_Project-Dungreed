@@ -121,7 +121,10 @@ void Bat::Update(float dt)
 			isRandMoving = false;
 			state = BatState::Move;
 		}
+		sf::Vector2f oldPos = position;
 
+		sf::Vector2f newPosition = position + direction * speed * dt;
+		SetPosition(newPosition);
 		if (idleAccumTime > idleTimeDelay)
 		{
 			if (!isRandMoving)
@@ -161,12 +164,22 @@ void Bat::Update(float dt)
 						dirY = dirY < EPSILON ? -1 : 1;
 					}
 				}
+
 				direction = { dirX, dirY };
 				float mag = Utils::Magnitude(direction);
+
 				if (mag > 1.f)
 				{
 					Utils::Normailize(direction);
 				}
+
+
+
+				do
+				{
+					direction = Utils::RandomInUnitCircle();
+				} while (Utils::SqrMagnitude(direction) == 0.f);
+
 				if (direction.x > 0)
 				{
 					SetScale({ 1.f, 1.f });
@@ -181,10 +194,7 @@ void Bat::Update(float dt)
 				idleRandMoveAccumTime += dt;
 				if (idleRandMoveAccumTime < idleRandMoveTimeDelay)
 				{
-					sf::Vector2f oldPos = position;
-
-					sf::Vector2f newPosition = position + direction * speed * dt;
-					SetPosition(newPosition);
+					
 					hitbox.UpdateTr(body, GetLocalBounds());
 
 					auto& roomHitBoxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
@@ -197,12 +207,21 @@ void Bat::Update(float dt)
 						}
 					}
 
+
+
 					for (const auto& wall : walls)
 					{
 						if (Utils::CheckCollision(hitbox, *wall.first))
 						{
-							direction = { -direction.x, -direction.y };
-
+							CollisionState colstate = Utils::GetCollsionState(hitbox.rect.getGlobalBounds(), wall.first->rect.getGlobalBounds());
+							if ((colstate.Down && direction.y > 0.f) || (colstate.Up && direction.y < 0.f))
+							{
+								direction.y *= -1.f;
+							}
+							if ((colstate.Left && direction.x < 0.f) || (colstate.Right && direction.x > 0.f))
+							{
+								direction.x *= -1.f;
+							}
 							if (direction.x > 0)
 							{
 								SetScale({ 1.f, 1.f });
@@ -212,10 +231,8 @@ void Bat::Update(float dt)
 								SetScale({ -1.f, 1.f });
 							}
 
-							oldPos = oldPos + direction * speed * dt;
-							SetPosition(oldPos);
 							hitbox.UpdateTr(body, GetLocalBounds());
-
+							idleAccumTime = 0.f;
 							isRandMoving = false;
 
 							return;

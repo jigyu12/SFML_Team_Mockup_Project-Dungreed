@@ -46,3 +46,11 @@ enum class Sides
 	Right,
 	None,
 };
+
+struct CollisionState
+{
+	bool Up = false;
+	bool Down = false;
+	bool Left = false;
+	bool Right = false;
+};

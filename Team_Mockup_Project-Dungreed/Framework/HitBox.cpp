@@ -23,3 +23,9 @@ void HitBox::Draw(sf::RenderWindow& window)
 	if (Variables::isDrawHitBox)
 		window.draw(rect);
 }
+
+sf::Vector2f HitBox::GetCenter()
+{
+	sf::Vector2f localcenter = rect.getLocalBounds().getSize() * 0.5f;
+	return rect.getTransform().transformPoint(localcenter);
+}

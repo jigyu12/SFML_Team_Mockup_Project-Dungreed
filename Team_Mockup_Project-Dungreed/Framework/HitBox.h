@@ -10,4 +10,5 @@ public:
 	void UpdateTr(const sf::Transformable& tr, const sf::FloatRect& localBound);
 	void SetColor(const sf::Color& color) { rect.setOutlineColor(color); }
 	void Draw(sf::RenderWindow& window);
+	sf::Vector2f GetCenter();
 };
