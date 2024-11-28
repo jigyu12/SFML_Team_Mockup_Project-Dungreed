@@ -216,6 +216,8 @@ void Bat::Update(float dt)
 							SetPosition(oldPos);
 							hitbox.UpdateTr(body, GetLocalBounds());
 
+							isRandMoving = false;
+
 							return;
 						}
 					}
