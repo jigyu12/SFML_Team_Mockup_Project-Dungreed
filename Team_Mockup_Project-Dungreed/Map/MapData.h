@@ -7,10 +7,9 @@ struct TileMapData
 	sf::Vector2f cellsize;
 	sf::Vector2i cellcount;
 
-	std::vector<sf::Vector2f> tile;
 	std::vector<std::vector<int>> tileIndex;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TileMapData, texId, name, cellsize, cellcount, tile, tileIndex)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TileMapData, texId, name, cellsize, cellcount, tileIndex)
 };
 
 struct ObjectData

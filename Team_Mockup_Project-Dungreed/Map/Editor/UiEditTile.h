@@ -1,18 +1,21 @@
 #pragma once
 
-class UiEditTile;
+class TileMap;
 
-class UiEditor : public GameObject
+class UiEditTile : public GameObject
 {
 protected:
 
-	sf::RectangleShape editorWindow;
-
-	UiEditTile* uiEditTile;
+	sf::Sprite selectedTile;
+	sf::Sprite saveButton;
+	sf::Sprite loadButton;
+	TileMap* tileMap;
+	std::vector<std::vector<int>> tileIndexes;
+	int selectedTileIndex;
 
 public:
-	UiEditor(const std::string& name = "");
-	~UiEditor() = default;
+	UiEditTile(const std::string& name = "");
+	~UiEditTile() = default;
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float angle) override;
@@ -27,6 +30,5 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	int GetSelectedTileIndex();
+	int GetSelectedTileIndex() { return selectedTileIndex; }
 };
-

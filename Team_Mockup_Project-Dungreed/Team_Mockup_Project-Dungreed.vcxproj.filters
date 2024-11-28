@@ -41,6 +41,7 @@
     <ClCompile Include="Map\Editor\SceneMapEdit.cpp" />
     <ClCompile Include="Map\Editor\UiEditor.cpp" />
     <ClCompile Include="Map\TileTable.cpp" />
+    <ClCompile Include="Map\Editor\UiEditTile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -89,6 +90,7 @@
     <ClInclude Include="Map\Editor\SceneMapEdit.h" />
     <ClInclude Include="Map\Editor\UiEditor.h" />
     <ClInclude Include="Map\TileTable.h" />
+    <ClInclude Include="Map\Editor\UiEditTile.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">

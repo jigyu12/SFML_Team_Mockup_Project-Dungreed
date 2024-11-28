@@ -10,19 +10,19 @@ void MapDataLoader::Save(MapDataVC mapData, const std::string& path)
 	}
 
 	json j = mapData;
-	std::ofstream f(path);
+	std::ofstream f("maps/" + path);
 	f << j.dump(4) << std::endl;
 	f.close();
 }
 
 MapDataVC MapDataLoader::Load(const std::string& path)
 {
-	if (_access(path.c_str(), 0) == -1)
+	if (_access(("maps/" + path).c_str(), 0) == -1)
 	{
 		return MapDataVC();
 	}
 
-	std::ifstream f(path);
+	std::ifstream f("maps/" + path);
 	json j = json::parse(f);
 
 	int version = j["version"];

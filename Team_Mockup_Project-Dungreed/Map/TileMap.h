@@ -35,11 +35,11 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<sf::Vector2f>& tileData);
 	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<std::vector<int>>& tileData);
+	void Set(const TileMapData& tileMapData);
 	void SetTexture(const std::string& texId);
-	void SetTile(const sf::Vector2i& pos, const sf::Vector2f& tile);
-	TileMapData GetTileData();
-	sf::Vector2i GetTileIndex();
+	void SetTile(const sf::Vector2f& mousepos, const TileDatum& tile);
+	TileMapData GetTileMapData();
+	sf::Vector2i GetTileIndex(const sf::Vector2f& mousepos);
 	void UpdateTransform();
 };

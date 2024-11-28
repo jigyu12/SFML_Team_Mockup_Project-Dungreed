@@ -10,7 +10,6 @@ protected:
 	UiEditor* uiEditor;
 
 	TileMap* tileMap;
-	sf::VertexArray* rect;
 
 	sf::Vector2f centerpos;
 
@@ -26,5 +25,8 @@ public:
 
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void Save();
+	void Load();
 };
 

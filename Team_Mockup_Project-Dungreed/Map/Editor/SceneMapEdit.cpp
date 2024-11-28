@@ -2,6 +2,7 @@
 #include "SceneMapEdit.h"
 #include "UiEditor.h"
 #include "TileMap.h"
+#include "MapData.h"
 
 SceneMapEdit::SceneMapEdit() : Scene(SceneIds::Dev2)
 {
@@ -46,13 +47,32 @@ void SceneMapEdit::Update(float dt)
 	centerpos.y += InputMgr::GetAxis(Axis::Vertical) * speed * dt;
 	worldView.setCenter(centerpos);
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Q))
+	if (InputMgr::GetMouseButton(sf::Mouse::Left))
 	{
-		tileMap->SetTile({ 1,1 }, TILE_TABLE->Get(3).startpos);
+		sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
+		if (tileMap->GetGlobalBounds().contains(mousepos))
+		{
+			tileMap->SetTile(mousepos, TILE_TABLE->Get(uiEditor->GetSelectedTileIndex()));
+		}
 	}
 }
 
 void SceneMapEdit::Draw(sf::RenderWindow& window)
 {
+	window.clear({ 50,50,50,255 });
 	Scene::Draw(window);
+}
+
+void SceneMapEdit::Save()
+{
+	MapDataVC mapData;
+
+	mapData.tileMapData = tileMap->GetTileMapData();
+
+	MapDataLoader::Save(mapData, "temp.json");
+}
+
+void SceneMapEdit::Load()
+{
+	tileMap->Set(MapDataLoader::Load("temp.json").tileMapData);
 }

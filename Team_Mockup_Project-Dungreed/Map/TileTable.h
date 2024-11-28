@@ -1,6 +1,6 @@
 #pragma once
 
-struct DataTile
+struct TileDatum
 {
 	int index;
 	sf::Vector2f startpos;
@@ -10,10 +10,10 @@ struct DataTile
 class TileTable : public DataTable
 {
 public:
-	const static DataTile Undefined;
+	const static TileDatum Undefined;
 
 protected:
-	std::unordered_map<int, DataTile> table;
+	std::unordered_map<int, TileDatum> table;
 	std::string filePath = "tables/tile_table.csv";
 
 public:
@@ -23,7 +23,7 @@ public:
 	bool Load() override;
 	void Release() override;
 
-	const DataTile& Get(int idx);
-	const std::unordered_map<int, DataTile>& GetTable();
+	const TileDatum& Get(int idx);
+	const std::unordered_map<int, TileDatum>& GetTable();
 };
 

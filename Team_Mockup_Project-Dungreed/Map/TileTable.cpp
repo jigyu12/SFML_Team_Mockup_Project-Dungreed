@@ -3,7 +3,7 @@
 #include <io.h>
 #include "rapidcsv.h"
 
-const DataTile TileTable::Undefined = { -1, {208.f,32.f} };
+const TileDatum TileTable::Undefined = { -1, {208.f,32.f} };
 
 bool TileTable::Load()
 {
@@ -24,7 +24,7 @@ bool TileTable::Load()
 			auto find = table.find(id);
 			if (find == table.end())
 			{
-				DataTile dataTile;
+				TileDatum dataTile;
 				dataTile.index = id;
 				dataTile.startpos.x = std::stof(row[1]);
 				dataTile.startpos.y = std::stof(row[2]);
@@ -48,7 +48,7 @@ void TileTable::Release()
 	table.clear();
 }
 
-const DataTile& TileTable::Get(int idx)
+const TileDatum& TileTable::Get(int idx)
 {
 	auto find = table.find(idx);
 	if (find == table.end())
@@ -58,7 +58,7 @@ const DataTile& TileTable::Get(int idx)
 	return find->second;
 }
 
-const std::unordered_map<int, DataTile>& TileTable::GetTable()
+const std::unordered_map<int, TileDatum>& TileTable::GetTable()
 {
 	return table;
 }
