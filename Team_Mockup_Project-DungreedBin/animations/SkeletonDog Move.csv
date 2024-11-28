@@ -1,0 +1,11 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Move,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/monster/SkelDogRun0.png,0,"0",20,18,0
+graphics/monster/SkelDogRun1.png,0,"0",20,18,0
+graphics/monster/SkelDogRun2.png,0,"0",20,18,0
+graphics/monster/SkelDogRun3.png,0,"0",20,18,0
+graphics/monster/SkelDogRun4.png,0,"0",20,18,0
+graphics/monster/SkelDogRun5.png,0,"0",20,18,0
+graphics/monster/SkelDogRun6.png,0,"0",20,18,0
