@@ -32,6 +32,10 @@ protected:
 	float attackTimeDelay;
 	bool isAttack;
 
+	float attackMoveAccumTime;
+	float attackMoveTimeDelay;
+	bool isAttackMove;
+
 	float hitAccumTime;
 	float hitTimeDelay;
 	bool isDamaged;
@@ -42,9 +46,16 @@ protected:
 
 	sf::RectangleShape detectionRange;
 
+	sf::RectangleShape detectionLine;
+
 	sf::FloatRect movableBound;
 
 	sf::Shader shader;
+
+	float velocityY;
+	float gravity;
+	float jumpSpeed;
+	bool isOnGround;
 
 public:
 	SkeletonDog(const std::string& name = "SkeletonDog");
@@ -73,7 +84,15 @@ public:
 		return body.getGlobalBounds();
 	}
 
-	void Attack();
+	/// <summary>
+	/// 각 Scene의 Scene::Enter(); 의 뒤에 사용해야 적용됨.
+	/// </summary>
+	void SetStartDirectionX(const float dirX)
+	{
+		direction = Utils::GetNormal({ dirX, 0.f });
+		detectionLine.setPosition(body.getPosition() + direction * -10.f);
+	}
+
 	void OnDamaged();
 	void Jump();
 };

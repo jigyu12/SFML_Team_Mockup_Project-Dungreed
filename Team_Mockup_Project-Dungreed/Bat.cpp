@@ -97,7 +97,7 @@ void Bat::Reset()
 	detectionRange.setOutlineColor(sf::Color::Blue);
 	detectionRange.setOutlineThickness(1.f);
 	detectionRange.setPosition(body.getPosition());
-	detectionRange.setRadius(80.f);
+	detectionRange.setRadius(50.f);
 	detectionRange.setOrigin({ detectionRange.getLocalBounds().width / 2.f, detectionRange.getLocalBounds().height / 2.f });
 
 	shader.loadFromFile("shader/red.frag", sf::Shader::Type::Fragment);

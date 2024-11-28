@@ -43,8 +43,8 @@ void SceneDev2::Enter()
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
 
-	//room->SaveMapData("1froom1.json");
-	//room->LoadMapData("1froom1.json");
+	room->SaveMapData("1froom1.json");
+	room->LoadMapData("1froom1.json");
 	
 	Scene::Enter();
 }
