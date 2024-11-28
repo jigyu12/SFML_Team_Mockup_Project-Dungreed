@@ -79,6 +79,7 @@ void SceneDev3::Update(float dt)
 			{
 				roome->EnterPortal(hitbox.first);
 			}
+			
 		}
 	}
 	else if (room1->IsActive())

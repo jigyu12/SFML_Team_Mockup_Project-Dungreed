@@ -65,7 +65,7 @@ Player::CollisionState Player::GetCollsionState(const sf::FloatRect& player, con
 void Player::Init()
 {
 	speed = 100.f;
-	jumpForce = 400.f;
+	jumpForce = 200.f;
 	gravity = 300.f;
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 2;
@@ -82,7 +82,7 @@ void Player::Reset()
 	sword.setTexture(TEXTURE_MGR.Get(swordId));
 
 	sword.setOrigin(Utils::SetOrigin(sword, Origins::BC));
-
+	hitbox.SetColor(sf::Color::Blue);
 
 	SetPosition({ 0.f,0.f });
 	SetOrigin(Origins::BC);
@@ -101,13 +101,24 @@ void Player::Update(float dt)
 	case Player::Status::Jump:
 		UpdateJump(dt);
 		break;
+	case Player::Status::Dash:
+		UpdateDash(dt);
+		break;
+	case Player::Status::DownJump:
+		UpdateDownJump(dt);
+		break;
 	default:
 		break;
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::LShift))
+	{
+		SetStatus(Player::Status::Dash);
+	}
+	if (InputMgr::GetKey(sf::Keyboard::S) && InputMgr::GetKeyDown(sf::Keyboard::Space))
+	{
+		SetStatus(Player::Status::DownJump);
+	}
 
-	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
-	direction.x = horizontalInput;
-	velocity.x = direction.x * speed;
 
 
 	SetPosition(position + velocity * dt);
@@ -119,38 +130,110 @@ void Player::Update(float dt)
 	look = Utils::GetNormal(mouseworldPos - sword.getPosition());
 	sword.setRotation(Utils::Angle(look) + 90);
 	SetOrigin(Origins::BC);
-	
-	hitbox.SetColor(sf::Color::Blue);
+
+
 	hitbox.UpdateTr(body, GetGlobalBounds());
-
-	auto hitboxBounds = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
-	for (auto& startHitBox : hitboxBounds)
-	{
-		if (Utils::CheckCollision(*startHitBox.first, hitbox))
-		{
-			Player::CollisionState state = GetCollsionState(hitbox.rect.getGlobalBounds(), startHitBox.first->rect.getGlobalBounds());
-			if (state.Up)
-			{
-				if (velocity.y < 0)
-					velocity.y *= -0.8f;
-			}
-			if (state.Down)
-			{
-				Player::Status::Ground;
-				position.y = startHitBox.first->rect.getGlobalBounds().top;
-				SetPosition(position);
-				velocity.y = 0.f;
-			}
-
-			
-			
-		}
-	}
-
+	
 }
 
 void Player::LateUpdate(float dt)
 {
+	auto playerGlobalBounds = hitbox.rect.getGlobalBounds();
+	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
+	auto hitboxBounds = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+	bool collided = false;
+	for (auto& startHitBox : hitboxBounds)
+	{
+		if (Utils::CheckCollision(*startHitBox.first, hitbox))
+		{
+			
+			Player::CollisionState state = GetCollsionState(playerGlobalBounds, startHitBox.first->rect.getGlobalBounds());
+			if (state.Up)
+			{
+				switch (startHitBox.second.type)
+				{
+				case HitBoxData::Type::Immovable:
+					if (velocity.y < 0)
+						velocity.y = 50.f;
+					collided = true;
+					break;
+				case HitBoxData::Type::Downable:
+					collided = true;
+						break;
+				default:
+					break;
+				}
+			}
+			if ((state.Down) && velocity.y >= 0.f && startHitBox.first->rect.getGlobalBounds().contains(position))
+			{
+				switch (startHitBox.second.type)
+				{
+				case HitBoxData::Type::Immovable:
+					SetStatus(Status::Ground);
+					position.y = startHitBox.first->rect.getGlobalBounds().top;
+					SetPosition(position);
+					velocity.y = 0.f;
+					collided = true;
+					break;
+				case HitBoxData::Type::Downable:
+					if (status != Status::DownJump || startHitBox.first != DownPlatform)
+					{
+						SetStatus(Status::Ground);
+						position.y = startHitBox.first->rect.getGlobalBounds().top;
+						SetPosition(position);
+						DownPlatform = startHitBox.first;
+						collided = true;
+					}
+					break;
+				default:
+					break;
+				}
+				
+			}
+			if (state.Right && (status == Status::Jump || (state.Down==false)))
+			{
+				switch (startHitBox.second.type)
+				{
+				case HitBoxData::Type::Immovable:
+					if (horizontalInput>0)
+					{
+						position.x = startHitBox.first->rect.getGlobalBounds().left - startHitBox.first->rect.getGlobalBounds().width / 2;
+						SetPosition(position);
+						collided = true;
+					}	
+					break;
+				case HitBoxData::Type::Downable:
+					break;
+				default:
+					break;
+				}
+			}
+			if (state.Left && (status == Status::Jump || (state.Down == false)))
+			{
+				switch (startHitBox.second.type)
+				{
+				case HitBoxData::Type::Immovable:
+					if (horizontalInput < 0)
+					{
+						position.x = startHitBox.first->rect.getGlobalBounds().left + startHitBox.first->rect.getGlobalBounds().width
+							+ hitbox.rect.getGlobalBounds().width / 2;
+						SetPosition(position);
+						collided = true;
+					}
+					break;
+				case HitBoxData::Type::Downable:
+					break;
+				default:
+					break;
+				}
+			}
+
+		}
+	}
+	if (!collided && status == Status::Ground)
+	{
+		status = Status::Jump;
+	}
 }
 
 
@@ -167,6 +250,13 @@ void Player::SetStatus(Status status)
 		velocity.y = -jumpForce;
 		jumpTimer = 0.f;
 		break;
+	case Player::Status::Dash:
+		velocity = look * dashSpeed;
+		dashTimer = 0.f;
+		break;
+	case Player::Status::DownJump:
+		velocity.y = downSpeed;
+		break;
 	default:
 		break;
 
@@ -175,30 +265,49 @@ void Player::SetStatus(Status status)
 
 void Player::UpdateGrounded(float dt)
 {
+	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
+	direction.x = horizontalInput;
+	velocity.x = direction.x * speed;
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
 	{
 		SetStatus(Player::Status::Jump);
 	}
+
 
 }
 
 void Player::UpdateJump(float dt)
 {
 	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
-
+	direction.x = horizontalInput;
+	velocity.x = direction.x * speed;
 	jumpTimer += dt;
 
-	if (jumpTimer < 1.f && InputMgr::GetKey(sf::Keyboard::Space))
-	{
-		velocity.y = -jumpForce;
-	}
-	else
+	if (jumpTimer > 1.f || !InputMgr::GetKey(sf::Keyboard::Space) || velocity.y > 0.f)
 	{
 		velocity.y += gravity * dt;
 	}
+}
 
+void Player::UpdateDownJump(float dt)
+{
+	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
+	direction.x = horizontalInput;
+	velocity.x = direction.x * speed;
+	if (velocity.y > 0.f)
+	{
+		velocity.y += gravity * dt;
+	}
+	
+}
 
-
+void Player::UpdateDash(float dt)
+{
+	dashTimer += dt;
+	if (dashTimer > 0.3f)
+	{
+		SetStatus(Status::Jump);
+	}
 }
 
 void Player::Draw(sf::RenderWindow& window)
