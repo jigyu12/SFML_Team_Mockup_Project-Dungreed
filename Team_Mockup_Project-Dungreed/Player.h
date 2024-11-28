@@ -9,7 +9,8 @@ public:
 	{
 		Ground,
 		Jump,
-
+		DownJump,
+		Dash,
 	};
 
 	struct CollisionState
@@ -29,9 +30,16 @@ protected:
 	std::string playerId = "graphics/player/CharWalk0.png";
 	std::string swordId = "graphics/player/Sword.png";
 
+	HitBox* DownPlatform;
+
 	float gravity;
 	float jumpForce;
 	float jumpTimer;
+
+	float dashTimer;
+	float dashSpeed = 40.f;
+	float downSpeed = 100.f;
+	
 public:
 	Player(const std::string& name = "Player");
 	virtual ~Player() = default;
@@ -64,4 +72,6 @@ public:
 	void SetStatus(Status status);
 	void UpdateGrounded(float dt);
 	void UpdateJump(float dt);
+	void UpdateDownJump(float dt);
+	void UpdateDash(float dt);
 };
