@@ -17,6 +17,14 @@ public:
 		Count
 	};
 
+	struct CollisionState
+	{
+		bool Up = false;
+		bool Down = false;
+		bool Left = false;
+		bool Right = false;
+	};
+
 protected:
 	SkeleDogState state;
 
@@ -95,4 +103,6 @@ public:
 
 	void OnDamaged();
 	void Jump();
+
+	CollisionState GetCollsionState(const sf::FloatRect& monster, const sf::FloatRect& stage);
 };

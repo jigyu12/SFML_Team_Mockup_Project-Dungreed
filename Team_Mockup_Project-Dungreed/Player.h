@@ -28,7 +28,7 @@ protected:
 	sf::Vector2f velocity;
 	sf::Vector2f look;
 	std::string playerId = "graphics/player/CharWalk0.png";
-	std::string swordId = "graphics/player/Sword.png";
+	std::string swordId = "graphics/weapon/Sword.png";
 
 	HitBox* DownPlatform;
 

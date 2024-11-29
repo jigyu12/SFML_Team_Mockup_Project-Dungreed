@@ -47,6 +47,9 @@
     <ClCompile Include="SkeletonDog.cpp">
       <Filter>Monsters</Filter>
     </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Weapons\Weapon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -101,6 +104,9 @@
     <ClInclude Include="SkeletonDog.h">
       <Filter>Monsters</Filter>
     </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Weapons\Weapon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">
@@ -108,6 +114,12 @@
     </Filter>
     <Filter Include="Monsters\Monster">
       <UniqueIdentifier>{42d0b12e-3c6a-4528-8f75-fae8e5927743}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Weapons">
+      <UniqueIdentifier>{dc3cb11a-890a-4a85-a94e-a2d3d34fb138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Weapons\Weapon">
+      <UniqueIdentifier>{e766e0cd-4f95-4466-8f39-9c7cdb54f40b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

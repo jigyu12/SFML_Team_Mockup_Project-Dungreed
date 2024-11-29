@@ -194,6 +194,7 @@
     <ClCompile Include="Map\Editor\UiEditor.cpp" />
     <ClCompile Include="Map\TileTable.cpp" />
     <ClCompile Include="Map\Editor\UiEditTile.cpp" />
+    <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -246,6 +247,7 @@
     <ClInclude Include="Map\Editor\UiEditor.h" />
     <ClInclude Include="Map\TileTable.h" />
     <ClInclude Include="Map\Editor\UiEditTile.h" />
+    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Team_Mockup_Project-Dungreed.rc" />

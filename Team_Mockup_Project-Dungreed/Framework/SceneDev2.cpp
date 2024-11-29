@@ -24,7 +24,7 @@ void SceneDev2::Init()
 	}
 	{
 		SkeletonDog* skeletonDog = AddGo(new SkeletonDog());
-		skeletonDog->SetPosition({ -140.f, 0.f });
+		skeletonDog->SetPosition({ 0.f, 70.f });
 		skeletonDogList.push_back(skeletonDog);
 	}
 
