@@ -1,5 +1,4 @@
 #pragma once
-
 #include <windows.h>
 #define STRICT_TYPED_ITEMIDS
 #include <shlobj.h>
@@ -14,9 +13,19 @@
 #include <shtypes.h>
 #include <new>
 
+#pragma comment(linker, "\"/manifestdependency:type='Win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
 namespace FileDialog
 {
 	HRESULT CDialogEventHandler_CreateInstance(REFIID riid, void** ppv);
+	HRESULT OpenDialog(bool open = true, std::function<void(const std::wstring& wpath)> pathfunction = [](std::wstring wpath) {});
+
+	const COMDLG_FILTERSPEC c_rgSaveTypes[] =
+	{
+		{L"Map Data (*.json)",			 L"*.json"},
+		{L"All Files (*.*)",         L"*.*"}
+	};
+
 
 	class CDialogEventHandler : public IFileDialogEvents,
 		public IFileDialogControlEvents
@@ -68,21 +77,4 @@ namespace FileDialog
 		~CDialogEventHandler() {};
 		long _cRef;
 	};
-
-
-#pragma comment(linker, "\"/manifestdependency:type='Win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
-
-	const COMDLG_FILTERSPEC c_rgSaveTypes[] =
-	{
-		{L"Map Data (*.json)",			 L"*.json"},
-		{L"All Files (*.*)",         L"*.*"}
-	};
-
-
-
-	/* Common File Dialog Snippets ***************************************************************************************************/
-
-	// This code snippet demonstrates how to work with the common file dialog interface
-	HRESULT OpenDialog(bool open = true, std::function<void(const std::wstring& wpath)> pathfunction = [](std::wstring wpath) {});
-	
 }

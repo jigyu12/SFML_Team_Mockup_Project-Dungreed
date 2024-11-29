@@ -150,7 +150,7 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Character.cpp" />
-    <ClCompile Include="Framework\FileDialog.cpp" />
+    <ClCompile Include="Map\Editor\FileDialog.cpp" />
     <ClCompile Include="Framework\DataTableMgr.cpp" />
     <ClCompile Include="Framework\DataTable.cpp" />
     <ClCompile Include="Framework\SceneDev3.cpp" />
@@ -201,7 +201,7 @@
     <ClInclude Include="Animator.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Character.h" />
-    <ClInclude Include="Framework\FileDialog.h" />
+    <ClInclude Include="Map\Editor\FileDialog.h" />
     <ClInclude Include="Framework\DefineJson.h" />
     <ClInclude Include="Framework\DataTableMgr.h" />
     <ClInclude Include="Framework\DataTable.h" />

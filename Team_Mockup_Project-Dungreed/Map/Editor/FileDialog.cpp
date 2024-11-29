@@ -52,24 +52,21 @@ HRESULT FileDialog::OpenDialog(bool open, std::function<void(const std::wstring&
 					if (SUCCEEDED(hr))
 					{
 						// Set the file types to display only. Notice that, this is a 1-based array.
-						hr = pfd->SetFileTypes(ARRAYSIZE(c_rgSaveTypes), c_rgSaveTypes);
+						hr = pfd->SetDefaultExtension(L"json");
 						if (SUCCEEDED(hr))
 						{
-							hr = pfd->SetDefaultExtension(L"json");
+							hr = pfd->SetFileTypes(ARRAYSIZE(c_rgSaveTypes), c_rgSaveTypes);
 							if (SUCCEEDED(hr))
 							{
 								// Show the dialog
 								hr = pfd->Show(NULL);
 								if (SUCCEEDED(hr))
 								{
-									// Obtain the result, once the user clicks the 'Open' button.
-									// The result is an IShellItem object.
 									IShellItem* psiResult;
 
 									hr = pfd->GetResult(&psiResult);
 									if (SUCCEEDED(hr))
 									{
-										// We are just going to print out the name of the file for sample sake.
 										PWSTR pszFilePath = NULL;
 										hr = psiResult->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
 										if (SUCCEEDED(hr))
