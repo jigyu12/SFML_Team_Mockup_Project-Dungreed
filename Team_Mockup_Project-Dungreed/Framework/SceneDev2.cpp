@@ -3,6 +3,9 @@
 #include "Room.h"
 #include "Bat.h"
 #include "SkeletonDog.h"
+#include "Weapon.h"
+#include "ShortSword.h"
+#include "HandCrossbow.h"
 
 SceneDev2::SceneDev2() : Scene(SceneIds::Dev2)
 {
@@ -16,6 +19,21 @@ void SceneDev2::Init()
 	}
 	{
 		player = AddGo(new Player());
+
+		{
+			ShortSword* shortSword = AddGo(new ShortSword());
+			weaponList.push_back(shortSword);
+			shortSword->SetPosition({120.f, -80.f});
+			//shortSword->SetOwnerPlayer(player);
+			//shortSword->SetIsCurrentWeapon(true);
+		}
+		{
+			HandCrossbow* handCrossbow = AddGo(new HandCrossbow());
+			weaponList.push_back(handCrossbow);
+			handCrossbow->SetPosition({ -120.f, -80.f });
+			handCrossbow->SetOwnerPlayer(player);
+			handCrossbow->SetIsCurrentWeapon(true);
+		}
 	}
 	{
 		Bat* bat = AddGo(new Bat());

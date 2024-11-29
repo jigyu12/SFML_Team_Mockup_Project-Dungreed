@@ -50,6 +50,12 @@
     <ClCompile Include="Weapon.cpp">
       <Filter>Weapons\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="ShortSword.cpp">
+      <Filter>Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="HandCrossbow.cpp">
+      <Filter>Weapons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -106,6 +112,12 @@
     </ClInclude>
     <ClInclude Include="Weapon.h">
       <Filter>Weapons\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="ShortSword.h">
+      <Filter>Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="HandCrossbow.h">
+      <Filter>Weapons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

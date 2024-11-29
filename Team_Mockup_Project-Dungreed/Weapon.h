@@ -2,7 +2,7 @@
 
 #include "Player.h"
 
-class Weapon : public GameObject
+class Weapon : public SpriteGo
 {
 public:
 	enum class WeaponType
@@ -15,18 +15,34 @@ public:
 		Count
 	};
 
+	struct CollisionState
+	{
+		bool Up = false;
+		bool Down = false;
+		bool Left = false;
+		bool Right = false;
+	};
+
 protected:
 	WeaponType weaponType;
 
 	Player* owner;
 
-	int originalDamage;
+	int originalDamageMin;
+	int originalDamageMax;
 
 	float attackSpeedAccumTime;
 	float attackSpeedDelayTime;
 
+	bool isCurrentWeapon = false;
+
+	float velocityY = 0.f;
+	float gravity = 98.f * 2.f;
+	float jumpSpeed = -90.0f;
+	bool isOnGround = false;
+
 public:
-	Weapon(const std::string& name = "");
+	Weapon(const std::string& name = "Weapon");
 	virtual ~Weapon() = default;
 
 	virtual void SetOrigin(Origins preset) override = 0;
@@ -40,8 +56,24 @@ public:
 	virtual void Update(float dt) override = 0;
 	virtual void Draw(sf::RenderWindow& window) override = 0;
 	virtual void Release() override = 0;
+
+	virtual sf::FloatRect GetLocalBounds() const 
+	{
+		return sprite.getLocalBounds();
+	}
+
+	virtual sf::FloatRect GetGlobalBounds() const
+	{
+		return sprite.getGlobalBounds();
+	}
 	
 	WeaponType GetWeaponType() const { return weaponType; }
-	int GetOriginalDamage() const { return originalDamage; }
-	float GetAttackSpeedDelay() const { return attackSpeedDelayTime; }
+	int GetOriginalDamageMin() const { return originalDamageMin; }
+	int GetOriginalDamageMax() const { return originalDamageMax; }
+	float GetAttackSpeed() const { return attackSpeedDelayTime; }
+
+	void SetOwnerPlayer(Player* player) { owner = player; }
+	void SetIsCurrentWeapon(bool isCurrWeapon) { isCurrentWeapon = isCurrWeapon; }
+
+	CollisionState GetCollsionState(const sf::FloatRect& weapon, const sf::FloatRect& stage);
 };
