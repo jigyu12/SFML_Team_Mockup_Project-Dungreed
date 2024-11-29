@@ -19,6 +19,5 @@ bool AnimationClip::loadFromFile(const std::string& filePath)
 				{ std::stoi(row[1]), std::stoi(row[2]), std::stoi(row[3]), std::stoi(row[4]) }
 			});
 	}
-
 	return true;
 }

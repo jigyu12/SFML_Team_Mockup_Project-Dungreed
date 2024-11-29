@@ -12,7 +12,7 @@ void HitBox::UpdateTr(const sf::Transformable& tr, const sf::FloatRect& localBou
 {
 	rect.setOutlineColor(sf::Color::Green);
 	rect.setSize({ localBounds.width, localBounds.height });
-	rect.setOrigin(tr.getOrigin());
+	rect.setOrigin(tr.getOrigin()- localBounds.getPosition());
 	rect.setPosition(tr.getPosition());
 	rect.setScale(tr.getScale());
 	rect.setRotation(tr.getRotation());
