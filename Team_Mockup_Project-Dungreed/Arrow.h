@@ -1,19 +1,25 @@
 #pragma once
 
-#include "Weapon.h"
-#include "Arrow.h"
-#include "ObjectPool.h"
+#include "Player.h"
+#include "SpriteGo.h"
 
-class HandCrossbow : public Weapon
+class HandCrossbow;
+
+class Arrow : public SpriteGo
 {
 protected:
-	sf::Vector2f look;
+	sf::Vector2f direction;
 
-	ObjectPool<Arrow> arrowPool;
+	float speed;
+
+	int damage;
+
+	Player* owner;
+	HandCrossbow* ownerWeapon;
 
 public:
-	HandCrossbow(const std::string& name = "HandCrossbow");
-	virtual ~HandCrossbow() = default;
+	Arrow(const std::string& name = "Arrow");
+	virtual ~Arrow() = default;
 
 	virtual void SetOrigin(Origins preset) override;
 	virtual void SetOrigin(const sf::Vector2f& newOrigin) override;
@@ -28,5 +34,15 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
 
-	void Shoot();
+	virtual sf::FloatRect GetLocalBounds() const
+	{
+		return sprite.getLocalBounds();
+	}
+
+	virtual sf::FloatRect GetGlobalBounds() const
+	{
+		return sprite.getGlobalBounds();
+	}
+
+	void Fire(const sf::Vector2f& pos, const sf::Vector2f& dir, float s, int d);
 };

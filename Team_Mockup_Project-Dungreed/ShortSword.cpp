@@ -68,12 +68,15 @@ void ShortSword::Reset()
 
 void ShortSword::Update(float dt)
 {
-	auto player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
-	if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()))
+	if (!owner)
 	{
-		SetOwnerPlayer(player);
+		auto player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
+		if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()))
+		{
+			SetOwnerPlayer(player);
+		}
 	}
-
+	
 	hitbox.UpdateTr(sprite, GetLocalBounds());
 }
 
