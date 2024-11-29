@@ -18,7 +18,7 @@
 namespace FileDialog
 {
 	HRESULT CDialogEventHandler_CreateInstance(REFIID riid, void** ppv);
-	HRESULT OpenDialog(bool open = true, std::function<void(const std::wstring& wpath)> pathfunction = [](std::wstring wpath) {});
+	HRESULT OpenDialog(std::function<void(const std::wstring& wpath)> pathfunction,bool open = true);
 
 	const COMDLG_FILTERSPEC c_rgSaveTypes[] =
 	{

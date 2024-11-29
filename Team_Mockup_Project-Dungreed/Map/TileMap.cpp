@@ -59,6 +59,9 @@ void TileMap::Init()
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = -1;
 	tileIndexes.resize(1);
+	texture = nullptr;
+	showGridLine = false;
+
 }
 
 void TileMap::Release()
@@ -87,6 +90,12 @@ void TileMap::Draw(sf::RenderWindow& window)
 	}
 	state.transform = transform;
 	window.draw(va, state);
+	if (showGridLine)
+	{
+		sf::RenderStates gridstate;
+		gridstate.transform = transform;
+		window.draw(gridLine, gridstate);
+	}
 }
 
 void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<std::vector<int>>& tileIndex)
@@ -97,6 +106,9 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 	va.clear();
 	va.setPrimitiveType(sf::Quads);
 	va.resize(count.x * count.y * 4);
+	gridLine.clear();
+	gridLine.resize((count.x + count.y + 2) * 2);
+	gridLine.setPrimitiveType(sf::PrimitiveType::Lines);
 
 	this->tileIndexes.resize(count.y);
 	for (int i = 0;i < this->tileIndexes.size();++i)
@@ -112,11 +124,25 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 		{ 0.f, size.y },
 	};
 
+	for (int i = 0;i <= count.x;++i)
+	{
+		gridLine[2 * i].color = sf::Color::White;
+		gridLine[2 * i].position = { size.x * i,0.f };
+		gridLine[2 * i + 1].color = sf::Color::White;
+		gridLine[2 * i + 1].position = { size.x * i,size.y * count.y };
+	}
+	for (int i = 0;i <= count.y;++i)
+	{
+		gridLine[2 * (count.x + 1 + i)].color = sf::Color::White;
+		gridLine[2 * (count.x + 1 + i)].position = { 0.f,size.y * i };
+		gridLine[2 * (count.x + 1 + i) + 1].color = sf::Color::White;
+		gridLine[2 * (count.x + 1 + i) + 1].position = { size.x * count.x,size.y * i };
+	}
+
 	for (int i = 0; i < count.y; ++i)
 	{
 		for (int j = 0; j < count.x; ++j)
 		{
-
 			int quadIndex = i * count.x + j;
 			sf::Vector2f quadPos(j * size.x, i * size.y);
 

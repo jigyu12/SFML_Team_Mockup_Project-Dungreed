@@ -1,12 +1,19 @@
 #pragma once
 
+class TileMap;
 class UiEditTile;
+
 
 class UiEditor : public GameObject
 {
 protected:
 
 	sf::RectangleShape editorWindow;
+
+	TileMap* tileMap;
+
+	sf::Sprite saveButton;
+	sf::Sprite loadButton;
 
 	UiEditTile* uiEditTile;
 

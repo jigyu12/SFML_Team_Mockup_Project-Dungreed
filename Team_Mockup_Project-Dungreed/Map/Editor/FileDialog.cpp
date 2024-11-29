@@ -15,7 +15,7 @@ HRESULT FileDialog::CDialogEventHandler_CreateInstance(REFIID riid, void** ppv)
 	return hr;
 }
 
-HRESULT FileDialog::OpenDialog(bool open, std::function<void(const std::wstring& wpath)> pathfunction)
+HRESULT FileDialog::OpenDialog(std::function<void(const std::wstring& wpath)> pathfunction, bool open)
 {
 	// CoCreate the File Open Dialog object.
 	IFileDialog* pfd = NULL;

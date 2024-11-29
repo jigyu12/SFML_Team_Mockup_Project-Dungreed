@@ -25,6 +25,7 @@ void SceneMapEdit::Enter()
 	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
 	tileMap->SetTexture("graphics/map/Map.png");
 	tileMap->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1,-1)));
+	tileMap->SetShowGridLine(true);
 
 	uiView.setSize(size);
 	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);

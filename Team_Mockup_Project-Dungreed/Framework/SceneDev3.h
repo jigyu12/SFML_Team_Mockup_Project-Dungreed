@@ -12,6 +12,8 @@ protected:
 
 	Player* player;
 
+	sf::VertexArray vaLight;
+
 public:
 	SceneDev3();
 	~SceneDev3() = default;

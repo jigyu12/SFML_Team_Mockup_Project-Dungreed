@@ -7,8 +7,6 @@ class UiEditTile : public GameObject
 protected:
 
 	sf::Sprite selectedTile;
-	sf::Sprite saveButton;
-	sf::Sprite loadButton;
 
 	sf::Sprite xUpButton;
 	sf::Sprite xDownButton;

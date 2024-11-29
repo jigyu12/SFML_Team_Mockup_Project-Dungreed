@@ -6,15 +6,16 @@ class TileMap : public GameObject
 {
 protected:
 	sf::VertexArray va;
+	sf::VertexArray gridLine;
 	std::string texId;
-	sf::Texture* texture = nullptr;
+	sf::Texture* texture;
 	sf::Transform transform;
 
 	sf::Vector2i cellCount;
 	sf::Vector2f cellSize;
 
 	std::vector<std::vector<int>> tileIndexes;
-
+	bool showGridLine;
 public:
 	TileMap(const std::string& name = "");
 	~TileMap() = default;
@@ -47,4 +48,7 @@ public:
 
 	const sf::Vector2i& GetCellCount() { return cellCount; }
 	void Resize(const sf::Vector2i& size);
+
+	bool IsShowGridLine() { return showGridLine; }
+	void SetShowGridLine(bool show) { showGridLine = show; }
 };

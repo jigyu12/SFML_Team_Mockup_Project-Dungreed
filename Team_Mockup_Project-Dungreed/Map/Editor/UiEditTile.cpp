@@ -3,7 +3,6 @@
 #include "TileMap.h"
 #include "MapData.h"
 #include "SceneMapEdit.h"
-#include "FileDialog.h"
 
 UiEditTile::UiEditTile(const std::string& name)
 	: GameObject(name)
@@ -81,18 +80,11 @@ void UiEditTile::Reset()
 		}
 		tileIndexes[j][i] = tiledata.first;
 	}
+
 	selectedTile.setTexture(TEXTURE_MGR.Get("graphics/map/Map.png"));
-	selectedTile.setTextureRect({ (sf::Vector2i)TILE_TABLE->Undefined.startpos , {16,16} });
+	selectedTile.setTextureRect({ (sf::Vector2i)TILE_TABLE->Get(0).startpos , {16,16} });
 	selectedTile.setPosition(50.f, 100.f);
 	selectedTile.setScale({ 3.f, 3.f });
-
-	saveButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonsave.png"));
-	saveButton.setPosition(150.f, 100.f);
-	saveButton.setScale(0.25f, 0.25f);
-
-	loadButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonload.png"));
-	loadButton.setPosition(250.f, 100.f);
-	loadButton.setScale(0.25f, 0.25f);
 
 	xUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
 	xUpButton.setPosition(50.f, 150.f);
@@ -115,6 +107,7 @@ void UiEditTile::Reset()
 	tileList->SetScale({ 3.f, 3.f });
 
 	tileList->SetPosition({ 50.f,200.f });
+	tileList->SetShowGridLine(true);
 }
 
 void UiEditTile::Update(float dt)
@@ -126,29 +119,6 @@ void UiEditTile::Update(float dt)
 		{
 			selectedTileIndex = tileList->GetTileIndex(mousepos);
 			selectedTile.setTextureRect({ (sf::Vector2i)TILE_TABLE->Get(selectedTileIndex).startpos , {16,16} });
-		}
-		else if (saveButton.getGlobalBounds().contains(mousepos))
-		{
-			FileDialog::OpenDialog(false, [this](const std::wstring& path)
-				{
-					MapDataVC mapData;
-
-					if (tileMap != nullptr)
-					{
-						mapData.tileMapData = tileMap->GetTileMapData();
-					}
-					MapDataLoader::Save(mapData, path);
-				});
-		}
-		else if (loadButton.getGlobalBounds().contains(mousepos))
-		{
-			FileDialog::OpenDialog(true, [this](const std::wstring& path)
-				{
-					if (tileMap != nullptr)
-					{
-						tileMap->Set(MapDataLoader::Load(path).tileMapData);
-					}
-				});
 		}
 		else if (xUpButton.getGlobalBounds().contains(mousepos))
 		{
@@ -180,8 +150,6 @@ void UiEditTile::Update(float dt)
 void UiEditTile::Draw(sf::RenderWindow& window)
 {
 	window.draw(selectedTile);
-	window.draw(loadButton);
-	window.draw(saveButton);
 	window.draw(xUpButton);
 	window.draw(xDownButton);
 	window.draw(yUpButton);
