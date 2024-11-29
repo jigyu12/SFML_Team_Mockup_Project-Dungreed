@@ -11,7 +11,10 @@ public:
 		Jump,
 		DownJump,
 		Dash,
+		Dead,
 	};
+
+	
 
 	struct CollisionState
 	{
@@ -24,13 +27,19 @@ public:
 protected:
 	Status status;
 	sf::Sprite sword;
+	sf::Sprite PlayerLife;
+	sf::Sprite PlayerLifeBackGround;
 
 	sf::Vector2f velocity;
 	sf::Vector2f look;
 	std::string playerId = "graphics/player/CharWalk0.png";
 	std::string swordId = "graphics/player/Sword.png";
+	std::string PlayerLifeBase = "graphics/ui/PlayerLifeBase 1.png";
+	std::string PlayerLifeBack = "graphics/ui/PlayerLifeBack1.png";
+
 
 	HitBox* DownPlatform;
+
 
 	float gravity;
 	float jumpForce;

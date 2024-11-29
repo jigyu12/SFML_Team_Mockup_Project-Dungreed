@@ -78,8 +78,15 @@ void Player::Release()
 
 void Player::Reset()
 {
-	body.setTexture(TEXTURE_MGR.Get(playerId));
+	animator.SetTarget(&body);
+	animator.Play("animations/player Idle.csv");
+	/*body.setTexture(TEXTURE_MGR.Get(playerId));*/
 	sword.setTexture(TEXTURE_MGR.Get(swordId));
+	PlayerLife.setTexture(TEXTURE_MGR.Get(PlayerLifeBase));
+	PlayerLifeBackGround.setTexture(TEXTURE_MGR.Get(PlayerLifeBack));
+
+	PlayerLife.setOrigin(Utils::SetOrigin(PlayerLife, Origins::TL));
+	PlayerLife.setPosition({-158.f,-88.f });
 
 	sword.setOrigin(Utils::SetOrigin(sword, Origins::BC));
 	hitbox.SetColor(sf::Color::Blue);
@@ -92,7 +99,7 @@ void Player::Reset()
 void Player::SetStatus(Status status)
 {
 	this->status = (status);
-
+	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
 	switch (status)
 	{
 	case Player::Status::Ground:
@@ -103,10 +110,12 @@ void Player::SetStatus(Status status)
 		velocity = look * dashSpeed;
 		dashTimer = 0.f;
 		dashCoolTimer = 0.f;
+		animator.Play("animations/player Dash.csv");
 		break;
 	case Player::Status::DownJump:
 		velocity.y = downSpeed;
 		break;
+	
 	default:
 		break;
 
@@ -116,7 +125,10 @@ void Player::SetStatus(Status status)
 void Player::Update(float dt)
 {
 	animator.Update(dt);
+
 	dashCoolTimer += dt;
+
+
 	switch (status)
 	{
 	case Player::Status::Ground:
@@ -142,7 +154,7 @@ void Player::Update(float dt)
 	{
 		SetStatus(Player::Status::DownJump);
 	}
-
+	
 
 
 	SetPosition(position + velocity * dt);
@@ -156,7 +168,7 @@ void Player::Update(float dt)
 	SetOrigin(Origins::BC);
 
 
-	hitbox.UpdateTr(body, GetGlobalBounds());
+	hitbox.UpdateTr(body, { 7,12,14,21 });
 	
 }
 
@@ -274,6 +286,15 @@ void Player::UpdateGrounded(float dt)
 	{
 		Jump();
 	}
+	if (horizontalInput == 0&&animator.GetCurrentClipId() != "Idle")
+	{
+		animator.Play("animations/player Idle.csv");
+	}
+
+	if (horizontalInput != 0 && animator.GetCurrentClipId() != "Walk")
+	{
+		animator.Play("animations/player Walk.csv");
+	}
 }
 
 void Player::UpdateJump(float dt)
@@ -303,12 +324,14 @@ void Player::UpdateDownJump(float dt)
 void Player::UpdateDash(float dt)
 {
 	dashTimer += dt;
-	if (dashTimer > 0.3f)
+	if (dashTimer > 0.3f )
 	{
 		velocity = { 0.f,0.f };
 		SetStatus(Status::Jump);
 	}
 }
+
+
 
 void Player::Jump()
 {
@@ -316,6 +339,8 @@ void Player::Jump()
 	jumpTimer = 0.f;
 	SetStatus(Status::Jump);
 }
+
+
 
 void Player::Draw(sf::RenderWindow& window)
 {
