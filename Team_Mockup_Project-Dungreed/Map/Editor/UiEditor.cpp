@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "UiEditTile.h"
+#include "UiEditHitBox.h"
 #include "UiEditor.h"
 #include "TileMap.h"
 #include "FileDialog.h"
@@ -13,16 +14,19 @@ UiEditor::UiEditor(const std::string& name)
 void UiEditor::SetPosition(const sf::Vector2f& pos)
 {
 	position = pos;
+	editorWindow.setPosition(position);
 }
 
 void UiEditor::SetRotation(float angle)
 {
 	rotation = angle;
+	editorWindow.setRotation(rotation);
 }
 
 void UiEditor::SetScale(const sf::Vector2f& s)
 {
 	scale = s;
+	editorWindow.setScale(scale);
 }
 
 void UiEditor::SetOrigin(Origins preset)
@@ -30,13 +34,20 @@ void UiEditor::SetOrigin(Origins preset)
 	originPreset = preset;
 	if (originPreset != Origins::Custom)
 	{
-
+		origin = Utils::SetOrigin(editorWindow, originPreset);
+		saveButton.setOrigin(origin - sf::Vector2f(150.f, 100.f));
+		loadButton.setOrigin(origin - sf::Vector2f(250.f, 100.f));
 	}
 }
 
 void UiEditor::SetOrigin(const sf::Vector2f& newOrigin)
 {
 	originPreset = Origins::Custom;
+}
+
+void UiEditor::SetSize(const sf::Vector2f& size)
+{
+	editorWindow.setSize(size);
 }
 
 void UiEditor::Init()
@@ -60,22 +71,24 @@ void UiEditor::Reset()
 
 	this->tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("tileMap"));
 
-	sf::Vector2f windowsize = FRAMEWORK.GetWindowSizeF();
-	editorWindow.setSize({ 480.f, windowsize.y });
 	editorWindow.setFillColor({ 100,100,100,255 });
 
 	saveButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonsave.png"));
-	saveButton.setPosition(150.f, 100.f);
-	saveButton.setScale(0.25f, 0.25f);
 
 	loadButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonload.png"));
-	loadButton.setPosition(250.f, 100.f);
-	loadButton.setScale(0.25f, 0.25f);
 }
 
 void UiEditor::Update(float dt)
 {
-	uiEditTile->Update(dt);
+	switch (currentGroupBox)
+	{
+	case UiEditor::GroupBox::Tile:
+		uiEditTile->Update(dt);
+		break;
+	case UiEditor::GroupBox::HitBox:
+		uiEditHitBox->Update(dt);
+		break;
+	}
 
 
 	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left))
@@ -110,9 +123,17 @@ void UiEditor::Update(float dt)
 void UiEditor::Draw(sf::RenderWindow& window)
 {
 	window.draw(editorWindow);
-	uiEditTile->Draw(window);
 	window.draw(loadButton);
 	window.draw(saveButton);
+	
+	switch (currentGroupBox)
+	{
+	case UiEditor::GroupBox::Tile:
+		uiEditTile->Draw(window);
+		break;
+	case UiEditor::GroupBox::HitBox:
+		break;
+	}
 }
 
 int UiEditor::GetSelectedTileIndex()

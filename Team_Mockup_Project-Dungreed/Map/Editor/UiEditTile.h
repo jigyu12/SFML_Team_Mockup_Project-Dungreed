@@ -6,10 +6,16 @@ class UiEditTile : public GameObject
 {
 protected:
 
+	sf::Sprite pageUpButton;
+	sf::Text pageText;
+	sf::Sprite pageDownButton;
+
 	sf::Sprite xUpButton;
+	sf::Text countxText;
 	sf::Sprite xDownButton;
 
 	sf::Sprite yUpButton;
+	sf::Text countyText;
 	sf::Sprite yDownButton;
 
 	TileMap* selectedTiles;

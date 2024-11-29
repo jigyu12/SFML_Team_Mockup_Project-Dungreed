@@ -30,6 +30,10 @@ void SceneMapEdit::Enter()
 	uiView.setSize(size);
 	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);
 
+	uiEditor->SetPosition({ 0.f,0.f });
+	uiEditor->SetSize({ 480.f,size.y });
+	uiEditor->SetOrigin(Origins::TL);
+
 	size.x /= 6.f;
 	size.y /= 6.f;
 	worldView.setSize(size);

@@ -61,11 +61,11 @@ void Room::SetOrigin(Origins preset)
 		origin = tileMap->GetOrigin();
 		for (auto& hitBox : hitBoxes)
 		{
-			hitBox.first->rect.setOrigin(-hitBox.second.origin + origin);
+			hitBox.first->rect.setOrigin(origin - hitBox.second.origin);
 		}
 		for (auto& obj : objects)
 		{
-			obj.first->SetOrigin(-obj.second.origin + origin);
+			obj.first->SetOrigin(origin - obj.second.origin);
 		}
 	}
 }
