@@ -156,6 +156,7 @@
     <ClCompile Include="Framework\SceneDev3.cpp" />
     <ClCompile Include="Framework\SoundMgr.cpp" />
     <ClCompile Include="Framework\StringTable.cpp" />
+    <ClCompile Include="HandCrossbow.cpp" />
     <ClCompile Include="Map\MapObject.cpp" />
     <ClCompile Include="Map\MapData.cpp" />
     <ClCompile Include="Monster.cpp" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Framework\Utils.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="Map\Editor\SceneMapEdit.cpp" />
+    <ClCompile Include="ShortSword.cpp" />
     <ClCompile Include="SkeletonDog.cpp" />
     <ClCompile Include="Snippets\SceneXXX.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -196,6 +198,7 @@
     <ClCompile Include="Map\TileTable.cpp" />
     <ClCompile Include="Map\Editor\UiEditTile.cpp" />
     <ClCompile Include="Map\Editor\UiEditHitBox.cpp" />
+    <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -225,6 +228,7 @@
     <ClInclude Include="Framework\TextGo.h" />
     <ClInclude Include="Framework\SoundMgr.h" />
     <ClInclude Include="Framework\StringTable.h" />
+    <ClInclude Include="HandCrossbow.h" />
     <ClInclude Include="Map\MapObject.h" />
     <ClInclude Include="Map\MapData.h" />
     <ClInclude Include="Monster.h" />
@@ -236,6 +240,7 @@
     <ClInclude Include="Framework\Utils.h" />
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="Map\Editor\SceneMapEdit.h" />
+    <ClInclude Include="ShortSword.h" />
     <ClInclude Include="SkeletonDog.h" />
     <ClInclude Include="Snippets\SceneXXX.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -250,6 +255,7 @@
     <ClInclude Include="Map\TileTable.h" />
     <ClInclude Include="Map\Editor\UiEditTile.h" />
     <ClInclude Include="Map\Editor\UiEditHitBox.h" />
+    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Team_Mockup_Project-Dungreed.rc" />

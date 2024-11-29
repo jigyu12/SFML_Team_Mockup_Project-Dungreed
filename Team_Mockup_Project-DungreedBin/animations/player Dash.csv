@@ -1,0 +1,12 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Move,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/player/CharRun.png,0,"0",32,32,0
+graphics/player/CharRun.png,32,"0",32,32,0
+graphics/player/CharRun.png,64,"0",32,32,0
+graphics/player/CharRun.png,96,"0",32,32,0
+graphics/player/CharRun.png,128,"0",32,32,0
+graphics/player/CharRun.png,160,"0",32,32,0
+graphics/player/CharRun.png,192,"0",32,32,0
+graphics/player/CharRun.png,224,"0",32,32,0

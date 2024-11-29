@@ -4,12 +4,14 @@
 class Room;
 class Bat;
 class SkeletonDog;
+class Weapon;
 
 class SceneDev2 : public Scene
 {
 protected:
 	Room* room;
 	Player* player;
+	std::vector<Weapon*> weaponList;
 	std::vector<Bat*> batList;
 	std::vector<SkeletonDog*> skeletonDogList;
 	

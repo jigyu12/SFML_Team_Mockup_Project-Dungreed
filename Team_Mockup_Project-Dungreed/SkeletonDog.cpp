@@ -98,13 +98,13 @@ void SkeletonDog::Reset()
 
 	state = SkeleDogState::Idle;
 
-	movableBound = { -FRAMEWORK.GetWindowBounds().width / 2.f / 6.f, 0.f,FRAMEWORK.GetWindowBounds().width / 6.f, 0.f };
+	movableBound = { -FRAMEWORK.GetWindowBounds().width / 2.f / 6.f, 70.f,FRAMEWORK.GetWindowBounds().width / 6.f, 0.f };
 
 	detectionRange.setFillColor(sf::Color::Transparent);
 	detectionRange.setOutlineColor(sf::Color::Blue);
 	detectionRange.setOutlineThickness(1.f);
 	detectionRange.setPosition(body.getPosition());
-	detectionRange.setSize({160.f, 40.f});
+	detectionRange.setSize({120.f, 40.f});
 	detectionRange.setOrigin({ detectionRange.getSize().x / 2, detectionRange.getSize().y });
 
 	detectionLine.setFillColor(sf::Color::Magenta);
@@ -123,7 +123,7 @@ void SkeletonDog::Reset()
 void SkeletonDog::Update(float dt)
 {
 	detectionRange.setPosition(body.getPosition());
-	detectionLine.setPosition({ body.getPosition().x + direction.x * 10.f ,body.getPosition().y });
+	detectionLine.setPosition({ body.getPosition().x + direction.x * 12.f ,body.getPosition().y });
 
 	switch (state)
 	{
@@ -159,6 +159,21 @@ void SkeletonDog::Update(float dt)
 			isAttackMove = true;
 			isMoving = true;
 
+			auto& roomHitBoxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+			for (auto& roomHitBox : roomHitBoxes)
+			{
+				if (roomHitBox.second.type != HitBoxData::Type::Downable)
+				{
+					if (detectionLine.getGlobalBounds().intersects(roomHitBox.first->rect.getGlobalBounds()))
+					{
+						direction = -direction;
+						//newPosition = { Utils::Clamp(newPosition.x, roomHitBox.first->rect.getGlobalBounds().left + body.getGlobalBounds().width / 2.f , roomHitBox.first->rect.getGlobalBounds().left + roomHitBox.first->rect.getGlobalBounds().width - body.getGlobalBounds().width / 2.f), newPosition.y };
+
+						break;
+					}
+				}
+			}
+
 			attackMoveAccumTime += dt;
 
 			if (attackMoveAccumTime > attackMoveTimeDelay)
@@ -179,12 +194,19 @@ void SkeletonDog::Update(float dt)
 				animator.Play("animations/SkeletonDog Move.csv");
 				isMoving = true;
 			}
-
-			if (detectionLine.getGlobalBounds().getPosition().x < movableBound.left || detectionLine.getGlobalBounds().getPosition().x > movableBound.left + movableBound.width)
+			auto& roomHitBoxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+			for (auto& roomHitBox : roomHitBoxes)
 			{
-				direction.x = -direction.x;
+				if (roomHitBox.second.type != HitBoxData::Type::Downable)
+				{
+					if (detectionLine.getGlobalBounds().intersects(roomHitBox.first->rect.getGlobalBounds()))
+					{
+						direction.x = -direction.x;
+					}
+				}
 			}
-			else if(detectionRange.getGlobalBounds().intersects(target->GetGlobalBounds()))
+			
+			if(detectionRange.getGlobalBounds().intersects(target->GetGlobalBounds()))
 			{
 				direction = Utils::GetNormal({ target->GetPosition().x - position.x , 0.f });
 			}
@@ -240,13 +262,56 @@ void SkeletonDog::Update(float dt)
 			{
 				SetScale({ -1.f, 1.f });
 			}
-			sf::Vector2f newPosition = { position.x + direction.x * (speed * 2) * dt, position.y + direction.y * speed * dt };
-			newPosition = { Utils::Clamp(newPosition.x, movableBound.left + body.getGlobalBounds().width / 2.f , movableBound.left + movableBound.width - body.getGlobalBounds().width / 2.f), newPosition.y};
+
+			auto skelDogGlobalBounds = hitbox.rect.getGlobalBounds();
+			auto& roomHitBoxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+			bool breakWhile = false;
+			while (true)
+			{
+				for (auto& roomHitBox : roomHitBoxes)
+				{
+					if (Utils::CheckCollision(*roomHitBox.first, hitbox))
+					{
+						SkeletonDog::CollisionState state = GetCollsionState(skelDogGlobalBounds, roomHitBox.first->rect.getGlobalBounds());
+						
+						if (state.Down)
+						{
+							SetPosition({ position.x, position.y -= 10.f * dt});
+							hitbox.UpdateTr(body, GetLocalBounds());
+
+							continue;
+						}
+					}
+
+					breakWhile = true;
+				}
+
+				if (breakWhile)
+				{
+					break;
+				}
+			}
+
+			sf::Vector2f newPosition = { position.x + direction.x * (speed * 1.7f) * dt, position.y + direction.y * speed * dt };
+
+			for (auto& roomHitBox : roomHitBoxes)
+			{
+				if (roomHitBox.second.type != HitBoxData::Type::Downable)
+				{
+					if (detectionLine.getGlobalBounds().intersects(roomHitBox.first->rect.getGlobalBounds()))
+					{
+						direction = -direction;
+						//newPosition = { Utils::Clamp(newPosition.x, roomHitBox.first->rect.getGlobalBounds().left + body.getGlobalBounds().width / 2.f , roomHitBox.first->rect.getGlobalBounds().left + roomHitBox.first->rect.getGlobalBounds().width - body.getGlobalBounds().width / 2.f), newPosition.y };
+
+						break;
+					}
+				}
+			}
 			SetPosition({ newPosition.x , newPosition.y + velocityY * dt });
 
-			if (body.getPosition().y > movableBound.top - movableBound.height)
+			if (!isOnGround)
 			{
-				body.setPosition(body.getPosition().x, movableBound.top - movableBound.height);
+				//body.setPosition(body.getPosition().x, movableBound.top - movableBound.height);
 				velocityY = 0.0f;
 				isAttack = false;
 				isOnGround = true;
@@ -304,6 +369,40 @@ void SkeletonDog::LateUpdate(float dt)
 		SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 	else
 		SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
+
+	isOnGround = false;
+
+	auto skelDogGlobalBounds = hitbox.rect.getGlobalBounds();
+	auto& roomHitBoxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+	for (auto& roomHitBox : roomHitBoxes)
+	{
+		if (Utils::CheckCollision(*roomHitBox.first, hitbox))
+		{
+			SkeletonDog::CollisionState state = GetCollsionState(skelDogGlobalBounds, roomHitBox.first->rect.getGlobalBounds());
+
+			if (state.Up)
+			{
+			}
+
+			if (state.Down)
+			{
+				isOnGround = true;
+			}
+
+			if (state.Left)
+			{
+			}
+
+			if (state.Right)
+			{
+			}
+		}
+	}
+
+	if(isOnGround)
+		SetPosition({position.x, position.y += gravity * dt * 0.f });
+	else
+		SetPosition({ position.x, position.y += gravity * dt });
 }
 
 void SkeletonDog::Draw(sf::RenderWindow& window)
@@ -336,10 +435,30 @@ void SkeletonDog::Release()
 
 void SkeletonDog::OnDamaged()
 {
-	hp -= 10; /////////// �ӽ� �ڵ�
+	hp -= 10; /////////// ÀÓ½Ã ÄÚµå
 	isDamaged = true;
 }
 
 void SkeletonDog::Jump()
 {
+}
+
+SkeletonDog::CollisionState SkeletonDog::GetCollsionState(const sf::FloatRect& monster, const sf::FloatRect& stage)
+{
+	SkeletonDog::CollisionState state;
+
+	if (stage.top + stage.height > monster.top
+		&& monster.top + monster.height > stage.top + stage.height)
+		state.Up = true;
+	if (stage.left + stage.width > monster.left
+		&& monster.left + monster.width > stage.left + stage.width)
+		state.Left = true;
+	if (monster.left + monster.width > stage.left
+		&& stage.left > monster.left)
+		state.Right = true;
+	if (monster.top + monster.height > stage.top
+		&& stage.top > monster.top)
+		state.Down = true;
+
+	return state;
 }
