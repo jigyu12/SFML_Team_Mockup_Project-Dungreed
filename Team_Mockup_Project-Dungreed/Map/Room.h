@@ -3,24 +3,21 @@
 
 class TileMap;
 class Player;
+class MapObject;
 
 class Room : public GameObject
 {
 protected:
+	sf::Sprite subBackground;
 
 	TileMap* tileMap;
 
 	MapDataVC mapData;
-
 	std::vector<std::pair<HitBox*, HitBoxData>> hitBoxes;
-
-	std::vector<sf::Sprite> objects;
-
-	std::function<void()> change;
+	std::vector<std::pair<MapObject*, ObjectData>> objects;
+	std::vector<Room*> connectedRoom;
 
 	Player* player;
-
-	std::vector<Room*> connectedRoom;
 public:
 	Room(const std::string& name = "");
 	~Room() = default;

@@ -1,17 +1,18 @@
 #pragma once
 
-#include "MapData.h"
+class UiEditTile;
 
-class MapObject : public GameObject
+class UiEditor : public GameObject
 {
 protected:
 
-	sf::Sprite body;
-	Animator animator;
+	sf::RectangleShape editorWindow;
+
+	UiEditTile* uiEditTile;
 
 public:
-	MapObject(const std::string& name = "");
-	~MapObject() = default;
+	UiEditor(const std::string& name = "");
+	~UiEditor() = default;
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float angle) override;
@@ -26,5 +27,6 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void Set(ObjectData::Type objData);
+	int GetSelectedTileIndex();
 };
+

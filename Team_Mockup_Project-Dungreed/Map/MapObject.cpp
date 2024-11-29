@@ -42,6 +42,8 @@ void MapObject::SetOrigin(const sf::Vector2f& newOrigin)
 
 void MapObject::Init()
 {
+	sortingLayer = SortingLayers::Background;
+	sortingOrder = 10;
 }
 
 void MapObject::Release()
@@ -50,12 +52,27 @@ void MapObject::Release()
 
 void MapObject::Reset()
 {
+	animator.SetTarget(&body);
 }
 
 void MapObject::Update(float dt)
 {
+	animator.Update(dt);
 }
 
 void MapObject::Draw(sf::RenderWindow& window)
 {
+	window.draw(body);
+}
+
+void MapObject::Set(ObjectData::Type objType)
+{
+	switch (objType)
+	{
+	case ObjectData::Type::Platform:
+		animator.Play("animations/map/platformidle.csv");
+		break;
+	default:
+		break;
+	} 
 }

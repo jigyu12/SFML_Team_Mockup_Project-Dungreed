@@ -7,21 +7,25 @@ struct TileMapData
 	sf::Vector2f cellsize;
 	sf::Vector2i cellcount;
 
-	std::vector<sf::Vector2f> tile;
+	std::vector<std::vector<int>> tileIndex;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TileMapData, texId, name, cellsize, cellcount, tile)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TileMapData, texId, name, cellsize, cellcount, tileIndex)
 };
 
 struct ObjectData
 {
-	int type;
-	sf::Vector2f position;
-	int origin;
+	enum class Type
+	{
+		Platform,
+		Torch,
+		Door,
+	};
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(ObjectData, type, position, origin)
+	Type type;
+	sf::Vector2f origin;
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(ObjectData, type, origin)
 };
-
-
 
 struct HitBoxData
 {
@@ -42,6 +46,21 @@ struct HitBoxData
 	Type type;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(HitBoxData, size, origin, rotation, type)
+};
+
+struct SpawnData
+{
+	enum class Type
+	{
+		Bat,
+	};
+
+	Type type;
+	sf::Vector2f position;
+	int wave;
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(SpawnData, type, position, wave)
+
 };
 
 struct MapData
@@ -67,24 +86,38 @@ struct MapDataV1 : public MapData
 	std::vector<ObjectData> objectData;
 	std::vector<HitBoxData> hitBoxData;
 
-	MapData* VersionUp() override { return nullptr; }
+
+	MapData* VersionUp() override;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(MapDataV1, version, playerStartPoint, tileMapData, objectData, hitBoxData)
 };
 
-typedef MapDataV1 MapDataVC;
+struct MapDataV2 : public MapData
+{
+	MapDataV2();
+
+
+	std::vector<sf::Vector2f> playerStartPoint;
+	TileMapData tileMapData;
+	std::vector<ObjectData> objectData;
+	std::vector<HitBoxData> hitBoxData;
+	std::vector<SpawnData> spawnData;
+
+	MapData* VersionUp() override { return this; }
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(MapDataV2, version, playerStartPoint, tileMapData, objectData, hitBoxData, spawnData)
+};
+
+typedef MapDataV2 MapDataVC;
 
 class MapDataLoader
 {
-	const static int currentVersion = 1;
 protected:
-	MapDataVC mapData;
-	std::string path = "NULL";
+	const static int currentVersion = 2;
+	MapDataLoader() = delete;
+	~MapDataLoader() = delete;
 public:
-	void Save(const std::string& path = "");
-	bool Load(const std::string& path);
-
-	MapDataVC& Get() { return mapData; }
-	const MapDataVC& Get() const { return mapData; }
+	static void Save(MapDataVC mapData, const std::string& path = "");
+	static MapDataVC Load(const std::string& path);
 };
 

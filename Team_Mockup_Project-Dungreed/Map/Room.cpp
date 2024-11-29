@@ -2,6 +2,7 @@
 #include "Room.h"
 #include "TileMap.h"
 #include "Player.h"
+#include "MapObject.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -16,6 +17,10 @@ void Room::SetPosition(const sf::Vector2f& pos)
 	{
 		hitBox.first->rect.setPosition(position);
 	}
+	for (auto& obj : objects)
+	{
+		obj.first->SetPosition(position);
+	}
 }
 
 void Room::SetRotation(float angle)
@@ -25,6 +30,10 @@ void Room::SetRotation(float angle)
 	for (auto& hitBox : hitBoxes)
 	{
 		hitBox.first->rect.setRotation(rotation);
+	}
+	for (auto& obj : objects)
+	{
+		obj.first->SetRotation(rotation);
 	}
 }
 
@@ -36,6 +45,10 @@ void Room::SetScale(const sf::Vector2f& s)
 	{
 		hitBox.first->rect.setScale(scale);
 	}
+	for (auto& obj : objects)
+	{
+		obj.first->SetScale(scale);
+	}
 }
 
 void Room::SetOrigin(Origins preset)
@@ -43,11 +56,16 @@ void Room::SetOrigin(Origins preset)
 	originPreset = preset;
 	if (originPreset != Origins::Custom)
 	{
+		Utils::SetOrigin(subBackground, originPreset);
 		tileMap->SetOrigin(originPreset);
 		origin = tileMap->GetOrigin();
 		for (auto& hitBox : hitBoxes)
 		{
 			hitBox.first->rect.setOrigin(-hitBox.second.origin + origin);
+		}
+		for (auto& obj : objects)
+		{
+			obj.first->SetOrigin(-obj.second.origin + origin);
 		}
 	}
 }
@@ -79,12 +97,21 @@ void Room::Release()
 	}
 	hitBoxes.clear();
 
+	for (auto& obj : objects)
+	{
+		delete obj.first;
+	}
+	objects.clear();
+
 	delete tileMap;
 }
 
 void Room::Reset()
 {
 	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("player"));
+
+	subBackground.setTexture(TEXTURE_MGR.Get("graphics/map/SubBG.png"));
+	SetOrigin(Origins::MC);
 }
 
 void Room::Update(float dt)
@@ -93,8 +120,13 @@ void Room::Update(float dt)
 
 void Room::Draw(sf::RenderWindow& window)
 {
+	window.draw(subBackground);
 	tileMap->Draw(window);
 
+	for (auto& obj : objects)
+	{
+		obj.first->Draw(window);
+	}
 	if (Variables::isDrawHitBox)
 	{
 		for (auto& hitBox : hitBoxes)
@@ -112,13 +144,20 @@ void Room::LoadMapData(const std::string& path)
 	}
 	hitBoxes.clear();
 
-	MapDataLoader loader;
-	loader.Load(path);
-	mapData = loader.Get();
+	mapData = MapDataLoader::Load(path);
 
-	const MapDataVC& mapData = loader.Get();
-	tileMap->SetTexture(mapData.tileMapData.texId);
-	tileMap->Set(mapData.tileMapData.cellcount, mapData.tileMapData.cellsize, mapData.tileMapData.tile);
+	tileMap->Set(mapData.tileMapData);
+
+	for (const ObjectData& objData : mapData.objectData)
+	{
+		MapObject* obj = new MapObject();
+
+		obj->Init();
+		obj->Reset();
+		obj->Set(objData.type);
+
+		objects.push_back({ obj,objData });
+	}
 
 	for (const HitBoxData& hitBoxDatum : mapData.hitBoxData)
 	{
@@ -151,16 +190,9 @@ void Room::LoadMapData(const std::string& path)
 
 void Room::SaveMapData(const std::string& path)
 {
-	MapDataLoader loader;
-
-	MapDataVC& mapData = loader.Get();
-	mapData = this->mapData;
-
 	mapData.tileMapData.texId = "graphics/map/Map.png";
 	if (path == "1fenter.json")
 	{
-
-
 		mapData.playerStartPoint[(int)MapData::Direction::Down] = { 5 * 16.f,7.f * 16.f };
 
 		HitBoxData hitBoxData;
@@ -200,186 +232,15 @@ void Room::SaveMapData(const std::string& path)
 		mapData.tileMapData.name = "1fEnter";
 		mapData.tileMapData.cellcount = { 19,9 };
 		mapData.tileMapData.cellsize = { 16.f,16.f };
-		mapData.tileMapData.tile = { {48.f,160.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{128.f,32.f},
-	{64.f,160.f},
-	{0.f,64.f},
-
-	{32.f,176.f},
-	{128.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{144.f,336.f},
-	{176.f,336.f},
-	{0.f,176.f},
-	{0.f,64.f},
-
-	{32.f,176.f},
-	{96.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{80.f,336.f},
-	{0.f,176.f},
-	{0.f,64.f},
-
-	{32.f,176.f},
-	{96.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{80.f,336.f},
-	{112.f,32.f},
-	{128.f,32.f},
-
-	{32.f,176.f},
-	{96.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{176.f,352.f},
-	{144.f,336.f},
-	{176.f,336.f},
-
-	{32.f,176.f},
-	{96.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{0.f,336.f},
-	{80.f,336.f},
-
-	{ 32.f,176.f },
-	{ 96.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 80.f,336.f },
-
-	{ 32.f,176.f },
-	{ 96.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 0.f,336.f },
-	{ 80.f,336.f },
-
-	{ 48.f,176.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-	{ 16.f,144.f },
-		};
+		mapData.tileMapData.tileIndex = { {35, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 36, 8},
+{9, 148, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 151, 7, 8},
+{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145, 7, 8},
+{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145, 19, 20},
+{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 158, 149, 151},
+{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145},
+{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145},
+{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145},
+{37, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, };
 	}
 	else if (path == "1froom1.json")
 	{
@@ -387,6 +248,71 @@ void Room::SaveMapData(const std::string& path)
 
 		mapData.playerStartPoint[(int)MapData::Direction::Down] = { 5 * 16.f,7.f * 16.f };
 
+		ObjectData objData;
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 64.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 80.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 96.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 128.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 144.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 160.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 176.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 208.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 224.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 240.f,80.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 144.f,128.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 160.f,128.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 128.f,160.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 144.f,160.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 160.f,160.f };
+		mapData.objectData.push_back(objData);
+
+		objData.type = ObjectData::Type::Platform;
+		objData.origin = { 176.f,160.f };
+		mapData.objectData.push_back(objData);
 
 		HitBoxData hitBoxData;
 		hitBoxData.origin = { 0.f,0.f };
@@ -458,269 +384,22 @@ void Room::SaveMapData(const std::string& path)
 		mapData.tileMapData.name = "1froom1";
 		mapData.tileMapData.cellcount = { 19,14 };
 		mapData.tileMapData.cellsize = { 16.f,16.f };
-		mapData.tileMapData.tile = {
-			{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{32.f,176.f},
-{96.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{80.f,336.f},
-{0.f,176.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-{0.f,64.f},
-
-{0.f,64.f},
-{48.f,160.f},
-{128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{144.f,32.f},
-{96.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{80.f,336.f},
-{112.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{128.f,32.f},
-{64.f,160.f},
-
-{0.f,64.f},
-{32.f,176.f},
-{128.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{128.f,352.f},
-{0.f,336.f},
-{0.f,336.f},
-{176.f,352.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{144.f,336.f},
-{176.f,336.f},
-{0.f,176.f},
-
-{0.f,64.f},
-{32.f,176.f},
-{96.f,336.f},
-{0.f,336.f},
-{16.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{16.f,352.f},
-{0.f,336.f},
-{16.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{80.f,336.f},
-{0.f,176.f},
-
-{0.f,64.f},
-{32.f,176.f},
-{96.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{16.f,352.f},
-{0.f,336.f},
-{16.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{0.f,336.f},
-{16.f,336.f},
-{80.f,336.f},
-{0.f,176.f},
-
-{0.f,64.f},
-{32.f,176.f},
-{96.f,336.f},
-{80.f,336.f},
-{48.f,288.f},
-{48.f,288.f},
-{48.f,288.f},
-{160.f,352.f},
-{48.f,288.f},
-{48.f,288.f},
-{48.f,288.f},
-{48.f,288.f},
-{160.f,352.f},
-{48.f,288.f},
-{48.f,288.f},
-{48.f,288.f},
-{96.f,336.f},
-{80.f,336.f},
-{0.f,176.f},
-
-{ 0.f,64.f },
-{ 32.f,176.f },
-{ 96.f,336.f },
-{ 80.f,336.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 160.f,352.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 160.f,352.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 96.f,336.f },
-{ 80.f,336.f },
-{ 0.f,176.f },
-
-{ 128.f,32.f },
-{ 144.f,32.f },
-{ 96.f,336.f },
-{ 80.f,336.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 160.f,352.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 160.f,352.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 96.f,336.f },
-{ 80.f,336.f },
-{ 0.f,176.f },
-
-{ 144.f,336.f },
-{ 144.f,336.f },
-{ 128.f,352.f },
-{ 80.f,336.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 160.f,352.f },
-{ 0.f,64.f },
-{ 48.f,288.f },
-{ 48.f,288.f },
-{ 0.f,64.f },
-{ 160.f,352.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 96.f,336.f },
-{ 80.f,336.f },
-{ 0.f,176.f },
-
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 80.f,336.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 160.f,352.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 160.f,352.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 0.f,64.f },
-{ 96.f,336.f },
-{ 80.f,336.f },
-{ 0.f,176.f },
-
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 176.f,352.f },
-{ 0.f,400.f },
-{ 96.f,400.f },
-{ 32.f,400.f },
-{ 176.f,368.f },
-{ 0.f,400.f },
-{ 16.f,400.f },
-{ 16.f,400.f },
-{ 32.f,400.f },
-{ 176.f,368.f },
-{ 0.f,400.f },
-{ 16.f,400.f },
-{ 32.f,400.f },
-{ 128.f,352.f },
-{ 80.f,336.f },
-{ 0.f,176.f },
-
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 16.f,352.f },
-{ 0.f,336.f },
-{ 16.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 32.f,384.f },
-{ 48.f,384.f },
-{ 0.f,336.f },
-{ 16.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 0.f,336.f },
-{ 80.f,336.f },
-{ 0.f,176.f },
-
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 16.f,144.f },
-{ 64.f,176.f },
+		mapData.tileMapData.tileIndex = { {8, 8, 8, 8, 8, 8, 8, 9, 146, 160, 160, 145, 7, 8, 8, 8, 8, 8, 8},
+{8, 35, 20, 20, 20, 20, 20, 21, 146, 160, 160, 145, 19, 20, 20, 20, 20, 20, 36},
+{8, 9, 148, 149, 149, 149, 149, 149, 156, 160, 160, 158, 149, 149, 149, 149, 149, 151, 7},
+{8, 9, 146, 160, 161, 160, 160, 160, 160, 160, 160, 163, 160, 161, 160, 160, 160, 145, 7},
+{8, 9, 146, 160, 160, 160, 163, 160, 161, 160, 160, 160, 160, 160, 160, 160, 161, 145, 7},
+{8, 9, 146, 145, 0, 0, 0, 157, 0, 0, 0, 0, 157, 0, 0, 0, 146, 145, 7},
+{8, 9, 146, 145, 0, 0, 0, 157, 0, 0, 0, 0, 157, 0, 0, 0, 146, 145, 7},
+{20, 21, 146, 145, 0, 0, 0, 157, 0, 0, 0, 0, 157, 0, 0, 0, 146, 145, 7},
+{149, 149, 156, 145, 0, 0, 0, 157, 0, 0, 0, 0, 157, 0, 0, 0, 146, 145, 7},
+{160, 160, 160, 145, 0, 0, 0, 157, 0, 0, 0, 0, 157, 0, 0, 0, 146, 145, 7},
+{160, 160, 160, 158, 178, 184, 180, 159, 178, 179, 179, 180, 159, 178, 179, 180, 156, 145, 7 },
+{160, 160, 160, 163, 160, 161, 160, 160, 160, 174, 175, 160, 161, 160, 160, 160, 160, 145, 7 },
+{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 38},
 		};
 	}
-	loader.Save(path);
+	MapDataLoader::Save(mapData, path);
 }
 
 void Room::SetConnectedRoom(Room* room, HitBoxData::Type connection)
@@ -740,7 +419,7 @@ void Room::EnterPortal(HitBox* portal)
 		if (hitbox.first == portal)
 		{
 			active = false;
-			
+
 			connectedRoom[(int)hitbox.second.type]->ExitPortal(hitbox.second.type);
 		}
 	}

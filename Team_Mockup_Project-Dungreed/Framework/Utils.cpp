@@ -136,6 +136,7 @@ float Utils::Magnitude(const sf::Vector2f& vec)
 void Utils::Normailize(sf::Vector2f& vec)
 {
     float mag = Magnitude(vec);
+
     if (ABS(mag - 1.f) > EPSILON)
         vec /= mag;
 }
@@ -143,7 +144,12 @@ void Utils::Normailize(sf::Vector2f& vec)
 sf::Vector2f Utils::GetNormal(const sf::Vector2f& vec)
 {
     float mag = Magnitude(vec);
-   
+
+    if (ABS(mag) < EPSILON)
+    {
+        return { 0.f, 0.f };
+    }
+
     if (ABS(mag - 1.f) < EPSILON)
         return vec;
 
