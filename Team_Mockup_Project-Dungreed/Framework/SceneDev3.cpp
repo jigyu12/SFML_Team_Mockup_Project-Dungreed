@@ -31,7 +31,7 @@ void SceneDev3::Enter()
 
 	vaLight.setPrimitiveType(sf::PrimitiveType::TriangleFan);
 	vaLight[0].position = { 0.f,0.f };
-	vaLight[0].color = { 50,50,50,0 };
+	vaLight[0].color = { 50,50,10,0 };
 	for (int i = 1;i < vaLight.getVertexCount();++i)
 	{
 		vaLight[i].position = { 20 * cosf((i - 1) * Utils::PI * 2.f / 30.f),20 * sinf((i - 1) * Utils::PI * 2.f / 30.f) };

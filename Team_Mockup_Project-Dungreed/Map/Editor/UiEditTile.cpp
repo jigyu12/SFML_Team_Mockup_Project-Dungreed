@@ -40,6 +40,9 @@ void UiEditTile::SetOrigin(const sf::Vector2f& newOrigin)
 
 void UiEditTile::Init()
 {
+	sortingLayer = SortingLayers::UI;
+	sortingOrder = 2;
+
 	pagecount = 2;
 
 	for (int i = 0; i < pagecount;++i)
@@ -158,7 +161,6 @@ void UiEditTile::Update(float dt)
 		countyText.setString(std::to_string(count.y));
 	}
 
-
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 	{
 		sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToUi(InputMgr::GetMousePosition());
@@ -204,6 +206,15 @@ void UiEditTile::Update(float dt)
 				sf::Vector2i count = editingTileMap->GetCellCount();
 				editingTileMap->Resize({ count.x , count.y - 1 });
 			}
+		}
+	}
+
+	if (InputMgr::GetMouseButton(sf::Mouse::Left))
+	{
+		sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
+		if (editingTileMap->GetGlobalBounds().contains(mousepos))
+		{
+			editingTileMap->SetTile(mousepos, TILE_TABLE->Get(selectedTileIndex));
 		}
 	}
 }

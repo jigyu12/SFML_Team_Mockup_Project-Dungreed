@@ -6,6 +6,8 @@ class UiEditTile : public GameObject
 {
 protected:
 
+	sf::RectangleShape boxWindow;
+
 	sf::Sprite pageUpButton;
 	sf::Text pageText;
 	sf::Sprite pageDownButton;
@@ -44,5 +46,5 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	int GetSelectedTileIndex() { return selectedTileIndex; }
+	int GetSelectedTileIndex() const { return selectedTileIndex; }
 };

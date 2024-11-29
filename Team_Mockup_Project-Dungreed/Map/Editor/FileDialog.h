@@ -18,7 +18,7 @@
 namespace FileDialog
 {
 	HRESULT CDialogEventHandler_CreateInstance(REFIID riid, void** ppv);
-	HRESULT OpenDialog(std::function<void(const std::wstring& wpath)> pathfunction,bool open = true);
+	HRESULT OpenDialog(std::function<void(const std::wstring& wpath)> pathfunction, bool open = true);
 
 	const COMDLG_FILTERSPEC c_rgSaveTypes[] =
 	{
@@ -32,29 +32,11 @@ namespace FileDialog
 	{
 	public:
 		// IUnknown methods
-		IFACEMETHODIMP QueryInterface(REFIID riid, void** ppv)
-		{
-			static const QITAB qit[] = {
-				QITABENT(CDialogEventHandler, IFileDialogEvents),
-				QITABENT(CDialogEventHandler, IFileDialogControlEvents),
-				{ 0 },
-	#pragma warning(suppress:4838)
-			};
-			return QISearch(this, qit, riid, ppv);
-		}
+		IFACEMETHODIMP QueryInterface(REFIID riid, void** ppv);
 
-		IFACEMETHODIMP_(ULONG) AddRef()
-		{
-			return InterlockedIncrement(&_cRef);
-		}
+		IFACEMETHODIMP_(ULONG) AddRef() { return InterlockedIncrement(&_cRef); }
 
-		IFACEMETHODIMP_(ULONG) Release()
-		{
-			long cRef = InterlockedDecrement(&_cRef);
-			if (!cRef)
-				delete this;
-			return cRef;
-		}
+		IFACEMETHODIMP_(ULONG) Release();
 
 		// IFileDialogEvents methods
 		IFACEMETHODIMP OnFileOk(IFileDialog*) { return S_OK; };

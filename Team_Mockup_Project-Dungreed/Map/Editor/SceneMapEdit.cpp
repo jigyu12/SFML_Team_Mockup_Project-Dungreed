@@ -56,14 +56,6 @@ void SceneMapEdit::Update(float dt)
 		worldView.setCenter(centerpos);
 	}
 
-	if (InputMgr::GetMouseButton(sf::Mouse::Left))
-	{
-		sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
-		if (tileMap->GetGlobalBounds().contains(mousepos))
-		{
-			tileMap->SetTile(mousepos, TILE_TABLE->Get(uiEditor->GetSelectedTileIndex()));
-		}
-	}
 }
 
 void SceneMapEdit::Draw(sf::RenderWindow& window)

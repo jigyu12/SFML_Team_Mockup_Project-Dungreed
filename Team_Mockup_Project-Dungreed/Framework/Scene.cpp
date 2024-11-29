@@ -205,3 +205,13 @@ sf::Vector2i Scene::UiToScreen(sf::Vector2f worldPos)
 {
 	return FRAMEWORK.GetWindow().mapCoordsToPixel(worldPos, uiView);
 }
+
+sf::Vector2f Scene::WorldToUi(sf::Vector2f worldPos)
+{
+	return uiView.getInverseTransform().transformPoint(worldView.getTransform().transformPoint(worldPos));
+}
+
+sf::Vector2f Scene::UiToWorld(sf::Vector2f uiPos)
+{
+	return worldView.getInverseTransform().transformPoint(uiView.getTransform().transformPoint(uiPos));
+}

@@ -203,7 +203,7 @@ void TileMap::SetTile(const sf::Vector2i& cellpos, const TileDatum& tile)
 	va[quadindex + 3].texCoords = { tile.startpos.x,tile.startpos.y + cellSize.y };
 }
 
-TileMapData TileMap::GetTileMapData()
+TileMapData TileMap::GetTileMapData() const
 {
 	TileMapData data;
 	data.name = this->name;
@@ -215,14 +215,14 @@ TileMapData TileMap::GetTileMapData()
 	return data;
 }
 
-sf::Vector2i TileMap::GetTilePosition(const sf::Vector2f& mousepos)
+sf::Vector2i TileMap::GetTilePosition(const sf::Vector2f& mousepos) const
 {
 	sf::Transform inverse = transform.getInverse();
 	sf::Vector2f localPoint = inverse.transformPoint(mousepos);
 	return { (int)(localPoint.x / cellSize.x),(int)(localPoint.y / cellSize.y) };
 }
 
-int TileMap::GetTileIndex(const sf::Vector2f& mousepos)
+int TileMap::GetTileIndex(const sf::Vector2f& mousepos) const
 {
 	sf::Vector2i tilepos = GetTilePosition(mousepos);
 	if (tilepos.y < tileIndexes.size() && tilepos.x < tileIndexes[0].size())

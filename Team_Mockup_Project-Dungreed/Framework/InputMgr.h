@@ -60,5 +60,7 @@ public:
 
 	static float GetAxisRaw(Axis axis);	// -1.0 0 1.0
 	static float GetAxis(Axis axis);	// -1.0 ~ 1.0
+
+	static void ResetMouseButton(const sf::Mouse::Button& button);
 };
 

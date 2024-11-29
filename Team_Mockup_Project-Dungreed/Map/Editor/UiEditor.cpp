@@ -58,6 +58,8 @@ void UiEditor::Init()
 	uiEditTile = new UiEditTile();
 	uiEditTile->Init();
 
+	uiEditHitBox = new UiEditHitBox();
+	uiEditHitBox->Init();
 }
 
 void UiEditor::Release()
@@ -68,8 +70,9 @@ void UiEditor::Release()
 void UiEditor::Reset()
 {
 	uiEditTile->Reset();
+	uiEditHitBox->Reset();
 
-	this->tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("tileMap"));
+	this->editingTileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("tileMap"));
 
 	editorWindow.setFillColor({ 100,100,100,255 });
 
@@ -90,8 +93,7 @@ void UiEditor::Update(float dt)
 		break;
 	}
 
-
-	if (InputMgr::GetMouseButtonUp(sf::Mouse::Left))
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 	{
 		sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToUi(InputMgr::GetMousePosition());
 		if (saveButton.getGlobalBounds().contains(mousepos))
@@ -100,23 +102,44 @@ void UiEditor::Update(float dt)
 				{
 					MapDataVC mapData;
 
-					if (tileMap != nullptr)
+					if (editingTileMap != nullptr)
 					{
-						mapData.tileMapData = tileMap->GetTileMapData();
+						mapData.tileMapData = editingTileMap->GetTileMapData();
+					}
+					if (uiEditHitBox != nullptr)
+					{
+						mapData.hitBoxData = uiEditHitBox->GetHitBoxData();
 					}
 					MapDataLoader::Save(mapData, path);
 				}, false);
+			InputMgr::ResetMouseButton(sf::Mouse::Left);
 		}
 		else if (loadButton.getGlobalBounds().contains(mousepos))
 		{
 			FileDialog::OpenDialog([this](const std::wstring& path)
 				{
-					if (tileMap != nullptr)
+					const MapDataVC& mapdata = MapDataLoader::Load(path);
+
+					if (editingTileMap != nullptr)
 					{
-						tileMap->Set(MapDataLoader::Load(path).tileMapData);
+						editingTileMap->Set(mapdata.tileMapData);
+					}
+					if (uiEditHitBox != nullptr)
+					{
+						uiEditHitBox->SetHitBoxData(mapdata.hitBoxData);
 					}
 				}, true);
+			InputMgr::ResetMouseButton(sf::Mouse::Left);
 		}
+	}
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	{
+		currentGroupBox = GroupBox::Tile;
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	{
+		currentGroupBox = GroupBox::HitBox;
 	}
 }
 
@@ -132,11 +155,7 @@ void UiEditor::Draw(sf::RenderWindow& window)
 		uiEditTile->Draw(window);
 		break;
 	case UiEditor::GroupBox::HitBox:
+		uiEditHitBox->Draw(window);
 		break;
 	}
-}
-
-int UiEditor::GetSelectedTileIndex()
-{
-	return uiEditTile->GetSelectedTileIndex();
 }

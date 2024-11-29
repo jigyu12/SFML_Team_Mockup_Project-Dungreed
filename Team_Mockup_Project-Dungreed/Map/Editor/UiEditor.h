@@ -16,7 +16,7 @@ protected:
 
 	sf::RectangleShape editorWindow;
 
-	TileMap* tileMap;
+	TileMap* editingTileMap;
 
 	sf::Sprite saveButton;
 	sf::Sprite loadButton;
@@ -41,7 +41,5 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
-
-	int GetSelectedTileIndex();
 };
 

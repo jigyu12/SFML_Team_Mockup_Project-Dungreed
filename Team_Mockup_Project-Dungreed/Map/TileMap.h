@@ -43,13 +43,13 @@ public:
 	void SetTile(const sf::Vector2f& mousepos, const TileDatum& tile);
 	void SetTile(const sf::Vector2i& tilepos, const TileDatum& tile);
 	
-	TileMapData GetTileMapData();
-	sf::Vector2i GetTilePosition(const sf::Vector2f& mousepos);
-	int GetTileIndex(const sf::Vector2f& mousepos);
+	TileMapData GetTileMapData() const;
+	sf::Vector2i GetTilePosition(const sf::Vector2f& mousepos) const;
+	int GetTileIndex(const sf::Vector2f& mousepos) const;
 
-	const sf::Vector2i& GetCellCount() { return cellCount; }
+	const sf::Vector2i& GetCellCount() const { return cellCount; }
 	void Resize(const sf::Vector2i& size);
 
-	bool IsShowGridLine() { return showGridLine; }
+	bool IsShowGridLine() const { return showGridLine; }
 	void SetShowGridLine(bool show) { showGridLine = show; }
 };

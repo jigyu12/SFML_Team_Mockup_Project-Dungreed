@@ -93,3 +93,22 @@ HRESULT FileDialog::OpenDialog(std::function<void(const std::wstring& wpath)> pa
 	}
 	return hr;
 }
+
+IFACEMETHODIMP FileDialog::CDialogEventHandler::QueryInterface(REFIID riid, void** ppv)
+{
+	static const QITAB qit[] = {
+		QITABENT(CDialogEventHandler, IFileDialogEvents),
+		QITABENT(CDialogEventHandler, IFileDialogControlEvents),
+		{ 0 },
+#pragma warning(suppress:4838)
+	};
+	return QISearch(this, qit, riid, ppv);
+}
+
+IFACEMETHODIMP_(ULONG) FileDialog::CDialogEventHandler::Release()
+{
+	long cRef = InterlockedDecrement(&_cRef);
+	if (!cRef)
+		delete this;
+	return cRef;
+}
