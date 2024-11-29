@@ -124,7 +124,6 @@ void SkeletonDog::Update(float dt)
 {
 	detectionRange.setPosition(body.getPosition());
 	detectionLine.setPosition({ body.getPosition().x + direction.x * 12.f ,body.getPosition().y });
-	std::cout << body.getPosition().x << " " << body.getPosition().y << std::endl;
 
 	switch (state)
 	{
@@ -383,24 +382,19 @@ void SkeletonDog::LateUpdate(float dt)
 
 			if (state.Up)
 			{
-				std::cout << "Up" << std::endl;
 			}
 
 			if (state.Down)
 			{
-				std::cout << "Down" << std::endl;
-
 				isOnGround = true;
 			}
 
 			if (state.Left)
 			{
-				std::cout << "Left" << std::endl;
 			}
 
 			if (state.Right)
 			{
-				std::cout << "Right" << std::endl;
 			}
 		}
 	}
