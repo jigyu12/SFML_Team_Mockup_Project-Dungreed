@@ -37,8 +37,10 @@ protected:
 	float jumpTimer;
 
 	float dashTimer;
-	float dashSpeed = 40.f;
+	float dashSpeed = 300.f;
 	float downSpeed = 100.f;
+	float dashCoolTimer = 1.f;
+	sf::Vector2f dashDirection = look;
 	
 public:
 	Player(const std::string& name = "Player");
@@ -74,4 +76,5 @@ public:
 	void UpdateJump(float dt);
 	void UpdateDownJump(float dt);
 	void UpdateDash(float dt);
+	void Jump();
 };

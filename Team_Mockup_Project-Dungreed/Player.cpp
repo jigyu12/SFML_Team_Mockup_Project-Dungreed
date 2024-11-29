@@ -89,10 +89,34 @@ void Player::Reset()
 	SetRotation(0.f);
 }
 
+void Player::SetStatus(Status status)
+{
+	this->status = (status);
+
+	switch (status)
+	{
+	case Player::Status::Ground:
+		break;
+	case Player::Status::Jump:
+		break;
+	case Player::Status::Dash:
+		velocity = look * dashSpeed;
+		dashTimer = 0.f;
+		dashCoolTimer = 0.f;
+		break;
+	case Player::Status::DownJump:
+		velocity.y = downSpeed;
+		break;
+	default:
+		break;
+
+	}
+}
+
 void Player::Update(float dt)
 {
 	animator.Update(dt);
-
+	dashCoolTimer += dt;
 	switch (status)
 	{
 	case Player::Status::Ground:
@@ -110,7 +134,7 @@ void Player::Update(float dt)
 	default:
 		break;
 	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::LShift))
+	if (InputMgr::GetKeyDown(sf::Keyboard::LShift)&& dashCoolTimer >= 1.f)
 	{
 		SetStatus(Player::Status::Dash);
 	}
@@ -160,6 +184,8 @@ void Player::LateUpdate(float dt)
 				case HitBoxData::Type::Downable:
 					collided = true;
 						break;
+				case HitBoxData::Type::PortalDown:
+					
 				default:
 					break;
 				}
@@ -176,7 +202,7 @@ void Player::LateUpdate(float dt)
 					collided = true;
 					break;
 				case HitBoxData::Type::Downable:
-					if (status != Status::DownJump || startHitBox.first != DownPlatform)
+					if (status != Status::Dash &&(status != Status::DownJump || startHitBox.first != DownPlatform))
 					{
 						SetStatus(Status::Ground);
 						position.y = startHitBox.first->rect.getGlobalBounds().top;
@@ -227,41 +253,17 @@ void Player::LateUpdate(float dt)
 					break;
 				}
 			}
-
 		}
 	}
 	if (!collided && status == Status::Ground)
 	{
-		status = Status::Jump;
+		SetStatus( Status::Jump);
 	}
 }
 
 
 
-void Player::SetStatus(Status status)
-{
-	this->status = (status);
 
-	switch (status)
-	{
-	case Player::Status::Ground:
-		break;
-	case Player::Status::Jump:
-		velocity.y = -jumpForce;
-		jumpTimer = 0.f;
-		break;
-	case Player::Status::Dash:
-		velocity = look * dashSpeed;
-		dashTimer = 0.f;
-		break;
-	case Player::Status::DownJump:
-		velocity.y = downSpeed;
-		break;
-	default:
-		break;
-
-	}
-}
 
 void Player::UpdateGrounded(float dt)
 {
@@ -270,10 +272,8 @@ void Player::UpdateGrounded(float dt)
 	velocity.x = direction.x * speed;
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
 	{
-		SetStatus(Player::Status::Jump);
+		Jump();
 	}
-
-
 }
 
 void Player::UpdateJump(float dt)
@@ -298,7 +298,6 @@ void Player::UpdateDownJump(float dt)
 	{
 		velocity.y += gravity * dt;
 	}
-	
 }
 
 void Player::UpdateDash(float dt)
@@ -306,8 +305,16 @@ void Player::UpdateDash(float dt)
 	dashTimer += dt;
 	if (dashTimer > 0.3f)
 	{
+		velocity = { 0.f,0.f };
 		SetStatus(Status::Jump);
 	}
+}
+
+void Player::Jump()
+{
+	velocity.y = -jumpForce;
+	jumpTimer = 0.f;
+	SetStatus(Status::Jump);
 }
 
 void Player::Draw(sf::RenderWindow& window)

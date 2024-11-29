@@ -124,6 +124,7 @@ void SkeletonDog::Update(float dt)
 {
 	detectionRange.setPosition(body.getPosition());
 	detectionLine.setPosition({ body.getPosition().x + direction.x * 10.f ,body.getPosition().y });
+	std::cout << body.getPosition().x << " " << body.getPosition().y << std::endl;
 
 	switch (state)
 	{
