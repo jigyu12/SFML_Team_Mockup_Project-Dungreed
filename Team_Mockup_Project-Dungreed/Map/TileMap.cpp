@@ -98,8 +98,13 @@ void TileMap::Draw(sf::RenderWindow& window)
 	}
 }
 
-void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<std::vector<int>>& tileIndex)
+void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<std::vector<int>>& tileIndex, bool clear)
 {
+	if (clear)
+	{
+		this->tileIndexes.clear();
+	}
+
 	cellCount = count;
 	cellSize = size;
 	this->tileIndexes = tileIndex;
@@ -110,10 +115,16 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 	gridLine.resize((count.x + count.y + 2) * 2);
 	gridLine.setPrimitiveType(sf::PrimitiveType::Lines);
 
-	this->tileIndexes.resize(count.y);
+	if (this->tileIndexes.size() != count.y)
+	{
+		this->tileIndexes.resize(count.y);
+	}
 	for (int i = 0;i < this->tileIndexes.size();++i)
 	{
-		this->tileIndexes[i].resize(count.x, -1);
+		if (this->tileIndexes[i].size() != count.x)
+		{
+			this->tileIndexes[i].resize(count.x, -1);
+		}
 	}
 
 	sf::Vector2f posOffset[4] =
@@ -166,7 +177,7 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 void TileMap::Set(const TileMapData& tileMapData)
 {
 	SetTexture(tileMapData.texId);
-	Set(tileMapData.cellcount, tileMapData.cellsize, tileMapData.tileIndexes);
+	Set(tileMapData.cellcount, tileMapData.cellsize, tileMapData.tileIndexes, true);
 }
 
 void TileMap::SetTexture(const std::string& texId)
@@ -178,7 +189,11 @@ void TileMap::SetTexture(const std::string& texId)
 void TileMap::SetTile(const sf::Vector2f& mousepos, const TileDatum& tile)
 {
 	sf::Vector2i cellpos = GetTilePosition(mousepos);
+	SetTile(cellpos, tile);
+}
 
+void TileMap::SetTile(const sf::Vector2i& cellpos, const TileDatum& tile)
+{
 	tileIndexes[cellpos.y][cellpos.x] = tile.index;
 
 	int quadindex = (cellpos.y * cellCount.x + cellpos.x) * 4;

@@ -47,7 +47,6 @@ void UiEditor::Init()
 	uiEditTile = new UiEditTile();
 	uiEditTile->Init();
 
-	this->tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("tileMap"));
 }
 
 void UiEditor::Release()
@@ -58,6 +57,8 @@ void UiEditor::Release()
 void UiEditor::Reset()
 {
 	uiEditTile->Reset();
+
+	this->tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("tileMap"));
 
 	sf::Vector2f windowsize = FRAMEWORK.GetWindowSizeF();
 	editorWindow.setSize({ 480.f, windowsize.y });

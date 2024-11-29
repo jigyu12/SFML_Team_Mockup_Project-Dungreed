@@ -191,7 +191,7 @@ void Room::LoadMapData(const std::string& path)
 void Room::SaveMapData(const std::string& path)
 {
 	mapData.tileMapData.texId = "graphics/map/Map.png";
-	if (path == "1fenter.json")
+	if (path == "maps/1fenter.json")
 	{
 		mapData.playerStartPoint[(int)MapData::Direction::Down] = { 5 * 16.f,7.f * 16.f };
 
@@ -242,7 +242,7 @@ void Room::SaveMapData(const std::string& path)
 {9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145},
 {37, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, };
 	}
-	else if (path == "1froom1.json")
+	else if (path == "maps/1froom1.json")
 	{
 
 
@@ -382,7 +382,7 @@ void Room::SaveMapData(const std::string& path)
 		mapData.hitBoxData.push_back(hitBoxData);
 
 		mapData.tileMapData.name = "1froom1";
-		mapData.tileMapData.cellcount = { 19,14 };
+		mapData.tileMapData.cellcount = { 19,13 };
 		mapData.tileMapData.cellsize = { 16.f,16.f };
 		mapData.tileMapData.tileIndexes = { {8, 8, 8, 8, 8, 8, 8, 9, 146, 160, 160, 145, 7, 8, 8, 8, 8, 8, 8},
 {8, 35, 20, 20, 20, 20, 20, 21, 146, 160, 160, 145, 19, 20, 20, 20, 20, 20, 36},

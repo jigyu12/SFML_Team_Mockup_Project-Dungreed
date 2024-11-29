@@ -92,7 +92,7 @@
         },
         "name": "1fEnter",
         "texId": "graphics/map/Map.png",
-        "tileIndex": [
+        "tileIndexes": [
             [
                 35,
                 20,

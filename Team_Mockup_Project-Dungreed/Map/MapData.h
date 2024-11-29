@@ -95,7 +95,6 @@ struct MapDataV2 : public MapData
 {
 	MapDataV2();
 
-
 	std::vector<sf::Vector2f> playerStartPoint;
 	TileMapData tileMapData;
 	std::vector<ObjectData> objectData;

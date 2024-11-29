@@ -39,8 +39,9 @@ public:
 
 	void SetTexture(const std::string& texId);
 	void Set(const TileMapData& tileMapData);
-	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<std::vector<int>>& tileData);
+	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<std::vector<int>>& tileData, bool clear = false);
 	void SetTile(const sf::Vector2f& mousepos, const TileDatum& tile);
+	void SetTile(const sf::Vector2i& tilepos, const TileDatum& tile);
 	
 	TileMapData GetTileMapData();
 	sf::Vector2i GetTilePosition(const sf::Vector2f& mousepos);

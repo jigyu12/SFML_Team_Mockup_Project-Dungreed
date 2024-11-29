@@ -11,6 +11,7 @@ protected:
 	Room* room1;
 
 	Player* player;
+	sf::RenderStates rs;
 
 	sf::VertexArray vaLight;
 

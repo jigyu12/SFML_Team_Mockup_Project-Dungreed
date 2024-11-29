@@ -6,19 +6,20 @@ class UiEditTile : public GameObject
 {
 protected:
 
-	sf::Sprite selectedTile;
-
 	sf::Sprite xUpButton;
 	sf::Sprite xDownButton;
 
 	sf::Sprite yUpButton;
 	sf::Sprite yDownButton;
 
-	TileMap* tileList;
-	TileMap* tileMap;
+	TileMap* selectedTiles;
+	std::vector<TileMap*> tileList;
+	TileMap* editingTileMap;
 
 	int selectedTileIndex;
-	int pagenumber;
+	int selectedPage;
+	int currentPage;
+	int pagecount;
 
 public:
 	UiEditTile(const std::string& name = "");

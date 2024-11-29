@@ -269,7 +269,7 @@
     "tileMapData": {
         "cellcount": {
             "x": 19,
-            "y": 14
+            "y": 13
         },
         "cellsize": {
             "x": 16.0,
@@ -277,7 +277,7 @@
         },
         "name": "1froom1",
         "texId": "graphics/map/Map.png",
-        "tileIndex": [
+        "tileIndexes": [
             [
                 8,
                 8,

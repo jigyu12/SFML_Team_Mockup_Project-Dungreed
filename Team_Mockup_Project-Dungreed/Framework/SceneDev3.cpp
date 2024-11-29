@@ -16,6 +16,8 @@ void SceneDev3::Init()
 	room1 = AddGo(new Room("room1"));
 	player = AddGo(new Player("player"));
 
+	vaLight.resize(32);
+
 	Scene::Init();
 }
 
@@ -27,6 +29,15 @@ void SceneDev3::Enter()
 	uiView.setSize(size);
 	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);
 
+	vaLight.setPrimitiveType(sf::PrimitiveType::TriangleFan);
+	vaLight[0].position = { 0.f,0.f };
+	vaLight[0].color = { 50,50,50,0 };
+	for (int i = 1;i < vaLight.getVertexCount();++i)
+	{
+		vaLight[i].position = { 20 * cosf((i - 1) * Utils::PI * 2.f / 30.f),20 * sinf((i - 1) * Utils::PI * 2.f / 30.f) };
+		vaLight[i].color = { 0,0,0,0 };
+	}
+
 	size.x /= 6.f;
 	size.y /= 6.f;
 	worldView.setSize(size);
@@ -35,6 +46,7 @@ void SceneDev3::Enter()
 
 	roome->SetConnectedRoom(room1, HitBoxData::Type::PortalRight);
 	room1->SetConnectedRoom(roome, HitBoxData::Type::PortalLeft);
+	roome->LoadMapData("maps/1fenter.json");
 }
 
 void SceneDev3::Exit()
@@ -48,23 +60,23 @@ void SceneDev3::Update(float dt)
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad7))
 	{
-		roome->SaveMapData("1fenter.json");
+		roome->SaveMapData("maps/1fenter.json");
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad8))
 	{
 		room1->SetActive(false);
 		roome->SetActive(true);
-		roome->LoadMapData("1fenter.json");
+		roome->LoadMapData("maps/1fenter.json");
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad4))
 	{
-		room1->SaveMapData("1froom1.json");
+		room1->SaveMapData("maps/1froom1.json");
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad5))
 	{
 		roome->SetActive(false);
 		room1->SetActive(true);
-		room1->LoadMapData("1froom1.json");
+		room1->LoadMapData("maps/1froom1.json");
 	}
 
 	sf::Vector2f playerpos = player->GetPosition();
@@ -102,4 +114,12 @@ void SceneDev3::Draw(sf::RenderWindow& window)
 {
 	window.clear({ 51,49,67 });
 	Scene::Draw(window);
+
+	sf::View dv = window.getDefaultView();
+	window.setView(worldView);
+
+	rs.blendMode = sf::BlendMode(sf::BlendMode::One, sf::BlendMode::One, sf::BlendMode::Add);
+	window.draw(vaLight, rs);
+	//window.draw(vaLight);
+	window.setView(dv);
 }
