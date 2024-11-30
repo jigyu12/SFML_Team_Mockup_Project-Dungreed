@@ -3,7 +3,7 @@
 class PlayerUi : public GameObject
 {
 protected:
-	sf::Vector2f maxHpSize = { 50.f,10.f };
+	sf::Vector2f maxHpSize = { 200.f,30.f };
 	sf::RectangleShape maxHp;
 	sf::Text textHp;
 

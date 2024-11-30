@@ -51,7 +51,7 @@ void PlayerUi::Release()
 
 void PlayerUi::Reset()
 {
-	float fontsize = 9.f;
+	float fontsize = 50.f;
 	sf::Font& font = FONT_MGR.Get("Font/french.ttf");
 	textHp.setFont(font);
 	textHp.setCharacterSize(fontsize);
@@ -61,21 +61,28 @@ void PlayerUi::Reset()
 	PlayerLife.setTexture(TEXTURE_MGR.Get(PlayerLifeBase));
 	PlayerLifeBackGround.setTexture(TEXTURE_MGR.Get(PlayerLifeBack));
 
+	PlayerLifeBackGround.setOrigin(Utils::SetOrigin(PlayerLife, Origins::TL));
+	PlayerLifeBackGround.setPosition({ 5.f,5.f });
+	PlayerLifeBackGround.setScale({ 6.f,5.5f });
 
 	PlayerLife.setOrigin(Utils::SetOrigin(PlayerLife, Origins::TL));
-	PlayerLife.setPosition({ -158.f,-88.f });
+	PlayerLife.setPosition({ 5.f,5.f });
+	PlayerLife.setScale({ 6.f,5.5f });
 
-	textHp.setPosition({ -130.f,-80.f });
+	textHp.setPosition({ 200.f,55.f });
 	SetHp(90, 90);
 }
 
 void PlayerUi::Update(float dt)
 {
+
 }
 
 void PlayerUi::Draw(sf::RenderWindow& window)
 {
-	
+	window.draw(PlayerLifeBackGround);
+	window.draw(PlayerLife);
+	window.draw(textHp);
 }
 
 void PlayerUi::SetHp(int hp, int max)
