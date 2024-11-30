@@ -7,6 +7,11 @@ class ShortSword : public Weapon
 protected:
 	sf::Vector2f look;
 
+	bool isUp;
+
+	Animator animatorFx;
+	sf::Sprite swordSwingFx;
+
 public:
 	ShortSword(const std::string& name = "ShortSword");
 	virtual ~ShortSword() = default;

@@ -82,6 +82,8 @@ public:
 	void UpdateDash(float dt);
 	void Jump();
 
+	sf::Vector2f GetPlayerLookNormal() const { return Utils::GetNormal(look); }
+
 	void SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon = false);
 	void SetWeaponToWeaponSlot2(Weapon* weapon, bool isCurrentWeapon = false);
 	void SwitchWeaponSlot(sf::Keyboard::Key key);

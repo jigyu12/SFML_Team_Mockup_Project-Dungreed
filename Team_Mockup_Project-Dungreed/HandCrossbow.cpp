@@ -60,7 +60,7 @@ void HandCrossbow::Reset()
 	originalDamageMin = 7;
 	originalDamageMax = 9;
 
-	attackSpeedDelayTime = 1.43f;
+	attackSpeedDelayTime = 1.f;
 	attackSpeedAccumTime = attackSpeedDelayTime;
 
 	Utils::SetOrigin(sprite, Origins::ML);

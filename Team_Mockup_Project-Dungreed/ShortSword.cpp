@@ -60,9 +60,15 @@ void ShortSword::Reset()
 	originalDamageMin = 8;
 	originalDamageMax = 10;
 
-	attackSpeedDelayTime = 3.03f;
+	attackSpeedDelayTime = 0.7f;
 	attackSpeedAccumTime = attackSpeedDelayTime;
-	
+
+	isUp = true;
+
+	animatorFx.SetTarget(&swordSwingFx);
+
+	Utils::SetOrigin(swordSwingFx, Origins::MC);
+
 	Utils::SetOrigin(sprite, Origins::BC);
 }
 
@@ -77,6 +83,8 @@ void ShortSword::Update(float dt)
 		}
 	}
 	
+	animatorFx.Update(dt);
+
 	hitbox.UpdateTr(sprite, GetLocalBounds());
 }
 
@@ -129,7 +137,31 @@ void ShortSword::LateUpdate(float dt)
 		sf::Vector2i mousePos = InputMgr::GetMousePosition();
 		sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
 		look = Utils::GetNormal(mouseworldPos - sprite.getPosition());
-		SetRotation(Utils::Angle(look) + 90);
+		
+		attackSpeedAccumTime += dt;
+		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+		{
+			attackSpeedAccumTime = 0.f;
+
+			isUp = !isUp;
+
+			
+			
+
+			//swordSwingFx.setPosition(owner->GetPosition() + Utils::GetNormal({ InputMgr::GetMousePosition().x - owner->GetPosition().x,InputMgr::GetMousePosition().y - owner->GetPosition().y }) * 10.f);
+			swordSwingFx.setPosition(owner->GetPosition() + owner->GetPlayerLookNormal() * 10.f);
+			swordSwingFx.setRotation(Utils::Angle(look) + 90);
+			animatorFx.Play("animations/Sword Swing Fx.csv");
+		}
+
+		if (isCurrentWeapon && isUp)
+		{
+			SetRotation(Utils::Angle(look) - 10);
+		}
+		else
+		{
+			SetRotation(Utils::Angle(look) + 190);
+		}
 	}
 }
 
@@ -138,7 +170,10 @@ void ShortSword::Draw(sf::RenderWindow& window)
 	if (owner)
 	{
 		if (isCurrentWeapon)
+		{
 			window.draw(sprite);
+			window.draw(swordSwingFx);
+		}
 	}
 	else
 	{
