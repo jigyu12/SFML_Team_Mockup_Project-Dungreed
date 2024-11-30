@@ -49,7 +49,7 @@ void SceneMapEdit::Update(float dt)
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::F5))
 	{
-		SCENE_MGR.ChangeScene(SceneIds::Dev3);
+		SCENE_MGR.ChangeScene(SceneIds::Game);
 
 	}
 

@@ -5,7 +5,7 @@
 #include "Room.h";
 #include "Player.h"
 
-SceneDev3::SceneDev3() : Scene(SceneIds::Dev2)
+SceneDev3::SceneDev3() : Scene(SceneIds::Dev3)
 {
 
 }

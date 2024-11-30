@@ -9,6 +9,7 @@ SceneGame::SceneGame()
 
 void SceneGame::Init()
 {
+	player = AddGo(new Player("player"));
 
 	Scene::Init();
 }
@@ -42,6 +43,7 @@ void SceneGame::Exit()
 void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
+	worldView.setCenter(player->GetPosition());
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::F5))
 	{

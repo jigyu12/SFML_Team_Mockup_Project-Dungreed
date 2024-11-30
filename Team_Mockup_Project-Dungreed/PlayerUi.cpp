@@ -52,7 +52,7 @@ void PlayerUi::Release()
 void PlayerUi::Reset()
 {
 	float fontsize = 50.f;
-	sf::Font& font = FONT_MGR.Get("Font/french.ttf");
+	sf::Font& font = FONT_MGR.Get("fonts/french.ttf");
 	textHp.setFont(font);
 	textHp.setCharacterSize(fontsize);
 	textHp.setFillColor(sf::Color::Black);
