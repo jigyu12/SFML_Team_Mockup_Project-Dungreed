@@ -2,6 +2,9 @@
 
 #include "Character.h"
 
+class Monster;
+class PlayerUi;
+
 class Player : public Character
 {
 public:
@@ -26,15 +29,15 @@ protected:
 	Status status;
 	sf::Sprite sword;
 
-
-
 	sf::Vector2f velocity;
 	sf::Vector2f look;
-
-
+	
+	PlayerUi* playerui;
+	sf::Color originalPlayerColor;
+	
 	HitBox* DownPlatform;
 	std::string swordId = "graphics/weapon/Sword.png";
-
+	std::string playerDeadId = "graphics/player/CharDie.png";
 	float gravity;
 	float jumpForce;
 	float jumpTimer;
@@ -42,6 +45,13 @@ protected:
 	float dashTimer;
 	float dashSpeed = 300.f;
 	float downSpeed = 100.f;
+
+	float invincibilityTimer = 0.f;
+
+	bool isDamaged = false;
+	bool isDead = false;
+	
+
 	float dashCoolTimer = 1.f;
 	sf::Vector2f dashDirection = look;
 	
@@ -79,6 +89,8 @@ public:
 	void UpdateJump(float dt);
 	void UpdateDownJump(float dt);
 	void UpdateDash(float dt);
-	void Jump();
 
+	void Jump();
+	void OnDamage(int monsterDamage);
+	int GetHp() const { return hp; }
 };

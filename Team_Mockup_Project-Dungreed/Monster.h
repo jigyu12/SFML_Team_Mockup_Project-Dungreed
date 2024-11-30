@@ -19,6 +19,7 @@ protected:
 
 	Player* target;
 	int originalDamage;
+	
 
 	float attackAccumSpeed;
 	float attackSpeedDelay;

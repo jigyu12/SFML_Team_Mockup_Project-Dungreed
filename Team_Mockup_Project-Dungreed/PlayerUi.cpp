@@ -51,6 +51,7 @@ void PlayerUi::Release()
 
 void PlayerUi::Reset()
 {
+	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
 	float fontsize = 50.f;
 	sf::Font& font = FONT_MGR.Get("Font/french.ttf");
 	textHp.setFont(font);
@@ -70,12 +71,11 @@ void PlayerUi::Reset()
 	PlayerLife.setScale({ 6.f,5.5f });
 
 	textHp.setPosition({ 200.f,55.f });
-	SetHp(90, 90);
+	SetHp(player->GetHp(), maxhp);
 }
 
 void PlayerUi::Update(float dt)
 {
-
 }
 
 void PlayerUi::Draw(sf::RenderWindow& window)
