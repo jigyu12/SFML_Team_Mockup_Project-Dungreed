@@ -3,6 +3,7 @@
 #include "SceneDev1.h"
 #include "SceneDev3.h"
 #include "Room.h"
+#include "Weapon.h"
 #include "PlayerUi.h"
 #include "Monster.h"
 
@@ -87,11 +88,9 @@ void Player::Reset()
 	animator.SetTarget(&body);
 	animator.Play("animations/player Idle.csv");
 	/*body.setTexture(TEXTURE_MGR.Get(playerId));*/
-	sword.setTexture(TEXTURE_MGR.Get(swordId));
-	
+
 	originalPlayerColor = body.getColor();
 
-	sword.setOrigin(Utils::SetOrigin(sword, Origins::BC));
 	hitbox.SetColor(sf::Color::Blue);
 
 	SetPosition({ 0.f,0.f });
@@ -131,6 +130,16 @@ void Player::SetStatus(Status status)
 
 void Player::Update(float dt)
 {
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	{
+		SwitchWeaponSlot(sf::Keyboard::Num1);
+	}
+	else if(InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	{
+		SwitchWeaponSlot(sf::Keyboard::Num2);
+	}
+	
+
 	animator.Update(dt);
 
 	dashCoolTimer += dt;
@@ -165,13 +174,11 @@ void Player::Update(float dt)
 
 
 	SetPosition(position + velocity * dt);
-	sword.setPosition({ body.getPosition().x ,body.getPosition().y - 9 });
 
 
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
 	sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
-	look = Utils::GetNormal(mouseworldPos - sword.getPosition());
-	sword.setRotation(Utils::Angle(look) + 90);
+	look = Utils::GetNormal(mouseworldPos - position);
 	SetOrigin(Origins::BC);
 
 
@@ -377,12 +384,6 @@ void Player::UpdateDash(float dt)
 	}
 }
 
-
-
-
-
-
-
 void Player::Jump()
 {
 	velocity.y = -jumpForce;
@@ -395,14 +396,37 @@ void Player::OnDamage(int monsterDamage)
 	playerui->SetHp(hp -= monsterDamage, playerui->GetMaxHp());
 }
 
+void Player::SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon)
+{
+	weaponSlot1 = weapon;
+	weaponSlot1->SetIsCurrentWeapon(isCurrentWeapon);
+}
 
+void Player::SetWeaponToWeaponSlot2(Weapon* weapon, bool isCurrentWeapon)
+{
+	weaponSlot2 = weapon;
+	weaponSlot2->SetIsCurrentWeapon(isCurrentWeapon);
+}
 
+void Player::SwitchWeaponSlot(sf::Keyboard::Key key)
+{
+	if (key != sf::Keyboard::Num1 && key != sf::Keyboard::Num2)
+		return;
+
+	if (key == sf::Keyboard::Num1)
+	{
+		weaponSlot1->SetIsCurrentWeapon(true);
+		weaponSlot2->SetIsCurrentWeapon(false);
+	}
+	else
+	{
+		weaponSlot1->SetIsCurrentWeapon(false);
+		weaponSlot2->SetIsCurrentWeapon(true);
+	}
+}
 
 void Player::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
-	window.draw(sword);
 	hitbox.Draw(window);
-
-
 }

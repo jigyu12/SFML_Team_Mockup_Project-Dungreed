@@ -5,6 +5,8 @@
 class Monster;
 class PlayerUi;
 
+class Weapon;
+
 class Player : public Character
 {
 public:
@@ -27,7 +29,8 @@ public:
 
 protected:
 	Status status;
-	sf::Sprite sword;
+	Weapon* weaponSlot1;
+	Weapon* weaponSlot2;
 
 	sf::Vector2f velocity;
 	sf::Vector2f look;
@@ -93,4 +96,11 @@ public:
 	void Jump();
 	void OnDamage(int monsterDamage);
 	int GetHp() const { return hp; }
+
+
+	sf::Vector2f GetPlayerLookNormal() const { return Utils::GetNormal(look); }
+
+	void SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon = false);
+	void SetWeaponToWeaponSlot2(Weapon* weapon, bool isCurrentWeapon = false);
+	void SwitchWeaponSlot(sf::Keyboard::Key key);
 };

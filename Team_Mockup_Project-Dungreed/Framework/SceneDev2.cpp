@@ -21,19 +21,20 @@ void SceneDev2::Init()
 	{
 		player = AddGo(new Player());
 
+		// 두 무기 중에 하나는 SetWeaponToWeaponSlot->true로 켜져 있어야 시작 무기로 사용됨 
 		{
 			ShortSword* shortSword = AddGo(new ShortSword());
 			weaponList.push_back(shortSword);
 			shortSword->SetPosition({120.f, -80.f});
-			//shortSword->SetOwnerPlayer(player);
-			//shortSword->SetIsCurrentWeapon(true);
+			shortSword->SetOwnerPlayer(player);
+			player->SetWeaponToWeaponSlot1(shortSword, true);
 		}
 		{
 			HandCrossbow* handCrossbow = AddGo(new HandCrossbow());
 			weaponList.push_back(handCrossbow);
 			handCrossbow->SetPosition({ -120.f, -80.f });
 			handCrossbow->SetOwnerPlayer(player);
-			handCrossbow->SetIsCurrentWeapon(true);
+			player->SetWeaponToWeaponSlot2(handCrossbow);
 		}
 	}
 	{
