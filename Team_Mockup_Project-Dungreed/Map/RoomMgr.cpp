@@ -17,6 +17,12 @@ Room* RoomMgr::GetCurrentRoom()
 
 void RoomMgr::Reset()
 {
+	for (auto& room : rooms)
+	{
+		delete room.second;
+	}
+	rooms.clear();
+
 	currentRoom = { 0,0 };
 
 	Scene* scene = SCENE_MGR.GetCurrentScene();

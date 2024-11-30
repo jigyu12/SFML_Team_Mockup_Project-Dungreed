@@ -4,6 +4,8 @@
 #include "SceneDev3.h"
 #include "Room.h"
 #include "Weapon.h"
+#include "PlayerUi.h"
+#include "Monster.h"
 
 Player::Player(const std::string& name)
 	:Character(name), velocity({ 0.f,0.f })
@@ -70,6 +72,7 @@ void Player::Init()
 	gravity = 300.f;
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 2;
+	hp = 90;
 }
 
 void Player::Release()
@@ -79,11 +82,14 @@ void Player::Release()
 
 void Player::Reset()
 {
-
+	
+	playerui = dynamic_cast<PlayerUi*>(SCENE_MGR.GetCurrentScene()->FindGo("playerUi"));
 
 	animator.SetTarget(&body);
 	animator.Play("animations/player Idle.csv");
 	/*body.setTexture(TEXTURE_MGR.Get(playerId));*/
+
+	originalPlayerColor = body.getColor();
 
 	hitbox.SetColor(sf::Color::Blue);
 
@@ -113,7 +119,9 @@ void Player::SetStatus(Status status)
 	case Player::Status::DownJump:
 		velocity.y = downSpeed;
 		break;
-	
+	case Player::Status::Dead:
+		hp = 0;
+		break;
 	default:
 		break;
 
@@ -182,6 +190,46 @@ void Player::LateUpdate(float dt)
 {
 	auto playerGlobalBounds = hitbox.rect.getGlobalBounds();
 	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
+	
+
+	auto& gameobjects = SCENE_MGR.GetCurrentScene()->GetGameObjects();
+	for (auto& gameobject : gameobjects)
+	{
+		if (auto* monster = dynamic_cast<Monster*>(gameobject))
+		{
+			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
+			{
+
+				if (!isDamaged && !isDead)
+				{
+					isDamaged = true;
+					OnDamage(monster->GetOriginalDamage());
+					sf::Color currColor = body.getColor();
+					body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
+				}
+			}
+		}
+	}
+
+	if (isDamaged||isDead)
+	{
+		invincibilityTimer += dt;
+		if (invincibilityTimer > 1.5f)
+		{
+			invincibilityTimer = 0.f;
+			isDamaged = false;
+			body.setColor(originalPlayerColor);
+		}
+	
+	}
+
+	if (hp <= 0)
+	{
+		isDead = true;
+		playerui->SetHp(0, 90);
+		animator.Play("animations/player Dead.csv");
+	}
+	
 	//auto hitboxBounds = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
 	auto hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 	bool collided = false;
@@ -204,7 +252,7 @@ void Player::LateUpdate(float dt)
 					collided = true;
 						break;
 				case HitBoxData::Type::PortalDown:
-					
+					break;
 				default:
 					break;
 				}
@@ -343,6 +391,11 @@ void Player::Jump()
 	velocity.y = -jumpForce;
 	jumpTimer = 0.f;
 	SetStatus(Status::Jump);
+}
+
+void Player::OnDamage(int monsterDamage)
+{
+	playerui->SetHp(hp -= monsterDamage, playerui->GetMaxHp());
 }
 
 void Player::SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon)
