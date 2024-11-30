@@ -78,6 +78,13 @@ void Player::Release()
 
 void Player::Reset()
 {
+	float fontsize = 9.f;
+	sf::Font& font = FONT_MGR.Get("Font/french.ttf");
+	textHp.setFont(font);
+	textHp.setCharacterSize(fontsize);
+	textHp.setFillColor(sf::Color::Black);
+	Utils::SetOrigin(textHp, Origins::TL);
+
 	animator.SetTarget(&body);
 	animator.Play("animations/player Idle.csv");
 	/*body.setTexture(TEXTURE_MGR.Get(playerId));*/
@@ -94,6 +101,9 @@ void Player::Reset()
 	SetPosition({ 0.f,0.f });
 	SetOrigin(Origins::BC);
 	SetRotation(0.f);
+
+	textHp.setPosition({ -130.f,-80.f });
+	SetHp(90, 90);
 }
 
 void Player::SetStatus(Status status)
@@ -168,7 +178,7 @@ void Player::Update(float dt)
 	SetOrigin(Origins::BC);
 
 
-	hitbox.UpdateTr(body, { 7,12,14,21 });
+	hitbox.UpdateTr(body, { 8,12,16,21 });
 	
 }
 
@@ -235,7 +245,7 @@ void Player::LateUpdate(float dt)
 				case HitBoxData::Type::Immovable:
 					if (horizontalInput>0)
 					{
-						position.x = startHitBox.first->rect.getGlobalBounds().left - startHitBox.first->rect.getGlobalBounds().width / 2;
+						position.x = startHitBox.first->rect.getGlobalBounds().left- hitbox.rect.getGlobalBounds().width / 2;
 						SetPosition(position);
 						collided = true;
 					}	
@@ -340,6 +350,14 @@ void Player::Jump()
 	SetStatus(Status::Jump);
 }
 
+void Player::SetHp(int hp, int max)
+{
+	float value = (float)hp / max;
+	maxHp.setSize({ maxHpSize.x * value,maxHpSize.y });
+	textHp.setString(std::to_string(hp) + " / " + std::to_string(max));
+	Utils::SetOrigin(textHp, Origins::BL);
+}
+
 
 
 void Player::Draw(sf::RenderWindow& window)
@@ -347,4 +365,6 @@ void Player::Draw(sf::RenderWindow& window)
 	window.draw(body);
 	window.draw(sword);
 	hitbox.Draw(window);
+	window.draw(PlayerLife);
+	window.draw(textHp);
 }
