@@ -28,7 +28,6 @@ protected:
 	
 	float hitAccumTime;
 	float hitTimeDelay;
-	bool isDamaged;
 
 	float deathAccumTime;
 	float deathTimeDelay;
@@ -66,6 +65,4 @@ public:
 	{
 		return body.getGlobalBounds();
 	}
-
-	void OnDamaged();
 };

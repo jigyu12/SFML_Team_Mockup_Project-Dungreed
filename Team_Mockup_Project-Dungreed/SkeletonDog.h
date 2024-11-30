@@ -46,7 +46,6 @@ protected:
 
 	float hitAccumTime;
 	float hitTimeDelay;
-	bool isDamaged;
 
 	float deathAccumTime;
 	float deathTimeDelay;
@@ -101,7 +100,6 @@ public:
 		detectionLine.setPosition(body.getPosition() + direction * -10.f);
 	}
 
-	void OnDamaged();
 	void Jump();
 
 	CollisionState GetCollsionState(const sf::FloatRect& monster, const sf::FloatRect& stage);

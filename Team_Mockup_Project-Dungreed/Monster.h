@@ -23,6 +23,8 @@ protected:
 	float attackAccumSpeed;
 	float attackSpeedDelay;
 
+	bool isDamaged;
+
 public:
 	Monster(const std::string& name = "");
 	virtual ~Monster() = default;
@@ -42,4 +44,6 @@ public:
 
 	MonsterType GetMonsterType() const { return monsterType; }
 	int GetOriginalDamage() const { return originalDamage; }
+
+	void OnDamaged(int damage);
 };

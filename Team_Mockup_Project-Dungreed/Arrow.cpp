@@ -73,6 +73,7 @@ void Arrow::Update(float dt)
 
 void Arrow::LateUpdate(float dt)
 {
+	
 }
 
 void Arrow::Draw(sf::RenderWindow& window)

@@ -257,11 +257,6 @@ void Bat::Update(float dt)
 		break;
 	}
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
-	{
-		OnDamaged();
-	}
-
 	if (isDamaged && hp > 0)
 	{
 		hitAccumTime += dt;
@@ -315,10 +310,4 @@ void Bat::Draw(sf::RenderWindow& window)
 
 void Bat::Release()
 {
-}
-
-void Bat::OnDamaged()
-{
-	hp -= 3; /////////// 임시 코드
-	isDamaged = true;
 }
