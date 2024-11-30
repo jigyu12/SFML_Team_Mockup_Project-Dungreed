@@ -333,11 +333,6 @@ void SkeletonDog::Update(float dt)
 		break;
 	}
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
-	{
-		OnDamaged();
-	}
-
 	if (isDamaged && hp > 0)
 	{
 		hitAccumTime += dt;
@@ -431,12 +426,6 @@ void SkeletonDog::Draw(sf::RenderWindow& window)
 
 void SkeletonDog::Release()
 {
-}
-
-void SkeletonDog::OnDamaged()
-{
-	hp -= 10; /////////// ÀÓ½Ã ÄÚµå
-	isDamaged = true;
 }
 
 void SkeletonDog::Jump()

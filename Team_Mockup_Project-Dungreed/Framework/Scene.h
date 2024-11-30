@@ -47,7 +47,7 @@ public:
 	void ApplyRemoveGO();
 
 	sf::Vector2f GetWorldViewCenter() const { return worldView.getCenter(); }
-	
+	std::list<GameObject*>& GetGameObjects() { return gameObjects; }
 
 	sf::Vector2f ScreenToWorld(sf::Vector2i screenPos);
 	sf::Vector2i WorldToScreen(sf::Vector2f worldPos);
