@@ -5,6 +5,7 @@
 void Framework::Init(int width, int height, const std::string& name)
 {
     window.create(sf::VideoMode(width, height), name);
+    window.setFramerateLimit(100);
     DATATABLE_MGR.Init();
     Utils::Init();
     SCENE_MGR.Init();

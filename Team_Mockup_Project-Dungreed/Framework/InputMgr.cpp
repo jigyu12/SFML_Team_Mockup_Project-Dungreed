@@ -7,19 +7,19 @@ std::unordered_map<Axis, AxisInfo> InputMgr::axisInfoMap;
 
 void InputMgr::Init()
 {
-	 // Horizontal
-    AxisInfo infoH;
-    infoH.axis = Axis::Horizontal;
-    infoH.AddKey(true, sf::Keyboard::D);
+	// Horizontal
+	AxisInfo infoH;
+	infoH.axis = Axis::Horizontal;
+	infoH.AddKey(true, sf::Keyboard::D);
 	infoH.AddKey(true, sf::Keyboard::Right);
 	infoH.AddKey(false, sf::Keyboard::A);
 	infoH.AddKey(false, sf::Keyboard::Left);
 	axisInfoMap.insert({ infoH.axis, infoH });
 
-    // Vertical
-    AxisInfo infoV;
-    infoV.axis = Axis::Vertical;
-    infoV.AddKey(true, sf::Keyboard::S);
+	// Vertical
+	AxisInfo infoV;
+	infoV.axis = Axis::Vertical;
+	infoV.AddKey(true, sf::Keyboard::S);
 	infoV.AddKey(true, sf::Keyboard::Down);
 	infoV.AddKey(false, sf::Keyboard::W);
 	infoV.AddKey(false, sf::Keyboard::Up);
@@ -81,25 +81,25 @@ void InputMgr::UpdateEvent(const sf::Event& ev)
 
 void InputMgr::Update(float dt)
 {
-	 for (auto& pair : axisInfoMap)
-    {
-        auto& axisInfo = pair.second;
-        float raw = GetAxisRaw(axisInfo.axis);
-        float dir = raw;
-        if (dir == 0.f && axisInfo.value != 0.f)
-        {
-            dir = axisInfo.value > 0.f ? -1.f : 1.f;
-        }
+	for (auto& pair : axisInfoMap)
+	{
+		auto& axisInfo = pair.second;
+		float raw = GetAxisRaw(axisInfo.axis);
+		float dir = raw;
+		if (dir == 0.f && axisInfo.value != 0.f)
+		{
+			dir = axisInfo.value > 0.f ? -1.f : 1.f;
+		}
 
-        axisInfo.value += dir * axisInfo.sensi * dt;
-        axisInfo.value = Utils::Clamp(axisInfo.value, -1.f, 1.f);
-        
-        float stopThreshold = std::abs(dir * axisInfo.sensi * dt);
-        if (raw == 0.f && std::abs(axisInfo.value) < stopThreshold)
-        {
-            axisInfo.value = 0.f;
-        }
-    }
+		axisInfo.value += dir * axisInfo.sensi * dt;
+		axisInfo.value = Utils::Clamp(axisInfo.value, -1.f, 1.f);
+
+		float stopThreshold = std::abs(dir * axisInfo.sensi * dt);
+		if (raw == 0.f && std::abs(axisInfo.value) < stopThreshold)
+		{
+			axisInfo.value = 0.f;
+		}
+	}
 }
 
 bool InputMgr::GetKeyDown(const sf::Keyboard::Key& key)
@@ -135,8 +135,8 @@ bool InputMgr::GetMouseButtonUp(const sf::Mouse::Button& button)
 float InputMgr::GetAxisRaw(Axis axis)
 {
 	auto findIt = axisInfoMap.find(axis);
-    if (findIt == axisInfoMap.end())
-        return 0.f;
+	if (findIt == axisInfoMap.end())
+		return 0.f;
 
 	auto& axisInfo = findIt->second;
 
@@ -170,7 +170,14 @@ float InputMgr::GetAxisRaw(Axis axis)
 float InputMgr::GetAxis(Axis axis)
 {
 	auto findIt = axisInfoMap.find(axis);
-    if (findIt == axisInfoMap.end())
-        return 0.f;
-    return findIt->second.value;
+	if (findIt == axisInfoMap.end())
+		return 0.f;
+	return findIt->second.value;
+}
+
+void InputMgr::ResetMouseButton(const sf::Mouse::Button& button)
+{
+	std::bitset<3> setter = 0;
+	setter[(int)State::Release] = true;
+	vecInput[sf::Keyboard::KeyCount + button] = setter;
 }

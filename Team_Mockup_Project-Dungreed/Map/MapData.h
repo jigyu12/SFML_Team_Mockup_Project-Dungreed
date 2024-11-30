@@ -6,10 +6,10 @@ struct TileMapData
 	std::string name;
 	sf::Vector2f cellsize;
 	sf::Vector2i cellcount;
+	
+	std::vector<std::vector<int>> tileIndexes;
 
-	std::vector<std::vector<int>> tileIndex;
-
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TileMapData, texId, name, cellsize, cellcount, tileIndex)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TileMapData, texId, name, cellsize, cellcount, tileIndexes)
 };
 
 struct ObjectData
@@ -60,7 +60,6 @@ struct SpawnData
 	int wave;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(SpawnData, type, position, wave)
-
 };
 
 struct MapData
@@ -72,6 +71,9 @@ public:
 		Left,
 		Right,
 	};
+
+	const static int TileMapCount = 3;
+	const static int StartPointCount = 4;
 
 	int version = 0;
 	virtual MapData* VersionUp() = 0;
@@ -96,28 +98,44 @@ struct MapDataV2 : public MapData
 {
 	MapDataV2();
 
-
 	std::vector<sf::Vector2f> playerStartPoint;
 	TileMapData tileMapData;
 	std::vector<ObjectData> objectData;
 	std::vector<HitBoxData> hitBoxData;
 	std::vector<SpawnData> spawnData;
 
-	MapData* VersionUp() override { return this; }
+	MapData* VersionUp() override;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(MapDataV2, version, playerStartPoint, tileMapData, objectData, hitBoxData, spawnData)
 };
 
-typedef MapDataV2 MapDataVC;
+struct MapDataV3 : public MapData
+{
+	MapDataV3();
+	
+	std::vector<sf::Vector2f> playerStartPoint;
+	std::vector<TileMapData> tileMapData;
+	std::vector<ObjectData> objectData;
+	std::vector<HitBoxData> hitBoxData;
+	std::vector<SpawnData> monsterSpawnData;
+
+	MapData* VersionUp() override { return this; }
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(MapDataV3, version, playerStartPoint, tileMapData, objectData, hitBoxData, monsterSpawnData)
+};
+
+typedef MapDataV3 MapDataVC;
 
 class MapDataLoader
 {
 protected:
-	const static int currentVersion = 2;
+	const static int currentVersion = 3;
 	MapDataLoader() = delete;
 	~MapDataLoader() = delete;
 public:
 	static void Save(MapDataVC mapData, const std::string& path = "");
+	static void Save(MapDataVC mapData, const std::wstring& path = L"");
 	static MapDataVC Load(const std::string& path);
+	static MapDataVC Load(const std::wstring& path);
 };
 

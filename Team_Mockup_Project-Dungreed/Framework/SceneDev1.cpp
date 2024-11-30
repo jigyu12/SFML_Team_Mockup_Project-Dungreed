@@ -10,7 +10,6 @@ SceneDev1::SceneDev1() : Scene(SceneIds::Dev1)
 void SceneDev1::Init()
 {
 	player = AddGo(new Player("player"));
-	room = AddGo(new Room("tilemap"));
 
 	Scene::Init();
 }
@@ -28,8 +27,9 @@ void SceneDev1::Enter()
 	size.y /= 6.f;
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
-	room->SaveMapData("1froom1.json");
-	room->LoadMapData("1froom1.json");
+
+	ROOM_MGR.Reset();
+
 
 }
 
