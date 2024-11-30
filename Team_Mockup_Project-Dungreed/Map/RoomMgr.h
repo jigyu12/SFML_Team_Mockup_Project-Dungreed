@@ -1,11 +1,23 @@
 #pragma once
 #include "MapData.h"
 
+
+struct Vector2iHash
+{
+	std::size_t operator()(const sf::Vector2i& ev) const
+	{
+		std::size_t hStr = std::hash<int>()(ev.x);
+		std::size_t hInt = std::hash<int>()(ev.y);
+		return hStr ^ (hInt << 1);
+	}
+};
+
 class Room;
+
 
 struct RoomData
 {
-	std::unordered_map<int,std::unordered_map<int, std::string>> roomCoord;
+	std::unordered_map<sf::Vector2i, std::string, Vector2iHash> roomCoord;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(RoomData, roomCoord)
 };
@@ -17,7 +29,7 @@ public:
 	friend Singleton<RoomMgr>;
 protected:
 
-	std::unordered_map<int,std::unordered_map<int, Room*>> rooms;
+	std::unordered_map<sf::Vector2i, Room*, Vector2iHash> rooms;
 
 	sf::Vector2i currentRoom;
 
@@ -25,8 +37,10 @@ protected:
 	~RoomMgr() = default;
 public:
 
+	void Reset();
+
 	void RoomChange(const HitBoxData::Type& portalType);
-	void Load(const std::string& path);
+	void Start(const std::string& path);
 	Room* GetCurrentRoom();
 };
 

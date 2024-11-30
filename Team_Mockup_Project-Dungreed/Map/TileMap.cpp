@@ -70,8 +70,9 @@ void TileMap::Release()
 
 void TileMap::Reset()
 {
-
-	SetOrigin(Origins::MC);
+	shader.loadFromFile("shader/transparency.frag", sf::Shader::Fragment);
+	shader.setUniform("trans_alpha", 1.f);
+	SetOrigin(originPreset);
 	SetScale({ 1.f, 1.f });
 	SetPosition({ 0.f, 0.f });
 }
@@ -89,6 +90,14 @@ void TileMap::Draw(sf::RenderWindow& window)
 		state.texture = texture;
 	}
 	state.transform = transform;
+	if (shader.isAvailable())
+	{
+		state.shader = &shader;
+	}
+	else
+	{
+		state.shader = nullptr;
+	}
 	window.draw(va, state);
 	if (showGridLine)
 	{
@@ -240,7 +249,7 @@ void TileMap::Resize(const sf::Vector2i& count)
 	tileIndexes.resize(count.y);
 	for (int i = 0;i < tileIndexes.size();++i)
 	{
-		tileIndexes[i].resize(count.x, -1);
+		tileIndexes[i].resize(count.x, 0);
 	}
 
 	for (int j = 0;j < miny;++j)
@@ -251,6 +260,11 @@ void TileMap::Resize(const sf::Vector2i& count)
 		}
 	}
 	Set(count, cellSize, tileIndexes);
+}
+
+void TileMap::SetOpaque(const sf::Uint8& alpha)
+{
+	shader.setUniform("trans_alpha", (float)alpha / 255.f);
 }
 
 void TileMap::UpdateTransform()

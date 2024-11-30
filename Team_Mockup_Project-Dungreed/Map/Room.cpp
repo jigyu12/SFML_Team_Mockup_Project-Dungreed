@@ -232,12 +232,14 @@ void Room::LoadMapData(const std::string& path)
 		}
 		hitBoxes.push_back({ hitbox,hitBoxDatum });
 	}
-	SetOrigin(Origins::MC);
+	SetOrigin(originPreset);
 	SetPosition(position);
 }
 
 void Room::SaveMapData(const std::string& path)
 {
+	return;
+
 	for (int i = 0; i < tileMaps.size();++i)
 	{
 		mapData.tileMapData[i].texId = "graphics/map/Map.png";

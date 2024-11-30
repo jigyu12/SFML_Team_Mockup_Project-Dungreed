@@ -7,7 +7,7 @@ class SceneDev3 : public Scene
 {
 protected:
 
-	Room* roome;
+	//Room* roome;
 	//Room* room1;
 
 	Player* player;

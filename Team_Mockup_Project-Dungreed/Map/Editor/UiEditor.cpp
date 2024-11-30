@@ -187,12 +187,16 @@ void UiEditor::SetSelectedTileLayer(int tilenum)
 		{
 			editingTileMaps[i]->SetActive(true);
 		}
+		editingTileMaps[1]->SetOpaque(255);
 		break;
 	default:
 		for (int i = 0;i < editingTileMaps.size();++i)
 		{
 			editingTileMaps[i]->SetActive(i == tilenum);
 		}
+		editingTileMaps[1]->SetActive(true);
+		editingTileMaps[1]->SetOpaque(tilenum != 1 ? 128 : 255);
+
 		break;
 	}
 }

@@ -176,7 +176,8 @@ void Player::LateUpdate(float dt)
 {
 	auto playerGlobalBounds = hitbox.rect.getGlobalBounds();
 	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
-	auto hitboxBounds = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+	//auto hitboxBounds = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+	auto hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 	bool collided = false;
 	for (auto& startHitBox : hitboxBounds)
 	{

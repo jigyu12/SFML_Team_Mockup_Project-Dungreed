@@ -5,21 +5,44 @@
 
 Room* RoomMgr::GetCurrentRoom()
 {
-	auto findit = rooms.find(currentRoom.y);
+	auto findit = rooms.find(currentRoom);
 
 	if (findit == rooms.end())
 	{
-		return rooms[0][0];
+		return rooms[{0, 0}];
 	}
 
-	auto findit2 = findit->second.find(currentRoom.x);
+	return findit->second;
+}
 
-	if (findit2 == findit->second.end())
-	{
-		return rooms[0][0];
-	}
+void RoomMgr::Reset()
+{
+	currentRoom = { 0,0 };
 
-	return findit2->second;
+	Scene* scene = SCENE_MGR.GetCurrentScene();
+
+	Room* room = new Room("00room");
+	room->Init();
+	room->Reset();
+	room->LoadMapData("maps/1fenter1LR.json");
+	scene->AddGo(room);
+	rooms.insert({ { 0,0 }, room });
+
+	room = new Room("10room");
+	room->Init();
+	room->Reset();
+	room->LoadMapData("maps/1froom1UL.json");
+	room->SetActive(false);
+	scene->AddGo(room);
+	rooms.insert({ { 1,0 }, room });
+
+	room = new Room("1-1room");
+	room->Init();
+	room->Reset();
+	room->LoadMapData("maps/1froom2DLR.json");
+	room->SetActive(false);
+	scene->AddGo(room);
+	rooms.insert({ { 1,-1 }, room });
 }
 
 void RoomMgr::RoomChange(const HitBoxData::Type& portalType)
@@ -40,35 +63,27 @@ void RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 		++nextroom.x;
 		break;
 	}
-	auto findit = rooms.find(nextroom.y);
+	auto findit = rooms.find(nextroom);
 
 	if (findit == rooms.end())
 	{
 		return;
 	}
 
-	auto findit2 = findit->second.find(nextroom.x);
-
-	if (findit2 == findit->second.end())
-	{
-		return;
-	}
 	GetCurrentRoom()->SetActive(false);
-	findit2->second->SetActive(true);
-	findit2->second->EnterRoom(portalType);
+	findit->second->SetActive(true);
+	findit->second->EnterRoom(portalType);
+	currentRoom = nextroom;
 }
 
-void RoomMgr::Load(const std::string& path)
+void RoomMgr::Start(const std::string& path)
 {
-	Scene* scene = SCENE_MGR.GetCurrentScene();
-	for (auto& vroom : rooms)
+	//Scene* scene = SCENE_MGR.GetCurrentScene();
+
+	for (auto& room : rooms)
 	{
-		for (auto& room : vroom.second)
-		{
-			scene->RemoveGo(room.second);
-			delete room.second;
-		}
+		//scene->RemoveGo(room.second);
+		delete room.second;
 	}
 	rooms.clear();
-	currentRoom = { 0,0 };
 }

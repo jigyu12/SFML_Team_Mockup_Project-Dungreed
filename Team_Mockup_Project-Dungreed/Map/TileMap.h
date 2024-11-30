@@ -15,6 +15,10 @@ protected:
 	sf::Vector2f cellSize;
 
 	std::vector<std::vector<int>> tileIndexes;
+
+	sf::Shader shader;
+	bool useshader;
+	
 	bool showGridLine;
 public:
 	TileMap(const std::string& name = "");
@@ -53,4 +57,5 @@ public:
 	bool IsShowGridLine() const { return showGridLine; }
 	void SetShowGridLine(bool show) { showGridLine = show; }
 	const sf::Transform& GetTransform() const { return transform; }
+	void SetOpaque(const sf::Uint8& alpha);
 };

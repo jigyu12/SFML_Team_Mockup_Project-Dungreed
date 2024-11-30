@@ -47,6 +47,12 @@ void SceneMapEdit::Update(float dt)
 {
 	Scene::Update(dt);
 
+	if (InputMgr::GetKeyDown(sf::Keyboard::F5))
+	{
+		SCENE_MGR.ChangeScene(SceneIds::Dev3);
+
+	}
+
 	if (InputMgr::GetAxisRaw(Axis::Horizontal) != 0.f || InputMgr::GetAxisRaw(Axis::Vertical) != 0.f)
 	{
 		centerpos.x += InputMgr::GetAxis(Axis::Horizontal) * speed * dt;
