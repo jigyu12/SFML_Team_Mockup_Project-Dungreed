@@ -43,6 +43,14 @@ void RoomMgr::Reset()
 	room->SetActive(false);
 	scene->AddGo(room);
 	rooms.insert({ { 1,-1 }, room });
+
+	room = new Room("-10room");
+	room->Init();
+	room->Reset();
+	room->LoadMapData("maps/1froom4ULR.json");
+	room->SetActive(false);
+	scene->AddGo(room);
+	rooms.insert({ {-1,0 }, room });
 }
 
 void RoomMgr::RoomChange(const HitBoxData::Type& portalType)
