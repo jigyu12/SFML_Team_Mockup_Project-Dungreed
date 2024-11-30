@@ -159,7 +159,7 @@ void SkeletonDog::Update(float dt)
 			isAttackMove = true;
 			isMoving = true;
 
-			auto& roomHitBoxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+			auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 			for (auto& roomHitBox : roomHitBoxes)
 			{
 				if (roomHitBox.second.type != HitBoxData::Type::Downable)
@@ -264,7 +264,7 @@ void SkeletonDog::Update(float dt)
 			}
 
 			auto skelDogGlobalBounds = hitbox.rect.getGlobalBounds();
-			auto& roomHitBoxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+			auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 			bool breakWhile = false;
 			while (true)
 			{
