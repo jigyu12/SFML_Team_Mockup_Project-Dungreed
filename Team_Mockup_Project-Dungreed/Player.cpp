@@ -120,7 +120,6 @@ void Player::SetStatus(Status status)
 		velocity.y = downSpeed;
 		break;
 	case Player::Status::Dead:
-		hp = 0;
 		break;
 	default:
 		break;
@@ -130,6 +129,12 @@ void Player::SetStatus(Status status)
 
 void Player::Update(float dt)
 {
+	if (hp <= 0)
+	{
+		return;
+	}
+
+
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 	{
 		SwitchWeaponSlot(sf::Keyboard::Num1);
@@ -159,6 +164,8 @@ void Player::Update(float dt)
 	case Player::Status::DownJump:
 		UpdateDownJump(dt);
 		break;
+	case Player::Status::Dead:
+		return;
 	default:
 		break;
 	}
@@ -228,6 +235,7 @@ void Player::LateUpdate(float dt)
 		isDead = true;
 		playerui->SetHp(0, 90);
 		animator.Play("animations/player Dead.csv");
+		SetStatus(Status::Dead);
 	}
 	
 	//auto hitboxBounds = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
