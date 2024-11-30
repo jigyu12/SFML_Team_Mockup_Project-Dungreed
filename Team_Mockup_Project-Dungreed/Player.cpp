@@ -238,7 +238,6 @@ void Player::LateUpdate(float dt)
 		SetStatus(Status::Dead);
 	}
 	
-	//auto hitboxBounds = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
 	auto hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 	bool collided = false;
 	for (auto& startHitBox : hitboxBounds)
