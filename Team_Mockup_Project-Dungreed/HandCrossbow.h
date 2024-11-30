@@ -1,11 +1,15 @@
 #pragma once
 
 #include "Weapon.h"
+#include "Arrow.h"
+#include "ObjectPool.h"
 
 class HandCrossbow : public Weapon
 {
 protected:
 	sf::Vector2f look;
+
+	ObjectPool<Arrow> arrowPool;
 
 public:
 	HandCrossbow(const std::string& name = "HandCrossbow");
@@ -23,4 +27,6 @@ public:
 	virtual void LateUpdate(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
+
+	void Shoot();
 };

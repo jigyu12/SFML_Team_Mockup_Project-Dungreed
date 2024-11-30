@@ -59,6 +59,8 @@
       <Filter>Weapons</Filter>
     </ClCompile>
     <ClCompile Include="Map\RoomMgr.cpp" />
+    <ClCompile Include="Arrow.cpp" />
+    <ClCompile Include="PlayerUi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -125,6 +127,8 @@
       <Filter>Weapons</Filter>
     </ClInclude>
     <ClInclude Include="Map\RoomMgr.h" />
+    <ClInclude Include="Arrow.h" />
+    <ClInclude Include="PlayerUi.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">

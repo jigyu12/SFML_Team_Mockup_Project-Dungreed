@@ -60,7 +60,7 @@ void HandCrossbow::Reset()
 	originalDamageMin = 7;
 	originalDamageMax = 9;
 
-	attackSpeedDelayTime = 1.43f;
+	attackSpeedDelayTime = 1.f;
 	attackSpeedAccumTime = attackSpeedDelayTime;
 
 	Utils::SetOrigin(sprite, Origins::ML);
@@ -68,12 +68,25 @@ void HandCrossbow::Reset()
 
 void HandCrossbow::Update(float dt)
 {
-	auto player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
-	if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()))
+	if (!owner)
 	{
-		SetOwnerPlayer(player);
+		auto player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
+		if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()))
+		{
+			SetOwnerPlayer(player);
+		}
 	}
+	else
+	{
+		attackSpeedAccumTime += dt;
+		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButton(sf::Mouse::Left) && isCurrentWeapon)
+		{
+			attackSpeedAccumTime = 0.f;
 
+			Shoot();
+		}
+	}
+	
 	hitbox.UpdateTr(sprite, GetLocalBounds());
 }
 
@@ -146,4 +159,12 @@ void HandCrossbow::Draw(sf::RenderWindow& window)
 
 void HandCrossbow::Release()
 {
+}
+
+void HandCrossbow::Shoot()
+{
+	Arrow* arrow = arrowPool.Take();
+	SCENE_MGR.GetCurrentScene()->AddGo(arrow);
+
+	arrow->Fire(position, look, 300.f, Utils::RandomRange(originalDamageMin, originalDamageMax));
 }

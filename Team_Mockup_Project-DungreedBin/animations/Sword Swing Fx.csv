@@ -1,0 +1,7 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+SwordSwing,10,"0",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/weapon/SwingFX00.png,0,"0",40,28,0
+graphics/weapon/SwingFX01.png,0,"0",40,28,0
+graphics/weapon/SwingFX02.png,0,"0",40,28,0

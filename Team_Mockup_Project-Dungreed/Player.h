@@ -2,6 +2,8 @@
 
 #include "Character.h"
 
+class Weapon;
+
 class Player : public Character
 {
 public:
@@ -14,8 +16,6 @@ public:
 		Dead,
 	};
 
-	
-
 	struct CollisionState
 	{
 		bool Up = false;
@@ -26,19 +26,15 @@ public:
 
 protected:
 	Status status;
-	sf::Sprite sword;
-	sf::Sprite PlayerLife;
-	sf::Sprite PlayerLifeBackGround;
+	Weapon* weaponSlot1;
+	Weapon* weaponSlot2;
 
 	sf::Vector2f velocity;
 	sf::Vector2f look;
-	std::string playerId = "graphics/player/CharWalk0.png";
-	std::string swordId = "graphics/weapon/Sword.png";
-	std::string PlayerLifeBase = "graphics/ui/PlayerLifeBase 1.png";
-	std::string PlayerLifeBack = "graphics/ui/PlayerLifeBack1.png";
+
 
 	HitBox* DownPlatform;
-
+	std::string swordId = "graphics/weapon/Sword.png";
 
 	float gravity;
 	float jumpForce;
@@ -85,4 +81,10 @@ public:
 	void UpdateDownJump(float dt);
 	void UpdateDash(float dt);
 	void Jump();
+
+	sf::Vector2f GetPlayerLookNormal() const { return Utils::GetNormal(look); }
+
+	void SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon = false);
+	void SetWeaponToWeaponSlot2(Weapon* weapon, bool isCurrentWeapon = false);
+	void SwitchWeaponSlot(sf::Keyboard::Key key);
 };
