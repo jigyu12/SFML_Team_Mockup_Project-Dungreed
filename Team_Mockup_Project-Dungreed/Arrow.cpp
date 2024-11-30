@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Arrow.h"
 #include "HandCrossbow.h"
+#include "Room.h"
 
 Arrow::Arrow(const std::string& name)
 	: SpriteGo(name)
@@ -73,7 +74,28 @@ void Arrow::Update(float dt)
 
 void Arrow::LateUpdate(float dt)
 {
-	
+	auto& gameObjects = SCENE_MGR.GetCurrentScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (auto* monster = dynamic_cast<Monster*>(gameObject))
+		{
+			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
+			{
+				monster->OnDamaged(damage);
+				SCENE_MGR.GetCurrentScene()->RemoveGo(this);
+			}
+		}
+	}
+
+	auto& roomHitboxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+	for (auto& roomHitbox : roomHitboxes)
+	{
+		if (Utils::CheckCollision(*roomHitbox.first, hitbox))
+		{
+			if(roomHitbox.second.type != HitBoxData::Type::Downable)
+				SCENE_MGR.GetCurrentScene()->RemoveGo(this);
+		}
+	}
 }
 
 void Arrow::Draw(sf::RenderWindow& window)
