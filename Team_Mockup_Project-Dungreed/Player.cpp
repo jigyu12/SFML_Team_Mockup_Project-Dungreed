@@ -78,22 +78,14 @@ void Player::Release()
 
 void Player::Reset()
 {
-	float fontsize = 9.f;
-	sf::Font& font = FONT_MGR.Get("Font/french.ttf");
-	textHp.setFont(font);
-	textHp.setCharacterSize(fontsize);
-	textHp.setFillColor(sf::Color::Black);
-	Utils::SetOrigin(textHp, Origins::TL);
+
 
 	animator.SetTarget(&body);
 	animator.Play("animations/player Idle.csv");
 	/*body.setTexture(TEXTURE_MGR.Get(playerId));*/
 	sword.setTexture(TEXTURE_MGR.Get(swordId));
-	PlayerLife.setTexture(TEXTURE_MGR.Get(PlayerLifeBase));
-	PlayerLifeBackGround.setTexture(TEXTURE_MGR.Get(PlayerLifeBack));
+	
 
-	PlayerLife.setOrigin(Utils::SetOrigin(PlayerLife, Origins::TL));
-	PlayerLife.setPosition({-158.f,-88.f });
 
 	sword.setOrigin(Utils::SetOrigin(sword, Origins::BC));
 	hitbox.SetColor(sf::Color::Blue);
@@ -102,8 +94,7 @@ void Player::Reset()
 	SetOrigin(Origins::BC);
 	SetRotation(0.f);
 
-	textHp.setPosition({ -130.f,-80.f });
-	SetHp(90, 90);
+	
 }
 
 void Player::SetStatus(Status status)
@@ -350,13 +341,6 @@ void Player::Jump()
 	SetStatus(Status::Jump);
 }
 
-void Player::SetHp(int hp, int max)
-{
-	float value = (float)hp / max;
-	maxHp.setSize({ maxHpSize.x * value,maxHpSize.y });
-	textHp.setString(std::to_string(hp) + " / " + std::to_string(max));
-	Utils::SetOrigin(textHp, Origins::BL);
-}
 
 
 
@@ -365,6 +349,6 @@ void Player::Draw(sf::RenderWindow& window)
 	window.draw(body);
 	window.draw(sword);
 	hitbox.Draw(window);
-	window.draw(PlayerLife);
-	window.draw(textHp);
+
+
 }
