@@ -14,8 +14,6 @@ public:
 		Dead,
 	};
 
-	
-
 	struct CollisionState
 	{
 		bool Up = false;
@@ -30,14 +28,19 @@ protected:
 	sf::Sprite PlayerLife;
 	sf::Sprite PlayerLifeBackGround;
 
+	sf::Vector2f maxHpSize = { 50.f,10.f };
+	sf::RectangleShape maxHp;
+	sf::Text textHp;
+
 	sf::Vector2f velocity;
 	sf::Vector2f look;
+
 	std::string playerId = "graphics/player/CharWalk0.png";
 	std::string swordId = "graphics/player/Sword.png";
 	std::string PlayerLifeBase = "graphics/ui/PlayerLifeBase 1.png";
 	std::string PlayerLifeBack = "graphics/ui/PlayerLifeBack1.png";
 
-
+	
 	HitBox* DownPlatform;
 
 
@@ -86,4 +89,5 @@ public:
 	void UpdateDownJump(float dt);
 	void UpdateDash(float dt);
 	void Jump();
+	void SetHp(int hp, int max);
 };
