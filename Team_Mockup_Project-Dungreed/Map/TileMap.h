@@ -52,4 +52,5 @@ public:
 
 	bool IsShowGridLine() const { return showGridLine; }
 	void SetShowGridLine(bool show) { showGridLine = show; }
+	const sf::Transform& GetTransform() const { return transform; }
 };

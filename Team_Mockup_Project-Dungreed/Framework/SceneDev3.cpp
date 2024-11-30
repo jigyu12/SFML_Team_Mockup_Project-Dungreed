@@ -13,7 +13,7 @@ SceneDev3::SceneDev3() : Scene(SceneIds::Dev2)
 void SceneDev3::Init()
 {
 	roome = AddGo(new Room("tilemap"));
-	room1 = AddGo(new Room("room1"));
+	//room1 = AddGo(new Room("room1"));
 	player = AddGo(new Player("player"));
 
 	vaLight.resize(32);
@@ -43,7 +43,7 @@ void SceneDev3::Enter()
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
 
-	roome->LoadMapData("maps/1fenter.json");
+	roome->LoadMapData("maps/corridorLR1.json");
 }
 
 void SceneDev3::Exit()
@@ -55,26 +55,26 @@ void SceneDev3::Update(float dt)
 {
 	Scene::Update(dt);
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad7))
-	{
-		roome->SaveMapData("maps/1fenter.json");
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad8))
-	{
-		room1->SetActive(false);
-		roome->SetActive(true);
-		roome->LoadMapData("maps/1fenter.json");
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad4))
-	{
-		room1->SaveMapData("maps/1froom1.json");
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Numpad5))
-	{
-		roome->SetActive(false);
-		room1->SetActive(true);
-		room1->LoadMapData("maps/1froom1.json");
-	}
+	//if (InputMgr::GetKeyDown(sf::Keyboard::Numpad7))
+	//{
+	//	roome->SaveMapData("maps/1fenter.json");
+	//}
+	//if (InputMgr::GetKeyDown(sf::Keyboard::Numpad8))
+	//{
+	//	room1->SetActive(false);
+	//	roome->SetActive(true);
+	//	roome->LoadMapData("maps/1fenter.json");
+	//}
+	//if (InputMgr::GetKeyDown(sf::Keyboard::Numpad4))
+	//{
+	//	room1->SaveMapData("maps/1froom1.json");
+	//}
+	//if (InputMgr::GetKeyDown(sf::Keyboard::Numpad5))
+	//{
+	//	roome->SetActive(false);
+	//	room1->SetActive(true);
+	//	room1->LoadMapData("maps/1froom1.json");
+	//}
 
 	sf::Vector2f playerpos = player->GetPosition();
 	//if (roome->IsActive())

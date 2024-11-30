@@ -8,7 +8,7 @@ class SceneDev3 : public Scene
 protected:
 
 	Room* roome;
-	Room* room1;
+	//Room* room1;
 
 	Player* player;
 	sf::RenderStates rs;

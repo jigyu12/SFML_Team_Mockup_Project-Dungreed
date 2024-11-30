@@ -18,7 +18,7 @@ void Room::SetPosition(const sf::Vector2f& pos)
 	}
 	for (auto& hitBox : hitBoxes)
 	{
-		hitBox.first->rect.setPosition(position);
+		hitBox.first->rect.setPosition(tileMaps[0]->GetTransform().transformPoint(hitBox.second.origin));
 	}
 	for (auto& obj : objects)
 	{
@@ -73,13 +73,13 @@ void Room::SetOrigin(Origins preset)
 			tileMap->SetOrigin(originPreset);
 		}
 		origin = tileMaps[0]->GetOrigin();
-		for (auto& hitBox : hitBoxes)
-		{
-			hitBox.first->rect.setOrigin(origin - hitBox.second.origin);
-		}
+		//for (auto& hitBox : hitBoxes)
+		//{
+		//	hitBox.first->rect.setOrigin(origin);
+		//}
 		for (auto& obj : objects)
 		{
-			obj.first->SetOrigin(origin - obj.second.origin);
+			obj.first->SetOrigin(origin);
 		}
 	}
 }
@@ -210,7 +210,8 @@ void Room::LoadMapData(const std::string& path)
 		HitBox* hitbox = new HitBox();
 
 		hitbox->rect.setSize(hitBoxDatum.size);
-		hitbox->rect.setOrigin(hitBoxDatum.origin);
+		hitbox->rect.setPosition(hitBoxDatum.origin);
+		//hitbox->rect.setOrigin(-hitBoxDatum.origin);
 		hitbox->rect.setRotation(hitBoxDatum.rotation);
 		switch (hitBoxDatum.type)
 		{
@@ -232,6 +233,7 @@ void Room::LoadMapData(const std::string& path)
 		hitBoxes.push_back({ hitbox,hitBoxDatum });
 	}
 	SetOrigin(Origins::MC);
+	SetPosition(position);
 }
 
 void Room::SaveMapData(const std::string& path)

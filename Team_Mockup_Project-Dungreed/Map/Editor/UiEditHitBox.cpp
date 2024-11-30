@@ -169,7 +169,7 @@ void UiEditHitBox::Update(float dt)
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::XButton1)
 		&& selectedHitBox != nullptr)
 	{
-		selectedHitBox->rotate(45.f);
+		selectedHitBox->rotate(-45.f);
 	}
 }
 
