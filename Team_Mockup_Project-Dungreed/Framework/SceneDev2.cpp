@@ -6,6 +6,7 @@
 #include "Weapon.h"
 #include "ShortSword.h"
 #include "HandCrossbow.h"
+#include "PlayerUi.h"
 
 SceneDev2::SceneDev2() : Scene(SceneIds::Dev2)
 {
@@ -44,6 +45,9 @@ void SceneDev2::Init()
 		SkeletonDog* skeletonDog = AddGo(new SkeletonDog());
 		skeletonDog->SetPosition({ 0.f, 70.f });
 		skeletonDogList.push_back(skeletonDog);
+	}
+	{
+		PlayerUi* playerui = AddGo(new PlayerUi());
 	}
 
 	Scene::Init();

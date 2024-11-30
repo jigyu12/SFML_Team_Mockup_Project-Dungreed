@@ -63,6 +63,8 @@ void Arrow::Reset()
 	{
 		sortingOrder = ownerWeapon->sortingOrder - 1;
 	}
+
+	SetScale({0.6f, 0.6f});
 }
 
 void Arrow::Update(float dt)

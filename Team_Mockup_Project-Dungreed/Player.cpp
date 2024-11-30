@@ -78,15 +78,14 @@ void Player::Release()
 
 void Player::Reset()
 {
+
+
 	animator.SetTarget(&body);
 	animator.Play("animations/player Idle.csv");
 	/*body.setTexture(TEXTURE_MGR.Get(playerId));*/
 	sword.setTexture(TEXTURE_MGR.Get(swordId));
-	PlayerLife.setTexture(TEXTURE_MGR.Get(PlayerLifeBase));
-	PlayerLifeBackGround.setTexture(TEXTURE_MGR.Get(PlayerLifeBack));
+	
 
-	PlayerLife.setOrigin(Utils::SetOrigin(PlayerLife, Origins::TL));
-	PlayerLife.setPosition({-158.f,-88.f });
 
 	sword.setOrigin(Utils::SetOrigin(sword, Origins::BC));
 	hitbox.SetColor(sf::Color::Blue);
@@ -94,6 +93,8 @@ void Player::Reset()
 	SetPosition({ 0.f,0.f });
 	SetOrigin(Origins::BC);
 	SetRotation(0.f);
+
+	
 }
 
 void Player::SetStatus(Status status)
@@ -168,7 +169,7 @@ void Player::Update(float dt)
 	SetOrigin(Origins::BC);
 
 
-	hitbox.UpdateTr(body, { 7,12,14,21 });
+	hitbox.UpdateTr(body, { 8,12,16,21 });
 	
 }
 
@@ -235,7 +236,7 @@ void Player::LateUpdate(float dt)
 				case HitBoxData::Type::Immovable:
 					if (horizontalInput>0)
 					{
-						position.x = startHitBox.first->rect.getGlobalBounds().left - startHitBox.first->rect.getGlobalBounds().width / 2;
+						position.x = startHitBox.first->rect.getGlobalBounds().left- hitbox.rect.getGlobalBounds().width / 2;
 						SetPosition(position);
 						collided = true;
 					}	
@@ -342,9 +343,12 @@ void Player::Jump()
 
 
 
+
 void Player::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
 	window.draw(sword);
 	hitbox.Draw(window);
+
+
 }
