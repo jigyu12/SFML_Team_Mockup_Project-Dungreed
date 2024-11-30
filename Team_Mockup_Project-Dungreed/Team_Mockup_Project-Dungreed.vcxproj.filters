@@ -47,6 +47,8 @@
     <ClCompile Include="SkeletonDog.cpp">
       <Filter>Monsters</Filter>
     </ClCompile>
+    <ClCompile Include="Map\Editor\FileDialog.cpp" />
+    <ClCompile Include="Map\Editor\UiEditHitBox.cpp" />
     <ClCompile Include="Weapon.cpp">
       <Filter>Weapons\Weapon</Filter>
     </ClCompile>
@@ -56,6 +58,7 @@
     <ClCompile Include="HandCrossbow.cpp">
       <Filter>Weapons</Filter>
     </ClCompile>
+    <ClCompile Include="Map\RoomMgr.cpp" />
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="PlayerUi.cpp" />
   </ItemGroup>
@@ -112,6 +115,8 @@
     <ClInclude Include="SkeletonDog.h">
       <Filter>Monsters</Filter>
     </ClInclude>
+    <ClInclude Include="Map\Editor\FileDialog.h" />
+    <ClInclude Include="Map\Editor\UiEditHitBox.h" />
     <ClInclude Include="Weapon.h">
       <Filter>Weapons\Weapon</Filter>
     </ClInclude>
@@ -121,6 +126,7 @@
     <ClInclude Include="HandCrossbow.h">
       <Filter>Weapons</Filter>
     </ClInclude>
+    <ClInclude Include="Map\RoomMgr.h" />
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="PlayerUi.h" />
   </ItemGroup>

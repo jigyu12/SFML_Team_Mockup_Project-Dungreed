@@ -10,12 +10,11 @@ class Room : public GameObject
 protected:
 	sf::Sprite subBackground;
 
-	TileMap* tileMap;
+	std::vector<TileMap*> tileMaps;
 
 	MapDataVC mapData;
 	std::vector<std::pair<HitBox*, HitBoxData>> hitBoxes;
 	std::vector<std::pair<MapObject*, ObjectData>> objects;
-	std::vector<Room*> connectedRoom;
 
 	Player* player;
 public:
@@ -38,9 +37,6 @@ public:
 	void LoadMapData(const std::string& path);
 	void SaveMapData(const std::string& path);
 
-	void SetConnectedRoom(Room* room, HitBoxData::Type connection);
-
 	const std::vector<std::pair<HitBox*, HitBoxData>>& GetHitBoxes() const;
-	void EnterPortal(HitBox* portal);
-	void ExitPortal(HitBoxData::Type connection);
+	void EnterRoom(HitBoxData::Type connection);
 };

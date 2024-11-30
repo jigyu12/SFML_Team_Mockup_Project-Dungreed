@@ -1,17 +1,40 @@
 #pragma once
 
 class TileMap;
+class UiEditor;
 
 class UiEditTile : public GameObject
 {
 protected:
 
-	sf::Sprite selectedTile;
-	sf::Sprite saveButton;
-	sf::Sprite loadButton;
-	TileMap* tileMap;
-	std::vector<std::vector<int>> tileIndexes;
+	sf::RectangleShape boxWindow;
+
+	sf::Sprite pageUpButton;
+	sf::Text pageText;
+	sf::Sprite pageDownButton;
+
+	sf::Sprite layerUpButton;
+	sf::Text layerText;
+	sf::Sprite layerDownButton;
+
+	sf::Sprite xUpButton;
+	sf::Text countxText;
+	sf::Sprite xDownButton;
+
+	sf::Sprite yUpButton;
+	sf::Text countyText;
+	sf::Sprite yDownButton;
+
+	TileMap* selectedTile;
+	std::vector<TileMap*> tileList;
+	TileMap* editingTileMap;
+	
+	UiEditor* uieditor;
+
 	int selectedTileIndex;
+	int selectedPage;
+	int currentPage;
+	int pagecount;
 
 public:
 	UiEditTile(const std::string& name = "");
@@ -30,5 +53,5 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	int GetSelectedTileIndex() { return selectedTileIndex; }
+	int GetSelectedTileIndex() const { return selectedTileIndex; }
 };

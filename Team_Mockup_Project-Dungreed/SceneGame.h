@@ -1,9 +1,11 @@
 #pragma once
 #include "Scene.h"
+class Player;
 
 class SceneGame : public Scene
 {
 protected:
+	Player* player;
 
 public:
 	SceneGame();

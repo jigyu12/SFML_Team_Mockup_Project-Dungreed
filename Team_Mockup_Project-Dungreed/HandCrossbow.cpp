@@ -99,7 +99,7 @@ void HandCrossbow::LateUpdate(float dt)
 		isOnGround = false;
 
 		auto skelDogGlobalBounds = hitbox.rect.getGlobalBounds();
-		auto& roomHitBoxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+		auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 		for (auto& roomHitBox : roomHitBoxes)
 		{
 			if (Utils::CheckCollision(*roomHitBox.first, hitbox))

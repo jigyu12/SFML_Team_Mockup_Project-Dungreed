@@ -12,6 +12,10 @@ protected:
 	Animator animatorFx;
 	sf::Sprite swordSwingFx;
 
+	bool isSwing;
+	float swingTimeAccum;
+	float swingTimeDelay;
+
 public:
 	ShortSword(const std::string& name = "ShortSword");
 	virtual ~ShortSword() = default;

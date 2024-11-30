@@ -9,6 +9,8 @@ SceneGame::SceneGame()
 
 void SceneGame::Init()
 {
+	player = AddGo(new Player("player"));
+
 	Scene::Init();
 }
 
@@ -19,6 +21,7 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
+	Scene::Enter();
 	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
 
 	uiView.setSize(size);
@@ -28,8 +31,8 @@ void SceneGame::Enter()
 	size.y /= 6.f;
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
+	ROOM_MGR.Reset();
 
-	Scene::Enter();
 }
 
 void SceneGame::Exit()
@@ -40,6 +43,12 @@ void SceneGame::Exit()
 void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
+	worldView.setCenter(player->GetPosition());
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::F5))
+	{
+		SCENE_MGR.ChangeScene(SceneIds::MapEdit);
+	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
 	{

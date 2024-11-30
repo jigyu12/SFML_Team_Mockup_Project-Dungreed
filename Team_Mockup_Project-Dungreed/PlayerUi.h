@@ -6,14 +6,17 @@ protected:
 	sf::Vector2f maxHpSize = { 200.f,30.f };
 	sf::RectangleShape maxHp;
 	sf::Text textHp;
+	Player* player;
 
 	sf::Sprite PlayerLife;
 	sf::Sprite PlayerLifeBackGround;
 
 	std::string PlayerLifeBase = "graphics/ui/PlayerLifeBase 1.png";
 	std::string PlayerLifeBack = "graphics/ui/PlayerLifeBack1.png";
+	int maxhp = 90;
+	
 public:
-	PlayerUi(const std::string& name = "");
+	PlayerUi(const std::string& name = "playerUi");
 	~PlayerUi() = default;
 
 	void SetPosition(const sf::Vector2f& pos) override;
@@ -29,5 +32,6 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 	void SetHp(int hp, int max);
+	int GetMaxHp() const { return maxhp; }
 };
 

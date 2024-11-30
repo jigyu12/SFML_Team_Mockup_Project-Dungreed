@@ -63,11 +63,13 @@ void ShortSword::Reset()
 	attackSpeedDelayTime = 0.7f;
 	attackSpeedAccumTime = attackSpeedDelayTime;
 
+	isSwing = false;
+	swingTimeAccum = 0.f;
+	swingTimeDelay = 0.35f;
+
 	isUp = true;
 
 	animatorFx.SetTarget(&swordSwingFx);
-
-	Utils::SetOrigin(swordSwingFx, Origins::MC);
 
 	Utils::SetOrigin(sprite, Origins::BC);
 }
@@ -97,7 +99,7 @@ void ShortSword::LateUpdate(float dt)
 		isOnGround = false;
 
 		auto skelDogGlobalBounds = hitbox.rect.getGlobalBounds();
-		auto& roomHitBoxes = dynamic_cast<Room*>(SCENE_MGR.GetCurrentScene()->FindGo("tilemap"))->GetHitBoxes();
+		auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 		for (auto& roomHitBox : roomHitBoxes)
 		{
 			if (Utils::CheckCollision(*roomHitBox.first, hitbox))
@@ -144,14 +146,13 @@ void ShortSword::LateUpdate(float dt)
 			attackSpeedAccumTime = 0.f;
 
 			isUp = !isUp;
-
-			
-			
-
-			//swordSwingFx.setPosition(owner->GetPosition() + Utils::GetNormal({ InputMgr::GetMousePosition().x - owner->GetPosition().x,InputMgr::GetMousePosition().y - owner->GetPosition().y }) * 10.f);
-			swordSwingFx.setPosition(owner->GetPosition() + owner->GetPlayerLookNormal() * 10.f);
+	
+			Utils::SetOrigin(swordSwingFx, Origins::MC);
+			swordSwingFx.setPosition({ owner->GetPosition().x + owner->GetPlayerLookNormal().x * 30.f,owner->GetPosition().y - 10.5f + owner->GetPlayerLookNormal().y * 30.f });
 			swordSwingFx.setRotation(Utils::Angle(look) + 90);
+
 			animatorFx.Play("animations/Sword Swing Fx.csv");
+			isSwing = true;
 		}
 
 		if (isCurrentWeapon && isUp)
@@ -163,6 +164,11 @@ void ShortSword::LateUpdate(float dt)
 			SetRotation(Utils::Angle(look) + 190);
 		}
 	}
+
+	if (isSwing)
+	{
+		swingTimeAccum += dt;
+	}
 }
 
 void ShortSword::Draw(sf::RenderWindow& window)
@@ -172,7 +178,15 @@ void ShortSword::Draw(sf::RenderWindow& window)
 		if (isCurrentWeapon)
 		{
 			window.draw(sprite);
-			window.draw(swordSwingFx);
+			if (isSwing)
+			{
+				if (swingTimeAccum > swingTimeDelay)
+				{
+					swingTimeAccum = 0.f;
+					isSwing = false;
+				}
+				window.draw(swordSwingFx);
+			}
 		}
 	}
 	else
