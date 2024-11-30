@@ -2,6 +2,8 @@
 
 #include "Character.h"
 
+class Weapon;
+
 class Player : public Character
 {
 public:
@@ -24,9 +26,8 @@ public:
 
 protected:
 	Status status;
-	sf::Sprite sword;
-
-
+	Weapon* weaponSlot1;
+	Weapon* weaponSlot2;
 
 	sf::Vector2f velocity;
 	sf::Vector2f look;
@@ -81,4 +82,7 @@ public:
 	void UpdateDash(float dt);
 	void Jump();
 
+	void SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon = false);
+	void SetWeaponToWeaponSlot2(Weapon* weapon, bool isCurrentWeapon = false);
+	void SwitchWeaponSlot(sf::Keyboard::Key key);
 };
