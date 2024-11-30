@@ -9,8 +9,6 @@ class SceneMapEdit :
 protected:
 	UiEditor* uiEditor;
 
-	TileMap* tileMap;
-
 	sf::Vector2f centerpos;
 
 	float speed;

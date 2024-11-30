@@ -13,7 +13,7 @@ void MapDataLoader::Save(MapDataVC mapData, const std::wstring& path)
 	{
 		return;
 	}
-	
+
 	json j = mapData;
 	std::ofstream f(path);
 	f << j.dump(4) << std::endl;
@@ -48,6 +48,12 @@ MapDataVC MapDataLoader::Load(const std::wstring& path)
 	{
 		MapDataV2 v2 = j.get<MapDataV2>();
 		saveData = new MapDataV2(v2);
+		break;
+	}
+	case 3:
+	{
+		MapDataV3 v3 = j.get<MapDataV3>();
+		saveData = new MapDataV3(v3);
 		break;
 	}
 	}
@@ -87,4 +93,34 @@ MapDataV2::MapDataV2()
 {
 	version = 2;
 	playerStartPoint.resize(4);
+}
+
+MapData* MapDataV2::VersionUp()
+{
+	MapDataV3* newData = new MapDataV3();
+
+	newData->hitBoxData = hitBoxData;
+	newData->objectData = objectData;
+	newData->playerStartPoint = playerStartPoint;
+	newData->tileMapData[1] = tileMapData;
+
+	newData->tileMapData[0].cellcount = tileMapData.cellcount;
+	newData->tileMapData[0].cellsize = tileMapData.cellsize;
+	newData->tileMapData[0].texId = tileMapData.texId;
+	newData->tileMapData[0].tileIndexes.resize(tileMapData.tileIndexes.size(), std::vector<int>(tileMapData.tileIndexes[0].size(), 0));
+	newData->tileMapData[2].cellcount = tileMapData.cellcount;
+	newData->tileMapData[2].cellsize = tileMapData.cellsize;
+	newData->tileMapData[2].texId = tileMapData.texId;
+	newData->tileMapData[2].tileIndexes.resize(tileMapData.tileIndexes.size(), std::vector<int>(tileMapData.tileIndexes[0].size(), 0));
+
+	newData->monsterSpawnData = spawnData;
+
+	return newData;
+}
+
+MapDataV3::MapDataV3()
+{
+	version = 3;
+	tileMapData.resize(TileMapCount);
+	playerStartPoint.resize(StartPointCount);
 }

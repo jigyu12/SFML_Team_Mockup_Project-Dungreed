@@ -60,6 +60,15 @@ void UiEditor::Init()
 
 	uiEditHitBox = new UiEditHitBox();
 	uiEditHitBox->Init();
+
+	Scene* scene = SCENE_MGR.GetCurrentScene();
+	for (int i = 0;i < MapData::TileMapCount;++i)
+	{
+		TileMap* tilemap = new TileMap("tileMap" + std::to_string(i));
+		tilemap->Init();
+		tilemap->sortingOrder - i;
+		editingTileMaps.push_back(tilemap);
+	}
 }
 
 void UiEditor::Release()
@@ -71,14 +80,22 @@ void UiEditor::Reset()
 {
 	uiEditTile->Reset();
 	uiEditHitBox->Reset();
-
-	this->editingTileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("tileMap"));
+	Scene* scene = SCENE_MGR.GetCurrentScene();
+	for (int i = 0;i < MapData::TileMapCount;++i)
+	{
+		editingTileMaps[i]->Reset();
+		editingTileMaps[i]->SetTexture("graphics/map/Map.png");
+		editingTileMaps[i]->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
+		editingTileMaps[i]->SetShowGridLine(true);
+		scene->AddGo(editingTileMaps[i]);
+	}
 
 	editorWindow.setFillColor({ 100,100,100,255 });
 
 	saveButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonsave.png"));
 
 	loadButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonload.png"));
+	SetSelectedTileLayer(-1);
 }
 
 void UiEditor::Update(float dt)
@@ -102,9 +119,9 @@ void UiEditor::Update(float dt)
 				{
 					MapDataVC mapData;
 
-					if (editingTileMap != nullptr)
+					for (int i = 0; i < MapData::TileMapCount;++i)
 					{
-						mapData.tileMapData = editingTileMap->GetTileMapData();
+						mapData.tileMapData[i] = editingTileMaps[i]->GetTileMapData();
 					}
 					if (uiEditHitBox != nullptr)
 					{
@@ -120,9 +137,9 @@ void UiEditor::Update(float dt)
 				{
 					const MapDataVC& mapdata = MapDataLoader::Load(path);
 
-					if (editingTileMap != nullptr)
+					for (int i = 0; i < MapData::TileMapCount;++i)
 					{
-						editingTileMap->Set(mapdata.tileMapData);
+						editingTileMaps[i]->Set(mapdata.tileMapData[i]);
 					}
 					if (uiEditHitBox != nullptr)
 					{
@@ -148,7 +165,7 @@ void UiEditor::Draw(sf::RenderWindow& window)
 	window.draw(editorWindow);
 	window.draw(loadButton);
 	window.draw(saveButton);
-	
+
 	switch (currentGroupBox)
 	{
 	case UiEditor::GroupBox::Tile:
@@ -157,5 +174,33 @@ void UiEditor::Draw(sf::RenderWindow& window)
 	case UiEditor::GroupBox::HitBox:
 		uiEditHitBox->Draw(window);
 		break;
+	}
+}
+
+void UiEditor::SetSelectedTileLayer(int tilenum)
+{
+	selectedTile = tilenum;
+	switch (tilenum)
+	{
+	case -1:
+		for (int i = 0;i < editingTileMaps.size();++i)
+		{
+			editingTileMaps[i]->SetActive(true);
+		}
+		break;
+	default:
+		for (int i = 0;i < editingTileMaps.size();++i)
+		{
+			editingTileMaps[i]->SetActive(i == tilenum);
+		}
+		break;
+	}
+}
+
+void UiEditor::ResizeTileMaps(const sf::Vector2i& count)
+{
+	for (int i = 0;i < editingTileMaps.size();++i)
+	{
+		editingTileMaps[i]->Resize(count);
 	}
 }

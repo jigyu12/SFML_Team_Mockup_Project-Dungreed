@@ -123,7 +123,7 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 	{
 		if (this->tileIndexes[i].size() != count.x)
 		{
-			this->tileIndexes[i].resize(count.x, -1);
+			this->tileIndexes[i].resize(count.x, 0);
 		}
 	}
 

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "UiEditHitBox.h"
 #include "TileMap.h"
+#include "UiEditor.h"
 
 UiEditHitBox::UiEditHitBox(const std::string& name)
 	: GameObject(name)
@@ -59,7 +60,9 @@ void UiEditHitBox::Reset()
 	}
 	hitboxes.clear();
 	selectedHitBox = nullptr;
-	this->editingTileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("tileMap"));
+
+	uieditor = dynamic_cast<UiEditor*>(SCENE_MGR.GetCurrentScene()->FindGo("uieditor"));
+
 	status = EditStatus::Create;
 }
 
@@ -144,13 +147,13 @@ void UiEditHitBox::Update(float dt)
 				hitboxes[selectedHitBox] = HitBoxData::Type::PortalUp;
 				selectedHitBox->setOutlineColor(sf::Color::Cyan);
 			}
-			else if (editingTileMap != nullptr && boxbound.left + boxbound.width >= editingTileMap->GetGlobalBounds().width
+			else if (uieditor != nullptr && boxbound.left + boxbound.width >= uieditor->GetSelectedTileMap()->GetGlobalBounds().width
 				&& hitboxes[selectedHitBox] != HitBoxData::Type::PortalRight)
 			{
 				hitboxes[selectedHitBox] = HitBoxData::Type::PortalRight;
 				selectedHitBox->setOutlineColor(sf::Color::Cyan);
 			}
-			else if (editingTileMap != nullptr && boxbound.top + boxbound.height >= editingTileMap->GetGlobalBounds().height
+			else if (uieditor != nullptr && boxbound.top + boxbound.height >= uieditor->GetSelectedTileMap()->GetGlobalBounds().height
 				&& hitboxes[selectedHitBox] != HitBoxData::Type::PortalDown)
 			{
 				hitboxes[selectedHitBox] = HitBoxData::Type::PortalDown;
@@ -162,6 +165,11 @@ void UiEditHitBox::Update(float dt)
 				selectedHitBox->setOutlineColor(sf::Color::Red);
 			}
 		}
+	}
+	if (InputMgr::GetMouseButtonDown(sf::Mouse::XButton1)
+		&& selectedHitBox != nullptr)
+	{
+		selectedHitBox->rotate(45.f);
 	}
 }
 

@@ -15,7 +15,7 @@ void SceneMapEdit::Init()
 	speed = 200.f;
 
 	uiEditor = AddGo(new UiEditor("uieditor"));
-	tileMap = AddGo(new TileMap("tileMap"));
+
 	Scene::Init();
 }
 
@@ -23,10 +23,8 @@ void SceneMapEdit::Enter()
 {
 	Scene::Enter();
 	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
-	tileMap->SetTexture("graphics/map/Map.png");
-	tileMap->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1,-1)));
-	tileMap->SetShowGridLine(true);
 
+	
 	uiView.setSize(size);
 	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);
 
@@ -55,7 +53,6 @@ void SceneMapEdit::Update(float dt)
 		centerpos.y += InputMgr::GetAxis(Axis::Vertical) * speed * dt;
 		worldView.setCenter(centerpos);
 	}
-
 }
 
 void SceneMapEdit::Draw(sf::RenderWindow& window)

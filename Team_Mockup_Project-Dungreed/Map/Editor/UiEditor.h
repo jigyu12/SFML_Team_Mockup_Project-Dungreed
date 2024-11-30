@@ -16,10 +16,12 @@ protected:
 
 	sf::RectangleShape editorWindow;
 
-	TileMap* editingTileMap;
-
 	sf::Sprite saveButton;
 	sf::Sprite loadButton;
+
+	std::vector<TileMap*> editingTileMaps;
+
+	int selectedTile;
 
 	UiEditTile* uiEditTile;
 	UiEditHitBox* uiEditHitBox;
@@ -41,5 +43,11 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void SetSelectedTileLayer(int tilenum);
+	int GetSelectedTileLayer() { return selectedTile; }
+	TileMap* GetSelectedTileMap() { return selectedTile < 0 ? editingTileMaps[0] : editingTileMaps[selectedTile]; }
+
+	void ResizeTileMaps(const sf::Vector2i& size);
 };
 

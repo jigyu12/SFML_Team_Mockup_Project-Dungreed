@@ -3,6 +3,7 @@
 #include "TileMap.h"
 #include "MapData.h"
 #include "SceneMapEdit.h"
+#include "UiEditor.h"
 
 UiEditTile::UiEditTile(const std::string& name)
 	: GameObject(name)
@@ -52,8 +53,8 @@ void UiEditTile::Init()
 		tileList.push_back(tmpTileMap);
 	}
 
-	selectedTiles = new TileMap();
-	selectedTiles->Init();
+	selectedTile = new TileMap();
+	selectedTile->Init();
 }
 
 void UiEditTile::Release()
@@ -65,8 +66,8 @@ void UiEditTile::Release()
 	}
 	tileList.clear();
 
-	selectedTiles->Release();
-	delete selectedTiles;
+	selectedTile->Release();
+	delete selectedTile;
 }
 
 void UiEditTile::Reset()
@@ -76,7 +77,7 @@ void UiEditTile::Reset()
 		tileList[i]->Reset();
 	}
 
-	editingTileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("tileMap"));
+	uieditor = dynamic_cast<UiEditor*>(SCENE_MGR.GetCurrentScene()->FindGo("uieditor"));
 
 	selectedPage = 0;
 	currentPage = 0;
@@ -116,51 +117,51 @@ void UiEditTile::Reset()
 		tileList[k]->SetShowGridLine(true);
 	}
 
-	selectedTiles->SetTexture("graphics/map/Map.png");
-	selectedTiles->Set({ 1,1 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, -1)));
-	selectedTiles->SetScale({ 3.f, 3.f });
-	selectedTiles->SetPosition({ 50.f, 100.f });
-	selectedTiles->SetShowGridLine(true);
+	selectedTile->SetTexture("graphics/map/Map.png");
+	selectedTile->Set({ 1,1 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
+	selectedTile->SetScale({ 3.f, 3.f });
+	selectedTile->SetPosition({ 50.f, 100.f });
+	selectedTile->SetShowGridLine(true);
+
+	layerUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
+	layerUpButton.setPosition(50.f, 200.f);
+
+	layerDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
+	layerDownButton.setPosition(50.f, 320.f);
+
+	layerText.setFont(FONT_MGR.Get("fonts/french.ttf"));
+	layerText.setPosition(50.f, 260.f);
 
 	pageUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
-	pageUpButton.setPosition(50.f, 200.f);
+	pageUpButton.setPosition(150.f, 200.f);
 
 	pageDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
-	pageDownButton.setPosition(50.f, 320.f);
+	pageDownButton.setPosition(150.f, 320.f);
 
 	pageText.setFont(FONT_MGR.Get("fonts/french.ttf"));
-	pageText.setPosition(50.f, 260.f);
+	pageText.setPosition(150.f, 260.f);
 
 	xUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
-	xUpButton.setPosition(150.f, 200.f);
+	xUpButton.setPosition(250.f, 200.f);
 
 	xDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
-	xDownButton.setPosition(150.f, 320.f);
+	xDownButton.setPosition(250.f, 320.f);
 
 	countxText.setFont(FONT_MGR.Get("fonts/french.ttf"));
-	countxText.setPosition(150.f, 260.f);
+	countxText.setPosition(250.f, 260.f);
 
 	yUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
-	yUpButton.setPosition(250.f, 200.f);
+	yUpButton.setPosition(350.f, 200.f);
 
 	yDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
-	yDownButton.setPosition(250.f, 320.f);
+	yDownButton.setPosition(350.f, 320.f);
 
 	countyText.setFont(FONT_MGR.Get("fonts/french.ttf"));
-	countyText.setPosition(250.f, 260.f);
+	countyText.setPosition(350.f, 260.f);
 }
 
 void UiEditTile::Update(float dt)
 {
-	pageText.setString(std::to_string(currentPage));
-	if (editingTileMap != nullptr)
-	{
-		sf::Vector2i count = editingTileMap->GetCellCount();
-
-		countxText.setString(std::to_string(count.x));
-		countyText.setString(std::to_string(count.y));
-	}
-
 	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 	{
 		sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToUi(InputMgr::GetMousePosition());
@@ -168,7 +169,7 @@ void UiEditTile::Update(float dt)
 		{
 			selectedPage = currentPage;
 			selectedTileIndex = tileList[selectedPage]->GetTileIndex(mousepos);
-			selectedTiles->SetTile(sf::Vector2i(0, 0), TILE_TABLE->Get(selectedTileIndex));
+			selectedTile->SetTile(sf::Vector2i(0, 0), TILE_TABLE->Get(selectedTileIndex));
 		}
 		if (editingTileMap != nullptr)
 		{
@@ -189,33 +190,53 @@ void UiEditTile::Update(float dt)
 			else if (xUpButton.getGlobalBounds().contains(mousepos))
 			{
 				sf::Vector2i count = editingTileMap->GetCellCount();
-				editingTileMap->Resize({ count.x + 1, count.y });
+				uieditor->ResizeTileMaps({ count.x + 1, count.y });
 			}
 			else if (xDownButton.getGlobalBounds().contains(mousepos))
 			{
 				sf::Vector2i count = editingTileMap->GetCellCount();
-				editingTileMap->Resize({ count.x - 1, count.y });
+				uieditor->ResizeTileMaps({ count.x - 1, count.y });
 			}
 			else if (yUpButton.getGlobalBounds().contains(mousepos))
 			{
 				sf::Vector2i count = editingTileMap->GetCellCount();
-				editingTileMap->Resize({ count.x, count.y + 1 });
+				uieditor->ResizeTileMaps({ count.x, count.y + 1 });
 			}
 			else if (yDownButton.getGlobalBounds().contains(mousepos))
 			{
 				sf::Vector2i count = editingTileMap->GetCellCount();
-				editingTileMap->Resize({ count.x , count.y - 1 });
+				uieditor->ResizeTileMaps({ count.x , count.y - 1 });
 			}
 		}
+		if (layerUpButton.getGlobalBounds().contains(mousepos))
+		{
+			uieditor->SetSelectedTileLayer(Utils::Clamp(uieditor->GetSelectedTileLayer() + 1, -1, MapData::TileMapCount - 1));
+			editingTileMap = uieditor->GetSelectedTileMap();
+		}
+		else if (layerDownButton.getGlobalBounds().contains(mousepos))
+		{
+			uieditor->SetSelectedTileLayer(Utils::Clamp(uieditor->GetSelectedTileLayer() - 1, -1, MapData::TileMapCount - 1));
+			editingTileMap = uieditor->GetSelectedTileMap();
+		}
 	}
-
-	if (InputMgr::GetMouseButton(sf::Mouse::Left))
+	if (InputMgr::GetMouseButton(sf::Mouse::Left)
+		&& InputMgr::GetMousePosition().x > 480.f)
 	{
 		sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
-		if (editingTileMap->GetGlobalBounds().contains(mousepos))
+		if (editingTileMap != nullptr && editingTileMap->GetGlobalBounds().contains(mousepos))
 		{
 			editingTileMap->SetTile(mousepos, TILE_TABLE->Get(selectedTileIndex));
 		}
+	}
+	pageText.setString(std::to_string(currentPage));
+	layerText.setString(std::to_string(uieditor->GetSelectedTileLayer()));
+
+	if (editingTileMap != nullptr)
+	{
+		sf::Vector2i count = editingTileMap->GetCellCount();
+
+		countxText.setString(std::to_string(count.x));
+		countyText.setString(std::to_string(count.y));
 	}
 }
 
@@ -224,6 +245,9 @@ void UiEditTile::Draw(sf::RenderWindow& window)
 	window.draw(pageUpButton);
 	window.draw(pageDownButton);
 	window.draw(pageText);
+	window.draw(layerUpButton);
+	window.draw(layerDownButton);
+	window.draw(layerText);
 	window.draw(xUpButton);
 	window.draw(xDownButton);
 	window.draw(countxText);
@@ -231,5 +255,5 @@ void UiEditTile::Draw(sf::RenderWindow& window)
 	window.draw(yDownButton);
 	window.draw(countyText);
 	tileList[currentPage]->Draw(window);
-	selectedTiles->Draw(window);
+	selectedTile->Draw(window);
 }

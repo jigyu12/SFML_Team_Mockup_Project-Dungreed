@@ -3,6 +3,7 @@
 #include "MapData.h"
 
 class TileMap;
+class UiEditor;
 
 class UiEditHitBox : public GameObject
 {
@@ -17,9 +18,9 @@ protected:
 	EditStatus status;
 
 	sf::RectangleShape boxWindow;
-	TileMap* editingTileMap;
 	sf::RectangleShape* selectedHitBox;
 	std::unordered_map<sf::RectangleShape*, HitBoxData::Type> hitboxes;
+	UiEditor* uieditor;
 	sf::Vector2f startPos;
 public:
 	UiEditHitBox(const std::string& name = "");

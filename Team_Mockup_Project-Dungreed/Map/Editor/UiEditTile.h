@@ -1,6 +1,7 @@
 #pragma once
 
 class TileMap;
+class UiEditor;
 
 class UiEditTile : public GameObject
 {
@@ -12,6 +13,10 @@ protected:
 	sf::Text pageText;
 	sf::Sprite pageDownButton;
 
+	sf::Sprite layerUpButton;
+	sf::Text layerText;
+	sf::Sprite layerDownButton;
+
 	sf::Sprite xUpButton;
 	sf::Text countxText;
 	sf::Sprite xDownButton;
@@ -20,9 +25,11 @@ protected:
 	sf::Text countyText;
 	sf::Sprite yDownButton;
 
-	TileMap* selectedTiles;
+	TileMap* selectedTile;
 	std::vector<TileMap*> tileList;
 	TileMap* editingTileMap;
+	
+	UiEditor* uieditor;
 
 	int selectedTileIndex;
 	int selectedPage;

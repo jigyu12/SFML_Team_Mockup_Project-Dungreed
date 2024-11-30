@@ -43,9 +43,6 @@ void SceneDev3::Enter()
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
 
-
-	roome->SetConnectedRoom(room1, HitBoxData::Type::PortalRight);
-	room1->SetConnectedRoom(roome, HitBoxData::Type::PortalLeft);
 	roome->LoadMapData("maps/1fenter.json");
 }
 
@@ -80,33 +77,33 @@ void SceneDev3::Update(float dt)
 	}
 
 	sf::Vector2f playerpos = player->GetPosition();
-	if (roome->IsActive())
-	{
-		const std::vector<std::pair<HitBox*, HitBoxData>>& hitboxes = roome->GetHitBoxes();
-		for (auto& hitbox : hitboxes)
-		{
-			if (hitbox.second.type >= HitBoxData::Type::PortalUp
-				&& hitbox.second.type <= HitBoxData::Type::PortalRight
-				&& hitbox.first->rect.getGlobalBounds().contains(playerpos))
-			{
-				roome->EnterPortal(hitbox.first);
-			}
-			
-		}
-	}
-	else if (room1->IsActive())
-	{
-		const std::vector<std::pair<HitBox*, HitBoxData>>& hitboxes = room1->GetHitBoxes();
-		for (auto& hitbox : hitboxes)
-		{
-			if (hitbox.second.type >= HitBoxData::Type::PortalUp
-				&& hitbox.second.type <= HitBoxData::Type::PortalRight
-				&& hitbox.first->rect.getGlobalBounds().contains(playerpos))
-			{
-				room1->EnterPortal(hitbox.first);
-			}
-		}
-	}
+	//if (roome->IsActive())
+	//{
+	//	const std::vector<std::pair<HitBox*, HitBoxData>>& hitboxes = roome->GetHitBoxes();
+	//	for (auto& hitbox : hitboxes)
+	//	{
+	//		if (hitbox.second.type >= HitBoxData::Type::PortalUp
+	//			&& hitbox.second.type <= HitBoxData::Type::PortalRight
+	//			&& hitbox.first->rect.getGlobalBounds().contains(playerpos))
+	//		{
+	//			roome->EnterPortal(hitbox.first);
+	//		}
+	//		
+	//	}
+	//}
+	//else if (room1->IsActive())
+	//{
+	//	const std::vector<std::pair<HitBox*, HitBoxData>>& hitboxes = room1->GetHitBoxes();
+	//	for (auto& hitbox : hitboxes)
+	//	{
+	//		if (hitbox.second.type >= HitBoxData::Type::PortalUp
+	//			&& hitbox.second.type <= HitBoxData::Type::PortalRight
+	//			&& hitbox.first->rect.getGlobalBounds().contains(playerpos))
+	//		{
+	//			room1->EnterPortal(hitbox.first);
+	//		}
+	//	}
+	//}
 
 }
 

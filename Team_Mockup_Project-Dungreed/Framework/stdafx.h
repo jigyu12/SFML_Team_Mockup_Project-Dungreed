@@ -44,3 +44,4 @@ using json = nlohmann::json;
 #include "Weapon.h"
 #include "Monster.h"
 #include "Player.h"
+#include "RoomMgr.h"

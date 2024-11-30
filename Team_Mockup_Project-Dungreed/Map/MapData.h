@@ -72,6 +72,9 @@ public:
 		Right,
 	};
 
+	const static int TileMapCount = 3;
+	const static int StartPointCount = 4;
+
 	int version = 0;
 	virtual MapData* VersionUp() = 0;
 };
@@ -101,17 +104,32 @@ struct MapDataV2 : public MapData
 	std::vector<HitBoxData> hitBoxData;
 	std::vector<SpawnData> spawnData;
 
-	MapData* VersionUp() override { return this; }
+	MapData* VersionUp() override;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(MapDataV2, version, playerStartPoint, tileMapData, objectData, hitBoxData, spawnData)
 };
 
-typedef MapDataV2 MapDataVC;
+struct MapDataV3 : public MapData
+{
+	MapDataV3();
+	
+	std::vector<sf::Vector2f> playerStartPoint;
+	std::vector<TileMapData> tileMapData;
+	std::vector<ObjectData> objectData;
+	std::vector<HitBoxData> hitBoxData;
+	std::vector<SpawnData> monsterSpawnData;
+
+	MapData* VersionUp() override { return this; }
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(MapDataV3, version, playerStartPoint, tileMapData, objectData, hitBoxData, monsterSpawnData)
+};
+
+typedef MapDataV3 MapDataVC;
 
 class MapDataLoader
 {
 protected:
-	const static int currentVersion = 2;
+	const static int currentVersion = 3;
 	MapDataLoader() = delete;
 	~MapDataLoader() = delete;
 public:

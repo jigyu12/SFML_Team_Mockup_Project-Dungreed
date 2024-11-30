@@ -58,6 +58,7 @@
     <ClCompile Include="HandCrossbow.cpp">
       <Filter>Weapons</Filter>
     </ClCompile>
+    <ClCompile Include="Map\RoomMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -123,6 +124,7 @@
     <ClInclude Include="HandCrossbow.h">
       <Filter>Weapons</Filter>
     </ClInclude>
+    <ClInclude Include="Map\RoomMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">
