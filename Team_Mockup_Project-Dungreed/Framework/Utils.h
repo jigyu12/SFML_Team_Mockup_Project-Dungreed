@@ -48,8 +48,10 @@ public:
 	static float Dot(const sf::Vector2f& a, const sf::Vector2f& b);
 
 	// Ãæµ¹
-	static bool CheckCollision(const HitBox& shapeA, const HitBox& shapeB);
+	static bool CheckCollision(const HitBox& boxA, const HitBox& boxB);
+	static bool CheckCollision(const HitBox& boxA, const HitBox& boxB, CollisionState& collisionState);
 	static bool CheckCollision(const sf::RectangleShape& shapeA, const sf::RectangleShape& shapeB);
+	static bool CheckCollision(const sf::RectangleShape& shapeA, const sf::RectangleShape& shapeB, CollisionState& collisionState);
 	static bool CheckCollision(const sf::Sprite& shapeA, const sf::Sprite& shapeB);
 	static bool PointInTransformBounds(const sf::Transformable& transformable,
 		const sf::FloatRect& localBounds, const sf::Vector2f point);

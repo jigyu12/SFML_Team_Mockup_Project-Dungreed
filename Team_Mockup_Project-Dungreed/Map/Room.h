@@ -19,6 +19,7 @@ protected:
 
 	std::vector<Monster*> monsters;
 	Player* player;
+	Scene* scene;
 public:
 	Room(const std::string& name = "");
 	~Room() = default;

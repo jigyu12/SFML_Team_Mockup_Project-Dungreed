@@ -19,14 +19,6 @@ public:
 		Dead,
 	};
 
-	struct CollisionState
-	{
-		bool Up = false;
-		bool Down = false;
-		bool Left = false;
-		bool Right = false;
-	};
-
 protected:
 	Status status;
 	Weapon* weaponSlot1;
@@ -78,8 +70,6 @@ public:
 		return body.getGlobalBounds();
 	}
 
-	Player::CollisionState GetCollsionState(const sf::FloatRect& player, const sf::FloatRect& stage);
-	
 	void Init() override;
 	void Release() override;
 	void Reset() override;

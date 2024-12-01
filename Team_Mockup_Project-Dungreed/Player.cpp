@@ -46,25 +46,6 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 	origin = Utils::SetOrigin(body, originPreset);
 }
 
-Player::CollisionState Player::GetCollsionState(const sf::FloatRect& player, const sf::FloatRect& stage)
-{
-	Player::CollisionState state;
-	if (stage.top + stage.height > player.top
-		&& player.top + player.height > stage.top + stage.height)
-		state.Up = true;
-	if (stage.left + stage.width > player.left
-		&& player.left + player.width > stage.left + stage.width)
-		state.Left = true;
-	if (player.left + player.width > stage.left
-		&& stage.left > player.left)
-		state.Right = true;
-	if (player.top + player.height > stage.top
-		&& stage.top > player.top)
-		state.Down = true;
-
-	return state;
-}
-
 void Player::Init()
 {
 	speed = 100.f;
@@ -198,54 +179,13 @@ void Player::LateUpdate(float dt)
 	auto playerGlobalBounds = hitbox.rect.getGlobalBounds();
 	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
 
-
-	auto& gameobjects = SCENE_MGR.GetCurrentScene()->GetGameObjects();
-	for (auto& gameobject : gameobjects)
-	{
-		if (auto* monster = dynamic_cast<Monster*>(gameobject))
-		{
-			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
-			{
-
-				if (!isDamaged && !isDead)
-				{
-					isDamaged = true;
-					OnDamage(monster->GetOriginalDamage());
-					sf::Color currColor = body.getColor();
-					body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
-				}
-			}
-		}
-	}
-
-	if (isDamaged || isDead)
-	{
-		invincibilityTimer += dt;
-		if (invincibilityTimer > 1.5f)
-		{
-			invincibilityTimer = 0.f;
-			isDamaged = false;
-			body.setColor(originalPlayerColor);
-		}
-
-	}
-
-	if (hp <= 0)
-	{
-		isDead = true;
-		playerui->SetHp(0, 90);
-		animator.Play("animations/player Dead.csv");
-		SetStatus(Status::Dead);
-	}
-
 	auto hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 	bool collided = false;
 	for (auto& startHitBox : hitboxBounds)
 	{
-		if (Utils::CheckCollision(*startHitBox.first, hitbox))
+		CollisionState state;
+		if (Utils::CheckCollision(hitbox, *startHitBox.first, state))
 		{
-
-			Player::CollisionState state = GetCollsionState(playerGlobalBounds, startHitBox.first->rect.getGlobalBounds());
 			if (state.Up)
 			{
 				switch (startHitBox.second.type)
@@ -256,7 +196,6 @@ void Player::LateUpdate(float dt)
 					collided = true;
 					break;
 				case HitBoxData::Type::Downable:
-					collided = true;
 					break;
 				case HitBoxData::Type::PortalDown:
 					break;
@@ -264,67 +203,67 @@ void Player::LateUpdate(float dt)
 					break;
 				}
 			}
-			if ((state.Down) && velocity.y >= 0.f && startHitBox.first->rect.getGlobalBounds().contains(position))
+			if (state.Down)
 			{
-				switch (startHitBox.second.type)
+				if (velocity.y >= 0.f && (state.AspectRatio() < 1.f && state.area.height < 5.f))
 				{
-				case HitBoxData::Type::Immovable:
-					SetStatus(Status::Ground);
-					position.y = startHitBox.first->rect.getGlobalBounds().top;
-					SetPosition(position);
-					velocity.y = 0.f;
-					collided = true;
-					break;
-				case HitBoxData::Type::Downable:
-					if (status != Status::Dash && (status != Status::DownJump || startHitBox.first != DownPlatform))
+					switch (startHitBox.second.type)
 					{
+					case HitBoxData::Type::Immovable:
 						SetStatus(Status::Ground);
-						position.y = startHitBox.first->rect.getGlobalBounds().top;
+						position.y = state.area.top;
+						velocity.y = 0.f;
 						SetPosition(position);
-						DownPlatform = startHitBox.first;
 						collided = true;
+						break;
+					case HitBoxData::Type::Downable:
+						if (status != Status::Dash
+							&& (status != Status::DownJump || startHitBox.first != DownPlatform))
+						{
+							SetStatus(Status::Ground);
+							position.y = state.area.top;
+							velocity.y = 0.f;
+							SetPosition(position);
+							DownPlatform = startHitBox.first;
+							collided = true;
+						}
+						break;
 					}
-					break;
-				default:
-					break;
+				}
+			}
+			if (state.Right)
+			{
+				if (status == Status::Dash)
+				{
+					SetStatus(Status::Jump);
 				}
 
-			}
-			if (state.Right && (status == Status::Jump || (state.Down == false)))
-			{
-				switch (startHitBox.second.type)
+				if (startHitBox.second.type == HitBoxData::Type::Immovable
+					&& (status == Status::Jump || (state.AspectRatio() > 2.f && state.area.width < 5.f)))
 				{
-				case HitBoxData::Type::Immovable:
-					if (horizontalInput > 0)
+					if (horizontalInput >= 0)
 					{
-						position.x = startHitBox.first->rect.getGlobalBounds().left - hitbox.rect.getGlobalBounds().width / 2;
+						position.x -= state.area.width;
 						SetPosition(position);
 						collided = true;
 					}
-					break;
-				case HitBoxData::Type::Downable:
-					break;
-				default:
-					break;
 				}
 			}
 			if (state.Left && (status == Status::Jump || (state.Down == false)))
 			{
-				switch (startHitBox.second.type)
+				if (status == Status::Dash)
 				{
-				case HitBoxData::Type::Immovable:
-					if (horizontalInput < 0)
+					SetStatus(Status::Jump);
+				}
+				if (startHitBox.second.type == HitBoxData::Type::Immovable
+					&& (status == Status::Jump || (state.AspectRatio() > 2.f && state.area.width < 5.f)))
+				{
+					if (horizontalInput <= 0)
 					{
-						position.x = startHitBox.first->rect.getGlobalBounds().left + startHitBox.first->rect.getGlobalBounds().width
-							+ hitbox.rect.getGlobalBounds().width / 2;
+						position.x += state.area.width;
 						SetPosition(position);
 						collided = true;
 					}
-					break;
-				case HitBoxData::Type::Downable:
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -332,6 +271,44 @@ void Player::LateUpdate(float dt)
 	if (!collided && status == Status::Ground)
 	{
 		SetStatus(Status::Jump);
+	}
+
+	auto& gameobjects = SCENE_MGR.GetCurrentScene()->GetGameObjects();
+	for (auto& gameobject : gameobjects)
+	{
+		if (auto* monster = dynamic_cast<Monster*>(gameobject))
+		{
+			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
+			{
+				if (!isDamaged && !isDead)
+				{
+					isDamaged = true;
+					invincibilityTimer = 0.f;
+					OnDamage(monster->GetOriginalDamage());
+					sf::Color currColor = body.getColor();
+					body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
+				}
+			}
+		}
+	}
+
+	if (isDamaged)
+	{
+		invincibilityTimer += dt;
+		if (invincibilityTimer > 1.5f)
+		{
+			invincibilityTimer = 0.f;
+			isDamaged = false;
+			body.setColor(originalPlayerColor);
+		}
+	}
+
+	if (hp <= 0)
+	{
+		isDead = true;
+		playerui->SetHp(0, 90);
+		animator.Play("animations/player Dead.csv");
+		SetStatus(Status::Dead);
 	}
 }
 

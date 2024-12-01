@@ -133,12 +133,14 @@ void Room::Release()
 		delete tileMap;
 	}
 	tileMaps.clear();
+
+
 }
 
 void Room::Reset()
 {
 	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
-
+	scene = SCENE_MGR.GetCurrentScene();
 	subBackground.setTexture(TEXTURE_MGR.Get("graphics/map/SubBG.png"));
 	SetOrigin(Origins::MC);
 }
@@ -190,6 +192,9 @@ void Room::Draw(sf::RenderWindow& window)
 
 void Room::LoadMapData(const std::string& path)
 {
+	
+	monsters.clear();
+
 	for (auto& hitbox : hitBoxes)
 	{
 		delete hitbox.first;
@@ -252,7 +257,7 @@ void Room::LoadMapData(const std::string& path)
 		bat->Init();
 		bat->Reset();
 		bat->SetActive(false);
-		bat->SetPosition({ Utils::RandomRange(bounds.left,bounds.left+ bounds.width), Utils::RandomRange(bounds.top,bounds.top+ bounds.height)});
+		bat->SetPosition({ Utils::RandomRange(bounds.left,bounds.left + bounds.width), Utils::RandomRange(bounds.top,bounds.top + bounds.height) });
 		monsters.push_back(bat);
 
 		SkeletonDog* skeletonDog = scene->AddGo(new SkeletonDog());
