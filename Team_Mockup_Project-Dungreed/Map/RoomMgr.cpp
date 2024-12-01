@@ -57,6 +57,8 @@ void RoomMgr::Reset()
 	room->SetActive(false);
 	scene->AddGo(room);
 	rooms.insert({ {-1,0 }, room });
+
+	rooms[currentRoom]->EnterRoom(HitBoxData::Type::PortalDown);
 }
 
 void RoomMgr::RoomChange(const HitBoxData::Type& portalType)

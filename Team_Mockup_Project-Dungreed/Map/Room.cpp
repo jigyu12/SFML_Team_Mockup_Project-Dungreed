@@ -3,6 +3,10 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "MapObject.h"
+#include "Monster.h"
+#include "Bat.h"
+#include "SkeletonDog.h"
+#include "Scene.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -103,7 +107,7 @@ void Room::Init()
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = 0;
 
-	for (int i = 0;i < MapData::TileMapCount;++i)
+	for (int i = 0; i < MapData::TileMapCount; ++i)
 	{
 		TileMap* tileMap = new TileMap("tileMap" + std::to_string(i));
 		tileMaps.push_back(tileMap);
@@ -133,7 +137,7 @@ void Room::Release()
 
 void Room::Reset()
 {
-	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("player"));
+	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
 
 	subBackground.setTexture(TEXTURE_MGR.Get("graphics/map/SubBG.png"));
 	SetOrigin(Origins::MC);
@@ -143,6 +147,7 @@ void Room::Update(float dt)
 {
 	if (player != nullptr)
 	{
+		subBackground.setPosition(player->GetPosition());
 		for (auto& hitbox : hitBoxes)
 		{
 			if (hitbox.second.type > HitBoxData::Type::PortalRight)
@@ -151,6 +156,10 @@ void Room::Update(float dt)
 			}
 			if (Utils::PointInTransformBounds(hitbox.first->rect, hitbox.first->rect.getLocalBounds(), player->GetHitBox().GetCenter()))
 			{
+				for (Monster* monster : monsters)
+				{
+					monster->SetActive(false);
+				}
 				ROOM_MGR.RoomChange(hitbox.second.type);
 				break;
 			}
@@ -189,7 +198,7 @@ void Room::LoadMapData(const std::string& path)
 
 	mapData = MapDataLoader::Load(path);
 
-	for (int i = 0; i < tileMaps.size();++i)
+	for (int i = 0; i < tileMaps.size(); ++i)
 	{
 		tileMaps[i]->Set(mapData.tileMapData[i]);
 	}
@@ -232,6 +241,28 @@ void Room::LoadMapData(const std::string& path)
 		}
 		hitBoxes.push_back({ hitbox,hitBoxDatum });
 	}
+
+	Scene* scene = SCENE_MGR.GetCurrentScene();
+
+	if (scene != nullptr)
+	{
+		sf::FloatRect bounds = tileMaps[0]->GetGlobalBounds();
+
+		Bat* bat = scene->AddGo(new Bat());
+		bat->Init();
+		bat->Reset();
+		bat->SetActive(false);
+		bat->SetPosition({ Utils::RandomRange(bounds.left,bounds.left+ bounds.width), Utils::RandomRange(bounds.top,bounds.top+ bounds.height)});
+		monsters.push_back(bat);
+
+		SkeletonDog* skeletonDog = scene->AddGo(new SkeletonDog());
+		skeletonDog->Init();
+		skeletonDog->Reset();
+		skeletonDog->SetActive(false);
+		skeletonDog->SetPosition({ 0.f, 70.f });
+		monsters.push_back(skeletonDog);
+	}
+
 	SetOrigin(originPreset);
 	SetPosition(position);
 }
@@ -240,7 +271,7 @@ void Room::SaveMapData(const std::string& path)
 {
 	return;
 
-	for (int i = 0; i < tileMaps.size();++i)
+	for (int i = 0; i < tileMaps.size(); ++i)
 	{
 		mapData.tileMapData[i].texId = "graphics/map/Map.png";
 		if (path == "maps/1fenter.json")
@@ -470,5 +501,13 @@ const std::vector<std::pair<HitBox*, HitBoxData>>& Room::GetHitBoxes() const
 
 void Room::EnterRoom(HitBoxData::Type connection)
 {
-	player->SetPosition(mapData.playerStartPoint[(int)connection]);
+	if (player != nullptr)
+	{
+		player->SetPosition(mapData.playerStartPoint[(int)connection]);
+	}
+
+	for (Monster* monster : monsters)
+	{
+		monster->SetActive(true);
+	}
 }

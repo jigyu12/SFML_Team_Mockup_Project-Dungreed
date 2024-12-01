@@ -82,7 +82,7 @@ void Player::Release()
 
 void Player::Reset()
 {
-	
+
 	playerui = dynamic_cast<PlayerUi*>(SCENE_MGR.GetCurrentScene()->FindGo("playerUi"));
 
 	animator.SetTarget(&body);
@@ -97,7 +97,7 @@ void Player::Reset()
 	SetOrigin(Origins::BC);
 	SetRotation(0.f);
 
-	
+
 }
 
 void Player::SetStatus(Status status)
@@ -139,11 +139,11 @@ void Player::Update(float dt)
 	{
 		SwitchWeaponSlot(sf::Keyboard::Num1);
 	}
-	else if(InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	else if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
 	{
 		SwitchWeaponSlot(sf::Keyboard::Num2);
 	}
-	
+
 
 	animator.Update(dt);
 
@@ -169,7 +169,7 @@ void Player::Update(float dt)
 	default:
 		break;
 	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::LShift)&& dashCoolTimer >= 1.f)
+	if (InputMgr::GetKeyDown(sf::Keyboard::LShift) && dashCoolTimer >= 1.f)
 	{
 		SetStatus(Player::Status::Dash);
 	}
@@ -177,7 +177,7 @@ void Player::Update(float dt)
 	{
 		SetStatus(Player::Status::DownJump);
 	}
-	
+
 
 
 	SetPosition(position + velocity * dt);
@@ -190,14 +190,14 @@ void Player::Update(float dt)
 
 
 	hitbox.UpdateTr(body, { 8,12,16,21 });
-	
+
 }
 
 void Player::LateUpdate(float dt)
 {
 	auto playerGlobalBounds = hitbox.rect.getGlobalBounds();
 	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
-	
+
 
 	auto& gameobjects = SCENE_MGR.GetCurrentScene()->GetGameObjects();
 	for (auto& gameobject : gameobjects)
@@ -218,7 +218,7 @@ void Player::LateUpdate(float dt)
 		}
 	}
 
-	if (isDamaged||isDead)
+	if (isDamaged || isDead)
 	{
 		invincibilityTimer += dt;
 		if (invincibilityTimer > 1.5f)
@@ -227,7 +227,7 @@ void Player::LateUpdate(float dt)
 			isDamaged = false;
 			body.setColor(originalPlayerColor);
 		}
-	
+
 	}
 
 	if (hp <= 0)
@@ -237,14 +237,14 @@ void Player::LateUpdate(float dt)
 		animator.Play("animations/player Dead.csv");
 		SetStatus(Status::Dead);
 	}
-	
+
 	auto hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 	bool collided = false;
 	for (auto& startHitBox : hitboxBounds)
 	{
 		if (Utils::CheckCollision(*startHitBox.first, hitbox))
 		{
-			
+
 			Player::CollisionState state = GetCollsionState(playerGlobalBounds, startHitBox.first->rect.getGlobalBounds());
 			if (state.Up)
 			{
@@ -257,7 +257,7 @@ void Player::LateUpdate(float dt)
 					break;
 				case HitBoxData::Type::Downable:
 					collided = true;
-						break;
+					break;
 				case HitBoxData::Type::PortalDown:
 					break;
 				default:
@@ -276,7 +276,7 @@ void Player::LateUpdate(float dt)
 					collided = true;
 					break;
 				case HitBoxData::Type::Downable:
-					if (status != Status::Dash &&(status != Status::DownJump || startHitBox.first != DownPlatform))
+					if (status != Status::Dash && (status != Status::DownJump || startHitBox.first != DownPlatform))
 					{
 						SetStatus(Status::Ground);
 						position.y = startHitBox.first->rect.getGlobalBounds().top;
@@ -288,19 +288,19 @@ void Player::LateUpdate(float dt)
 				default:
 					break;
 				}
-				
+
 			}
-			if (state.Right && (status == Status::Jump || (state.Down==false)))
+			if (state.Right && (status == Status::Jump || (state.Down == false)))
 			{
 				switch (startHitBox.second.type)
 				{
 				case HitBoxData::Type::Immovable:
-					if (horizontalInput>0)
+					if (horizontalInput > 0)
 					{
-						position.x = startHitBox.first->rect.getGlobalBounds().left- hitbox.rect.getGlobalBounds().width / 2;
+						position.x = startHitBox.first->rect.getGlobalBounds().left - hitbox.rect.getGlobalBounds().width / 2;
 						SetPosition(position);
 						collided = true;
-					}	
+					}
 					break;
 				case HitBoxData::Type::Downable:
 					break;
@@ -331,7 +331,7 @@ void Player::LateUpdate(float dt)
 	}
 	if (!collided && status == Status::Ground)
 	{
-		SetStatus( Status::Jump);
+		SetStatus(Status::Jump);
 	}
 }
 
@@ -348,7 +348,7 @@ void Player::UpdateGrounded(float dt)
 	{
 		Jump();
 	}
-	if (horizontalInput == 0&&animator.GetCurrentClipId() != "Idle")
+	if (horizontalInput == 0 && animator.GetCurrentClipId() != "Idle")
 	{
 		animator.Play("animations/player Idle.csv");
 	}
@@ -386,7 +386,7 @@ void Player::UpdateDownJump(float dt)
 void Player::UpdateDash(float dt)
 {
 	dashTimer += dt;
-	if (dashTimer > 0.3f )
+	if (dashTimer > 0.3f)
 	{
 		velocity = { 0.f,0.f };
 		SetStatus(Status::Jump);
@@ -402,7 +402,8 @@ void Player::Jump()
 
 void Player::OnDamage(int monsterDamage)
 {
-	playerui->SetHp(hp -= monsterDamage, playerui->GetMaxHp());
+	if (playerui != nullptr)
+		playerui->SetHp(hp -= monsterDamage, playerui->GetMaxHp());
 }
 
 void Player::SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon)

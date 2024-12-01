@@ -14,7 +14,7 @@ void SceneDev3::Init()
 {
 	//roome = AddGo(new Room("tilemap"));
 	//room1 = AddGo(new Room("room1"));
-	player = AddGo(new Player("player"));
+	player = AddGo(new Player("Player"));
 
 	vaLight.resize(32);
 
