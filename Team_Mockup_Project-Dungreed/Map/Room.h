@@ -4,6 +4,7 @@
 class TileMap;
 class Player;
 class MapObject;
+class Monster;
 
 class Room : public GameObject
 {
@@ -16,7 +17,9 @@ protected:
 	std::vector<std::pair<HitBox*, HitBoxData>> hitBoxes;
 	std::vector<std::pair<MapObject*, ObjectData>> objects;
 
+	std::vector<Monster*> monsters;
 	Player* player;
+	Scene* scene;
 public:
 	Room(const std::string& name = "");
 	~Room() = default;

@@ -17,15 +17,17 @@ Room* RoomMgr::GetCurrentRoom()
 
 void RoomMgr::Reset()
 {
+	Scene* scene = SCENE_MGR.GetCurrentScene();
 	for (auto& room : rooms)
 	{
+		scene->RemoveGo(room.second);
+		room.second->Release();
 		delete room.second;
 	}
+	scene->ApplyRemoveGO();
 	rooms.clear();
 
 	currentRoom = { 0,0 };
-
-	Scene* scene = SCENE_MGR.GetCurrentScene();
 
 	Room* room = new Room("00room");
 	room->Init();
@@ -50,13 +52,23 @@ void RoomMgr::Reset()
 	scene->AddGo(room);
 	rooms.insert({ { 1,-1 }, room });
 
-	room = new Room("-10room");
+	room = new Room("0-1room");
 	room->Init();
 	room->Reset();
 	room->LoadMapData("maps/1froom4ULR.json");
 	room->SetActive(false);
 	scene->AddGo(room);
+	rooms.insert({ {0,-1 }, room });
+
+	room = new Room("-10room");
+	room->Init();
+	room->Reset();
+	room->LoadMapData("maps/corridorLR1.json");
+	room->SetActive(false);
+	scene->AddGo(room);
 	rooms.insert({ {-1,0 }, room });
+
+	rooms[currentRoom]->EnterRoom(HitBoxData::Type::PortalDown);
 }
 
 void RoomMgr::RoomChange(const HitBoxData::Type& portalType)

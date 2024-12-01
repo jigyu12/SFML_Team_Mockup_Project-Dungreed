@@ -46,3 +46,17 @@ enum class Sides
 	Right,
 	None,
 };
+
+/// <summary>
+/// A,B 중 A 기준 충돌 여부
+/// </summary>
+struct CollisionState
+{
+	bool Up = false;
+	bool Down = false;
+	bool Left = false;
+	bool Right = false;
+
+	sf::FloatRect area;
+	float AspectRatio() { return area.getSize().y / area.getSize().x; }
+};

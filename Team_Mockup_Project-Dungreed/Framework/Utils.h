@@ -47,9 +47,16 @@ public:
 
 	static float Dot(const sf::Vector2f& a, const sf::Vector2f& b);
 
+	/// <summary>
+	/// A 직선과 B 직선의 교차여부 반환,
+	/// </summary>
+	static bool LineIntersect(const sf::Vector2f& a1,const sf::Vector2f& a2, const sf::Vector2f& b1, const sf::Vector2f& b2, sf::Vector2f& result);
+
 	// 충돌
-	static bool CheckCollision(const HitBox& shapeA, const HitBox& shapeB);
+	static bool CheckCollision(const HitBox& boxA, const HitBox& boxB);
+	static bool CheckCollision(const HitBox& boxA, const HitBox& boxB, CollisionState& collisionState);
 	static bool CheckCollision(const sf::RectangleShape& shapeA, const sf::RectangleShape& shapeB);
+	static bool CheckCollision(const sf::RectangleShape& shapeA, const sf::RectangleShape& shapeB, CollisionState& collisionState);
 	static bool CheckCollision(const sf::Sprite& shapeA, const sf::Sprite& shapeB);
 	static bool PointInTransformBounds(const sf::Transformable& transformable,
 		const sf::FloatRect& localBounds, const sf::Vector2f point);

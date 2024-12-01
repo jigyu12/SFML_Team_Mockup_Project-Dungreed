@@ -9,7 +9,7 @@ SceneGame::SceneGame()
 
 void SceneGame::Init()
 {
-	player = AddGo(new Player("player"));
+	player = AddGo(new Player("Player"));
 
 	Scene::Init();
 }
@@ -32,7 +32,6 @@ void SceneGame::Enter()
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
 	ROOM_MGR.Reset();
-
 }
 
 void SceneGame::Exit()
@@ -58,5 +57,6 @@ void SceneGame::Update(float dt)
 
 void SceneGame::Draw(sf::RenderWindow& window)
 {
+	window.clear({ 51,49,67 });
 	Scene::Draw(window);
 }
