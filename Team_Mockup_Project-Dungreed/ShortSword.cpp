@@ -60,7 +60,7 @@ void ShortSword::Reset()
 	originalDamageMin = 8;
 	originalDamageMax = 10;
 
-	attackSpeedDelayTime = 0.7f;
+	attackSpeedDelayTime = 0.4f;
 	attackSpeedAccumTime = attackSpeedDelayTime;
 
 	isSwing = false;
@@ -149,7 +149,7 @@ void ShortSword::LateUpdate(float dt)
 		look = Utils::GetNormal(mouseworldPos - sprite.getPosition());
 		
 		attackSpeedAccumTime += dt;
-		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButtonDown(sf::Mouse::Left) && isCurrentWeapon)
 		{
 			attackSpeedAccumTime = 0.f;
 
@@ -167,7 +167,7 @@ void ShortSword::LateUpdate(float dt)
 		{
 			SetRotation(Utils::Angle(look) - 10);
 		}
-		else
+		else if (isCurrentWeapon && !isUp)
 		{
 			SetRotation(Utils::Angle(look) + 190);
 		}
@@ -181,15 +181,16 @@ void ShortSword::Draw(sf::RenderWindow& window)
 		if (isCurrentWeapon)
 		{
 			window.draw(sprite);
-			if (isSwing)
+		}
+
+		if (isSwing)
+		{
+			if (swingTimeAccum > swingTimeDelay)
 			{
-				if (swingTimeAccum > swingTimeDelay)
-				{
-					swingTimeAccum = 0.f;
-					isSwing = false;
-				}
-				window.draw(swordSwingFx);
+				swingTimeAccum = 0.f;
+				isSwing = false;
 			}
+			window.draw(swordSwingFx);
 		}
 	}
 	else
