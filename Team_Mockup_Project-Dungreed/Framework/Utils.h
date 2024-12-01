@@ -47,6 +47,11 @@ public:
 
 	static float Dot(const sf::Vector2f& a, const sf::Vector2f& b);
 
+	/// <summary>
+	/// A 직선과 B 직선의 교차여부 반환,
+	/// </summary>
+	static bool LineIntersect(const sf::Vector2f& a1,const sf::Vector2f& a2, const sf::Vector2f& b1, const sf::Vector2f& b2, sf::Vector2f& result);
+
 	// 충돌
 	static bool CheckCollision(const HitBox& boxA, const HitBox& boxB);
 	static bool CheckCollision(const HitBox& boxA, const HitBox& boxB, CollisionState& collisionState);

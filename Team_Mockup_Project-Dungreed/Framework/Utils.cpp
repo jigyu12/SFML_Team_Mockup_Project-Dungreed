@@ -193,6 +193,30 @@ bool Utils::CheckCollision(const sf::Sprite& shapeA, const sf::Sprite& shapeB)
 	return PolygonsIntersect(pointsA, shapeA.getTransform(), pointsB, shapeB.getTransform());
 }
 
+bool Utils::LineIntersect(const sf::Vector2f& a1, const sf::Vector2f& a2, const sf::Vector2f& b1, const sf::Vector2f& b2, sf::Vector2f& result)
+{
+	// t = ((x1-x3)(y3-y4)-(y1-y3)(x3-x4))/((x1-x2)(y3-y4)-(y1-y2)(x3-x4))
+	// y = -((x1-x2)(y1-y3)-(y1-y2)(x1-x3))/((x1-x2)(y3-y4)-(y1-y2)(x3-x4))
+	float det = ((a1.x - a2.x) * (b1.y - b2.y) - (a1.y - a2.y) * (b1.x - b2.x));
+	if (det == 0.f)
+	{
+		return false;
+	}
+	float t = ((a1.x - b1.x) * (b1.y - b2.y) - (a1.y - b1.y) * (b1.x - b2.x))
+		/ det;
+	float u = -((a1.x - a2.x) * (a1.y - b1.y) - (a1.y - a2.y) * (a1.x - b1.x))
+		/ det;
+	if (t < 0.f || t > 1.f || u < 0.f || u > 1.f)
+	{
+		result.x = 0.f;
+		result.y = 0.f;
+		return false;
+	}
+	result.x = a1.x + t * (a2.x - a1.x);
+	result.y = a1.y + t * (a2.y - a1.y);
+	return true;
+}
+
 bool Utils::CheckCollision(const HitBox& boxA, const HitBox& boxB)
 {
 	return CheckCollision(boxA.rect, boxB.rect);
@@ -233,17 +257,17 @@ bool Utils::CheckCollision(const sf::RectangleShape& shapeA, const sf::Rectangle
 		{
 			sf::FloatRect player = shapeA.getGlobalBounds();
 			sf::FloatRect target = shapeB.getGlobalBounds();
-
+		
 			float playerright = player.left + player.width;
 			float playerbottom = player.top + player.height;
 			float targetright = target.left + target.width;
 			float targetbottom = target.top + target.height;
-
-			collisionState.area.left = std::min(std::min(playerright, targetright), std::max(player.left, target.left));
-			collisionState.area.top = std::min(std::min(playerbottom, targetbottom), std::max(player.top, target.top));
-			collisionState.area.width = std::min(playerright, targetright) - std::max(player.left, target.left);
-			collisionState.area.height = std::min(playerbottom, targetbottom) - std::max(player.top, target.top);
-
+		
+			collisionState.area.left = std::max(player.left, target.left);
+			collisionState.area.top = std::max(player.top, target.top);
+			collisionState.area.width = std::min(playerright, targetright) - collisionState.area.left;
+			collisionState.area.height = std::min(playerbottom, targetbottom) - collisionState.area.top;
+		
 			if (targetbottom > player.top
 				&& playerbottom > targetbottom)
 				collisionState.Up = true;
@@ -261,15 +285,60 @@ bool Utils::CheckCollision(const sf::RectangleShape& shapeA, const sf::Rectangle
 		{
 			//01
 			//32
+			sf::FloatRect player = shapeA.getLocalBounds();
+			sf::FloatRect target = shapeB.getLocalBounds();
 			std::vector<sf::Vector2f> pointsBatA;
 			sf::Transform aInverse = aTrans.getInverse();
+			sf::Transform bInverse = bTrans.getInverse();
+			std::vector<bool> containsa;
+			sf::VertexArray va;
+			sf::Vector2f intersectPoint;
+			for (auto& pointA : pointsA)
+			{
+				sf::Vector2f point = bInverse.transformPoint(aTrans.transformPoint(pointA));
+				bool contain = target.contains(point);
+				containsa.push_back(contain);
+				if (contain)
+				{
+					va.append(pointA);
+				}
+			}
 			for (auto& pointB : pointsB)
 			{
-				pointsBatA.push_back(aInverse.transformPoint(bTrans.transformPoint(pointB)));
+				sf::Vector2f point = aInverse.transformPoint(bTrans.transformPoint(pointB));
+				pointsBatA.push_back(point);
+				if (player.contains(point))
+				{
+					va.append(point);
+				}
 			}
-			
+			collisionState.Up = (containsa[0] || containsa[1]) && !(containsa[2] || containsa[3]);
+			collisionState.Down = !(containsa[0] || containsa[1]) && (containsa[2] || containsa[3]);
+			collisionState.Left = (containsa[0] || containsa[3]) && !(containsa[1] || containsa[2]);
+			collisionState.Right = !(containsa[0] || containsa[3]) && (containsa[1] || containsa[2]);
 
+			int aSize = pointsA.size();
+			int bSize = pointsBatA.size();
+			for (int i = 0; i < aSize; ++i)
+			{
+				for (int j = 0; j < bSize; ++j)
+				{
+					if (LineIntersect(pointsA[i], pointsA[(i + 1) % aSize], pointsBatA[j], pointsBatA[(j + 1) % bSize], intersectPoint))
+					{
+						va.append(intersectPoint);
+					}
+				}
+			}
 
+			//sf::FloatRect ar = va.getBounds();
+			//collisionState.area = aTrans.transformRect(ar);
+
+			for (int i = 0; i < va.getVertexCount(); ++i)
+			{
+				va[i].position = aTrans.transformPoint(va[i].position);
+			}
+			sf::FloatRect ar = va.getBounds();
+			collisionState.area = ar;
 		}
 	}
 

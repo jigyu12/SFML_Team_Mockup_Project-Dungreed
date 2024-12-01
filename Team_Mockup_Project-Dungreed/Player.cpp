@@ -205,13 +205,14 @@ void Player::LateUpdate(float dt)
 			}
 			if (state.Down)
 			{
-				if (velocity.y >= 0.f && (state.AspectRatio() < 1.f && state.area.height < 5.f))
+				if (velocity.y >= 0.f && state.area.height < 5.f
+					&& (state.AspectRatio() < 1.f || (startHitBox.first->rect.getRotation() != 0.f || startHitBox.first->rect.getRotation() != 360.f)))
 				{
 					switch (startHitBox.second.type)
 					{
 					case HitBoxData::Type::Immovable:
 						SetStatus(Status::Ground);
-						position.y = state.area.top;
+						position.y = std::min(position.y, state.area.top);
 						velocity.y = 0.f;
 						SetPosition(position);
 						collided = true;
@@ -221,7 +222,7 @@ void Player::LateUpdate(float dt)
 							&& (status != Status::DownJump || startHitBox.first != DownPlatform))
 						{
 							SetStatus(Status::Ground);
-							position.y = state.area.top;
+							position.y = std::min(position.y, state.area.top);
 							velocity.y = 0.f;
 							SetPosition(position);
 							DownPlatform = startHitBox.first;
@@ -239,6 +240,7 @@ void Player::LateUpdate(float dt)
 				}
 
 				if (startHitBox.second.type == HitBoxData::Type::Immovable
+					&& state.area.height > 5.f
 					&& (status == Status::Jump || (state.AspectRatio() > 2.f && state.area.width < 5.f)))
 				{
 					if (horizontalInput >= 0)
@@ -249,13 +251,14 @@ void Player::LateUpdate(float dt)
 					}
 				}
 			}
-			if (state.Left && (status == Status::Jump || (state.Down == false)))
+			if (state.Left)
 			{
 				if (status == Status::Dash)
 				{
 					SetStatus(Status::Jump);
 				}
 				if (startHitBox.second.type == HitBoxData::Type::Immovable
+					&& state.area.height > 5.f
 					&& (status == Status::Jump || (state.AspectRatio() > 2.f && state.area.width < 5.f)))
 				{
 					if (horizontalInput <= 0)
