@@ -79,7 +79,7 @@ void ShortSword::Update(float dt)
 	if (!owner)
 	{
 		auto player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
-		if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()))
+		if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()) && player->GetHp() > 0)
 		{
 			SetOwnerPlayer(player);
 		}
@@ -98,13 +98,13 @@ void ShortSword::LateUpdate(float dt)
 
 		isOnGround = false;
 
-		auto skelDogGlobalBounds = hitbox.rect.getGlobalBounds();
+		auto globalBounds = hitbox.rect.getGlobalBounds();
 		auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 		for (auto& roomHitBox : roomHitBoxes)
 		{
 			if (Utils::CheckCollision(*roomHitBox.first, hitbox))
 			{
-				Weapon::CollisionState state = GetCollsionState(skelDogGlobalBounds, roomHitBox.first->rect.getGlobalBounds());
+				Weapon::CollisionState state = GetCollsionState(globalBounds, roomHitBox.first->rect.getGlobalBounds());
 
 				if (state.Up)
 				{
@@ -132,6 +132,14 @@ void ShortSword::LateUpdate(float dt)
 	}
 	else
 	{
+		if (isSwing)
+		{
+			swingTimeAccum += dt;
+		}
+
+		if (owner->GetHp() <= 0)
+			return;
+
 		sortingOrder = owner->sortingOrder + 1;
 
 		SetPosition({ owner->GetPosition().x , owner->GetPosition().y - 9 });
@@ -163,11 +171,6 @@ void ShortSword::LateUpdate(float dt)
 		{
 			SetRotation(Utils::Angle(look) + 190);
 		}
-	}
-
-	if (isSwing)
-	{
-		swingTimeAccum += dt;
 	}
 }
 
