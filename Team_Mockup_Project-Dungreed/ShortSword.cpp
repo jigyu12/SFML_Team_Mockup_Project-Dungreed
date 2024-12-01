@@ -153,6 +153,8 @@ void ShortSword::LateUpdate(float dt)
 		{
 			attackSpeedAccumTime = 0.f;
 
+			Attack();
+
 			isUp = !isUp;
 	
 			Utils::SetOrigin(swordSwingFx, Origins::MC);
@@ -202,4 +204,9 @@ void ShortSword::Draw(sf::RenderWindow& window)
 
 void ShortSword::Release()
 {
+}
+
+void ShortSword::Attack()
+{
+	
 }
