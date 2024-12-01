@@ -1,11 +1,20 @@
 #pragma once
+
 #include "Scene.h"
+
 class Player;
+class Room;
+class Bat;
+class SkeletonDog;
+class Weapon;
 
 class SceneGame : public Scene
 {
 protected:
 	Player* player;
+	std::vector<Weapon*> weaponList;
+	std::vector<Bat*> batList;
+	std::vector<SkeletonDog*> skeletonDogList;
 
 public:
 	SceneGame();

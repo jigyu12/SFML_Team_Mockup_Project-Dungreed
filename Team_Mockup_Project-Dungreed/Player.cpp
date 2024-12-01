@@ -405,13 +405,22 @@ void Player::SwitchWeaponSlot(sf::Keyboard::Key key)
 
 	if (key == sf::Keyboard::Num1)
 	{
-		weaponSlot1->SetIsCurrentWeapon(true);
-		weaponSlot2->SetIsCurrentWeapon(false);
+		if (!weaponSlot1->IsCurrentWeapon())
+		{
+			weaponSlot1->SetIsCurrentWeapon(true);
+			weaponSlot1->SetAttackSpeedAccumTime(weaponSlot1->GetAttackSpeed() - 0.5f);
+			weaponSlot2->SetIsCurrentWeapon(false);
+		}
 	}
 	else
 	{
-		weaponSlot1->SetIsCurrentWeapon(false);
-		weaponSlot2->SetIsCurrentWeapon(true);
+		if (!weaponSlot2->IsCurrentWeapon())
+		{
+			weaponSlot2->SetIsCurrentWeapon(true);
+			weaponSlot2->SetAttackSpeedAccumTime(weaponSlot2->GetAttackSpeed() - 0.5f);
+			weaponSlot1->SetIsCurrentWeapon(false);
+		}
+		
 	}
 }
 

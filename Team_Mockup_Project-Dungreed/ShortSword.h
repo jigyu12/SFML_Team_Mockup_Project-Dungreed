@@ -32,4 +32,6 @@ public:
 	virtual void LateUpdate(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
+
+	void Attack();
 };
