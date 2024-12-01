@@ -245,7 +245,7 @@ void Player::LateUpdate(float dt)
 				{
 					if (horizontalInput >= 0)
 					{
-						position.x -= state.area.width;
+						position.x = std::min(position.x, position.x - state.area.width);
 						SetPosition(position);
 						collided = true;
 					}
@@ -263,7 +263,7 @@ void Player::LateUpdate(float dt)
 				{
 					if (horizontalInput <= 0)
 					{
-						position.x += state.area.width;
+						position.x = std::max(position.x, position.x + state.area.width);
 						SetPosition(position);
 						collided = true;
 					}
