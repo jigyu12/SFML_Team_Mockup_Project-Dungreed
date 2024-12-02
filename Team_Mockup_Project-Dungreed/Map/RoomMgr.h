@@ -39,7 +39,7 @@ public:
 
 	void Reset();
 
-	void RoomChange(const HitBoxData::Type& portalType);
+	bool RoomChange(const HitBoxData::Type& portalType);
 	void Start(const std::string& path);
 	Room* GetCurrentRoom();
 };
