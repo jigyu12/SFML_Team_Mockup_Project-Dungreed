@@ -24,8 +24,6 @@
     <ClCompile Include="Framework\TextGo.cpp" />
     <ClCompile Include="Framework\Utils.cpp" />
     <ClCompile Include="SceneGame.cpp" />
-    <ClCompile Include="Snippets\SceneXXX.cpp" />
-    <ClCompile Include="Snippets\XXXGo.cpp" />
     <ClCompile Include="Framework\HitBox.cpp" />
     <ClCompile Include="Monster.cpp">
       <Filter>Monsters\Monster</Filter>
@@ -89,8 +87,6 @@
     <ClInclude Include="SaveLoadMgr.h" />
     <ClInclude Include="Framework\Utils.h" />
     <ClInclude Include="SceneGame.h" />
-    <ClInclude Include="Snippets\SceneXXX.h" />
-    <ClInclude Include="Snippets\XXXGo.h" />
     <ClInclude Include="Framework\Variables.h" />
     <ClInclude Include="Framework\HitBox.h" />
     <ClInclude Include="resource.h" />
