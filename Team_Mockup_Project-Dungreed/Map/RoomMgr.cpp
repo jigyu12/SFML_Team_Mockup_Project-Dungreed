@@ -63,15 +63,23 @@ void RoomMgr::Reset()
 	room = new Room("-10room");
 	room->Init();
 	room->Reset();
-	room->LoadMapData("maps/corridorLR1.json");
+	room->LoadMapData("maps/1froom5LR.json");
 	room->SetActive(false);
 	scene->AddGo(room);
 	rooms.insert({ {-1,0 }, room });
 
+	room = new Room("-20room");
+	room->Init();
+	room->Reset();
+	room->LoadMapData("maps/1froom3UDLR.json");
+	room->SetActive(false);
+	scene->AddGo(room);
+	rooms.insert({ {-2,0 }, room });
+
 	rooms[currentRoom]->EnterRoom(HitBoxData::Type::PortalDown);
 }
 
-void RoomMgr::RoomChange(const HitBoxData::Type& portalType)
+bool RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 {
 	sf::Vector2i nextroom = currentRoom;
 	switch (portalType)
@@ -93,13 +101,14 @@ void RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 
 	if (findit == rooms.end())
 	{
-		return;
+		return false;
 	}
 
 	GetCurrentRoom()->SetActive(false);
 	findit->second->SetActive(true);
 	findit->second->EnterRoom(portalType);
 	currentRoom = nextroom;
+	return true;
 }
 
 void RoomMgr::Start(const std::string& path)

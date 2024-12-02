@@ -158,11 +158,13 @@ void Room::Update(float dt)
 			}
 			if (Utils::PointInTransformBounds(hitbox.first->rect, hitbox.first->rect.getLocalBounds(), player->GetHitBox().GetCenter()))
 			{
-				for (Monster* monster : monsters)
+				if (ROOM_MGR.RoomChange(hitbox.second.type))
 				{
-					monster->SetActive(false);
+					for (Monster* monster : monsters)
+					{
+						monster->SetActive(false);
+					}
 				}
-				ROOM_MGR.RoomChange(hitbox.second.type);
 				break;
 			}
 		}
@@ -192,7 +194,7 @@ void Room::Draw(sf::RenderWindow& window)
 
 void Room::LoadMapData(const std::string& path)
 {
-	
+
 	monsters.clear();
 
 	for (auto& hitbox : hitBoxes)
@@ -249,7 +251,7 @@ void Room::LoadMapData(const std::string& path)
 
 	Scene* scene = SCENE_MGR.GetCurrentScene();
 
-	if (scene != nullptr)
+	if (path == "maps/1fenter1LR.json" && scene != nullptr)
 	{
 		sf::FloatRect bounds = tileMaps[0]->GetGlobalBounds();
 
@@ -264,7 +266,7 @@ void Room::LoadMapData(const std::string& path)
 		skeletonDog->Init();
 		skeletonDog->Reset();
 		skeletonDog->SetActive(false);
-		skeletonDog->SetPosition({ 0.f, 70.f });
+		skeletonDog->SetPosition({ 40.f, 0.f });
 		monsters.push_back(skeletonDog);
 	}
 
