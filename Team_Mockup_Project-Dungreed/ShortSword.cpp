@@ -69,6 +69,9 @@ void ShortSword::Reset()
 
 	isUp = true;
 
+	attackBound.setSize({40.f, 30.f});
+	attackBound.setOrigin({attackBound.getSize().x / 2.f, attackBound.getSize().y / 2.f});
+
 	animatorFx.SetTarget(&swordSwingFx);
 
 	Utils::SetOrigin(sprite, Origins::BC);
@@ -148,6 +151,11 @@ void ShortSword::LateUpdate(float dt)
 		sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
 		look = Utils::GetNormal(mouseworldPos - sprite.getPosition());
 		
+		attackBound.setPosition({ owner->GetPosition().x + owner->GetPlayerLookNormal().x * 30.f, owner->GetPosition().y - 4.f + owner->GetPlayerLookNormal().y * 30.f });
+		attackBound.setRotation(Utils::Angle(look) + 90);
+		attackBoundHitbox.UpdateTr(attackBound, attackBound.getLocalBounds());
+		attackBoundHitbox.SetColor(sf::Color::Black);
+
 		attackSpeedAccumTime += dt;
 		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButtonDown(sf::Mouse::Left) && isCurrentWeapon)
 		{
@@ -183,6 +191,7 @@ void ShortSword::Draw(sf::RenderWindow& window)
 		if (isCurrentWeapon)
 		{
 			window.draw(sprite);
+			attackBoundHitbox.Draw(window);
 		}
 
 		if (isSwing)
@@ -208,5 +217,15 @@ void ShortSword::Release()
 
 void ShortSword::Attack()
 {
-	
+	auto& gameObjects = SCENE_MGR.GetCurrentScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (auto* monster = dynamic_cast<Monster*>(gameObject))
+		{
+			if (Utils::CheckCollision(monster->GetHitBox(), attackBoundHitbox))
+			{
+				monster->OnDamaged(Utils::RandomRange(originalDamageMin, originalDamageMax));
+			}
+		}
+	}
 }
