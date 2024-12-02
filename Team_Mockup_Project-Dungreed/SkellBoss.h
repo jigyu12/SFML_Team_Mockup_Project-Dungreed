@@ -22,9 +22,6 @@ public:
 protected:
 	SkellBossState state;
 
-	SkellBossLeftHand leftHand;
-	SkellBossLeftHand rightHand;
-
 	Animator animator;
 
 	sf::Shader shader;

@@ -40,6 +40,16 @@ void SceneGame::Init()
 	{
 		skellBoss = AddGo(new SkellBoss());
 		skellBoss->SetPosition({ -7.5f,0.f });
+
+		{
+			leftHand = AddGo(new SkellBossLeftHand("SkellBossLeftHand"));
+			leftHand->SetPosition({-57.5f , 20.f});
+		}
+		{
+			rightHand = AddGo(new SkellBossLeftHand("SkellBossRightHand"));
+			rightHand->SetPosition({42.5f , -20.f});
+			rightHand->SetScale({ -1.f, 1.f });
+		}
 	}
 	{
 		PlayerUi* playerui = AddGo(new PlayerUi());
