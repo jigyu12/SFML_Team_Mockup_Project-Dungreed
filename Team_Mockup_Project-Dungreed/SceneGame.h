@@ -13,8 +13,8 @@ class SceneGame : public Scene
 protected:
 	Player* player;
 	std::vector<Weapon*> weaponList;
-	std::vector<Bat*> batList;
-	std::vector<SkeletonDog*> skeletonDogList;
+	//std::vector<Bat*> batList;
+	//std::vector<SkeletonDog*> skeletonDogList;
 
 public:
 	SceneGame();

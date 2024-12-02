@@ -66,7 +66,7 @@ void SkeletonDog::Reset()
 
 	hp = 20;
 	speed = 50.f;
-	originalDamage = 80;
+	originalDamage = 8;
 
 	idleAccumTime = 0.f;
 	idleTimeDelay = 1.5f;

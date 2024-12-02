@@ -16,6 +16,9 @@ protected:
 	float swingTimeAccum;
 	float swingTimeDelay;
 
+	sf::RectangleShape attackBound;
+	HitBox attackBoundHitbox;
+
 public:
 	ShortSword(const std::string& name = "ShortSword");
 	virtual ~ShortSword() = default;
