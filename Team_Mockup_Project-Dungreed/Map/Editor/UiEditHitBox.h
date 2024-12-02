@@ -18,6 +18,7 @@ protected:
 	EditStatus status;
 
 	sf::RectangleShape boxWindow;
+
 	sf::RectangleShape* selectedHitBox;
 	std::unordered_map<sf::RectangleShape*, HitBoxData::Type> hitboxes;
 	UiEditor* uieditor;
@@ -32,6 +33,7 @@ public:
 
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
+	void SetSize(const sf::Vector2f& size);
 
 	void Init() override;
 	void Release() override;
@@ -41,4 +43,5 @@ public:
 
 	std::vector<HitBoxData> GetHitBoxData() const;
 	void SetHitBoxData(const std::vector<HitBoxData>& data);
+	void ClearHitBoxData();
 };

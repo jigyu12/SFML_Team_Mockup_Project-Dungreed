@@ -1,13 +1,13 @@
 #pragma once
 
-class UiEditMonster : public GameObject
+class UiEditObject : public GameObject
 {
 protected:
 	sf::RectangleShape boxWindow;
 
 public:
-	UiEditMonster(const std::string& name = "");
-	~UiEditMonster() = default;
+	UiEditObject(const std::string& name = "");
+	~UiEditObject() = default;
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float angle) override;

@@ -196,6 +196,7 @@
     <ClCompile Include="Map\Editor\UiEditTile.cpp" />
     <ClCompile Include="Map\Editor\UiEditHitBox.cpp" />
     <ClCompile Include="Map\Editor\UiEditMonster.cpp" />
+    <ClCompile Include="Map\Editor\UiEditObject.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +252,7 @@
     <ClInclude Include="Map\Editor\UiEditTile.h" />
     <ClInclude Include="Map\Editor\UiEditHitBox.h" />
     <ClInclude Include="Map\Editor\UiEditMonster.h" />
+    <ClInclude Include="Map\Editor\UiEditObject.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>

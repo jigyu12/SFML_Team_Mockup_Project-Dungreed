@@ -13,16 +13,45 @@ UiEditTile::UiEditTile(const std::string& name)
 void UiEditTile::SetPosition(const sf::Vector2f& pos)
 {
 	position = pos;
+	boxWindow.setPosition(position);
+
+	sf::Transform transform = boxWindow.getTransform();
+
+	for (int k = 0; k < tileList.size();++k)
+	{
+		tileList[k]->SetPosition(transform.transformPoint(40.f, 360.f));
+	}
+
+	selectedTile->SetPosition(transform.transformPoint(50.f, 30.f));
+	selectedTileText.setPosition(transform.transformPoint(120.f, 30.f));
+
+	layerUpButton.setPosition(transform.transformPoint(50.f, 130.f));
+	layerDownButton.setPosition(transform.transformPoint(50.f, 250.f));
+	layerText.setPosition(transform.transformPoint(50.f, 190.f));
+
+	pageUpButton.setPosition(transform.transformPoint(150.f, 130.f));
+	pageDownButton.setPosition(transform.transformPoint(150.f, 250.f));
+	pageText.setPosition(transform.transformPoint(150.f, 190.f));
+
+	xUpButton.setPosition(transform.transformPoint(250.f, 130.f));
+	xDownButton.setPosition(transform.transformPoint(250.f, 250.f));
+	countxText.setPosition(transform.transformPoint(250.f, 190.f));
+
+	yUpButton.setPosition(transform.transformPoint(350.f, 130.f));
+	yDownButton.setPosition(transform.transformPoint(350.f, 250.f));
+	countyText.setPosition(transform.transformPoint(350.f, 190.f));
 }
 
 void UiEditTile::SetRotation(float angle)
 {
 	rotation = angle;
+	boxWindow.setRotation(rotation);
 }
 
 void UiEditTile::SetScale(const sf::Vector2f& s)
 {
 	scale = s;
+	boxWindow.setScale(scale);
 }
 
 void UiEditTile::SetOrigin(Origins preset)
@@ -30,13 +59,20 @@ void UiEditTile::SetOrigin(Origins preset)
 	originPreset = preset;
 	if (originPreset != Origins::Custom)
 	{
-
+		origin = Utils::SetOrigin(boxWindow, originPreset);
 	}
 }
 
 void UiEditTile::SetOrigin(const sf::Vector2f& newOrigin)
 {
 	originPreset = Origins::Custom;
+	origin = newOrigin;
+	boxWindow.setOrigin(origin);
+}
+
+void UiEditTile::SetSize(const sf::Vector2f& size)
+{
+	boxWindow.setSize(size);
 }
 
 void UiEditTile::Init()
@@ -76,6 +112,7 @@ void UiEditTile::Reset()
 	{
 		tileList[i]->Reset();
 	}
+	boxWindow.setFillColor({ 150,150,150,255 });
 
 	uieditor = dynamic_cast<UiEditor*>(SCENE_MGR.GetCurrentScene()->FindGo("uieditor"));
 
@@ -113,51 +150,28 @@ void UiEditTile::Reset()
 		tileList[k]->SetTexture("graphics/map/Map.png");
 		tileList[k]->Set({ (int)tileIndexes[0][0].size(),(int)tileIndexes[0].size() }, { 16.f,16.f }, tileIndexes[k]);
 		tileList[k]->SetScale({ 2.5f, 2.5f });
-		tileList[k]->SetPosition({ 40.f,560.f });
 		tileList[k]->SetShowGridLine(true);
 	}
 
 	selectedTile->SetTexture("graphics/map/Map.png");
 	selectedTile->Set({ 1,1 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
 	selectedTile->SetScale({ 3.f, 3.f });
-	selectedTile->SetPosition({ 50.f, 100.f });
 	selectedTile->SetShowGridLine(true);
 
 	layerUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
-	layerUpButton.setPosition(50.f, 200.f);
-
 	layerDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
-	layerDownButton.setPosition(50.f, 320.f);
-
 	layerText.setFont(FONT_MGR.Get("fonts/french.ttf"));
-	layerText.setPosition(50.f, 260.f);
-
 	pageUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
-	pageUpButton.setPosition(150.f, 200.f);
-
 	pageDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
-	pageDownButton.setPosition(150.f, 320.f);
-
 	pageText.setFont(FONT_MGR.Get("fonts/french.ttf"));
-	pageText.setPosition(150.f, 260.f);
-
 	xUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
-	xUpButton.setPosition(250.f, 200.f);
-
 	xDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
-	xDownButton.setPosition(250.f, 320.f);
-
 	countxText.setFont(FONT_MGR.Get("fonts/french.ttf"));
-	countxText.setPosition(250.f, 260.f);
-
 	yUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
-	yUpButton.setPosition(350.f, 200.f);
-
 	yDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
-	yDownButton.setPosition(350.f, 320.f);
-
 	countyText.setFont(FONT_MGR.Get("fonts/french.ttf"));
-	countyText.setPosition(350.f, 260.f);
+	selectedTileText.setFont(FONT_MGR.Get("fonts/french.ttf"));
+	selectedTileText.setString("SELECTED TILE");
 }
 
 void UiEditTile::Update(float dt)
@@ -242,18 +256,25 @@ void UiEditTile::Update(float dt)
 
 void UiEditTile::Draw(sf::RenderWindow& window)
 {
+	window.draw(boxWindow);
+
 	window.draw(pageUpButton);
 	window.draw(pageDownButton);
 	window.draw(pageText);
+	
 	window.draw(layerUpButton);
 	window.draw(layerDownButton);
 	window.draw(layerText);
+	
 	window.draw(xUpButton);
 	window.draw(xDownButton);
 	window.draw(countxText);
+	
 	window.draw(yUpButton);
 	window.draw(yDownButton);
 	window.draw(countyText);
+	
 	tileList[currentPage]->Draw(window);
 	selectedTile->Draw(window);
+	window.draw(selectedTileText);
 }

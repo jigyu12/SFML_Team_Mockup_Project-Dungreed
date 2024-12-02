@@ -26,6 +26,8 @@ protected:
 	sf::Sprite yDownButton;
 
 	TileMap* selectedTile;
+	sf::Text selectedTileText;
+
 	std::vector<TileMap*> tileList;
 	TileMap* editingTileMap;
 	
@@ -46,6 +48,7 @@ public:
 
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
+	void SetSize(const sf::Vector2f& size);
 
 	void Init() override;
 	void Release() override;
