@@ -48,14 +48,14 @@ void Arrow::SetScale(const sf::Vector2f& scale)
 
 void Arrow::Init()
 {
-	SetTextureId("graphics/weapon/Arrow00.png");
-	sprite.setTexture(TEXTURE_MGR.Get(textureId));
-
 	sortingLayer = SortingLayers::Foreground;
 }
 
 void Arrow::Reset()
 {
+	SetTextureId("graphics/weapon/Arrow00.png");
+	sprite.setTexture(TEXTURE_MGR.Get(textureId));
+
 	owner = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
 
 	ownerWeapon = dynamic_cast<HandCrossbow*>(SCENE_MGR.GetCurrentScene()->FindGo("HandCrossbow"));

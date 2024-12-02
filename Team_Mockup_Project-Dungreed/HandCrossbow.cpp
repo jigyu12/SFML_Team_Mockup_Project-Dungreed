@@ -47,9 +47,6 @@ void HandCrossbow::SetScale(const sf::Vector2f& scale)
 
 void HandCrossbow::Init()
 {
-	SetTextureId("graphics/weapon/Crossbow.png");
-	sprite.setTexture(TEXTURE_MGR.Get(textureId));
-
 	sortingLayer = SortingLayers::Foreground;
 
 	weaponType = WeaponType::Ranged;
@@ -57,6 +54,9 @@ void HandCrossbow::Init()
 
 void HandCrossbow::Reset()
 {
+	SetTextureId("graphics/weapon/Crossbow.png");
+	sprite.setTexture(TEXTURE_MGR.Get(textureId));
+
 	originalDamageMin = 7;
 	originalDamageMax = 9;
 
