@@ -1,0 +1,14 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Idle,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/boss/BossIdle/Idle/SkellBossIdle0.png,0,"0",70,95,0
+graphics/boss/BossIdle/Idle/SkellBossIdle1.png,0,"0",70,95,0
+graphics/boss/BossIdle/Idle/SkellBossIdle2.png,0,"0",70,95,0
+graphics/boss/BossIdle/Idle/SkellBossIdle3.png,0,"0",70,96,0
+graphics/boss/BossIdle/Idle/SkellBossIdle4.png,0,"0",70,95,0
+graphics/boss/BossIdle/Idle/SkellBossIdle5.png,0,"0",70,93,0
+graphics/boss/BossIdle/Idle/SkellBossIdle6.png,0,"0",70,90,0
+graphics/boss/BossIdle/Idle/SkellBossIdle7.png,0,"0",70,89,0
+graphics/boss/BossIdle/Idle/SkellBossIdle8.png,0,"0",70,91,0
+graphics/boss/BossIdle/Idle/SkellBossIdle9.png,0,"0",70,94,0

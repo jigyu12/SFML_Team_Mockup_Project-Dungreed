@@ -7,12 +7,14 @@ class Room;
 class Bat;
 class SkeletonDog;
 class Weapon;
+class SkellBoss;
 
 class SceneGame : public Scene
 {
 protected:
 	Player* player;
 	std::vector<Weapon*> weaponList;
+	SkellBoss* skellBoss;
 	//std::vector<Bat*> batList;
 	//std::vector<SkeletonDog*> skeletonDogList;
 

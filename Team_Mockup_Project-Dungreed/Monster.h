@@ -12,19 +12,23 @@ public:
 		SkeletonDog,
 		Bat,
 
+		SkellBoss,
+
 		Count
 	};
+
 protected:
 	MonsterType monsterType;
 
 	Player* target;
 	int originalDamage;
 	
-
 	float attackAccumSpeed;
 	float attackSpeedDelay;
 
 	bool isDamaged;
+
+	bool isDead;
 
 public:
 	Monster(const std::string& name = "");
@@ -47,4 +51,5 @@ public:
 	int GetOriginalDamage() const { return originalDamage; }
 
 	void OnDamaged(int damage);
+	bool IsDead() const { return isDead; }
 };
