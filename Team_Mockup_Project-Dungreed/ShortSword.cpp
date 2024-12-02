@@ -158,7 +158,7 @@ void ShortSword::LateUpdate(float dt)
 			isUp = !isUp;
 	
 			Utils::SetOrigin(swordSwingFx, Origins::MC);
-			swordSwingFx.setPosition({ owner->GetPosition().x + owner->GetPlayerLookNormal().x * 30.f,owner->GetPosition().y - 10.5f + owner->GetPlayerLookNormal().y * 30.f });
+			swordSwingFx.setPosition({ owner->GetPosition().x + owner->GetPlayerLookNormal().x * 30.f,owner->GetPosition().y - 4.f + owner->GetPlayerLookNormal().y * 30.f });
 			swordSwingFx.setRotation(Utils::Angle(look) + 90);
 
 			animatorFx.Play("animations/Sword Swing Fx.csv");
