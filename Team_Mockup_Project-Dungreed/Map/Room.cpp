@@ -251,22 +251,22 @@ void Room::LoadMapData(const std::string& path)
 
 	Scene* scene = SCENE_MGR.GetCurrentScene();
 
-	if (scene != nullptr)
+	if (path== "maps/1fenter1LR.json" && scene != nullptr)
 	{
 		sf::FloatRect bounds = tileMaps[0]->GetGlobalBounds();
-
+	
 		Bat* bat = scene->AddGo(new Bat());
 		bat->Init();
 		bat->Reset();
 		bat->SetActive(false);
 		bat->SetPosition({ Utils::RandomRange(bounds.left,bounds.left + bounds.width), Utils::RandomRange(bounds.top,bounds.top + bounds.height) });
 		monsters.push_back(bat);
-
+	
 		SkeletonDog* skeletonDog = scene->AddGo(new SkeletonDog());
 		skeletonDog->Init();
 		skeletonDog->Reset();
 		skeletonDog->SetActive(false);
-		skeletonDog->SetPosition({ 0.f, 70.f });
+		skeletonDog->SetPosition({ 40.f, 0.f });
 		monsters.push_back(skeletonDog);
 	}
 
