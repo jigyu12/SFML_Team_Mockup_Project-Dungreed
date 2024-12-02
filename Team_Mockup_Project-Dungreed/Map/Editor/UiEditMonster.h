@@ -8,7 +8,7 @@ protected:
 	enum class EditStatus
 	{
 		Create,
-		MoveOld,
+		Move,
 	};
 	EditStatus status;
 

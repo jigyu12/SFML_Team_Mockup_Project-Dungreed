@@ -28,14 +28,14 @@ void UiEditMonster::SetRotation(float angle)
 	rotation = angle;
 	boxWindow.setRotation(rotation);
 
-	boxWindow.setPosition(position);
+	SetPosition(position);
 }
 
 void UiEditMonster::SetScale(const sf::Vector2f& s)
 {
 	scale = s;
 	boxWindow.setScale(scale);
-	boxWindow.setPosition(position);
+	SetPosition(position);
 }
 
 void UiEditMonster::SetOrigin(Origins preset)
@@ -143,7 +143,7 @@ void UiEditMonster::Update(float dt)
 			{
 				if (Utils::PointInTransformBounds(*spawnDatum.first, spawnDatum.first->getLocalBounds(), worldMousePos))
 				{
-					status = EditStatus::MoveOld;
+					status = EditStatus::Move;
 					selectedMonster = spawnDatum.first;
 					selectedMonster->setOutlineColor(sf::Color::Red);
 					startPos = worldMousePos - selectedMonster->getPosition();
@@ -188,7 +188,7 @@ void UiEditMonster::Update(float dt)
 
 			switch (status)
 			{
-			case EditStatus::MoveOld:
+			case EditStatus::Move:
 				selectedMonster->setPosition(worldMousePos - startPos);
 				break;
 			}
@@ -268,6 +268,10 @@ void UiEditMonster::SetSpawnData(const std::vector<SpawnData>& data)
 		shape->setOutlineColor(sf::Color::Red);
 		shape->setOutlineThickness(1.f);
 		shape->setPosition(datum.position);
+		if (selectedMonster != nullptr)
+		{
+			selectedMonster->setOutlineColor(sf::Color::Green);
+		}
 		selectedMonster = shape;
 		spawnData.insert({ shape,datum });
 	}

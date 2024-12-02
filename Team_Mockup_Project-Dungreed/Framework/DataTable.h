@@ -6,6 +6,7 @@ public:
 	{
 		String,
 		Tile,
+		ObjectAnimation,
 	};
 	static const int TotalTypes = 2;
 

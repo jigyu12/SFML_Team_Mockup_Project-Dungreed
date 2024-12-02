@@ -12,6 +12,7 @@ void DataTableMgr::Init()
 
 	tables.insert({ DataTable::Types::String, new StringTable() });
 	tables.insert({ DataTable::Types::Tile, new TileTable() });
+	tables.insert({ DataTable::Types::ObjectAnimation, new ObjectAnimationTable() });
 
 	for (auto t : tables)
 	{
