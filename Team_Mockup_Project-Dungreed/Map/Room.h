@@ -17,6 +17,8 @@ protected:
 	std::vector<std::pair<HitBox*, HitBoxData>> hitBoxes;
 	std::vector<std::pair<MapObject*, ObjectData>> objects;
 
+	sf::FloatRect viewbounds;
+
 	std::vector<Monster*> monsters;
 	Player* player;
 	Scene* scene;
@@ -42,4 +44,5 @@ public:
 
 	const std::vector<std::pair<HitBox*, HitBoxData>>& GetHitBoxes() const;
 	void EnterRoom(HitBoxData::Type connection);
+	const sf::FloatRect& GetViewBounds() { return viewbounds; }
 };

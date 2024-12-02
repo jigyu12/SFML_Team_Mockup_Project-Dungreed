@@ -194,6 +194,7 @@ void Room::Draw(sf::RenderWindow& window)
 
 void Room::LoadMapData(const std::string& path)
 {
+	sf::Vector2f worldViewSize = SCENE_MGR.GetCurrentScene()->GetWorldView().getSize();
 
 	monsters.clear();
 
@@ -209,7 +210,7 @@ void Room::LoadMapData(const std::string& path)
 	{
 		tileMaps[i]->Set(mapData.tileMapData[i]);
 	}
-
+	
 	for (const ObjectData& objData : mapData.objectData)
 	{
 		MapObject* obj = new MapObject();
@@ -272,6 +273,13 @@ void Room::LoadMapData(const std::string& path)
 
 	SetOrigin(originPreset);
 	SetPosition(position);
+
+	viewbounds = tileMaps[0]->GetGlobalBounds();
+
+	viewbounds.left += worldViewSize.x * 0.5f;
+	viewbounds.top += worldViewSize.y * 0.5f;
+	viewbounds.width -= worldViewSize.x;
+	viewbounds.height -= worldViewSize.y;
 }
 
 void Room::SaveMapData(const std::string& path)

@@ -7,6 +7,7 @@
 #include "ShortSword.h"
 #include "HandCrossbow.h"
 #include "PlayerUi.h"
+#include "Room.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -80,7 +81,12 @@ void SceneGame::Exit()
 void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
-	worldView.setCenter(player->GetPosition());
+	sf::Vector2f viewCenter = player->GetPosition();
+	sf::FloatRect viewBounds = ROOM_MGR.GetCurrentRoom()->GetViewBounds();
+	viewCenter.x = Utils::Clamp(viewCenter.x, viewBounds.left, viewBounds.left + viewBounds.width);
+	viewCenter.y = Utils::Clamp(viewCenter.y, viewBounds.top, viewBounds.top + viewBounds.height);
+
+	worldView.setCenter(viewCenter);
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::F5))
 	{
