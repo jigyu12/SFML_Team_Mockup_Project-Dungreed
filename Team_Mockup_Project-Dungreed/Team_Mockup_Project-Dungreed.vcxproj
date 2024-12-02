@@ -141,7 +141,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\SFML-2.6.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-network.lib;sfml-audio.lib
+      <AdditionalDependencies>propsys.lib;shlwapi.lib;comctl32.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-network.lib;sfml-audio.lib
 ;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -187,12 +187,6 @@
     <ClCompile Include="Map\Editor\SceneMapEdit.cpp" />
     <ClCompile Include="ShortSword.cpp" />
     <ClCompile Include="SkeletonDog.cpp" />
-    <ClCompile Include="Snippets\SceneXXX.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Snippets\XXXGo.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Map\TileMap.cpp" />
     <ClCompile Include="Framework\HitBox.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -248,12 +242,6 @@
     <ClInclude Include="Map\Editor\SceneMapEdit.h" />
     <ClInclude Include="ShortSword.h" />
     <ClInclude Include="SkeletonDog.h" />
-    <ClInclude Include="Snippets\SceneXXX.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Snippets\XXXGo.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="Map\TileMap.h" />
     <ClInclude Include="Framework\Variables.h" />
     <ClInclude Include="Framework\HitBox.h" />
