@@ -134,7 +134,6 @@ void Room::Release()
 	}
 	tileMaps.clear();
 
-
 }
 
 void Room::Reset()
@@ -149,7 +148,11 @@ void Room::Update(float dt)
 {
 	if (player != nullptr)
 	{
-		subBackground.setPosition(player->GetPosition());
+		subBGCenter = player->GetPosition();
+		subBGCenter.x = Utils::Clamp(subBGCenter.x, viewbounds.left, viewbounds.left + viewbounds.width);
+		subBGCenter.y = Utils::Clamp(subBGCenter.y, viewbounds.top, viewbounds.top + viewbounds.height);
+
+		subBackground.setPosition(subBGCenter);
 		for (auto& hitbox : hitBoxes)
 		{
 			if (hitbox.second.type > HitBoxData::Type::PortalRight)
@@ -160,9 +163,12 @@ void Room::Update(float dt)
 			{
 				if (ROOM_MGR.RoomChange(hitbox.second.type))
 				{
-					for (Monster* monster : monsters)
+					for (std::pair<Monster*, SpawnData> monster : monsters)
 					{
-						monster->SetActive(false);
+						if (monster.second.wave == this->wave)
+						{
+							monster.first->SetActive(false);
+						}
 					}
 				}
 				break;
@@ -194,6 +200,7 @@ void Room::Draw(sf::RenderWindow& window)
 
 void Room::LoadMapData(const std::string& path)
 {
+	sf::Vector2f worldViewSize = SCENE_MGR.GetCurrentScene()->GetWorldView().getSize();
 
 	monsters.clear();
 
@@ -249,257 +256,45 @@ void Room::LoadMapData(const std::string& path)
 		hitBoxes.push_back({ hitbox,hitBoxDatum });
 	}
 
-	Scene* scene = SCENE_MGR.GetCurrentScene();
-
-	if (path == "maps/1fenter1LR.json" && scene != nullptr)
-	{
-		sf::FloatRect bounds = tileMaps[0]->GetGlobalBounds();
-
-		Bat* bat = scene->AddGo(new Bat());
-		bat->Init();
-		bat->Reset();
-		bat->SetActive(false);
-		bat->SetPosition({ Utils::RandomRange(bounds.left,bounds.left + bounds.width), Utils::RandomRange(bounds.top,bounds.top + bounds.height) });
-		monsters.push_back(bat);
-
-		SkeletonDog* skeletonDog = scene->AddGo(new SkeletonDog());
-		skeletonDog->Init();
-		skeletonDog->Reset();
-		skeletonDog->SetActive(false);
-		skeletonDog->SetPosition({ 40.f, 0.f });
-		monsters.push_back(skeletonDog);
-	}
-
 	SetOrigin(originPreset);
 	SetPosition(position);
-}
 
-void Room::SaveMapData(const std::string& path)
-{
-	return;
+	Scene* scene = SCENE_MGR.GetCurrentScene();
 
-	for (int i = 0; i < tileMaps.size(); ++i)
+	for (const SpawnData& spawndatum : mapData.monsterSpawnData)
 	{
-		mapData.tileMapData[i].texId = "graphics/map/Map.png";
-		if (path == "maps/1fenter.json")
+		switch (spawndatum.type)
 		{
-			mapData.playerStartPoint[(int)MapData::Direction::Down] = { 5 * 16.f,7.f * 16.f };
-
-			HitBoxData hitBoxData;
-			hitBoxData.origin = { 0.f,0.f };
-			hitBoxData.size = { 18 * 16.f,1 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Immovable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 0.f,0.f };
-			hitBoxData.size = { 1 * 16.f,9 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Immovable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 17 * 16.f,0.f };
-			hitBoxData.size = { 2 * 16.f,4 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Immovable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 0 * 16.f,8 * 16.f };
-			hitBoxData.size = { 19 * 16.f,1 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Immovable;
-
-
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 18 * 16.f ,4 * 16.f };
-			hitBoxData.size = { 1 * 16.f,4 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::PortalRight;
-
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			mapData.tileMapData[i].name = "1fEnter";
-			mapData.tileMapData[i].cellcount = { 19,9 };
-			mapData.tileMapData[i].cellsize = { 16.f,16.f };
-			if (i == 1)
-			{
-				mapData.tileMapData[i].tileIndexes = { {35, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 36, 8},
-		{9, 148, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 149, 151, 7, 8},
-		{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145, 7, 8},
-		{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145, 19, 20},
-		{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 158, 149, 151},
-		{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145},
-		{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145},
-		{9, 146, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 145},
-		{37, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, };
-			}
+		case Monster::MonsterType::Bat:
+		{
+			Bat* bat = scene->AddGo(new Bat());
+			bat->Init();
+			bat->Reset();
+			bat->SetActive(false);
+			bat->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ bat,spawndatum });
 		}
-		else if (path == "maps/1froom1.json")
+		break;
+		case Monster::MonsterType::SkeletonDog:
 		{
-
-
-			mapData.playerStartPoint[(int)MapData::Direction::Down] = { 5 * 16.f,7.f * 16.f };
-
-			ObjectData objData;
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 64.f,80.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 80.f,80.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 96.f,80.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 128.f,80.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 144.f,80.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 160.f,80.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 176.f,80.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 208.f,80.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 224.f,80.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 240.f,80.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 144.f,128.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 160.f,128.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 128.f,160.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 144.f,160.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 160.f,160.f };
-			mapData.objectData.push_back(objData);
-
-			objData.type = ObjectData::Type::Platform;
-			objData.origin = { 176.f,160.f };
-			mapData.objectData.push_back(objData);
-
-			HitBoxData hitBoxData;
-			hitBoxData.origin = { 0.f,0.f };
-			hitBoxData.size = { 8 * 16.f,2 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Immovable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 0.f,0.f };
-			hitBoxData.size = { 2 * 16.f,8 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Immovable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 12 * 16.f,0.f };
-			hitBoxData.size = { 7 * 16.f,2 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Immovable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 0 * 16.f,12 * 16.f };
-			hitBoxData.size = { 19 * 16.f,1 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Immovable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 18 * 16.f,0 * 16.f };
-			hitBoxData.size = { 1 * 16.f,13 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Immovable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 4 * 16.f,5 * 16.f };
-			hitBoxData.size = { 3 * 16.f,0.25f * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Downable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 8 * 16.f,5 * 16.f };
-			hitBoxData.size = { 4 * 16.f,0.25f * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Downable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 13 * 16.f,5 * 16.f };
-			hitBoxData.size = { 3 * 16.f,0.25f * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Downable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 9 * 16.f,8 * 16.f };
-			hitBoxData.size = { 2 * 16.f,0.25f * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Downable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 8 * 16.f,10 * 16.f };
-			hitBoxData.size = { 4 * 16.f,0.25f * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::Downable;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			hitBoxData.origin = { 0 * 16.f,8 * 16.f };
-			hitBoxData.size = { 1 * 16.f,4 * 16.f };
-			hitBoxData.rotation = 0.f;
-			hitBoxData.type = HitBoxData::Type::PortalLeft;
-			mapData.hitBoxData.push_back(hitBoxData);
-
-			mapData.tileMapData[i].name = "1froom1";
-			mapData.tileMapData[i].cellcount = { 19,13 };
-			mapData.tileMapData[i].cellsize = { 16.f,16.f };
-			if (i == 1)
-			{
-				mapData.tileMapData[i].tileIndexes = { {8, 8, 8, 8, 8, 8, 8, 9, 146, 160, 160, 145, 7, 8, 8, 8, 8, 8, 8},
-		{8, 35, 20, 20, 20, 20, 20, 21, 146, 160, 160, 145, 19, 20, 20, 20, 20, 20, 36},
-		{8, 9, 148, 149, 149, 149, 149, 149, 156, 160, 160, 158, 149, 149, 149, 149, 149, 151, 7},
-		{8, 9, 146, 160, 161, 160, 160, 160, 160, 160, 160, 163, 160, 161, 160, 160, 160, 145, 7},
-		{8, 9, 146, 160, 160, 160, 163, 160, 161, 160, 160, 160, 160, 160, 160, 160, 161, 145, 7},
-		{8, 9, 146, 145, 0, 0, 0, 157, 0, 0, 0, 0, 157, 0, 0, 0, 146, 145, 7},
-		{8, 9, 146, 145, 0, 0, 0, 157, 0, 0, 0, 0, 157, 0, 0, 0, 146, 145, 7},
-		{20, 21, 146, 145, 0, 0, 0, 157, 0, 0, 0, 0, 157, 0, 0, 0, 146, 145, 7},
-		{149, 149, 156, 145, 0, 0, 0, 157, 0, 0, 0, 0, 157, 0, 0, 0, 146, 145, 7},
-		{160, 160, 160, 145, 0, 0, 0, 157, 0, 0, 0, 0, 157, 0, 0, 0, 146, 145, 7},
-		{160, 160, 160, 158, 178, 184, 180, 159, 178, 179, 179, 180, 159, 178, 179, 180, 156, 145, 7 },
-		{160, 160, 160, 163, 160, 161, 160, 160, 160, 174, 175, 160, 161, 160, 160, 160, 160, 145, 7 },
-		{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 38},
-				};
-			}
+			SkeletonDog* skeletonDog = scene->AddGo(new SkeletonDog());
+			skeletonDog->Init();
+			skeletonDog->Reset();
+			skeletonDog->SetActive(false);
+			skeletonDog->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ skeletonDog ,spawndatum });
+		}
+		break;
 		}
 	}
 
-	MapDataLoader::Save(mapData, path);
-}
+	viewbounds = tileMaps[0]->GetGlobalBounds();
 
+	viewbounds.left += worldViewSize.x * 0.5f;
+	viewbounds.top += worldViewSize.y * 0.5f;
+	viewbounds.width -= worldViewSize.x;
+	viewbounds.height -= worldViewSize.y;
+}
 
 const std::vector<std::pair<HitBox*, HitBoxData>>& Room::GetHitBoxes() const
 {
@@ -513,8 +308,29 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		player->SetPosition(mapData.playerStartPoint[(int)connection]);
 	}
 
-	for (Monster* monster : monsters)
+	if (cleared)
 	{
-		monster->SetActive(true);
+		return;
 	}
+	for (std::pair<Monster*, SpawnData>& monster : monsters)
+	{
+		if (monster.second.wave == 0)
+		{
+			monster.first->SetActive(true);
+		}
+	}
+}
+
+std::vector<Monster*> Room::GetMonsters()
+{
+	std::vector<Monster*> data;
+
+	for (auto& monster : monsters)
+	{
+		if (monster.second.wave == this->wave)
+		{
+			data.push_back(monster.first);
+		}
+	}
+	return data;
 }

@@ -3,6 +3,8 @@
 class TileMap;
 class UiEditTile;
 class UiEditHitBox;
+class UiEditMonster;
+class UiEditObject;
 
 class UiEditor : public GameObject
 {
@@ -11,13 +13,23 @@ protected:
 	{
 		Tile,
 		HitBox,
+		Monster,
+		Object,
 	};
-	GroupBox currentGroupBox;
+	GroupBox selectedGroupBox;
 
 	sf::RectangleShape editorWindow;
 
+	sf::Sprite newButton;
 	sf::Sprite saveButton;
 	sf::Sprite loadButton;
+
+	sf::Sprite tileButton;
+	sf::Sprite hitboxButton;
+	sf::Sprite monsterButton;
+	sf::Sprite objectButton;
+
+	sf::Text selectedFileName;
 
 	std::vector<TileMap*> editingTileMaps;
 
@@ -25,6 +37,8 @@ protected:
 
 	UiEditTile* uiEditTile;
 	UiEditHitBox* uiEditHitBox;
+	UiEditMonster* uiEditMonster;
+	UiEditObject* uiEditObject;
 
 public:
 	UiEditor(const std::string& name = "");
@@ -49,5 +63,7 @@ public:
 	TileMap* GetSelectedTileMap() { return selectedTile < 0 ? editingTileMaps[0] : editingTileMaps[selectedTile]; }
 
 	void ResizeTileMaps(const sf::Vector2i& size);
+
+	void ChangeGroupbox(const UiEditor::GroupBox& selectedGroupBox);
 };
 

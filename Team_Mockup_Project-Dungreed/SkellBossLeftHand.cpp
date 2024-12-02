@@ -69,6 +69,10 @@ void SkellBossLeftHand::Reset()
 	attackSpeedDelay = 0.3f;
 
 	isDamaged = false;
+	isDead = false;
+
+	animator.SetTarget(&body);
+
 }
 
 void SkellBossLeftHand::Update(float dt)

@@ -11,16 +11,19 @@ UiEditHitBox::UiEditHitBox(const std::string& name)
 void UiEditHitBox::SetPosition(const sf::Vector2f& pos)
 {
 	position = pos;
+	boxWindow.setPosition(position);
 }
 
 void UiEditHitBox::SetRotation(float angle)
 {
 	rotation = angle;
+	boxWindow.setRotation(rotation);
 }
 
 void UiEditHitBox::SetScale(const sf::Vector2f& s)
 {
 	scale = s;
+	boxWindow.setScale(scale);
 }
 
 void UiEditHitBox::SetOrigin(Origins preset)
@@ -28,13 +31,20 @@ void UiEditHitBox::SetOrigin(Origins preset)
 	originPreset = preset;
 	if (originPreset != Origins::Custom)
 	{
-
+		origin = Utils::SetOrigin(boxWindow, originPreset);
 	}
 }
 
 void UiEditHitBox::SetOrigin(const sf::Vector2f& newOrigin)
 {
 	originPreset = Origins::Custom;
+	origin = newOrigin;
+	boxWindow.setOrigin(origin);
+}
+
+void UiEditHitBox::SetSize(const sf::Vector2f& size)
+{
+	boxWindow.setSize(size);
 }
 
 void UiEditHitBox::Init()
@@ -60,6 +70,7 @@ void UiEditHitBox::Reset()
 	}
 	hitboxes.clear();
 	selectedHitBox = nullptr;
+	boxWindow.setFillColor({ 150,150,150,255 });
 
 	uieditor = dynamic_cast<UiEditor*>(SCENE_MGR.GetCurrentScene()->FindGo("uieditor"));
 
@@ -175,6 +186,8 @@ void UiEditHitBox::Update(float dt)
 
 void UiEditHitBox::Draw(sf::RenderWindow& window)
 {
+	window.draw(boxWindow);
+
 	sf::View prev = window.getView();
 	sf::View world = SCENE_MGR.GetCurrentScene()->GetWorldView();
 	sf::Vector2f size = world.getSize();
@@ -237,4 +250,13 @@ void UiEditHitBox::SetHitBoxData(const std::vector<HitBoxData>& data)
 		}
 		hitboxes.insert({ shape ,datum.type });
 	}
+}
+
+void UiEditHitBox::ClearHitBoxData()
+{
+	for (auto& hitbox : hitboxes)
+	{
+		delete hitbox.first;
+	}
+	hitboxes.clear();
 }

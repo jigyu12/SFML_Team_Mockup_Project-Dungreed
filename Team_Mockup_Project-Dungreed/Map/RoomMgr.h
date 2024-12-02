@@ -1,6 +1,4 @@
 #pragma once
-#include "MapData.h"
-
 
 struct Vector2iHash
 {
@@ -14,14 +12,12 @@ struct Vector2iHash
 
 class Room;
 
-
 struct RoomData
 {
 	std::unordered_map<sf::Vector2i, std::string, Vector2iHash> roomCoord;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(RoomData, roomCoord)
 };
-
 
 class RoomMgr : public Singleton<RoomMgr>
 {

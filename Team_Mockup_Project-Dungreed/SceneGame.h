@@ -8,13 +8,17 @@ class Bat;
 class SkeletonDog;
 class Weapon;
 class SkellBoss;
+class SkellBossLeftHand;
 
 class SceneGame : public Scene
 {
 protected:
 	Player* player;
 	std::vector<Weapon*> weaponList;
+
 	SkellBoss* skellBoss;
+	SkellBossLeftHand* leftHand;
+	SkellBossLeftHand* rightHand;
 	//std::vector<Bat*> batList;
 	//std::vector<SkeletonDog*> skeletonDogList;
 

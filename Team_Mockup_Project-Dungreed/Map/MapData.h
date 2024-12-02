@@ -37,6 +37,7 @@ struct HitBoxData
 		PortalRight,
 		Immovable,
 		Downable,
+		Spawner,
 	};
 
 	sf::Vector2f size;
@@ -50,12 +51,7 @@ struct HitBoxData
 
 struct SpawnData
 {
-	enum class Type
-	{
-		Bat,
-	};
-
-	Type type;
+	Monster::MonsterType type;
 	sf::Vector2f position;
 	int wave;
 

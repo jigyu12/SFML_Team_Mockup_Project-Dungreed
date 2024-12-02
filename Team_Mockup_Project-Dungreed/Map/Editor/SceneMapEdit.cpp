@@ -2,7 +2,6 @@
 #include "SceneMapEdit.h"
 #include "UiEditor.h"
 #include "TileMap.h"
-#include "MapData.h"
 #include "FileDialog.h"
 
 SceneMapEdit::SceneMapEdit() : Scene(SceneIds::MapEdit)
