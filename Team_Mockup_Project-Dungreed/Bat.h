@@ -31,7 +31,6 @@ protected:
 
 	float deathAccumTime;
 	float deathTimeDelay;
-	bool isDead;
 
 	sf::CircleShape detectionRange;
 

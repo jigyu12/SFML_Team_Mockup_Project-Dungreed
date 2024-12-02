@@ -283,7 +283,7 @@ void Player::LateUpdate(float dt)
 		{
 			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
-				if (!isDamaged && !isDead)
+				if (!isDamaged && !isDead && monster->GetOriginalDamage() != 0)
 				{
 					isDamaged = true;
 					invincibilityTimer = 0.f;

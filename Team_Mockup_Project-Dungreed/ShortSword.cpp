@@ -46,10 +46,7 @@ void ShortSword::SetScale(const sf::Vector2f& scale)
 }
 
 void ShortSword::Init()
-{
-	SetTextureId("graphics/weapon/Sword.png");
-	sprite.setTexture(TEXTURE_MGR.Get(textureId));
-
+{	
 	sortingLayer = SortingLayers::Foreground;
 
 	weaponType = WeaponType::Melee;
@@ -57,6 +54,9 @@ void ShortSword::Init()
 
 void ShortSword::Reset()
 {
+	SetTextureId("graphics/weapon/Sword.png");
+	sprite.setTexture(TEXTURE_MGR.Get(textureId));
+
 	originalDamageMin = 8;
 	originalDamageMax = 10;
 
@@ -68,6 +68,9 @@ void ShortSword::Reset()
 	swingTimeDelay = 0.35f;
 
 	isUp = true;
+
+	attackBound.setSize({40.f, 30.f});
+	attackBound.setOrigin({attackBound.getSize().x / 2.f, attackBound.getSize().y / 2.f});
 
 	animatorFx.SetTarget(&swordSwingFx);
 
@@ -148,6 +151,11 @@ void ShortSword::LateUpdate(float dt)
 		sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
 		look = Utils::GetNormal(mouseworldPos - sprite.getPosition());
 		
+		attackBound.setPosition({ owner->GetPosition().x + owner->GetPlayerLookNormal().x * 30.f, owner->GetPosition().y - 4.f + owner->GetPlayerLookNormal().y * 30.f });
+		attackBound.setRotation(Utils::Angle(look) + 90);
+		attackBoundHitbox.UpdateTr(attackBound, attackBound.getLocalBounds());
+		attackBoundHitbox.SetColor(sf::Color::Black);
+
 		attackSpeedAccumTime += dt;
 		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButtonDown(sf::Mouse::Left) && isCurrentWeapon)
 		{
@@ -157,11 +165,12 @@ void ShortSword::LateUpdate(float dt)
 
 			isUp = !isUp;
 	
+			animatorFx.Play("animations/Sword Swing Fx.csv");
+
 			Utils::SetOrigin(swordSwingFx, Origins::MC);
 			swordSwingFx.setPosition({ owner->GetPosition().x + owner->GetPlayerLookNormal().x * 30.f,owner->GetPosition().y - 4.f + owner->GetPlayerLookNormal().y * 30.f });
 			swordSwingFx.setRotation(Utils::Angle(look) + 90);
 
-			animatorFx.Play("animations/Sword Swing Fx.csv");
 			isSwing = true;
 		}
 
@@ -183,6 +192,7 @@ void ShortSword::Draw(sf::RenderWindow& window)
 		if (isCurrentWeapon)
 		{
 			window.draw(sprite);
+			attackBoundHitbox.Draw(window);
 		}
 
 		if (isSwing)
@@ -208,5 +218,15 @@ void ShortSword::Release()
 
 void ShortSword::Attack()
 {
-	
+	auto& gameObjects = SCENE_MGR.GetCurrentScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (auto* monster = dynamic_cast<Monster*>(gameObject))
+		{
+			if (Utils::CheckCollision(monster->GetHitBox(), attackBoundHitbox))
+			{
+				monster->OnDamaged(Utils::RandomRange(originalDamageMin, originalDamageMax));
+			}
+		}
+	}
 }
