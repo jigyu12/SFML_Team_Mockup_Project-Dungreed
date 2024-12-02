@@ -96,14 +96,15 @@ void UiEditMonster::Reset()
 
 void UiEditMonster::Update(float dt)
 {
-	sf::Vector2f worldMousePos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
 	if (InputMgr::GetMousePosition().x < 480.f)
 	{
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
+			sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToUi(InputMgr::GetMousePosition());
+
 			for (int i = 0;i < monsterList.size();++i)
 			{
-				if (monsterList[i].getGlobalBounds().contains(SCENE_MGR.GetCurrentScene()->ScreenToUi(InputMgr::GetMousePosition())))
+				if (monsterList[i].getGlobalBounds().contains(mousepos))
 				{
 					monsterList[i].setOutlineColor(sf::Color::Red);
 					selectedType = (Monster::MonsterType)i;
@@ -113,10 +114,24 @@ void UiEditMonster::Update(float dt)
 					monsterList[i].setOutlineColor(sf::Color::White);
 				}
 			}
+
+			if (waveUpButton.getGlobalBounds().contains(mousepos)
+				&& selectedMonster != nullptr)
+			{
+				spawnData[selectedMonster].wave = Utils::Clamp(++spawnData[selectedMonster].wave, 0, 100);
+			}
+			if (waveDownButton.getGlobalBounds().contains(mousepos)
+				&& selectedMonster != nullptr)
+			{
+				spawnData[selectedMonster].wave = Utils::Clamp(--spawnData[selectedMonster].wave, 0, 100);
+			}
 		}
+
 	}
 	else
 	{
+		sf::Vector2f worldMousePos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
+
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
 			if (selectedMonster != nullptr)
@@ -188,6 +203,8 @@ void UiEditMonster::Update(float dt)
 			}
 		}
 	}
+
+	waveText.setString("SPAWN WAVE : " + (selectedMonster != nullptr ? std::to_string(spawnData[selectedMonster].wave) : ""));
 }
 
 void UiEditMonster::Draw(sf::RenderWindow& window)
@@ -268,5 +285,4 @@ void UiEditMonster::ClearSpawnData()
 void UiEditMonster::SetMonsterType(const Monster::MonsterType& type)
 {
 	selectedType = type;
-
 }
