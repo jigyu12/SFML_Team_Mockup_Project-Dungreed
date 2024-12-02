@@ -51,13 +51,7 @@ struct HitBoxData
 
 struct SpawnData
 {
-	enum class Type
-	{
-		Bat,
-		SkeletonDog,
-	};
-
-	Type type;
+	Monster::MonsterType type;
 	sf::Vector2f position;
 	int wave;
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "MapData.h"
-
 class MapObject : public GameObject
 {
 protected:

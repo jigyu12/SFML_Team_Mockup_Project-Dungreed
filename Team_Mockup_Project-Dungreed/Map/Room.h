@@ -1,5 +1,4 @@
 #pragma once
-#include "MapData.h"
 
 class TileMap;
 class Player;
@@ -20,9 +19,14 @@ protected:
 	sf::FloatRect viewbounds;
 	sf::Vector2f subBGCenter;
 
-	std::vector<Monster*> monsters;
+	std::vector<std::pair<Monster*,SpawnData>> monsters;
 	Player* player;
 	Scene* scene;
+
+	int remain;
+	int wave;
+	bool cleared;
+
 public:
 	Room(const std::string& name = "");
 	~Room() = default;
@@ -43,8 +47,8 @@ public:
 	void LoadMapData(const std::string& path);
 
 	const std::vector<std::pair<HitBox*, HitBoxData>>& GetHitBoxes() const;
+	std::vector<Monster*> GetMonsters();
 	void EnterRoom(HitBoxData::Type connection);
 	const sf::Vector2f& GetSubBGCenter() { return subBGCenter; }
 	const sf::FloatRect& GetViewBounds() { return viewbounds; }
-	const std::vector<Monster*>& GetMonsters() { return monsters; }
 };

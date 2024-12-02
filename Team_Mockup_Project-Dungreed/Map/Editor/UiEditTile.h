@@ -6,24 +6,20 @@ class UiEditor;
 class UiEditTile : public GameObject
 {
 protected:
+	enum class UiType
+	{
+		Layer,
+		Page,
+		CountX,
+		CountY,
+		TypeCount,
+	};
 
 	sf::RectangleShape boxWindow;
 
-	sf::Sprite pageUpButton;
-	sf::Text pageText;
-	sf::Sprite pageDownButton;
-
-	sf::Sprite layerUpButton;
-	sf::Text layerText;
-	sf::Sprite layerDownButton;
-
-	sf::Sprite xUpButton;
-	sf::Text countxText;
-	sf::Sprite xDownButton;
-
-	sf::Sprite yUpButton;
-	sf::Text countyText;
-	sf::Sprite yDownButton;
+	std::vector<sf::Sprite> upButtons;
+	std::vector<sf::Text> buttonTexts;
+	std::vector<sf::Sprite> downButtons;
 
 	TileMap* selectedTile;
 	sf::Text selectedTileText;

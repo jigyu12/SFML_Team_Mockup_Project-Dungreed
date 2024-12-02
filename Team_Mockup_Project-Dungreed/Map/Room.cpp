@@ -134,7 +134,6 @@ void Room::Release()
 	}
 	tileMaps.clear();
 
-
 }
 
 void Room::Reset()
@@ -164,9 +163,12 @@ void Room::Update(float dt)
 			{
 				if (ROOM_MGR.RoomChange(hitbox.second.type))
 				{
-					for (Monster* monster : monsters)
+					for (std::pair<Monster*, SpawnData> monster : monsters)
 					{
-						monster->SetActive(false);
+						if (monster.second.wave == this->wave)
+						{
+							monster.first->SetActive(false);
+						}
 					}
 				}
 				break;
@@ -214,7 +216,7 @@ void Room::LoadMapData(const std::string& path)
 	{
 		tileMaps[i]->Set(mapData.tileMapData[i]);
 	}
-	
+
 	for (const ObjectData& objData : mapData.objectData)
 	{
 		MapObject* obj = new MapObject();
@@ -254,29 +256,37 @@ void Room::LoadMapData(const std::string& path)
 		hitBoxes.push_back({ hitbox,hitBoxDatum });
 	}
 
-	Scene* scene = SCENE_MGR.GetCurrentScene();
-
-	if (path == "maps/1fenter1LR.json" && scene != nullptr)
-	{
-		sf::FloatRect bounds = tileMaps[0]->GetGlobalBounds();
-
-		Bat* bat = scene->AddGo(new Bat());
-		bat->Init();
-		bat->Reset();
-		bat->SetActive(false);
-		bat->SetPosition({ Utils::RandomRange(bounds.left,bounds.left + bounds.width), Utils::RandomRange(bounds.top,bounds.top + bounds.height) });
-		monsters.push_back(bat);
-
-		SkeletonDog* skeletonDog = scene->AddGo(new SkeletonDog());
-		skeletonDog->Init();
-		skeletonDog->Reset();
-		skeletonDog->SetActive(false);
-		skeletonDog->SetPosition({ 40.f, 0.f });
-		monsters.push_back(skeletonDog);
-	}
-
 	SetOrigin(originPreset);
 	SetPosition(position);
+
+	Scene* scene = SCENE_MGR.GetCurrentScene();
+
+	for (const SpawnData& spawndatum : mapData.monsterSpawnData)
+	{
+		switch (spawndatum.type)
+		{
+		case Monster::MonsterType::Bat:
+		{
+			Bat* bat = scene->AddGo(new Bat());
+			bat->Init();
+			bat->Reset();
+			bat->SetActive(false);
+			bat->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ bat,spawndatum });
+		}
+		break;
+		case Monster::MonsterType::SkeletonDog:
+		{
+			SkeletonDog* skeletonDog = scene->AddGo(new SkeletonDog());
+			skeletonDog->Init();
+			skeletonDog->Reset();
+			skeletonDog->SetActive(false);
+			skeletonDog->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ skeletonDog ,spawndatum });
+		}
+		break;
+		}
+	}
 
 	viewbounds = tileMaps[0]->GetGlobalBounds();
 
@@ -298,8 +308,29 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		player->SetPosition(mapData.playerStartPoint[(int)connection]);
 	}
 
-	for (Monster* monster : monsters)
+	if (cleared)
 	{
-		monster->SetActive(true);
+		return;
 	}
+	for (std::pair<Monster*, SpawnData>& monster : monsters)
+	{
+		if (monster.second.wave == 0)
+		{
+			monster.first->SetActive(true);
+		}
+	}
+}
+
+std::vector<Monster*> Room::GetMonsters()
+{
+	std::vector<Monster*> data;
+
+	for (auto& monster : monsters)
+	{
+		if (monster.second.wave == this->wave)
+		{
+			data.push_back(monster.first);
+		}
+	}
+	return data;
 }

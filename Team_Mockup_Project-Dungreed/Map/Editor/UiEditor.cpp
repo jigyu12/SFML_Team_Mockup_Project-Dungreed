@@ -6,7 +6,6 @@
 #include "UiEditor.h"
 #include "TileMap.h"
 #include "FileDialog.h"
-#include "MapData.h"
 
 UiEditor::UiEditor(const std::string& name)
 	: GameObject(name)
@@ -219,6 +218,11 @@ void UiEditor::Update(float dt)
 					{
 						mapData.hitBoxData = uiEditHitBox->GetHitBoxData();
 					}
+					if (uiEditMonster != nullptr)
+					{
+						mapData.monsterSpawnData = uiEditMonster->GetSpawnData();
+					}
+
 					MapDataLoader::Save(mapData, path);
 
 					int index = path.rfind(L"\\");
@@ -239,6 +243,10 @@ void UiEditor::Update(float dt)
 					if (uiEditHitBox != nullptr)
 					{
 						uiEditHitBox->SetHitBoxData(mapdata.hitBoxData);
+					}
+					if (uiEditMonster != nullptr)
+					{
+						uiEditMonster->SetSpawnData(mapdata.monsterSpawnData);
 					}
 
 					int index = path.rfind(L"\\");
