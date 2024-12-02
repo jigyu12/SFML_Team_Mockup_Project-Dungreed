@@ -7,6 +7,8 @@
 #include "ShortSword.h"
 #include "HandCrossbow.h"
 #include "PlayerUi.h"
+#include "SkellBoss.h"
+#include "SkellBossLeftHand.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -34,6 +36,13 @@ void SceneGame::Init()
 			player->SetWeaponToWeaponSlot2(handCrossbow);
 		}
 	}
+	{
+		skellBoss = AddGo(new SkellBoss());
+		skellBoss->SetPosition({ -7.5f,0.f });
+	}
+	{
+		PlayerUi* playerui = AddGo(new PlayerUi());
+	}
 	/*{
 		Bat* bat = AddGo(new Bat());
 		bat->SetPosition({ 140.f, -80.f });
@@ -44,11 +53,7 @@ void SceneGame::Init()
 		skeletonDog->SetPosition({ 0.f, 0.f });
 		skeletonDogList.push_back(skeletonDog);
 	}*/
-	{
-		PlayerUi* playerui = AddGo(new PlayerUi());
-	}
-
-
+	
 	Scene::Init();
 }
 
