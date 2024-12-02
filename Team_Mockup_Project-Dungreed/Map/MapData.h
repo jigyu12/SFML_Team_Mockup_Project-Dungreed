@@ -37,6 +37,7 @@ struct HitBoxData
 		PortalRight,
 		Immovable,
 		Downable,
+		Spawner,
 	};
 
 	sf::Vector2f size;
@@ -53,6 +54,7 @@ struct SpawnData
 	enum class Type
 	{
 		Bat,
+		SkeletonDog,
 	};
 
 	Type type;

@@ -81,12 +81,8 @@ void SceneGame::Exit()
 void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
-	sf::Vector2f viewCenter = player->GetPosition();
-	sf::FloatRect viewBounds = ROOM_MGR.GetCurrentRoom()->GetViewBounds();
-	viewCenter.x = Utils::Clamp(viewCenter.x, viewBounds.left, viewBounds.left + viewBounds.width);
-	viewCenter.y = Utils::Clamp(viewCenter.y, viewBounds.top, viewBounds.top + viewBounds.height);
-
-	worldView.setCenter(viewCenter);
+	
+	worldView.setCenter(ROOM_MGR.GetCurrentRoom()->GetSubBGCenter());
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::F5))
 	{

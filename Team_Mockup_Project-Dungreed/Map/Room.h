@@ -18,6 +18,7 @@ protected:
 	std::vector<std::pair<MapObject*, ObjectData>> objects;
 
 	sf::FloatRect viewbounds;
+	sf::Vector2f subBGCenter;
 
 	std::vector<Monster*> monsters;
 	Player* player;
@@ -40,9 +41,10 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void LoadMapData(const std::string& path);
-	void SaveMapData(const std::string& path);
 
 	const std::vector<std::pair<HitBox*, HitBoxData>>& GetHitBoxes() const;
 	void EnterRoom(HitBoxData::Type connection);
+	const sf::Vector2f& GetSubBGCenter() { return subBGCenter; }
 	const sf::FloatRect& GetViewBounds() { return viewbounds; }
+	const std::vector<Monster*>& GetMonsters() { return monsters; }
 };
