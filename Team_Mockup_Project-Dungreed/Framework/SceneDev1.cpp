@@ -29,8 +29,6 @@ void SceneDev1::Enter()
 	worldView.setCenter(0.f, 0.f);
 
 	ROOM_MGR.Reset();
-
-
 }
 
 void SceneDev1::Exit()

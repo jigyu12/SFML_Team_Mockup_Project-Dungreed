@@ -158,11 +158,13 @@ void Room::Update(float dt)
 			}
 			if (Utils::PointInTransformBounds(hitbox.first->rect, hitbox.first->rect.getLocalBounds(), player->GetHitBox().GetCenter()))
 			{
-				for (Monster* monster : monsters)
+				if (ROOM_MGR.RoomChange(hitbox.second.type))
 				{
-					monster->SetActive(false);
+					for (Monster* monster : monsters)
+					{
+						monster->SetActive(false);
+					}
 				}
-				ROOM_MGR.RoomChange(hitbox.second.type);
 				break;
 			}
 		}
@@ -192,7 +194,7 @@ void Room::Draw(sf::RenderWindow& window)
 
 void Room::LoadMapData(const std::string& path)
 {
-	
+
 	monsters.clear();
 
 	for (auto& hitbox : hitBoxes)
