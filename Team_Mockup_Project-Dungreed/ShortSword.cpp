@@ -46,10 +46,7 @@ void ShortSword::SetScale(const sf::Vector2f& scale)
 }
 
 void ShortSword::Init()
-{
-	SetTextureId("graphics/weapon/Sword.png");
-	sprite.setTexture(TEXTURE_MGR.Get(textureId));
-
+{	
 	sortingLayer = SortingLayers::Foreground;
 
 	weaponType = WeaponType::Melee;
@@ -57,6 +54,9 @@ void ShortSword::Init()
 
 void ShortSword::Reset()
 {
+	SetTextureId("graphics/weapon/Sword.png");
+	sprite.setTexture(TEXTURE_MGR.Get(textureId));
+
 	originalDamageMin = 8;
 	originalDamageMax = 10;
 
