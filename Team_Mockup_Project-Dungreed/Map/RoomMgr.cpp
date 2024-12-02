@@ -32,7 +32,7 @@ void RoomMgr::Reset()
 	Room* room = new Room("00room");
 	room->Init();
 	room->Reset();
-	room->LoadMapData("maps/1fenter1LR.json");
+	room->LoadMapData("maps/2fboss.json");
 	scene->AddGo(room);
 	rooms.insert({ { 0,0 }, room });
 
