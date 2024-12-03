@@ -71,7 +71,7 @@ void HandCrossbow::Update(float dt)
 	if (!owner)
 	{
 		auto player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
-		if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()) && player->GetHp() > 0)
+		if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()) && player->GetCurrentHp() > 0)
 		{
 			SetOwnerPlayer(player);
 		}
@@ -79,7 +79,7 @@ void HandCrossbow::Update(float dt)
 	else
 	{
 		attackSpeedAccumTime += dt;
-		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButton(sf::Mouse::Left) && isCurrentWeapon && owner->GetHp() > 0)
+		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButton(sf::Mouse::Left) && isCurrentWeapon && owner->GetCurrentHp() > 0)
 		{
 			attackSpeedAccumTime = 0.f;
 
@@ -132,7 +132,7 @@ void HandCrossbow::LateUpdate(float dt)
 	}
 	else
 	{
-		if (owner->GetHp() <= 0)
+		if (owner->GetCurrentHp() <= 0)
 			return;
 
 		sortingOrder = owner->sortingOrder + 1;

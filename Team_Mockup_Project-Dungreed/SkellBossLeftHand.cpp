@@ -72,11 +72,10 @@ void SkellBossLeftHand::Reset()
 	isDead = false;
 
 	animator.SetTarget(&body);
-	animator.Play("animations/Boss/SkellBoss Hand Idle.csv");
 
 	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 
-	state = SkellBossLeftHandState::Idle;
+	SetState(SkellBossLeftHandState::Idle);
 }
 
 void SkellBossLeftHand::Update(float dt)
@@ -117,7 +116,7 @@ void SkellBossLeftHand::Release()
 {
 }
 
-void SkellBossLeftHand::SetStatus(SkellBossLeftHandState state)
+void SkellBossLeftHand::SetState(SkellBossLeftHandState state)
 {
 	this->state = state;
 
@@ -125,7 +124,7 @@ void SkellBossLeftHand::SetStatus(SkellBossLeftHandState state)
 	{
 	case SkellBossLeftHand::SkellBossLeftHandState::Idle: 
 	{
-
+		animator.Play("animations/Boss/SkellBoss Hand Idle.csv");
 	}
 		break;
 	case SkellBossLeftHand::SkellBossLeftHandState::AttackLaser:
@@ -143,10 +142,26 @@ void SkellBossLeftHand::SetStatus(SkellBossLeftHandState state)
 
 void SkellBossLeftHand::UpdateIdle(float dt)
 {
+	if (hp <= 0)
+	{
+		SetState(SkellBossLeftHandState::Death);
+
+		return;
+	}
+
+	
 }
 
 void SkellBossLeftHand::UpdateAttackLaser(float dt)
 {
+	if (hp <= 0)
+	{
+		SetState(SkellBossLeftHandState::Death);
+
+		return;
+	}
+
+
 }
 
 void SkellBossLeftHand::UpdateDeath(float dt)

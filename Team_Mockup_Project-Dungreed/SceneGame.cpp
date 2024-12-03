@@ -39,7 +39,7 @@ void SceneGame::Init()
 	}
 	{
 		skellBoss = AddGo(new SkellBoss());
-		skellBoss->SetPosition({ -7.5f,0.f });
+		skellBoss->SetPosition({ -7.5f, 0.f });
 
 		{
 			leftHand = AddGo(new SkellBossLeftHand("SkellBossLeftHand"));

@@ -6,6 +6,7 @@
 #include "Weapon.h"
 #include "PlayerUi.h"
 #include "Monster.h"
+#include "SkellBossSword.h"
 
 Player::Player(const std::string& name)
 	:Character(name), velocity({ 0.f,0.f })
@@ -53,7 +54,7 @@ void Player::Init()
 	gravity = 300.f;
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 2;
-	hp = 90;
+	maxhp = hp = 90;
 }
 
 void Player::Release()
@@ -78,7 +79,8 @@ void Player::Reset()
 	SetOrigin(Origins::BC);
 	SetRotation(0.f);
 
-
+	dashCoolTimer = 0.f;
+	hp = maxhp;
 }
 
 void Player::SetStatus(Status status)
@@ -94,7 +96,7 @@ void Player::SetStatus(Status status)
 	case Player::Status::Dash:
 		velocity = look * dashSpeed;
 		dashTimer = 0.f;
-		dashCoolTimer = 0.f;
+		dashCoolTimer -= 1.f;
 		animator.Play("animations/player Dash.csv");
 		break;
 	case Player::Status::DownJump:
@@ -129,6 +131,11 @@ void Player::Update(float dt)
 	animator.Update(dt);
 
 	dashCoolTimer += dt;
+	//dashCoolTimer = std::min(dashCoolTimer, 2.f);
+	//dashCoolTimer = std::max(dashCoolTimer, 0.f);
+
+	dashCoolTimer = Utils::Clamp(dashCoolTimer, 0.f, 2.f);
+	
 
 
 	switch (status)
@@ -150,10 +157,12 @@ void Player::Update(float dt)
 	default:
 		break;
 	}
+
 	if (InputMgr::GetKeyDown(sf::Keyboard::LShift) && dashCoolTimer >= 1.f)
 	{
 		SetStatus(Player::Status::Dash);
 	}
+
 	if (InputMgr::GetKey(sf::Keyboard::S) && InputMgr::GetKeyDown(sf::Keyboard::Space))
 	{
 		SetStatus(Player::Status::DownJump);
@@ -276,25 +285,19 @@ void Player::LateUpdate(float dt)
 		SetStatus(Status::Jump);
 	}
 
-	auto& gameobjects = SCENE_MGR.GetCurrentScene()->GetGameObjects();
-	for (auto& gameobject : gameobjects)
+	const auto& monsters = ROOM_MGR.GetCurrentRoom()->GetMonsters();
+	for (auto& monster : monsters)
 	{
-		if (auto* monster = dynamic_cast<Monster*>(gameobject))
+		if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 		{
-			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
+			if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
 			{
-				if (!isDamaged && !isDead && monster->GetOriginalDamage() != 0)
-				{
-					isDamaged = true;
-					invincibilityTimer = 0.f;
-					OnDamage(monster->GetOriginalDamage());
-					sf::Color currColor = body.getColor();
-					body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
-				}
+				OnDamage(monster->GetOriginalDamage());
 			}
 		}
 	}
 
+	/*const auto& bossSwords = dynamic_cast<SkellBossSword*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossSword"));*/
 	if (isDamaged)
 	{
 		invincibilityTimer += dt;
@@ -382,9 +385,20 @@ void Player::Jump()
 
 void Player::OnDamage(int monsterDamage)
 {
+	if (isDamaged)
+	{
+		return;
+	}
+	isDamaged = true;
+	invincibilityTimer = 0.f;
+	sf::Color currColor = body.getColor();
+	body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
+
 	if (playerui != nullptr)
-		playerui->SetHp(hp -= monsterDamage, playerui->GetMaxHp());
+		playerui->SetHp(hp -= monsterDamage, maxhp);
 }
+
+
 
 void Player::SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon)
 {
@@ -420,7 +434,7 @@ void Player::SwitchWeaponSlot(sf::Keyboard::Key key)
 			weaponSlot2->SetAttackSpeedAccumTime(weaponSlot2->GetAttackSpeed() - 0.5f);
 			weaponSlot1->SetIsCurrentWeapon(false);
 		}
-		
+
 	}
 }
 

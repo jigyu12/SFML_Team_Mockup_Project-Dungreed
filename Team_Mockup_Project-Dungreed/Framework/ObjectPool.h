@@ -26,7 +26,7 @@ public:
 		}
 		for (auto obj : used)
 		{
-			delete obj;
+			//delete obj;
 		}
 	}
 
