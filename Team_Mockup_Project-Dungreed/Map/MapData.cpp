@@ -4,7 +4,8 @@
 
 void MapDataLoader::Save(MapDataVC mapData, const std::string& path)
 {
-	Save(mapData, std::wstring().assign(path.begin(), path.end()));
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+	Save(mapData, converter.from_bytes(path));
 }
 
 void MapDataLoader::Save(MapDataVC mapData, const std::wstring& path)
@@ -22,15 +23,17 @@ void MapDataLoader::Save(MapDataVC mapData, const std::wstring& path)
 
 MapDataVC MapDataLoader::Load(const std::string& path)
 {
-	return Load(std::wstring().assign(path.begin(), path.end()));
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+	return Load(converter.from_bytes(path));
 }
 
 MapDataVC MapDataLoader::Load(const std::wstring& path)
 {
-	if (_access(std::string().assign(path.begin(), path.end()).c_str(), 0) == -1)
+	if (_waccess(path.c_str(), 0) == -1)
 	{
 		return MapDataVC();
 	}
+
 	std::ifstream f(path);
 	json j = json::parse(f);
 

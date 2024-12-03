@@ -1,6 +1,8 @@
 #pragma once
 
 class TileMap;
+class Button;
+class TextGo;
 class UiEditTile;
 class UiEditHitBox;
 class UiEditMonster;
@@ -20,16 +22,16 @@ protected:
 
 	sf::RectangleShape editorWindow;
 
-	sf::Sprite newButton;
-	sf::Sprite saveButton;
-	sf::Sprite loadButton;
+	Button* buttonNew;
+	Button* buttonSave;
+	Button* buttonLoad;
 
-	sf::Sprite tileButton;
-	sf::Sprite hitboxButton;
-	sf::Sprite monsterButton;
-	sf::Sprite objectButton;
+	Button* buttonTile;
+	Button* buttonHitbox;
+	Button* buttonMonster;
+	Button* buttonObject;
 
-	sf::Text selectedFileName;
+	TextGo* selectedFileName;
 
 	std::vector<TileMap*> editingTileMaps;
 
@@ -65,5 +67,10 @@ public:
 	void ResizeTileMaps(const sf::Vector2i& size);
 
 	void ChangeGroupbox(const UiEditor::GroupBox& selectedGroupBox);
+
+	void NewFile();
+	void SaveFile();
+	void LoadFile();
+
 };
 

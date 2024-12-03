@@ -217,6 +217,11 @@ bool Utils::LineIntersect(const sf::Vector2f& a1, const sf::Vector2f& a2, const 
 	return true;
 }
 
+sf::Vector2f Utils::GetCenter(const sf::FloatRect& rect)
+{
+	return rect.getPosition()+ rect.getSize()*0.5f;
+}
+
 bool Utils::CheckCollision(const HitBox& boxA, const HitBox& boxB)
 {
 	return CheckCollision(boxA.rect, boxB.rect);

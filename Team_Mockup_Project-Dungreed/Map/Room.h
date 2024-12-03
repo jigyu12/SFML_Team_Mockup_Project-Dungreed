@@ -23,7 +23,8 @@ protected:
 	Player* player;
 	Scene* scene;
 
-	int remain;
+	HitBoxData::Type enteredPortal;
+
 	int wave;
 	bool cleared;
 
@@ -52,4 +53,5 @@ public:
 	const sf::Vector2f& GetSubBGCenter() { return subBGCenter; }
 	const sf::FloatRect& GetViewBounds() { return viewbounds; }
 	bool isCleared() { return cleared; }
+	void ClearMonsters();
 };

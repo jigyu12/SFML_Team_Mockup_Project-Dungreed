@@ -1,6 +1,8 @@
 #pragma once
 
 class UiEditor;
+class Button;
+class TextGo;
 
 class UiEditMonster : public GameObject
 {
@@ -19,9 +21,9 @@ protected:
 	std::unordered_map<sf::RectangleShape*, SpawnData> spawnData;
 	UiEditor* uieditor;
 
-	sf::Sprite waveUpButton;
-	sf::Text waveText;
-	sf::Sprite waveDownButton;
+	Button* waveUpButton;
+	TextGo* waveText;
+	Button* waveDownButton;
 
 	sf::Vector2f startPos;
 
@@ -49,4 +51,5 @@ public:
 	void SetSpawnData(const std::vector<SpawnData>& data);
 	void ClearSpawnData();
 	void SetMonsterType(const Monster::MonsterType& type);
+	void UpDownSpawnWave(bool up);
 };
