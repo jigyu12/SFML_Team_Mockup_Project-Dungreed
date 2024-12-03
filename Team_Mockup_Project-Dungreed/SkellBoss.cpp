@@ -74,15 +74,16 @@ void SkellBoss::Reset()
 	shootTimeDelay = 0.2f;
 	shootAccumTime = shootTimeDelay;
 
+	swordSpawnTimeDelay = 0.2;
+
 	isDamaged = false;
 	isDead = false;
 
 	animator.SetTarget(&body);
-	animator.Play("animations/Boss/SkellBoss Idle.csv");
 
 	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 
-	state = SkellBossState::Idle;
+	SetState(SkellBossState::Idle);
 
 	shader.loadFromFile("shader/red.frag", sf::Shader::Type::Fragment);
 
@@ -143,7 +144,7 @@ void SkellBoss::Update(float dt)
 	{
 		shootAccumTime = 0.f;
 
-		Shoot();
+		ShootParticle();
 	}
 
 	animator.Update(dt);
@@ -183,7 +184,7 @@ void SkellBoss::Release()
 {
 }
 
-void SkellBoss::SetStatus(SkellBossState state)
+void SkellBoss::SetState(SkellBossState state)
 {
 	this->state = state;
 
@@ -191,7 +192,9 @@ void SkellBoss::SetStatus(SkellBossState state)
 	{
 	case SkellBoss::SkellBossState::Idle: 
 	{
+		attackAccumSpeed = 0.f;
 
+		animator.Play("animations/Boss/SkellBoss Idle.csv");
 	}
 		break;
 	case SkellBoss::SkellBossState::AttackLaser:
@@ -206,7 +209,8 @@ void SkellBoss::SetStatus(SkellBossState state)
 		break;
 	case SkellBoss::SkellBossState::AttackSword:
 	{
-
+		swordCount = 0;
+		swordSpawnTimeAccum = 0.f;
 	}
 		break;
 	case SkellBoss::SkellBossState::Death:
@@ -219,25 +223,99 @@ void SkellBoss::SetStatus(SkellBossState state)
 
 void SkellBoss::UpdateIdle(float dt)
 {
+	if (hp <= 0)
+	{
+		SetState(SkellBossState::Death);
+
+		return;
+	}
+
+	attackAccumSpeed += dt;
+
+	if (attackAccumSpeed >= attackSpeedDelay)
+	{
+		SetState(SkellBossState::AttackSword);
+
+		/*float randAttackValue = Utils::RandomRange(0, 3);
+
+		if (randAttackValue <= 1.f)
+		{
+			SetState(SkellBossState::AttackLaser);
+		}
+		else if (randAttackValue <= 2.f)
+		{
+			SetState(SkellBossState::AttackBullet);
+		}
+		else
+		{
+			SetState(SkellBossState::AttackSword);
+		}*/
+	}
 }
 
 void SkellBoss::UpdateAttackLaser(float dt)
 {
+	if (hp <= 0)
+	{
+		SetState(SkellBossState::Death);
+
+		return;
+	}
+
+
 }
 
 void SkellBoss::UpdateAttackBullet(float dt)
 {
+	if (hp <= 0)
+	{
+		SetState(SkellBossState::Death);
+
+		return;
+	}
+
+
 }
 
 void SkellBoss::UpdateAttackSword(float dt)
 {
+	if (hp <= 0)
+	{
+		SetState(SkellBossState::Death);
+
+		return;
+	}
+
+	swordSpawnTimeAccum += dt;
+	if (swordSpawnTimeAccum >= swordSpawnTimeDelay)
+	{
+		swordSpawnTimeAccum = 0.f;
+
+		ShootSword(swordCount);
+
+		swordCount++;
+		if (swordCount >= 5)
+		{
+			SetState(SkellBossState::Idle);
+		}
+	}
 }
 
 void SkellBoss::UpdateDeath(float dt)
 {
+
 }
 
-void SkellBoss::Shoot()
+void SkellBoss::ShootSword(int index)
+{
+	SkellBossSword* sword = swordPool.Take();
+	SCENE_MGR.GetCurrentScene()->AddGo(sword);
+	sf::Vector2f randDir = Utils::GetNormal(Utils::RandomInUnitCircle());
+
+	sword->Fire({ skellBossBackFx.getPosition().x - 50.f + 20.f * index, skellBossBackFx.getPosition().y - 100.f });
+}
+
+void SkellBoss::ShootParticle()
 {
 	SkellBossParticle* particle = particlePool.Take();
 	SCENE_MGR.GetCurrentScene()->AddGo(particle);

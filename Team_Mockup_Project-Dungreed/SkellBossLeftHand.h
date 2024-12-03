@@ -38,7 +38,7 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
 
-	void SetStatus(SkellBossLeftHandState state);
+	void SetState(SkellBossLeftHandState state);
 	void UpdateIdle(float dt);
 	void UpdateAttackLaser(float dt);
 	void UpdateDeath(float dt);
