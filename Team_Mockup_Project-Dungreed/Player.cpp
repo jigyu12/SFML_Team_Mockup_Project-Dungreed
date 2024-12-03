@@ -6,6 +6,7 @@
 #include "Weapon.h"
 #include "PlayerUi.h"
 #include "Monster.h"
+#include "SkellBossSword.h"
 
 Player::Player(const std::string& name)
 	:Character(name), velocity({ 0.f,0.f })
@@ -289,17 +290,14 @@ void Player::LateUpdate(float dt)
 	{
 		if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 		{
-			if (!monster->IsDead() && !isDamaged && !isDead && monster->GetOriginalDamage() != 0)
+			if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
 			{
-				isDamaged = true;
-				invincibilityTimer = 0.f;
 				OnDamage(monster->GetOriginalDamage());
-				sf::Color currColor = body.getColor();
-				body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
 			}
 		}
 	}
 
+	/*const auto& bossSwords = dynamic_cast<SkellBossSword*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossSword"));*/
 	if (isDamaged)
 	{
 		invincibilityTimer += dt;
@@ -387,6 +385,15 @@ void Player::Jump()
 
 void Player::OnDamage(int monsterDamage)
 {
+	if (isDamaged)
+	{
+		return;
+	}
+	isDamaged = true;
+	invincibilityTimer = 0.f;
+	sf::Color currColor = body.getColor();
+	body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
+
 	if (playerui != nullptr)
 		playerui->SetHp(hp -= monsterDamage, maxhp);
 }
