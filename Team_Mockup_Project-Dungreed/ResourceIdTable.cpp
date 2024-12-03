@@ -23,7 +23,17 @@ bool ResourceIdTable::Load()
 			auto find = table.find(row[0]);
 			if (find == table.end())
 			{
-				table.insert({ row[0],row[1] });
+				std::unordered_map<std::string, std::string> map;
+				map.insert({ row[1],row[2] });
+				table.insert({ row[0],map });
+			}
+			else
+			{
+				auto find2 = find->second.find(row[1]);
+				if (find2 == find->second.end())
+				{
+					find->second.insert({ row[1],row[2] });
+				}
 			}
 		}
 	}
@@ -40,15 +50,20 @@ bool ResourceIdTable::Load()
 
 void ResourceIdTable::Release()
 {
-	table.clear();
+	//table.clear();
 }
 
-const std::string& ResourceIdTable::Get(const std::string& idx)
+const std::string& ResourceIdTable::Get(const std::string& type, const std::string& idx)
 {
-	auto find = table.find(idx);
+	auto find = table.find(type);
 	if (find == table.end())
+	{
+	return Undefined;
+	}
+	auto find2 = find->second.find(idx);
+	if (find2 == find->second.end())
 	{
 		return Undefined;
 	}
-	return find->second;
+	return find2->second;
 }

@@ -163,7 +163,6 @@
     <ClCompile Include="Map\MapData.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Map\Room.cpp" />
-    <ClCompile Include="Map\ObjectAnimationTable.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerUi.cpp" />
     <ClCompile Include="ResourceIdTable.cpp" />
@@ -237,7 +236,6 @@
     <ClInclude Include="Map\MapObject.h" />
     <ClInclude Include="Map\MapData.h" />
     <ClInclude Include="Monster.h" />
-    <ClInclude Include="Map\ObjectAnimationTable.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerUi.h" />
     <ClInclude Include="resource.h" />

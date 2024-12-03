@@ -29,7 +29,6 @@ using json = nlohmann::json;
 #include "StringTable.h"
 #include "ResourceIdTable.h"
 #include "TileTable.h"
-#include "ObjectAnimationTable.h"
 #include "DataTableMgr.h"
 #include "Framework.h"
 #include "InputMgr.h"

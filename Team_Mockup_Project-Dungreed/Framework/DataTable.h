@@ -7,7 +7,6 @@ public:
 		String,
 		ResourceId,
 		Tile,
-		ObjectAnimation,
 		Count
 	};
 
