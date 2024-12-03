@@ -1,0 +1,12 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+TP,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/ui/tp/ReturnToTown1.png,0,"0",60,9,0
+graphics/ui/tp/ReturnToTown2.png,0,"0",65,10,0
+graphics/ui/tp/ReturnToTown3.png,0,"0",69,71,0
+graphics/ui/tp/ReturnToTown4.png,0,"0",69,71,0
+graphics/ui/tp/ReturnToTown5.png,0,"0",69,71,0
+graphics/ui/tp/ReturnToTown6.png,0,"0",69,71,0
+graphics/ui/tp/ReturnToTown7.png,0,"0",69,68,0
+graphics/ui/tp/ReturnToTown7.png,0,"0",69,68,0
