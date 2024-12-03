@@ -283,6 +283,11 @@ void SkellBoss::UpdateAttackSword(float dt)
 {
 	if (hp <= 0)
 	{
+		for (auto& sword : swords)
+		{
+			SCENE_MGR.GetCurrentScene()->RemoveGo(sword);
+		}
+
 		SetState(SkellBossState::Death);
 
 		return;
