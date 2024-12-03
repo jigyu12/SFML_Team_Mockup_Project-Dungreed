@@ -39,10 +39,14 @@ protected:
 
 	ObjectPool<SkellBossParticle> particlePool;
 	ObjectPool<SkellBossSword> swordPool;
+	std::vector<SkellBossSword*> swords;
 
 	int swordCount;
 	float swordSpawnTimeAccum;
 	float swordSpawnTimeDelay;
+
+	float afterSwordSpawnTimeAccum;
+	float afterSwordSpawnTimeDelay;
 
 public:
 	SkellBoss(const std::string& name = "SkellBoss");
@@ -76,6 +80,8 @@ public:
 	{
 		return body.getGlobalBounds();
 	}
+
+	std::vector<SkellBossSword*>& GetSwords() { return swords; }
 
 	void ShootSword(int index);
 	void ShootParticle();

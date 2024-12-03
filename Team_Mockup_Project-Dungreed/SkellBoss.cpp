@@ -74,7 +74,8 @@ void SkellBoss::Reset()
 	shootTimeDelay = 0.2f;
 	shootAccumTime = shootTimeDelay;
 
-	swordSpawnTimeDelay = 0.2;
+	swordSpawnTimeDelay = 0.15f;
+	afterSwordSpawnTimeDelay = 3.f;
 
 	isDamaged = false;
 	isDead = false;
@@ -211,6 +212,7 @@ void SkellBoss::SetState(SkellBossState state)
 	{
 		swordCount = 0;
 		swordSpawnTimeAccum = 0.f;
+		afterSwordSpawnTimeAccum = 0.f;
 	}
 		break;
 	case SkellBoss::SkellBossState::Death:
@@ -287,6 +289,20 @@ void SkellBoss::UpdateAttackSword(float dt)
 	}
 
 	swordSpawnTimeAccum += dt;
+
+
+	if (swordCount >= 6)
+	{
+		afterSwordSpawnTimeAccum += dt;
+
+		if (afterSwordSpawnTimeAccum >= afterSwordSpawnTimeDelay)
+		{
+			SetState(SkellBossState::Idle);
+		}
+
+		return;
+	}
+	
 	if (swordSpawnTimeAccum >= swordSpawnTimeDelay)
 	{
 		swordSpawnTimeAccum = 0.f;
@@ -294,10 +310,6 @@ void SkellBoss::UpdateAttackSword(float dt)
 		ShootSword(swordCount);
 
 		swordCount++;
-		if (swordCount >= 6)
-		{
-			SetState(SkellBossState::Idle);
-		}
 	}
 }
 
@@ -310,9 +322,10 @@ void SkellBoss::ShootSword(int index)
 {
 	SkellBossSword* sword = swordPool.Take();
 	SCENE_MGR.GetCurrentScene()->AddGo(sword);
+	swords.push_back(sword);
 	sf::Vector2f randDir = Utils::GetNormal(Utils::RandomInUnitCircle());
 
-	sword->Fire({ skellBossBackFx.getPosition().x - 50.f + 20.f * index, skellBossBackFx.getPosition().y - 100.f });
+	sword->Fire({ skellBossBackFx.getPosition().x - 100.f + 40.f * index, skellBossBackFx.getPosition().y - 80.f });
 }
 
 void SkellBoss::ShootParticle()
