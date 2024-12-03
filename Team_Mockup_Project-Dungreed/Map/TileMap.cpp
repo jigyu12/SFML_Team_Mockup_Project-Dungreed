@@ -69,7 +69,7 @@ void TileMap::Release()
 
 void TileMap::Reset()
 {
-	shader.loadFromFile("shader/transparency.frag", sf::Shader::Fragment);
+	shader.loadFromFile(RESOURCEID_TABLE->Get("Shader","Transparency"), sf::Shader::Fragment);
 	shader.setUniform("trans_alpha", 1.f);
 	SetOrigin(originPreset);
 	SetScale({ 1.f, 1.f });

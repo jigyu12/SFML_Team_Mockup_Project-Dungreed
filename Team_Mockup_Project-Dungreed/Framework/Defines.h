@@ -6,8 +6,6 @@
 enum class Languages
 {
 	Korean,
-	English,
-	Japanese,
 	Count,
 };
 
@@ -45,6 +43,13 @@ enum class Sides
 	Left,
 	Right,
 	None,
+};
+
+enum class MapObjectType
+{
+	Platform,
+	Torch,
+	Door,
 };
 
 /// <summary>

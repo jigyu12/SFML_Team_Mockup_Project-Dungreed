@@ -24,5 +24,5 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void Set(ObjectData::Type objData);
+	void Set(MapObjectType objData);
 };
