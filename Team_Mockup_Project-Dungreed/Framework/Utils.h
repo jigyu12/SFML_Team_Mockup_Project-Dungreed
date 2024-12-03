@@ -13,6 +13,7 @@ public:
 	static int RandomRange(int min, int max);
 	static float RandomRange(float min, float max);
 	static float RandomValue();	// 0.0f ~ 1.0f
+	static sf::Vector2f OnUnitCircle(float angle);
 	static sf::Vector2f RandomOnUnitCircle();
 	static sf::Vector2f RandomInUnitCircle();
 	static sf::Color RandomColor(bool opaque = true);

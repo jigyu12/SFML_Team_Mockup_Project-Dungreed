@@ -103,7 +103,7 @@ void SkellBossSword::LateUpdate(float dt)
 {
 	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 
-	if (Utils::CheckCollision(hitbox, target->GetHitBox()))
+	if (Utils::CheckCollision(hitbox, target->GetHitBox()) && !target->IsDead())
 	{
 		target->OnDamage(damage);
 	}

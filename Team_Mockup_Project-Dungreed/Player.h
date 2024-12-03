@@ -87,6 +87,8 @@ public:
 	void OnDamage(int monsterDamage);
 	int GetCurrentHp() const { return hp; }
 	int GetMaxHp() const { return maxhp; }
+	bool IsDamaged() const { return isDamaged; }
+	bool IsDead() const { return isDead; }
 
 	float GetCurrentCoolTime() const { return dashCoolTimer; }
 	float GetCurrentHpRatio() const { return (float)hp/maxhp; }
