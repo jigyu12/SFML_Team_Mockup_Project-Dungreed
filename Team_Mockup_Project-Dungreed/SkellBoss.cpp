@@ -294,7 +294,7 @@ void SkellBoss::UpdateAttackSword(float dt)
 		ShootSword(swordCount);
 
 		swordCount++;
-		if (swordCount >= 5)
+		if (swordCount >= 6)
 		{
 			SetState(SkellBossState::Idle);
 		}
