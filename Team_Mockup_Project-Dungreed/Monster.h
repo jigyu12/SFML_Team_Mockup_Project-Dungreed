@@ -27,7 +27,6 @@ protected:
 	float attackSpeedDelay;
 
 	bool isDamaged;
-
 	bool isDead;
 
 public:

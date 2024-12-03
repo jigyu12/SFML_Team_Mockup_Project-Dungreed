@@ -85,8 +85,12 @@ public:
 
 	void Jump();
 	void OnDamage(int monsterDamage);
-	int GetHp() const { return hp; }
+	int GetCurrentHp() const { return hp; }
+	int GetMaxHp() const { return maxhp; }
 
+	float GetCurrentCoolTime() const { return dashCoolTimer; }
+	float GetCurrentHpRatio() const { return (float)hp/maxhp; }
+	
 
 	sf::Vector2f GetPlayerLookNormal() const { return Utils::GetNormal(look); }
 
