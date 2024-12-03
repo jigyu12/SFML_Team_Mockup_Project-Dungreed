@@ -290,13 +290,9 @@ void Player::LateUpdate(float dt)
 	{
 		if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 		{
-			if (!monster->IsDead() && !isDamaged && !isDead && monster->GetOriginalDamage() != 0)
+			if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
 			{
-				isDamaged = true;
-				invincibilityTimer = 0.f;
 				OnDamage(monster->GetOriginalDamage());
-				sf::Color currColor = body.getColor();
-				body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
 			}
 		}
 	}
@@ -389,6 +385,15 @@ void Player::Jump()
 
 void Player::OnDamage(int monsterDamage)
 {
+	if (isDamaged)
+	{
+		return;
+	}
+	isDamaged = true;
+	invincibilityTimer = 0.f;
+	sf::Color currColor = body.getColor();
+	body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
+
 	if (playerui != nullptr)
 		playerui->SetHp(hp -= monsterDamage, maxhp);
 }
