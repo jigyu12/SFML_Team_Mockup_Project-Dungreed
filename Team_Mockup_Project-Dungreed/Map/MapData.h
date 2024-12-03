@@ -14,14 +14,7 @@ struct TileMapData
 
 struct ObjectData
 {
-	enum class Type
-	{
-		Platform,
-		Torch,
-		Door,
-	};
-
-	Type type;
+	MapObjectType type;
 	sf::Vector2f origin;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(ObjectData, type, origin)
@@ -37,7 +30,7 @@ struct HitBoxData
 		PortalRight,
 		Immovable,
 		Downable,
-		Spawner,
+		SpawnTrigger,
 	};
 
 	sf::Vector2f size;
@@ -61,13 +54,6 @@ struct SpawnData
 struct MapData
 {
 public:
-	enum class Direction {
-		Up,
-		Down,
-		Left,
-		Right,
-	};
-
 	const static int TileMapCount = 3;
 	const static int StartPointCount = 4;
 

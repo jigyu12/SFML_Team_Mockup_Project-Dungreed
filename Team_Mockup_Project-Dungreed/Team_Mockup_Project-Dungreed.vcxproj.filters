@@ -75,6 +75,14 @@
     <ClCompile Include="SkellBossSword.cpp">
       <Filter>Monsters\Boss</Filter>
     </ClCompile>
+    <ClCompile Include="Map\RoomMgr.cpp" />
+    <ClCompile Include="Arrow.cpp" />
+    <ClCompile Include="PlayerUi.cpp" />
+    <ClCompile Include="Map\Editor\UiEditMonster.cpp" />
+    <ClCompile Include="Map\Editor\UiEditObject.cpp" />
+    <ClCompile Include="SkellBoss.cpp" />
+    <ClCompile Include="SkellBossLeftHand.cpp" />
+    <ClCompile Include="Map\ObjectAnimationTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -157,6 +165,14 @@
     <ClInclude Include="SkellBossSword.h">
       <Filter>Monsters\Boss</Filter>
     </ClInclude>
+    <ClInclude Include="Map\RoomMgr.h" />
+    <ClInclude Include="Arrow.h" />
+    <ClInclude Include="PlayerUi.h" />
+    <ClInclude Include="Map\Editor\UiEditMonster.h" />
+    <ClInclude Include="Map\Editor\UiEditObject.h" />
+    <ClInclude Include="SkellBoss.h" />
+    <ClInclude Include="SkellBossLeftHand.h" />
+    <ClInclude Include="Map\ObjectAnimationTable.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">

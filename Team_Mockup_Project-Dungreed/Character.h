@@ -7,6 +7,7 @@ protected:
 	Animator animator;
 
 	int hp;
+	int maxhp;
 	float speed;
 	sf::Vector2f direction;
 	

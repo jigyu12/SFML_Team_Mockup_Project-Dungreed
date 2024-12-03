@@ -214,14 +214,9 @@ void UiEditor::Update(float dt)
 					{
 						mapData.tileMapData[i] = editingTileMaps[i]->GetTileMapData();
 					}
-					if (uiEditHitBox != nullptr)
-					{
-						mapData.hitBoxData = uiEditHitBox->GetHitBoxData();
-					}
-					if (uiEditMonster != nullptr)
-					{
-						mapData.monsterSpawnData = uiEditMonster->GetSpawnData();
-					}
+					mapData.hitBoxData = uiEditHitBox->GetHitBoxData();
+					mapData.playerStartPoint = uiEditHitBox->GetStartPoints();
+					mapData.monsterSpawnData = uiEditMonster->GetSpawnData();
 
 					MapDataLoader::Save(mapData, path);
 
@@ -243,6 +238,7 @@ void UiEditor::Update(float dt)
 					if (uiEditHitBox != nullptr)
 					{
 						uiEditHitBox->SetHitBoxData(mapdata.hitBoxData);
+						uiEditHitBox->SetStartPositionData(mapdata.playerStartPoint);
 					}
 					if (uiEditMonster != nullptr)
 					{
@@ -366,7 +362,7 @@ void UiEditor::ChangeGroupbox(const UiEditor::GroupBox& selectedGroupBox)
 	switch (this->selectedGroupBox)
 	{
 	case UiEditor::GroupBox::Tile:
-		tileButton.setColor({150,150,150,255});
+		tileButton.setColor({ 150,150,150,255 });
 		break;
 	case UiEditor::GroupBox::HitBox:
 		hitboxButton.setColor({ 150,150,150,255 });

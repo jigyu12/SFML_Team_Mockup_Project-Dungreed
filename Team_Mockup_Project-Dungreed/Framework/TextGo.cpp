@@ -68,6 +68,13 @@ void TextGo::SetString(const std::string& id)
 	SetOrigin(originPreset);
 }
 
+void TextGo::SetString(const std::string& id, const std::wstring& str)
+{
+	stringId = id;
+	text.setString(STRING_TABLE->Get(stringId) + str);
+	SetOrigin(originPreset);
+}
+
 void TextGo::Init()
 {
 }

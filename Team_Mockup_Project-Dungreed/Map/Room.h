@@ -47,8 +47,9 @@ public:
 	void LoadMapData(const std::string& path);
 
 	const std::vector<std::pair<HitBox*, HitBoxData>>& GetHitBoxes() const;
-	std::vector<Monster*> GetMonsters();
+	std::vector<Monster*> GetMonsters() const;
 	void EnterRoom(HitBoxData::Type connection);
 	const sf::Vector2f& GetSubBGCenter() { return subBGCenter; }
 	const sf::FloatRect& GetViewBounds() { return viewbounds; }
+	bool isCleared() { return cleared; }
 };
