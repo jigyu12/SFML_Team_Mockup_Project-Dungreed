@@ -82,6 +82,11 @@ void SkellBoss::Reset()
 	state = SkellBossState::Idle;
 
 	shader.loadFromFile("shader/red.frag", sf::Shader::Type::Fragment);
+
+	animatorBackFx.SetTarget(&skellBossBackFx);
+	animatorBackFx.Play("animations/Boss/SkellBoss Back Idle.csv");
+	skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	skellBossBackFx.setPosition({ position.x  + 17.5f , position.y + 45.f });
 }
 
 void SkellBoss::Update(float dt)
@@ -131,6 +136,7 @@ void SkellBoss::Update(float dt)
 	}
 
 	animator.Update(dt);
+	animatorBackFx.Update(dt);
 
 	hitbox.UpdateTr(body, GetLocalBounds());
 }
@@ -138,12 +144,15 @@ void SkellBoss::Update(float dt)
 void SkellBoss::LateUpdate(float dt)
 {
 	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+
+	skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 }
 
 void SkellBoss::Draw(sf::RenderWindow& window)
 {
 	if (!isDamaged && hp > 0)
 	{
+		window.draw(skellBossBackFx);
 		window.draw(body);
 	}
 	else if (isDamaged && hp <= 0)
@@ -152,9 +161,10 @@ void SkellBoss::Draw(sf::RenderWindow& window)
 	}
 	else
 	{
+		window.draw(skellBossBackFx);
 		window.draw(body, &shader);
 	}
-
+	
 	hitbox.Draw(window);
 }
 

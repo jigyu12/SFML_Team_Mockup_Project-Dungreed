@@ -26,7 +26,7 @@
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="Framework\HitBox.cpp" />
     <ClCompile Include="Monster.cpp">
-      <Filter>Monsters\Monster</Filter>
+      <Filter>Monsters\MonsterBase</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Framework\SceneDev3.cpp" />
@@ -39,26 +39,36 @@
     <ClCompile Include="Map\Editor\UiEditor.cpp" />
     <ClCompile Include="Map\TileTable.cpp" />
     <ClCompile Include="Map\Editor\UiEditTile.cpp" />
-    <ClCompile Include="Bat.cpp">
-      <Filter>Monsters</Filter>
-    </ClCompile>
-    <ClCompile Include="SkeletonDog.cpp">
-      <Filter>Monsters</Filter>
-    </ClCompile>
     <ClCompile Include="Map\Editor\FileDialog.cpp" />
     <ClCompile Include="Map\Editor\UiEditHitBox.cpp" />
+    <ClCompile Include="Map\RoomMgr.cpp" />
+    <ClCompile Include="PlayerUi.cpp" />
+    <ClCompile Include="Map\Editor\UiEditMonster.cpp" />
+    <ClCompile Include="Map\Editor\UiEditObject.cpp" />
+    <ClCompile Include="Bat.cpp">
+      <Filter>Monsters\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonDog.cpp">
+      <Filter>Monsters\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="SkellBoss.cpp">
+      <Filter>Monsters\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="SkellBossLeftHand.cpp">
+      <Filter>Monsters\Boss</Filter>
+    </ClCompile>
     <ClCompile Include="Weapon.cpp">
+      <Filter>Weapons\WeaponBase</Filter>
+    </ClCompile>
+    <ClCompile Include="HandCrossbow.cpp">
       <Filter>Weapons\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="ShortSword.cpp">
-      <Filter>Weapons</Filter>
+      <Filter>Weapons\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="HandCrossbow.cpp">
-      <Filter>Weapons</Filter>
+    <ClCompile Include="Arrow.cpp">
+      <Filter>Weapons\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="Map\RoomMgr.cpp" />
-    <ClCompile Include="Arrow.cpp" />
-    <ClCompile Include="PlayerUi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -91,7 +101,7 @@
     <ClInclude Include="Framework\HitBox.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Monster.h">
-      <Filter>Monsters\Monster</Filter>
+      <Filter>Monsters\MonsterBase</Filter>
     </ClInclude>
     <ClInclude Include="Character.h" />
     <ClInclude Include="Framework\DefineJson.h" />
@@ -105,39 +115,58 @@
     <ClInclude Include="Map\Editor\UiEditor.h" />
     <ClInclude Include="Map\TileTable.h" />
     <ClInclude Include="Map\Editor\UiEditTile.h" />
-    <ClInclude Include="Bat.h">
-      <Filter>Monsters</Filter>
-    </ClInclude>
-    <ClInclude Include="SkeletonDog.h">
-      <Filter>Monsters</Filter>
-    </ClInclude>
     <ClInclude Include="Map\Editor\FileDialog.h" />
     <ClInclude Include="Map\Editor\UiEditHitBox.h" />
+    <ClInclude Include="Map\RoomMgr.h" />
+    <ClInclude Include="PlayerUi.h" />
+    <ClInclude Include="Map\Editor\UiEditMonster.h" />
+    <ClInclude Include="Map\Editor\UiEditObject.h" />
+    <ClInclude Include="SkeletonDog.h">
+      <Filter>Monsters\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Bat.h">
+      <Filter>Monsters\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="SkellBoss.h">
+      <Filter>Monsters\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="SkellBossLeftHand.h">
+      <Filter>Monsters\Boss</Filter>
+    </ClInclude>
     <ClInclude Include="Weapon.h">
+      <Filter>Weapons\WeaponBase</Filter>
+    </ClInclude>
+    <ClInclude Include="HandCrossbow.h">
       <Filter>Weapons\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="ShortSword.h">
-      <Filter>Weapons</Filter>
+      <Filter>Weapons\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="HandCrossbow.h">
-      <Filter>Weapons</Filter>
+    <ClInclude Include="Arrow.h">
+      <Filter>Weapons\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="Map\RoomMgr.h" />
-    <ClInclude Include="Arrow.h" />
-    <ClInclude Include="PlayerUi.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">
       <UniqueIdentifier>{b673084f-dbde-4bc4-9200-cf14f4c4cf7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Monsters\Monster">
-      <UniqueIdentifier>{42d0b12e-3c6a-4528-8f75-fae8e5927743}</UniqueIdentifier>
     </Filter>
     <Filter Include="Weapons">
       <UniqueIdentifier>{dc3cb11a-890a-4a85-a94e-a2d3d34fb138}</UniqueIdentifier>
     </Filter>
     <Filter Include="Weapons\Weapon">
       <UniqueIdentifier>{e766e0cd-4f95-4466-8f39-9c7cdb54f40b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Monsters\MonsterBase">
+      <UniqueIdentifier>{42d0b12e-3c6a-4528-8f75-fae8e5927743}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Monsters\Monster">
+      <UniqueIdentifier>{31e5610b-ce12-4256-ac05-366924964070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Monsters\Boss">
+      <UniqueIdentifier>{f1429697-eada-41dd-a2ab-e51fb8e1fc38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Weapons\WeaponBase">
+      <UniqueIdentifier>{96dca2e8-6f6f-4876-9ced-c852d99154ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -29,6 +29,9 @@ protected:
 	float hitAccumTime;
 	float hitTimeDelay;
 
+	Animator animatorBackFx;
+	sf::Sprite skellBossBackFx;
+
 public:
 	SkellBoss(const std::string& name = "SkellBoss");
 	virtual ~SkellBoss() = default;
