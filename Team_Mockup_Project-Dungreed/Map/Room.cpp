@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Scene.h"
 #include "Room.h"
 #include "TileMap.h"
 #include "Player.h"
@@ -6,7 +7,6 @@
 #include "Monster.h"
 #include "Bat.h"
 #include "SkeletonDog.h"
-#include "Scene.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -155,7 +155,7 @@ void Room::Update(float dt)
 		subBackground.setPosition(subBGCenter);
 		for (auto& hitbox : hitBoxes)
 		{
-			if (hitbox.second.type > HitBoxData::Type::PortalRight)
+			if (!cleared || hitbox.second.type > HitBoxData::Type::PortalRight)
 			{
 				continue;
 			}
@@ -172,6 +172,34 @@ void Room::Update(float dt)
 					}
 				}
 				break;
+			}
+		}
+	}
+	int count = 0;
+	int wavecount = 0;
+	for (const std::pair<Monster*, SpawnData>& monster : monsters)
+	{
+		if (monster.first->IsDead())
+		{
+			++count;
+		}
+		if (wave == monster.second.wave && !monster.first->IsDead())
+		{
+			++wavecount;
+		}
+	}
+	if (monsters.size() == count)
+	{
+		cleared = true;
+	}
+	else if (wavecount == 0)
+	{
+		++wave;
+		for (const std::pair<Monster*, SpawnData>& monster : monsters)
+		{
+			if (wave == monster.second.wave && !monster.first->IsDead())
+			{
+				monster.first->SetActive(true);
 			}
 		}
 	}
@@ -287,6 +315,10 @@ void Room::LoadMapData(const std::string& path)
 		break;
 		}
 	}
+	if (mapData.monsterSpawnData.size() == 0)
+	{
+		cleared = true;
+	}
 
 	viewbounds = tileMaps[0]->GetGlobalBounds();
 
@@ -305,7 +337,14 @@ void Room::EnterRoom(HitBoxData::Type connection)
 {
 	if (player != nullptr)
 	{
-		player->SetPosition(mapData.playerStartPoint[(int)connection]);
+		if (mapData.playerStartPoint[(int)connection] != sf::Vector2f(0.f, 0.f))
+		{
+			player->SetPosition(tileMaps[0]->GetTransform().transformPoint(mapData.playerStartPoint[(int)connection]));
+		}
+		else
+		{
+			player->SetPosition(mapData.playerStartPoint[(int)connection]);
+		}
 	}
 
 	if (cleared)
@@ -321,11 +360,11 @@ void Room::EnterRoom(HitBoxData::Type connection)
 	}
 }
 
-std::vector<Monster*> Room::GetMonsters()
+std::vector<Monster*> Room::GetMonsters() const
 {
 	std::vector<Monster*> data;
 
-	for (auto& monster : monsters)
+	for (const auto& monster : monsters)
 	{
 		if (monster.second.wave == this->wave)
 		{

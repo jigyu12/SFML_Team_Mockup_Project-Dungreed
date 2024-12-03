@@ -32,14 +32,14 @@ void RoomMgr::Reset()
 	Room* room = new Room("00room");
 	room->Init();
 	room->Reset();
-	room->LoadMapData("maps/2fboss.json");
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map","2FBoss"));
 	scene->AddGo(room);
 	rooms.insert({ { 0,0 }, room });
 
 	room = new Room("10room");
 	room->Init();
 	room->Reset();
-	room->LoadMapData("maps/1froom1UL.json");
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom1UL"));
 	room->SetActive(false);
 	scene->AddGo(room);
 	rooms.insert({ { 1,0 }, room });
@@ -47,7 +47,7 @@ void RoomMgr::Reset()
 	room = new Room("1-1room");
 	room->Init();
 	room->Reset();
-	room->LoadMapData("maps/1froom2DLR.json");
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom2DLR"));
 	room->SetActive(false);
 	scene->AddGo(room);
 	rooms.insert({ { 1,-1 }, room });
@@ -55,7 +55,7 @@ void RoomMgr::Reset()
 	room = new Room("0-1room");
 	room->Init();
 	room->Reset();
-	room->LoadMapData("maps/1froom4ULR.json");
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom4ULR"));
 	room->SetActive(false);
 	scene->AddGo(room);
 	rooms.insert({ {0,-1 }, room });
@@ -63,7 +63,7 @@ void RoomMgr::Reset()
 	room = new Room("-10room");
 	room->Init();
 	room->Reset();
-	room->LoadMapData("maps/1froom5LR.json");
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom5LR"));
 	room->SetActive(false);
 	scene->AddGo(room);
 	rooms.insert({ {-1,0 }, room });
@@ -71,7 +71,7 @@ void RoomMgr::Reset()
 	room = new Room("-20room");
 	room->Init();
 	room->Reset();
-	room->LoadMapData("maps/1froom3UDLR.json");
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom3UDLR"));
 	room->SetActive(false);
 	scene->AddGo(room);
 	rooms.insert({ {-2,0 }, room });
@@ -82,18 +82,22 @@ void RoomMgr::Reset()
 bool RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 {
 	sf::Vector2i nextroom = currentRoom;
+	HitBoxData::Type entertype = HitBoxData::Type::PortalDown;
 	switch (portalType)
 	{
 	case HitBoxData::Type::PortalUp:
 		--nextroom.y;
 		break;
 	case HitBoxData::Type::PortalDown:
+		entertype = HitBoxData::Type::PortalUp;
 		++nextroom.y;
 		break;
 	case HitBoxData::Type::PortalLeft:
+		entertype = HitBoxData::Type::PortalRight;
 		--nextroom.x;
 		break;
 	case HitBoxData::Type::PortalRight:
+		entertype = HitBoxData::Type::PortalLeft;
 		++nextroom.x;
 		break;
 	}
@@ -106,7 +110,7 @@ bool RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 
 	GetCurrentRoom()->SetActive(false);
 	findit->second->SetActive(true);
-	findit->second->EnterRoom(portalType);
+	findit->second->EnterRoom(entertype);
 	currentRoom = nextroom;
 	return true;
 }

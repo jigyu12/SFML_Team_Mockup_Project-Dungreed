@@ -21,6 +21,7 @@ public:
 
 	void Set(int size, const sf::Color& color = sf::Color::White);
 	void SetString(const std::string& id);
+	void SetString(const std::string& id, const std::wstring& wstr);
 	void Init() override;
 	void Release() override;
 	void Reset() override;

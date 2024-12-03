@@ -65,11 +65,11 @@ void MapObject::Draw(sf::RenderWindow& window)
 	window.draw(body);
 }
 
-void MapObject::Set(ObjectData::Type objType)
+void MapObject::Set(MapObjectType objType)
 {
 	switch (objType)
 	{
-	case ObjectData::Type::Platform:
+	case MapObjectType::Platform:
 		animator.Play("animations/map/platformidle.csv");
 		break;
 	default:
