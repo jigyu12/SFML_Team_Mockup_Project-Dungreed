@@ -2,6 +2,8 @@
 
 #include "Monster.h"
 #include "SkellBossLeftHand.h"
+#include "SkellBossParticle.h"
+#include "SkellBossSword.h"
 
 class SkellBoss : public Monster
 {
@@ -29,6 +31,19 @@ protected:
 	float hitAccumTime;
 	float hitTimeDelay;
 
+	float shootAccumTime;
+	float shootTimeDelay;
+
+	Animator animatorBackFx;
+	sf::Sprite skellBossBackFx;
+
+	ObjectPool<SkellBossParticle> particlePool;
+	ObjectPool<SkellBossSword> swordPool;
+
+	int swordCount;
+	float swordSpawnTimeAccum;
+	float swordSpawnTimeDelay;
+
 public:
 	SkellBoss(const std::string& name = "SkellBoss");
 	virtual ~SkellBoss() = default;
@@ -46,7 +61,7 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
 
-	void SetStatus(SkellBossState state);
+	void SetState(SkellBossState state);
 	void UpdateIdle(float dt);
 	void UpdateAttackLaser(float dt);
 	void UpdateAttackBullet(float dt);
@@ -61,4 +76,7 @@ public:
 	{
 		return body.getGlobalBounds();
 	}
+
+	void ShootSword(int index);
+	void ShootParticle();
 };

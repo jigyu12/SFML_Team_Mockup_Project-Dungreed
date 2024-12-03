@@ -1,29 +1,26 @@
 #pragma once
 
-#include "Monster.h"
+#include "SpriteGo.h"
 
-class SkellBossLeftHand : public Monster
+class SkellBoss;
+
+class SkellBossParticle : public SpriteGo
 {
-public:
-	enum class SkellBossLeftHandState
-	{
-		None = -1,
-
-		Idle,
-		AttackLaser,
-		Death,
-
-		Count
-	};
-
 protected:
-	SkellBossLeftHandState state;
+	sf::Vector2f direction;
+
+	float speed;
+
+	SkellBoss* owner;
 
 	Animator animator;
 
+	float idleTimeAccum;
+	float idleTimeDelay;
+
 public:
-	SkellBossLeftHand(const std::string& name = "SkellBossLeftHand");
-	virtual ~SkellBossLeftHand() = default;
+	SkellBossParticle(const std::string& name = "SkellBossParticle");
+	virtual ~SkellBossParticle() = default;
 
 	virtual void SetOrigin(Origins preset) override;
 	virtual void SetOrigin(const sf::Vector2f& newOrigin) override;
@@ -38,17 +35,15 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
 
-	void SetState(SkellBossLeftHandState state);
-	void UpdateIdle(float dt);
-	void UpdateAttackLaser(float dt);
-	void UpdateDeath(float dt);
-
 	virtual sf::FloatRect GetLocalBounds() const
 	{
-		return body.getLocalBounds();
+		return sprite.getLocalBounds();
 	}
+
 	virtual sf::FloatRect GetGlobalBounds() const
 	{
-		return body.getGlobalBounds();
+		return sprite.getGlobalBounds();
 	}
+
+	void Fire(const sf::Vector2f& pos, const sf::Vector2f& dir, float s);
 };
