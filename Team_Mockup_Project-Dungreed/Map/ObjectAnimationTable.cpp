@@ -3,7 +3,7 @@
 #include <io.h>
 #include "rapidcsv.h"
 
-const ObjectAnimationDatum ObjectAnimationTable::Undefined = { "idle","animations/map/platformidle.csv" };
+const ObjectAnimationData ObjectAnimationTable::Undefined = { {"null"},{"null"},"null",sf::FloatRect() };
 
 bool ObjectAnimationTable::Load()
 {
@@ -22,16 +22,20 @@ bool ObjectAnimationTable::Load()
 			auto row = doc.GetRow<std::string>(i);
 			int id = std::stoi(row[0]);
 			auto find = table.find((MapObjectType)id);
-			ObjectAnimationDatum datum;
-			datum.name = row[1];
-			datum.path = row[2];
+			
 			if (find == table.end())
 			{
+				ObjectAnimationData datum;
+				datum.names.push_back(row[1]);
+				datum.paths.push_back(row[2]);
+				datum.defaultTexture = row[3];
+				datum.defaultTextureRect = {std::stof(row[4]),std::stof(row[5]),std::stof(row[6]),std::stof(row[7]) };
 				table.insert({ (MapObjectType)id,{datum} });
 			}
 			else
 			{
-				find->second.push_back(datum);
+				find->second.names.push_back(row[1]);
+				find->second.paths.push_back(row[2]);
 			}
 		}
 	}
@@ -51,7 +55,7 @@ void ObjectAnimationTable::Release()
 	table.clear();
 }
 
-const std::vector<ObjectAnimationDatum>& ObjectAnimationTable::Get(MapObjectType type)
+const ObjectAnimationData& ObjectAnimationTable::Get(MapObjectType type)
 {
 	auto find = table.find(type);
 	if (find == table.end())
@@ -61,7 +65,7 @@ const std::vector<ObjectAnimationDatum>& ObjectAnimationTable::Get(MapObjectType
 	return find->second;
 }
 
-const std::unordered_map<MapObjectType, std::vector<ObjectAnimationDatum>>& ObjectAnimationTable::GetTable()
+const std::unordered_map<MapObjectType, ObjectAnimationData>& ObjectAnimationTable::GetTable()
 {
 	return table;
 }

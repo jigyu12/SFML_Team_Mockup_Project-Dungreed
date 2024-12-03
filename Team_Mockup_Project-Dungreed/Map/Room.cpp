@@ -337,7 +337,14 @@ void Room::EnterRoom(HitBoxData::Type connection)
 {
 	if (player != nullptr)
 	{
-		player->SetPosition(mapData.playerStartPoint[(int)connection]);
+		if (mapData.playerStartPoint[(int)connection] != sf::Vector2f(0.f, 0.f))
+		{
+			player->SetPosition(tileMaps[0]->GetTransform().transformPoint(mapData.playerStartPoint[(int)connection]));
+		}
+		else
+		{
+			player->SetPosition(mapData.playerStartPoint[(int)connection]);
+		}
 	}
 
 	if (cleared)

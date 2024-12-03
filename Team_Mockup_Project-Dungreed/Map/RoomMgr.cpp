@@ -82,18 +82,22 @@ void RoomMgr::Reset()
 bool RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 {
 	sf::Vector2i nextroom = currentRoom;
+	HitBoxData::Type entertype = HitBoxData::Type::PortalDown;
 	switch (portalType)
 	{
 	case HitBoxData::Type::PortalUp:
 		--nextroom.y;
 		break;
 	case HitBoxData::Type::PortalDown:
+		entertype = HitBoxData::Type::PortalUp;
 		++nextroom.y;
 		break;
 	case HitBoxData::Type::PortalLeft:
+		entertype = HitBoxData::Type::PortalRight;
 		--nextroom.x;
 		break;
 	case HitBoxData::Type::PortalRight:
+		entertype = HitBoxData::Type::PortalLeft;
 		++nextroom.x;
 		break;
 	}
@@ -106,7 +110,7 @@ bool RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 
 	GetCurrentRoom()->SetActive(false);
 	findit->second->SetActive(true);
-	findit->second->EnterRoom(portalType);
+	findit->second->EnterRoom(entertype);
 	currentRoom = nextroom;
 	return true;
 }

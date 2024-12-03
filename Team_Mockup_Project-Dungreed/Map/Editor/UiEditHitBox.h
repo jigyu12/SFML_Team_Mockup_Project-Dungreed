@@ -6,21 +6,35 @@ class UiEditor;
 class UiEditHitBox : public GameObject
 {
 protected:
-	enum class EditStatus
+	enum class HitBoxEditStatus
 	{
 		Create,
-		MoveOld,
-		ResizeOld,
+		Move,
+	};
+	enum class EditStatus
+	{
+		Hitbox,
+		StartPosition,
+		Count,
 	};
 
-	EditStatus status;
+	EditStatus editStatus;
+	HitBoxEditStatus hitboxStatus;
+	HitBoxData::Type startPosType;
 
 	sf::RectangleShape boxWindow;
+
+	std::vector<sf::Sprite> editStatusButtons;
+	std::vector<sf::Sprite> dirButtons;
+	std::vector<sf::Vector2f> startPositions;
+	std::vector<sf::Text> positionTexts;
+
+	sf::Sprite spawnPoint;
 
 	sf::RectangleShape* selectedHitBox;
 	std::unordered_map<sf::RectangleShape*, HitBoxData::Type> hitboxes;
 	UiEditor* uieditor;
-	sf::Vector2f startPos;
+	sf::Vector2f editStartPos;
 public:
 	UiEditHitBox(const std::string& name = "");
 	~UiEditHitBox() = default;
@@ -41,5 +55,7 @@ public:
 
 	std::vector<HitBoxData> GetHitBoxData() const;
 	void SetHitBoxData(const std::vector<HitBoxData>& data);
+	std::vector<sf::Vector2f> GetStartPoints() { return startPositions; }
+	void SetStartPositionData(const std::vector<sf::Vector2f>& points) { startPositions = points; }
 	void ClearHitBoxData();
 };

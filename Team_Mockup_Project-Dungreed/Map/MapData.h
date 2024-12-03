@@ -54,13 +54,6 @@ struct SpawnData
 struct MapData
 {
 public:
-	enum class Direction {
-		Up,
-		Down,
-		Left,
-		Right,
-	};
-
 	const static int TileMapCount = 3;
 	const static int StartPointCount = 4;
 

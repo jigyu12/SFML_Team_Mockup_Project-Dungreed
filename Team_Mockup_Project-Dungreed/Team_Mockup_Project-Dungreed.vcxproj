@@ -166,6 +166,7 @@
     <ClCompile Include="Map\ObjectAnimationTable.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerUi.cpp" />
+    <ClCompile Include="ResourceIdTable.cpp" />
     <ClCompile Include="SaveData.cpp" />
     <ClCompile Include="SaveLoadMgr.cpp" />
     <ClCompile Include="Framework\Variables.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="PlayerUi.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Map\Room.h" />
+    <ClInclude Include="ResourceIdTable.h" />
     <ClInclude Include="SaveData.h" />
     <ClInclude Include="SaveLoadMgr.h" />
     <ClInclude Include="Framework\Utils.h" />

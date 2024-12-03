@@ -5,10 +5,11 @@ public:
 	enum class Types
 	{
 		String,
+		ResourceId,
 		Tile,
 		ObjectAnimation,
+		Count
 	};
-	static const int TotalTypes = 2;
 
 protected:
 	Types type;

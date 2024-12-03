@@ -92,6 +92,7 @@ void UiEditMonster::Reset()
 	waveUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
 	waveDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
 	waveText.setFont(FONT_MGR.Get("fonts/french.ttf"));
+	selectedMonster = nullptr;
 }
 
 void UiEditMonster::Update(float dt)
@@ -199,7 +200,9 @@ void UiEditMonster::Update(float dt)
 			auto found = spawnData.find(selectedMonster);
 			if (found != spawnData.end())
 			{
-				spawnData.erase(found->first);
+				delete found->first;
+				spawnData.erase(found);
+				selectedMonster = nullptr;
 			}
 		}
 	}
