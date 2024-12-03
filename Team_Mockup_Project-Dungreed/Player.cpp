@@ -6,6 +6,7 @@
 #include "Weapon.h"
 #include "PlayerUi.h"
 #include "Monster.h"
+#include "SkellBossSword.h"
 
 Player::Player(const std::string& name)
 	:Character(name), velocity({ 0.f,0.f })
@@ -300,6 +301,7 @@ void Player::LateUpdate(float dt)
 		}
 	}
 
+	/*const auto& bossSwords = dynamic_cast<SkellBossSword*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossSword"));*/
 	if (isDamaged)
 	{
 		invincibilityTimer += dt;
