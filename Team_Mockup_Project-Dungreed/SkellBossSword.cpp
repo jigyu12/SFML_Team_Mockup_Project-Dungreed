@@ -2,6 +2,7 @@
 #include "SkellBossSword.h"
 #include "SkellBoss.h"
 #include "Player.h"
+#include "Room.h"
 
 SkellBossSword::SkellBossSword(const std::string& name)
 	: SpriteGo(name)
@@ -55,7 +56,7 @@ void SkellBossSword::Reset()
 {
 	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 
-	speed = 180.f;
+	speed = 350.f;
 	damage = 8;
 
 	owner = dynamic_cast<SkellBoss*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBoss"));
@@ -63,9 +64,9 @@ void SkellBossSword::Reset()
 
 	target = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
 
-	idleTimeDelay = 1.f;
+	idleTimeDelay = 1.5f;
 
-	attackTimeDelay = 1.f;
+	attackTimeDelay = 0.1f;
 
 	destroyTimeDealy = 1.f;
 
@@ -170,10 +171,35 @@ void SkellBossSword::UpdateAttack(float dt)
 {
 	SetPosition(position + direction * speed * dt);
 	hitbox.UpdateTr(sprite, GetLocalBounds());
-	attackTimeAccum += dt;
-	if (attackTimeAccum >= attackTimeDelay)
+
+	auto hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+	bool collided = false;
+	for (auto& startHitBox : hitboxBounds)
 	{
-		SetState(SkellBossSwordState::Destroy);
+		if (Utils::CheckCollision(hitbox, *startHitBox.first))
+		{
+			if (startHitBox.second.type != HitBoxData::Type::Downable)
+				collided = true;
+		}
+	}
+
+	if (collided)
+	{
+		attackTimeAccum += dt;
+		if (attackTimeAccum >= attackTimeDelay)
+		{
+			auto& swords = owner->GetSwords();
+			for (auto it = swords.begin(); it != swords.end(); it++)
+			{
+				if (*it == this)
+				{
+					swords.erase(it);
+
+					break;
+				}
+			}
+			SetState(SkellBossSwordState::Destroy);
+		}
 	}
 }
 
