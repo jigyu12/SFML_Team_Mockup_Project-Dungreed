@@ -66,7 +66,7 @@ void SkellBossSword::Reset()
 
 	idleTimeDelay = 1.5f;
 
-	attackTimeDelay = 0.1f;
+	attackTimeDelay = Utils::RandomRange(0.05f, 0.2f);
 
 	destroyTimeDealy = 1.f;
 
