@@ -69,6 +69,9 @@
     <ClCompile Include="Arrow.cpp">
       <Filter>Weapons\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="SkellBossParticle.cpp">
+      <Filter>Monsters\Boss</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -144,6 +147,9 @@
     </ClInclude>
     <ClInclude Include="Arrow.h">
       <Filter>Weapons\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="SkellBossParticle.h">
+      <Filter>Monsters\Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

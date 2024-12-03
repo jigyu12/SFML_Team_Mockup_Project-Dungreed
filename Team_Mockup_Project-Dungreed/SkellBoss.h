@@ -2,6 +2,7 @@
 
 #include "Monster.h"
 #include "SkellBossLeftHand.h"
+#include "SkellBossParticle.h"
 
 class SkellBoss : public Monster
 {
@@ -29,8 +30,13 @@ protected:
 	float hitAccumTime;
 	float hitTimeDelay;
 
+	float shootAccumTime;
+	float shootTimeDelay;
+
 	Animator animatorBackFx;
 	sf::Sprite skellBossBackFx;
+
+	ObjectPool<SkellBossParticle> particlePool;
 
 public:
 	SkellBoss(const std::string& name = "SkellBoss");
@@ -64,4 +70,6 @@ public:
 	{
 		return body.getGlobalBounds();
 	}
+
+	void Shoot();
 };

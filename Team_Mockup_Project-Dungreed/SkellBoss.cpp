@@ -71,6 +71,9 @@ void SkellBoss::Reset()
 	hitAccumTime = 0.f;
 	hitTimeDelay = 0.1f;
 
+	shootTimeDelay = 0.2f;
+	shootAccumTime = shootTimeDelay;
+
 	isDamaged = false;
 	isDead = false;
 
@@ -133,6 +136,14 @@ void SkellBoss::Update(float dt)
 	{
 		isDead = true;
 		state = SkellBossState::Death;
+	}
+
+	shootAccumTime += dt;
+	if (shootAccumTime >= shootTimeDelay)
+	{
+		shootAccumTime = 0.f;
+
+		Shoot();
 	}
 
 	animator.Update(dt);
@@ -224,4 +235,13 @@ void SkellBoss::UpdateAttackSword(float dt)
 
 void SkellBoss::UpdateDeath(float dt)
 {
+}
+
+void SkellBoss::Shoot()
+{
+	SkellBossParticle* particle = particlePool.Take();
+	SCENE_MGR.GetCurrentScene()->AddGo(particle);
+	sf::Vector2f randDir = Utils::GetNormal(Utils::RandomInUnitCircle());
+
+	particle->Fire({ skellBossBackFx.getPosition().x - 10.f, skellBossBackFx.getPosition().y - 20.f }, randDir, 50.f);
 }
