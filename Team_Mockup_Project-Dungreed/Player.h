@@ -33,6 +33,10 @@ protected:
 	HitBox* DownPlatform;
 	std::string swordId = "graphics/weapon/Sword.png";
 	std::string playerDeadId = "graphics/player/CharDie.png";
+
+	float telePortTimer = 0.f;
+	float deadAniTimer = 0.f;
+
 	float gravity;
 	float jumpForce;
 	float jumpTimer;
@@ -82,6 +86,7 @@ public:
 	void UpdateJump(float dt);
 	void UpdateDownJump(float dt);
 	void UpdateDash(float dt);
+	void UpdateDead(float dt);
 
 	void Jump();
 	void OnDamage(int monsterDamage);
@@ -91,8 +96,10 @@ public:
 	bool IsDead() const { return isDead; }
 
 	float GetCurrentCoolTime() const { return dashCoolTimer; }
-	float GetCurrentHpRatio() const { return (float)hp/maxhp; }
+	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp/maxhp); }
 	
+	
+
 
 	sf::Vector2f GetPlayerLookNormal() const { return Utils::GetNormal(look); }
 

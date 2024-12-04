@@ -34,6 +34,14 @@ void Animator::Update(float dt)
 			std::string clipId = playeQueue.front();
 			Play(clipId, false);
 			playeQueue.pop();
+			auto find = events.find({ currentClip->id, currentFrame });
+			if (find != events.end())
+			{
+				for (auto& ev : (*find).second)
+				{
+					ev();
+				}
+			}
 			return;
 		}
 

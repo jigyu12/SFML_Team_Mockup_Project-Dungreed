@@ -82,7 +82,11 @@
     <ClCompile Include="Map\Editor\UiEditObject.cpp" />
     <ClCompile Include="SkellBoss.cpp" />
     <ClCompile Include="SkellBossLeftHand.cpp" />
-    <ClCompile Include="Map\ObjectAnimationTable.cpp" />
+    <ClCompile Include="Map\Editor\Button.cpp" />
+    <ClCompile Include="ResourceIdTable.cpp" />
+    <ClCompile Include="SkellBossBullet.cpp" />
+    <ClCompile Include="MainTitleScene.cpp" />
+    <ClCompile Include="MainTitleUi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -172,7 +176,11 @@
     <ClInclude Include="Map\Editor\UiEditObject.h" />
     <ClInclude Include="SkellBoss.h" />
     <ClInclude Include="SkellBossLeftHand.h" />
-    <ClInclude Include="Map\ObjectAnimationTable.h" />
+    <ClInclude Include="Map\Editor\Button.h" />
+    <ClInclude Include="ResourceIdTable.h" />
+    <ClInclude Include="SkellBossBullet.h" />
+    <ClInclude Include="MainTitleScene.h" />
+    <ClInclude Include="MainTitleUi.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">
