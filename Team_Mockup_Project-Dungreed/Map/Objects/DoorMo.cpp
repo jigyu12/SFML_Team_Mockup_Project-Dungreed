@@ -6,31 +6,29 @@ DoorMo::DoorMo(const std::string& name)
 {
 }
 
-void DoorMo::Init()
-{
-	MapObject::Init();
-	animator.AddEvent("dooropen", 7, [this]() {SetStatus(Status::Broken);});
-}
-
 void DoorMo::Update(float dt)
 {
 	MapObject::Update(dt);
 
 	hitbox.UpdateTr(body, body.getLocalBounds());
+	hitbox.rect.setOutlineColor(sf::Color::Red);
 }
 
 void DoorMo::Draw(sf::RenderWindow& window)
 {
 	MapObject::Draw(window);
-	if (Variables::isDrawHitBox)
-	{
-		window.draw(hitbox.rect);
-	}
+	hitbox.Draw(window);
+}
+
+void DoorMo::Set(const ObjectData::Type& type)
+{
+	MapObject::Set(type);
+	animator.AddEvent("dooropen", 7, [this]() {SetStatus(Status::Broken);});
 }
 
 void DoorMo::SetStatus(const Status& status)
 {
-	this->status = status;
+	MapObject::SetStatus(status);
 	switch (status)
 	{
 	case MapObject::Status::Idle:
@@ -49,4 +47,5 @@ void DoorMo::SetStatus(const Status& status)
 		SetActive(false);
 		break;
 	}
+	SetOrigin(Origins::BC);
 }

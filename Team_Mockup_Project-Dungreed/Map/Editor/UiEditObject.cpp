@@ -224,6 +224,7 @@ void UiEditObject::Draw(sf::RenderWindow& window)
 
 void UiEditObject::ClearObjectData()
 {
+	selectedObject = nullptr;
 	for (auto& objectdatum : objectData)
 	{
 		delete objectdatum.first;

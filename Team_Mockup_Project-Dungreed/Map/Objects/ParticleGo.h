@@ -2,7 +2,7 @@
 
 class Room;
 
-class ObjectParticle : public GameObject
+class ParticleGo : public GameObject
 {
 protected:
 
@@ -10,12 +10,14 @@ protected:
 	
 	sf::Vector2f velocity;
 	sf::Vector2f gravity;
-	float speed;
+	float rotationSpeed;
+
+	float timer;
 
 	std::function<void()> returnThis;
 public:
-	ObjectParticle(const std::string& name = "");
-	~ObjectParticle() = default;
+	ParticleGo(const std::string& name = "");
+	~ParticleGo() = default;
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float angle) override;
@@ -28,9 +30,10 @@ public:
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
+	void LateUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void Start(const std::string& name);
+	void Start(const std::string& name,const sf::Vector2f& position);
 
 	void SetReturnThis(std::function<void()> func) { returnThis = func; }
 };

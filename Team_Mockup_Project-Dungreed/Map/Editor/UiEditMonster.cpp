@@ -317,6 +317,7 @@ void UiEditMonster::SetSpawnRect(sf::RectangleShape* shape, const Monster::Monst
 
 void UiEditMonster::ClearSpawnData()
 {
+	selectedMonster = nullptr;
 	for (auto& spawndatum : spawnData)
 	{
 		delete spawndatum.first;

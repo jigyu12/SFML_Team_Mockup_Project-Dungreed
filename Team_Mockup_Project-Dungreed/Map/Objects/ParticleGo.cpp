@@ -2,30 +2,30 @@
 #include "ParticleGo.h"
 #include "Room.h"
 
-ObjectParticle::ObjectParticle(const std::string& name)
+ParticleGo::ParticleGo(const std::string& name)
 	: GameObject(name)
 {
 }
 
-void ObjectParticle::SetPosition(const sf::Vector2f& pos)
+void ParticleGo::SetPosition(const sf::Vector2f& pos)
 {
 	position = pos;
 	body.setPosition(position);
 }
 
-void ObjectParticle::SetRotation(float angle)
+void ParticleGo::SetRotation(float angle)
 {
 	rotation = angle;
 	body.setRotation(rotation);
 }
 
-void ObjectParticle::SetScale(const sf::Vector2f& s)
+void ParticleGo::SetScale(const sf::Vector2f& s)
 {
 	scale = s;
 	body.setScale(scale);
 }
 
-void ObjectParticle::SetOrigin(Origins preset)
+void ParticleGo::SetOrigin(Origins preset)
 {
 	originPreset = preset;
 	if (originPreset != Origins::Custom)
@@ -34,42 +34,100 @@ void ObjectParticle::SetOrigin(Origins preset)
 	}
 }
 
-void ObjectParticle::SetOrigin(const sf::Vector2f& newOrigin)
+void ParticleGo::SetOrigin(const sf::Vector2f& newOrigin)
 {
 	originPreset = Origins::Custom;
 	origin = newOrigin;
 	body.setOrigin(origin);
 }
 
-void ObjectParticle::Init()
+void ParticleGo::Init()
 {
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = 20;
 }
 
-void ObjectParticle::Release()
+void ParticleGo::Release()
+{
+	returnThis();
+}
+
+void ParticleGo::Reset()
 {
 }
 
-void ObjectParticle::Reset()
+void ParticleGo::Update(float dt)
 {
-}
-
-void ObjectParticle::Update(float dt)
-{
-	velocity += gravity * dt;
-	if (returnThis)
+	timer += dt;
+	if (timer > 3.f && returnThis)
 	{
 		returnThis();
 	}
+	SetRotation(rotation + rotationSpeed + dt);
+	velocity += gravity * dt;
+	SetPosition(position + velocity * dt);
+	hitbox.UpdateTr(body, body.getLocalBounds());
 }
 
-void ObjectParticle::Draw(sf::RenderWindow& window)
+void ParticleGo::LateUpdate(float dt)
+{
+	auto hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+	for (auto& startHitBox : hitboxBounds)
+	{
+		if (startHitBox.second.type == HitBoxData::Type::Immovable)
+		{
+			CollisionState state;
+			if (Utils::CheckCollision(hitbox, *startHitBox.first, state))
+			{
+				if (state.Up && velocity.y < 0.f)
+				{
+					velocity.y *= -0.5f;
+				}
+				if (state.Down)
+				{
+					position.y = std::min(position.y, state.area.top);
+					if (velocity.y > 0.f)
+					{
+						velocity.y *= -0.25f;
+					}
+					float multiflier = powf(0.368f, dt);
+					velocity.x *= multiflier;
+					rotationSpeed *= multiflier;
+				}
+				if (state.Right)
+				{
+					position.x = std::min(position.x, state.area.left);
+					if (velocity.x > 0.f)
+					{
+						velocity.x *= -0.25f;
+					}
+				}
+				if (state.Left)
+				{
+					position.x = std::max(position.x, state.area.left + state.area.width);
+					if (velocity.x < 0.f)
+					{
+						velocity.x *= -0.25f;
+					}
+				}
+			}
+		}
+	}
+}
+
+void ParticleGo::Draw(sf::RenderWindow& window)
 {
 	window.draw(body);
+	hitbox.Draw(window);
 }
 
-void ObjectParticle::Start(const std::string& name)
+void ParticleGo::Start(const std::string& name, const sf::Vector2f& position)
 {
-	body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("", "")));
+	body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", name)));
+	SetPosition(position);
+	velocity = Utils::RandomInUnitCircle() * 100.f;
+	rotationSpeed = Utils::RandomRange(-10.f, 10.f);
+	gravity.y = 50.f;
+	timer = 0.f;
+	SetOrigin(Origins::MC);
 }

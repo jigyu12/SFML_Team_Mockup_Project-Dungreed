@@ -10,9 +10,10 @@ public:
 	BreakableMo(const std::string& name = "");
 	~BreakableMo() = default;
 
-	void Init() override;
-	void Release() override;
-	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void Set(const ObjectData::Type& type) override;
+	void SetStatus(const Status& status) override;
+	void OnDamaged(int damage) override;
 };

@@ -588,6 +588,7 @@ void UiEditHitBox::SetEditStatus(const EditStatus& status)
 
 void UiEditHitBox::ClearHitBoxData()
 {
+	selectedHitBox = nullptr;
 	for (auto& hitbox : hitboxes)
 	{
 		delete hitbox.first;

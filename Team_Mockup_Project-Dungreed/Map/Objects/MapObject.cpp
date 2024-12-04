@@ -72,20 +72,6 @@ void MapObject::Set(const ObjectData::Type& type)
 {
 	animator.ClearEvent();
 	this->type = type;
-	
-	switch (this->type)
-	{
-	case ObjectData::Type::Box:
-		animator.Play(RESOURCEID_TABLE->Get("Animation", "Box"));
-		break;
-	case ObjectData::Type::BigBox:
-		animator.Play(RESOURCEID_TABLE->Get("Animation", "BigBox"));
-		break;
-	case ObjectData::Type::OakDrum:
-		animator.Play(RESOURCEID_TABLE->Get("Animation", "OakDrum"));
-		break;
-	}
-	SetOrigin(Origins::BC);
 }
 
 void MapObject::OnDamaged(int damage)

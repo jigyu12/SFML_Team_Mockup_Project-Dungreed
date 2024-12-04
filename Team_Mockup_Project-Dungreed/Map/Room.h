@@ -4,7 +4,6 @@ class TileMap;
 class Player;
 class MapObject;
 class Monster;
-class ObjectParticle;
 
 class Room : public GameObject
 {
@@ -19,9 +18,6 @@ protected:
 	std::vector<std::pair<MapObject*, ObjectData>> objects;
 	std::vector<std::pair<Monster*,SpawnData>> monsters;
 
-	std::list<ObjectParticle*> particles;
-	ObjectPool<ObjectParticle> particlePool;
-	
 	sf::FloatRect viewbounds;
 	sf::Vector2f subBGCenter;
 
@@ -60,13 +56,10 @@ public:
 
 	std::vector<std::pair<HitBox*, HitBoxData>> GetHitBoxes() const;
 	std::vector<Monster*> GetMonsters() const;
-	std::vector<GameObject*> GetBreakableObjects() const;
+	std::vector<MapObject*> GetBreakableObjects() const;
 
 	bool isCleared() { return cleared; }
 	void EnterRoom(HitBoxData::Type connection);
 	void ClearMonsters();
 
-	ObjectParticle* TakeObjectParticle();
-	void ReturnObjectParticle(ObjectParticle* particle);
-	void ClearTookObject();
 };

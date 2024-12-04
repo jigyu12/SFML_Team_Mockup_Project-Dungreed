@@ -125,9 +125,6 @@ void Room::Init()
 
 void Room::Release()
 {
-	ClearTookObject();
-
-
 	for (auto& hitbox : hitBoxes)
 	{
 		delete hitbox.first;
@@ -237,7 +234,8 @@ void Room::LateUpdate(float dt)
 			++wavecount;
 		}
 	}
-	if (monsters.size() == count)
+	if (monsters.size() == count
+		&& !cleared)
 	{
 		cleared = true;
 		for (const auto& object : objects)
@@ -280,14 +278,15 @@ void Room::Draw(sf::RenderWindow& window)
 
 	for (auto& obj : objects)
 	{
-		obj.first->Draw(window);
-	}
-	if (Variables::isDrawHitBox)
-	{
-		for (auto& hitBox : hitBoxes)
+		if (obj.first->IsActive())
 		{
-			window.draw(hitBox.first->rect);
+			obj.first->Draw(window);
 		}
+	}
+
+	for (auto& hitBox : hitBoxes)
+	{
+		hitBox.first->Draw(window);
 	}
 }
 
@@ -320,6 +319,11 @@ void Room::LoadMapData(const std::string& path)
 			break;
 		case ObjectData::Type::Door:
 			obj = new DoorMo();
+			break;
+		case ObjectData::Type::BigBox:
+		case ObjectData::Type::Box:
+		case ObjectData::Type::OakDrum:
+			obj = new BreakableMo();
 			break;
 		}
 		if (obj != nullptr)
@@ -423,7 +427,7 @@ std::vector<std::pair<HitBox*, HitBoxData>> Room::GetHitBoxes() const
 			HitBoxData hitBoxData;
 			hitBoxData.type = HitBoxData::Type::Immovable;
 
-			data.push_back({&object.first->GetHitBox(),hitBoxData });
+			data.push_back({ &object.first->GetHitBox(),hitBoxData });
 		}
 	}
 
@@ -449,7 +453,8 @@ void Room::EnterRoom(HitBoxData::Type connection)
 	{
 		for (const auto& object : objects)
 		{
-			if (object.second.type == ObjectData::Type::Door)
+			if (object.second.type == ObjectData::Type::Door
+				&& object.first->GetStatus() != MapObject::Status::Close)
 			{
 				object.first->SetStatus(MapObject::Status::Close);
 			}
@@ -476,40 +481,6 @@ void Room::ClearMonsters()
 	monsters.clear();
 }
 
-ObjectParticle* Room::TakeObjectParticle()
-{
-	ObjectParticle* objectParticle = particlePool.Take();
-	objectParticle->SetReturnThis([this, objectParticle]() {ReturnObjectParticle(objectParticle);});
-	particles.push_back(objectParticle);
-	if (scene != nullptr)
-	{
-		scene->AddGo(objectParticle);
-	}
-	return objectParticle;
-}
-
-void Room::ReturnObjectParticle(ObjectParticle* particle)
-{
-	if (scene != nullptr)
-	{
-		scene->RemoveGo((GameObject*)particle);
-	}
-	particles.remove(particle);
-	particlePool.Return(particle);
-}
-
-void Room::ClearTookObject()
-{
-	if (scene != nullptr)
-	{
-		for (auto particle : particles)
-		{
-			scene->RemoveGo(particle);
-			particlePool.Return(particle);
-		}
-		particles.clear();
-	}
-}
 
 std::vector<Monster*> Room::GetMonsters() const
 {
@@ -525,9 +496,9 @@ std::vector<Monster*> Room::GetMonsters() const
 	return data;
 }
 
-std::vector<GameObject*> Room::GetBreakableObjects() const
+std::vector<MapObject*> Room::GetBreakableObjects() const
 {
-	std::vector<GameObject*> vect;
+	std::vector<MapObject*> vect;
 
 	for (auto& obj : objects)
 	{
@@ -536,7 +507,7 @@ std::vector<GameObject*> Room::GetBreakableObjects() const
 		case ObjectData::Type::BigBox:
 		case ObjectData::Type::Box:
 		case ObjectData::Type::OakDrum:
-
+			vect.push_back(obj.first);
 			break;
 		default:
 			break;

@@ -42,7 +42,7 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	virtual void Set(const ObjectData::Type& datum);
+	virtual void Set(const ObjectData::Type& type);
 	Status GetStatus() { return status; }
 	virtual void SetStatus(const Status& status) {}
 	virtual void OnDamaged(int damage);

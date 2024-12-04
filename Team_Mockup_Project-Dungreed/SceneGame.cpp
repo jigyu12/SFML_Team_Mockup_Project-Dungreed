@@ -10,6 +10,7 @@
 #include "Room.h"
 #include "SkellBoss.h"
 #include "SkellBossLeftHand.h"
+#include "ParticleGo.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -43,11 +44,11 @@ void SceneGame::Init()
 
 		{
 			leftHand = AddGo(new SkellBossLeftHand("SkellBossLeftHand"));
-			leftHand->SetPosition({-107.5f , 50.f});
+			leftHand->SetPosition({ -107.5f , 50.f });
 		}
 		{
 			rightHand = AddGo(new SkellBossLeftHand("SkellBossRightHand"));
-			rightHand->SetPosition({92.5f , -50.f});
+			rightHand->SetPosition({ 92.5f , -50.f });
 			rightHand->SetScale({ -1.f, 1.f });
 		}
 	}
@@ -64,7 +65,7 @@ void SceneGame::Init()
 		skeletonDog->SetPosition({ 0.f, 0.f });
 		skeletonDogList.push_back(skeletonDog);
 	}*/
-	
+
 	Scene::Init();
 }
 
@@ -90,13 +91,14 @@ void SceneGame::Enter()
 
 void SceneGame::Exit()
 {
+	ClearTookObject();
 	Scene::Exit();
 }
 
 void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
-	
+
 	worldView.setCenter(ROOM_MGR.GetCurrentRoom()->GetSubBGCenter());
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::F5))
@@ -114,4 +116,33 @@ void SceneGame::Draw(sf::RenderWindow& window)
 {
 	window.clear({ 51,49,67 });
 	Scene::Draw(window);
+}
+
+
+ParticleGo* SceneGame::TakeObjectParticle()
+{
+	ParticleGo* objectParticle = particlePool.Take();
+	objectParticle->SetReturnThis([this, objectParticle]() {ReturnObjectParticle(objectParticle);});
+	particles.push_back(objectParticle);
+
+	AddGo(objectParticle);
+
+	return objectParticle;
+}
+
+void SceneGame::ReturnObjectParticle(ParticleGo* particle)
+{
+	RemoveGo((GameObject*)particle);
+	particles.remove(particle);
+	particlePool.Return(particle);
+}
+
+void SceneGame::ClearTookObject()
+{
+	for (auto particle : particles)
+	{
+		RemoveGo(particle);
+		particlePool.Return(particle);
+	}
+	particles.clear();
 }
