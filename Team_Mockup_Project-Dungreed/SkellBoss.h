@@ -67,6 +67,17 @@ protected:
 	float angleDown;
 	float randDir;
 
+	int attackLaserRandPatternValue;
+	float attackLaserTimeAccum;
+	float attackLaserTimeDelay;
+	int laserAttackTimeCount;
+
+	SkellBossLeftHand* leftHand;
+	SkellBossLeftHand* rightHand;
+	SkellBossLeftHand* beforeHand;
+
+	int laserAttackCountMax;
+
 public:
 	SkellBoss(const std::string& name = "SkellBoss");
 	virtual ~SkellBoss() = default;

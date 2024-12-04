@@ -1,0 +1,11 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+LaserBody Idle,10,"0",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/boss/BossAttackLaser/LaserBody/SkellBossLaserBody0.png,0,"0",32,49,0
+graphics/boss/BossAttackLaser/LaserBody/SkellBossLaserBody1.png,0,"0",32,51,0
+graphics/boss/BossAttackLaser/LaserBody/SkellBossLaserBody2.png,0,"0",32,49,0
+graphics/boss/BossAttackLaser/LaserBody/SkellBossLaserBody3.png,0,"0",32,31,0
+graphics/boss/BossAttackLaser/LaserBody/SkellBossLaserBody4.png,0,"0",32,15,0
+graphics/boss/BossAttackLaser/LaserBody/SkellBossLaserBody5.png,0,"0",32,16,0
+graphics/boss/BossAttackLaser/LaserBody/SkellBossLaserBody6.png,0,"0",32,19,0

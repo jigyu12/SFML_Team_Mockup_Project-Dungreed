@@ -178,7 +178,7 @@ void SkellBossSword::UpdateAttack(float dt)
 	{
 		if (Utils::CheckCollision(hitbox, *startHitBox.first))
 		{
-			if (startHitBox.second.type != HitBoxData::Type::Downable)
+			if (startHitBox.second.type == HitBoxData::Type::Immovable)
 				collided = true;
 		}
 	}

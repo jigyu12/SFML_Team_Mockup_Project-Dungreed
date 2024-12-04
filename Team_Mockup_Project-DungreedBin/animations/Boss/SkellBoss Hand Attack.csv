@@ -1,0 +1,22 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Hand Attack,10,"0",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack00.png,0,"0",59,67,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack01.png,0,"0",62,70,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack02.png,0,"0",56,56,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack03.png,0,"0",56,54,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack04.png,0,"0",56,56,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack05.png,0,"0",56,57,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack06.png,0,"0",56,58,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack07.png,0,"0",56,58,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack08.png,0,"0",56,58,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack09.png,0,"0",65,67,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack10.png,0,"0",63,71,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack11.png,0,"0",63,71,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack12.png,0,"0",62,71,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack13.png,0,"0",61,71,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack14.png,0,"0",61,65,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack15.png,0,"0",58,61,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack16.png,0,"0",57,59,0
+graphics/boss/BossAttackLaser/LeftHandAttack/SkellBossLeftHandAttack17.png,0,"0",58,61,0
