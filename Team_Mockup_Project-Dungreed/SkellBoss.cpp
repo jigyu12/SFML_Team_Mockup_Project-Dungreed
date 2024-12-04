@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SkellBoss.h"
+#include "Room.h"
 
 SkellBoss::SkellBoss(const std::string& name)
 	: Monster(name)
@@ -108,6 +109,28 @@ void SkellBoss::Reset()
 
 	leftHand = dynamic_cast<SkellBossLeftHand*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossLeftHand"));
 	rightHand = dynamic_cast<SkellBossLeftHand*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossRightHand"));
+
+	texDeath.loadFromFile("graphics/boss/BossDead/SkellBossDead_0.png");
+
+	otherDeathsSize = 5;
+	for (int i = 0; i < otherDeathsSize; ++i)
+	{
+		otherDeathTextures.push_back(new sf::Texture());
+	}
+	otherDeathTextures[0]->loadFromFile("graphics/boss/BossDead/SkellBossDead_5.png");
+	otherDeathTextures[1]->loadFromFile("graphics/boss/BossDead/SkellBossDead_3.png");
+	otherDeathTextures[2]->loadFromFile("graphics/boss/BossDead/SkellBossDead_4.png");
+	otherDeathTextures[3]->loadFromFile("graphics/boss/BossDead/SkellBossDead_6.png");
+	otherDeathTextures[4]->loadFromFile("graphics/boss/BossDead/SkellBossDead_7.png");
+	for (int i = 0; i < otherDeathsSize; ++i)
+	{
+		otherDeathSprites.push_back(new sf::Sprite());
+		otherDeathSprites[i]->setTexture(*otherDeathTextures[i]);
+	}
+	for (int i = 0; i < otherDeathsSize; ++i)
+	{
+		otherDeathHitBoxes.push_back(new HitBox());
+	}
 }
 
 void SkellBoss::Update(float dt)
@@ -164,8 +187,18 @@ void SkellBoss::Update(float dt)
 		ShootParticle();
 	}
 
-	animator.Update(dt);
-	animatorBackFx.Update(dt);
+	if (state != SkellBossState::Death)
+	{
+		animator.Update(dt);
+		animatorBackFx.Update(dt);
+	}
+	else
+	{
+		for (int i = 0; i < otherDeathsSize; ++i)
+		{
+			otherDeathHitBoxes[i]->UpdateTr(*otherDeathSprites[i], (*otherDeathSprites[i]).getLocalBounds());
+		}
+	}
 
 	hitbox.UpdateTr(body, GetLocalBounds());
 }
@@ -173,13 +206,57 @@ void SkellBoss::Update(float dt)
 void SkellBoss::LateUpdate(float dt)
 {
 	//SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
-	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
+	if(state == SkellBossState::Death)
+		SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().top });
+	else
+		SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
+
+	if (isDead)
+	{
+		auto& hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+		float tempSpeed1 = 1.f;
+		for (auto& startHitBox : hitboxBounds)
+		{
+			if (Utils::CheckCollision(hitbox, *startHitBox.first))
+			{
+				if (startHitBox.second.type == HitBoxData::Type::Downable)
+					tempSpeed1 = 0.f;
+			}
+		}
+
+		SetPosition({position.x , position.y + (gravity += dt * 10.f) * dt * tempSpeed1 });
+
+		for (int i = 0; i < otherDeathsSize; ++i)
+		{
+			float tempSpeed2 = 1.f;
+
+			for (auto& startHitBox : hitboxBounds)
+			{
+				if (Utils::CheckCollision(*otherDeathHitBoxes[i], *startHitBox.first))
+				{
+					if (startHitBox.second.type == HitBoxData::Type::Downable)
+						tempSpeed2 = 0.f;
+				}
+			}
+
+			otherDeathSprites[i]->setPosition({ otherDeathSprites[i]->getPosition().x, otherDeathSprites[i]->getPosition().y + gravity * dt * tempSpeed2 });
+		}
+	}
 
 	skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 }
 
 void SkellBoss::Draw(sf::RenderWindow& window)
 {
+	if (isDead)
+	{
+		for (int i = 0; i < otherDeathsSize; ++i)
+		{
+			window.draw(*otherDeathSprites[i]);
+			otherDeathHitBoxes[i]->Draw(window);
+		}
+	}
+
 	if (!isDamaged && hp > 0)
 	{
 		window.draw(skellBossBackFx);
@@ -200,6 +277,20 @@ void SkellBoss::Draw(sf::RenderWindow& window)
 
 void SkellBoss::Release()
 {
+	for (auto& tex : otherDeathTextures)
+	{
+		delete tex;
+	}
+
+	for (auto& spt : otherDeathSprites)
+	{
+		delete spt;
+	}
+
+	for (auto& hitBox : otherDeathHitBoxes)
+	{
+		delete hitBox;
+	}
 }
 
 void SkellBoss::SetState(SkellBossState state)
@@ -261,7 +352,29 @@ void SkellBoss::SetState(SkellBossState state)
 		break;
 	case SkellBoss::SkellBossState::Death:
 	{
+		animator.Stop();
 
+		{
+			otherDeathSprites[2]->setOrigin({ otherDeathSprites[2]->getLocalBounds().width / 2.f , otherDeathSprites[2]->getLocalBounds().height });
+			otherDeathSprites[2]->setPosition({ position.x + 7.5f + 20.f, position.y - 26.5f });
+
+			otherDeathSprites[1]->setOrigin({ otherDeathSprites[1]->getLocalBounds().width / 2.f , otherDeathSprites[1]->getLocalBounds().height });
+			otherDeathSprites[1]->setPosition({ position.x + 7.5f - 20.f, position.y - 26.5f });
+
+			otherDeathSprites[0]->setOrigin({ otherDeathSprites[0]->getLocalBounds().width / 2.f , otherDeathSprites[0]->getLocalBounds().height });
+			otherDeathSprites[0]->setPosition({ position.x + 7.5f, position.y + 4.f });
+
+			otherDeathSprites[3]->setOrigin({ otherDeathSprites[3]->getLocalBounds().width / 2.f , otherDeathSprites[3]->getLocalBounds().height });
+			otherDeathSprites[3]->setPosition({ position.x + 7.5f - 18.5f, position.y - 10.f });
+
+			otherDeathSprites[4]->setOrigin({ otherDeathSprites[4]->getLocalBounds().width / 2.f , otherDeathSprites[4]->getLocalBounds().height });
+			otherDeathSprites[4]->setPosition({ position.x + 7.5f + 18.5f, position.y - 10.f });
+		}
+		SetPosition({position.x, position.y - body.getLocalBounds().height});
+		
+		body.setTexture(texDeath, true);
+
+		gravity = 0.98f;
 	}
 		break;
 	}
@@ -462,7 +575,7 @@ void SkellBoss::UpdateAttackSword(float dt)
 
 void SkellBoss::UpdateDeath(float dt)
 {
-
+	
 }
 
 void SkellBoss::ShootBullet(sf::Vector2f direction)
