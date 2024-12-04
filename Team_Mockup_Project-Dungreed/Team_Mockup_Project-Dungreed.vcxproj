@@ -201,6 +201,7 @@
     <ClCompile Include="Map\Editor\UiEditObject.cpp" />
     <ClCompile Include="SkellBoss.cpp" />
     <ClCompile Include="SkellBossBullet.cpp" />
+    <ClCompile Include="SkellBossLaser.cpp" />
     <ClCompile Include="SkellBossLeftHand.cpp" />
     <ClCompile Include="SkellBossParticle.cpp" />
     <ClCompile Include="SkellBossSword.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="Map\Editor\UiEditObject.h" />
     <ClInclude Include="SkellBoss.h" />
     <ClInclude Include="SkellBossBullet.h" />
+    <ClInclude Include="SkellBossLaser.h" />
     <ClInclude Include="SkellBossLeftHand.h" />
     <ClInclude Include="SkellBossParticle.h" />
     <ClInclude Include="SkellBossSword.h" />

@@ -66,7 +66,7 @@ void SkellBoss::Reset()
 	originalDamage = 0;
 
 	attackAccumSpeed = 0.f;
-	attackSpeedDelay = 3.f;
+	attackSpeedDelay = 2.f;
 
 	hitAccumTime = 0.f;
 	hitTimeDelay = 0.1f;
@@ -75,7 +75,7 @@ void SkellBoss::Reset()
 	shootAccumTime = shootTimeDelay;
 
 	swordSpawnTimeDelay = 0.15f;
-	afterSwordSpawnTimeDelay = 3.f;
+	afterSwordSpawnTimeDelay = 1.f;
 
 	attackBulletTimeDelay = 5.f;
 	bulletSpawnTimeDelay = 0.115f;
@@ -103,6 +103,11 @@ void SkellBoss::Reset()
 	angleLeft = 0.5f * Utils::PI;
 	angleUp = 1.f * Utils::PI;
 	angleDown = 1.5f * Utils::PI;
+
+	attackLaserTimeDelay = 1.3f + 0.5f; // SkellLeftHand attackSpeedDelay + targetFindTimeDelay
+
+	leftHand = dynamic_cast<SkellBossLeftHand*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossLeftHand"));
+	rightHand = dynamic_cast<SkellBossLeftHand*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossRightHand"));
 }
 
 void SkellBoss::Update(float dt)
@@ -212,7 +217,21 @@ void SkellBoss::SetState(SkellBossState state)
 		break;
 	case SkellBoss::SkellBossState::AttackLaser:
 	{
+		attackLaserRandPatternValue = Utils::RandomValue() < 0.5f ? -1 : 1;
+		if (attackLaserRandPatternValue < 0)
+		{
+			beforeHand = rightHand;
+		}
+		else
+		{
+			beforeHand = leftHand;
+		}
 
+		attackLaserTimeAccum = 0.f;
+
+		laserAttackTimeCount = 0;
+
+		laserAttackCountMax = Utils::RandomRange(1, 3);
 	}
 		break;
 	case SkellBoss::SkellBossState::AttackBullet:
@@ -253,6 +272,8 @@ void SkellBoss::UpdateIdle(float dt)
 	if (hp <= 0)
 	{
 		SetState(SkellBossState::Death);
+		leftHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::Death);
+		rightHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::Death);
 
 		return;
 	}
@@ -261,9 +282,9 @@ void SkellBoss::UpdateIdle(float dt)
 
 	if (attackAccumSpeed >= attackSpeedDelay)
 	{
-		SetState(SkellBossState::AttackLaser);
+		float randAttackValue = Utils::RandomRange(0.f, 3.f);
 
-		/*float randAttackValue = Utils::RandomRange(0, 3);
+		SetState(SkellBossState::AttackLaser);
 
 		if (randAttackValue <= 1.f)
 		{
@@ -276,7 +297,7 @@ void SkellBoss::UpdateIdle(float dt)
 		else
 		{
 			SetState(SkellBossState::AttackSword);
-		}*/
+		}
 	}
 }
 
@@ -285,11 +306,61 @@ void SkellBoss::UpdateAttackLaser(float dt)
 	if (hp <= 0)
 	{
 		SetState(SkellBossState::Death);
+		leftHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::Death);
+		rightHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::Death);
 
 		return;
 	}
 
+	if (laserAttackTimeCount >= laserAttackCountMax)
+	{
+		SetState(SkellBossState::Idle);
 
+		return;
+	}
+
+	if (attackLaserRandPatternValue < 0)
+	{
+		attackLaserTimeAccum += dt;
+		if (attackLaserTimeAccum >= attackLaserTimeDelay)
+		{
+			attackLaserTimeAccum = 0.f;
+
+			if (beforeHand == leftHand)
+			{
+				rightHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::AttackLaser);
+				laserAttackTimeCount++;
+				beforeHand = rightHand;
+			}
+			else
+			{
+				leftHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::AttackLaser);
+				laserAttackTimeCount++;
+				beforeHand = leftHand;
+			}
+		}
+	}
+	else
+	{
+		attackLaserTimeAccum += dt;
+		if (attackLaserTimeAccum >= attackLaserTimeDelay)
+		{
+			attackLaserTimeAccum = 0.f;
+
+			if (beforeHand == leftHand)
+			{
+				rightHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::AttackLaser);
+				laserAttackTimeCount++;
+				beforeHand = rightHand;
+			}
+			else
+			{
+				leftHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::AttackLaser);
+				laserAttackTimeCount++;
+				beforeHand = leftHand;
+			}
+		}
+	}
 }
 
 void SkellBoss::UpdateAttackBullet(float dt)
@@ -302,6 +373,8 @@ void SkellBoss::UpdateAttackBullet(float dt)
 		}
 
 		SetState(SkellBossState::Death);
+		leftHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::Death);
+		rightHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::Death);
 
 		return;
 	}
@@ -356,6 +429,8 @@ void SkellBoss::UpdateAttackSword(float dt)
 		}
 
 		SetState(SkellBossState::Death);
+		leftHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::Death);
+		rightHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::Death);
 
 		return;
 	}

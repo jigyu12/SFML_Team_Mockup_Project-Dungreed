@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Monster.h"
+#include "SkellBossLaser.h"
 
 class SkellBossLeftHand : public Monster
 {
@@ -21,7 +22,16 @@ protected:
 
 	Animator animator;
 
-	
+	float deathTimeAccum;
+	float deathTimeDelay;
+
+	float targetFindTimeAccum;
+	float targetFindTimeDelay;
+
+	ObjectPool<SkellBossLaser> laserPool;
+	std::vector<SkellBossLaser*> lasers;
+
+	bool isShoot;
 
 public:
 	SkellBossLeftHand(const std::string& name = "SkellBossLeftHand");
@@ -53,4 +63,6 @@ public:
 	{
 		return body.getGlobalBounds();
 	}
+
+	void ShootLaser();
 };
