@@ -21,6 +21,8 @@ protected:
 
 	Animator animator;
 
+	
+
 public:
 	SkellBossLeftHand(const std::string& name = "SkellBossLeftHand");
 	virtual ~SkellBossLeftHand() = default;

@@ -85,7 +85,8 @@ void SkellBoss::Reset()
 
 	animator.SetTarget(&body);
 
-	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	//SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
 
 	SetState(SkellBossState::Idle);
 
@@ -167,7 +168,7 @@ void SkellBoss::Update(float dt)
 void SkellBoss::LateUpdate(float dt)
 {
 	//SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
-	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height});
+	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
 
 	skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 }
@@ -260,7 +261,7 @@ void SkellBoss::UpdateIdle(float dt)
 
 	if (attackAccumSpeed >= attackSpeedDelay)
 	{
-		SetState(SkellBossState::AttackBullet);
+		SetState(SkellBossState::AttackLaser);
 
 		/*float randAttackValue = Utils::RandomRange(0, 3);
 

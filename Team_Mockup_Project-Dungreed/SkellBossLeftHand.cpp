@@ -166,4 +166,7 @@ void SkellBossLeftHand::UpdateAttackLaser(float dt)
 
 void SkellBossLeftHand::UpdateDeath(float dt)
 {
+
+
+
 }
