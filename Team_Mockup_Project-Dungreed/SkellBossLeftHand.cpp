@@ -62,11 +62,12 @@ void SkellBossLeftHand::Reset()
 	sortingOrder = target->sortingOrder - 1;
 
 	hp = 1;
-	speed = 30.f;
+	speed = 10.f;
 	originalDamage = 0;
 
-	attackAccumSpeed = 0.f;
-	attackSpeedDelay = 0.5f;
+	attackSpeedDelay = 1.3f;
+	deathTimeDelay = 1.f;
+	targetFindTimeDelay = 0.5f;
 
 	isDamaged = false;
 	isDead = false;
@@ -76,6 +77,8 @@ void SkellBossLeftHand::Reset()
 	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 
 	SetState(SkellBossLeftHandState::Idle);
+
+	isShoot = false;
 }
 
 void SkellBossLeftHand::Update(float dt)
@@ -129,12 +132,18 @@ void SkellBossLeftHand::SetState(SkellBossLeftHandState state)
 		break;
 	case SkellBossLeftHand::SkellBossLeftHandState::AttackLaser:
 	{
+		attackAccumSpeed = 0.f;
+		targetFindTimeAccum = 0.f;
 
+		isShoot = false;
+
+		animator.Play("animations/Boss/SkellBoss Hand Attack.csv");
 	}
 		break;
 	case SkellBossLeftHand::SkellBossLeftHandState::Death:
 	{
-
+		deathTimeAccum = 0.f;
+		animator.Stop();
 	}
 		break;
 	}
@@ -142,28 +151,62 @@ void SkellBossLeftHand::SetState(SkellBossLeftHandState state)
 
 void SkellBossLeftHand::UpdateIdle(float dt)
 {
-	if (hp <= 0)
-	{
-		SetState(SkellBossLeftHandState::Death);
-
+	if (state == SkellBossLeftHandState::Death)
 		return;
-	}
 
-	
+	if (state == SkellBossLeftHandState::AttackLaser)
+		return;
 }
 
 void SkellBossLeftHand::UpdateAttackLaser(float dt)
 {
-	if (hp <= 0)
+	if (state == SkellBossLeftHandState::Death)
 	{
-		SetState(SkellBossLeftHandState::Death);
+		for (auto& laser : lasers)
+		{
+			SCENE_MGR.GetCurrentScene()->RemoveGo(laser);
+		}
 
 		return;
 	}
 
+	targetFindTimeAccum += dt;
+	if (targetFindTimeAccum < targetFindTimeDelay)
+	{
+		SetPosition({ position.x, position.y -= (position.y - target->GetPosition().y) * speed * dt});
 
+		return;
+	}
+
+	attackAccumSpeed += dt;
+
+	if (!isShoot && attackAccumSpeed > attackSpeedDelay * 4.f / 10.f)
+	{
+		isShoot = true;
+
+		ShootLaser();
+	}
+
+	if (attackAccumSpeed >= attackSpeedDelay)
+	{
+		SetState(SkellBossLeftHandState::Idle);
+	}
 }
 
 void SkellBossLeftHand::UpdateDeath(float dt)
 {
+	deathTimeAccum += dt;
+	if (deathTimeAccum > deathTimeDelay)
+	{
+		SCENE_MGR.GetCurrentScene()->RemoveGo(this);
+	}
+}
+
+void SkellBossLeftHand::ShootLaser()
+{
+	SkellBossLaser* laser = laserPool.Take();
+	SCENE_MGR.GetCurrentScene()->AddGo(laser);
+	lasers.push_back(laser);
+
+	laser->Fire(position, scale);
 }

@@ -1,0 +1,7 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+MainTitle0,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/maintitle/TeamLogo0.png,0,"0",59,64,0
+graphics/maintitle/TeamLogo1.png,0,"0",59,64,0
+graphics/maintitle/TeamLogo2.png,0,"0",59,64,0

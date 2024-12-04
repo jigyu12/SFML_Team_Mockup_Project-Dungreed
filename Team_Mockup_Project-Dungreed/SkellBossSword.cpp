@@ -66,7 +66,7 @@ void SkellBossSword::Reset()
 
 	idleTimeDelay = 1.5f;
 
-	attackTimeDelay = 0.1f;
+	attackTimeDelay = Utils::RandomRange(0.05f, 0.2f);
 
 	destroyTimeDealy = 1.f;
 
@@ -103,7 +103,7 @@ void SkellBossSword::LateUpdate(float dt)
 {
 	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 
-	if (Utils::CheckCollision(hitbox, target->GetHitBox()))
+	if (Utils::CheckCollision(hitbox, target->GetHitBox()) && !target->IsDead())
 	{
 		target->OnDamage(damage);
 	}
@@ -178,7 +178,7 @@ void SkellBossSword::UpdateAttack(float dt)
 	{
 		if (Utils::CheckCollision(hitbox, *startHitBox.first))
 		{
-			if (startHitBox.second.type != HitBoxData::Type::Downable)
+			if (startHitBox.second.type == HitBoxData::Type::Immovable)
 				collided = true;
 		}
 	}
