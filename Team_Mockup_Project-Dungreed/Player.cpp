@@ -71,6 +71,19 @@ void Player::Reset()
 	animator.Play("animations/player Idle.csv");
 	/*body.setTexture(TEXTURE_MGR.Get(playerId));*/
 
+	animator.AddEvent("TP", 0, [this]() {SetOrigin(originPreset); });
+	animator.AddEvent("TP", 1, [this]() {SetOrigin(originPreset); });
+	animator.AddEvent("TP", 2, [this]() {SetOrigin(originPreset); });
+	animator.AddEvent("TP", 6, [this]() {SetOrigin(originPreset); });
+	animator.AddEvent("TP", 7, [this]() {
+		hp = maxhp;
+		isDead = false;
+		playerui->SetHp(90, 90);
+		animator.Play("animations/player Idle.csv");
+		SetOrigin(originPreset);
+		SetStatus(Status::Ground);
+		});
+
 	originalPlayerColor = body.getColor();
 
 	hitbox.SetColor(sf::Color::Blue);
@@ -103,6 +116,9 @@ void Player::SetStatus(Status status)
 		velocity.y = downSpeed;
 		break;
 	case Player::Status::Dead:
+		animator.Play("animations/player Dead.csv");
+		animator.PlayQueue("animations/player TelePort.csv");
+		isDead = true;
 		break;
 	default:
 		break;
@@ -112,10 +128,10 @@ void Player::SetStatus(Status status)
 
 void Player::Update(float dt)
 {
-	if (hp <= 0)
-	{
-		return;
-	}
+	//if (hp <= 0)
+	//{
+	//	return;
+	//}
 
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
@@ -185,136 +201,136 @@ void Player::Update(float dt)
 
 void Player::LateUpdate(float dt)
 {
-	auto playerGlobalBounds = hitbox.rect.getGlobalBounds();
-	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
-
-	auto hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
-	bool collided = false;
-	for (auto& startHitBox : hitboxBounds)
+	if (status != Status::Dead)
 	{
-		CollisionState state;
-		if (Utils::CheckCollision(hitbox, *startHitBox.first, state))
+		auto playerGlobalBounds = hitbox.rect.getGlobalBounds();
+		float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
+
+		auto hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+		bool collided = false;
+		for (auto& startHitBox : hitboxBounds)
 		{
-			if (state.Up)
+			CollisionState state;
+			if (Utils::CheckCollision(hitbox, *startHitBox.first, state))
 			{
-				switch (startHitBox.second.type)
-				{
-				case HitBoxData::Type::Immovable:
-					if (velocity.y < 0)
-						velocity.y = 50.f;
-					collided = true;
-					break;
-				case HitBoxData::Type::Downable:
-					break;
-				case HitBoxData::Type::PortalDown:
-					break;
-				default:
-					break;
-				}
-			}
-			if (state.Down)
-			{
-				if (velocity.y >= 0.f && state.area.height < 5.f
-					&& (state.AspectRatio() < 1.f || (startHitBox.first->rect.getRotation() != 0.f || startHitBox.first->rect.getRotation() != 360.f)))
+				if (state.Up)
 				{
 					switch (startHitBox.second.type)
 					{
 					case HitBoxData::Type::Immovable:
-						SetStatus(Status::Ground);
-						position.y = std::min(position.y, state.area.top);
-						velocity.y = 0.f;
-						SetPosition(position);
+						if (velocity.y < 0)
+							velocity.y = 50.f;
 						collided = true;
 						break;
 					case HitBoxData::Type::Downable:
-						if (status != Status::Dash
-							&& (status != Status::DownJump || startHitBox.first != DownPlatform))
+						break;
+					case HitBoxData::Type::PortalDown:
+						break;
+					default:
+						break;
+					}
+				}
+				if (state.Down)
+				{
+					if (velocity.y >= 0.f && state.area.height < 5.f
+						&& (state.AspectRatio() < 1.f || (startHitBox.first->rect.getRotation() != 0.f || startHitBox.first->rect.getRotation() != 360.f)))
+					{
+						switch (startHitBox.second.type)
 						{
+						case HitBoxData::Type::Immovable:
 							SetStatus(Status::Ground);
 							position.y = std::min(position.y, state.area.top);
 							velocity.y = 0.f;
 							SetPosition(position);
-							DownPlatform = startHitBox.first;
+							collided = true;
+							break;
+						case HitBoxData::Type::Downable:
+							if (status != Status::Dash
+								&& (status != Status::DownJump || startHitBox.first != DownPlatform))
+							{
+								SetStatus(Status::Ground);
+								position.y = std::min(position.y, state.area.top);
+								velocity.y = 0.f;
+								SetPosition(position);
+								DownPlatform = startHitBox.first;
+								collided = true;
+							}
+							break;
+						}
+					}
+				}
+				if (state.Right)
+				{
+					if (status == Status::Dash)
+					{
+						SetStatus(Status::Jump);
+					}
+
+					if (startHitBox.second.type == HitBoxData::Type::Immovable
+						&& state.area.height > 5.f
+						&& (status == Status::Jump || (state.AspectRatio() > 2.f && state.area.width < 5.f)))
+					{
+						if (horizontalInput >= 0)
+						{
+							position.x = std::min(position.x, position.x - state.area.width);
+							SetPosition(position);
 							collided = true;
 						}
-						break;
 					}
 				}
-			}
-			if (state.Right)
-			{
-				if (status == Status::Dash)
+				if (state.Left)
 				{
-					SetStatus(Status::Jump);
-				}
-
-				if (startHitBox.second.type == HitBoxData::Type::Immovable
-					&& state.area.height > 5.f
-					&& (status == Status::Jump || (state.AspectRatio() > 2.f && state.area.width < 5.f)))
-				{
-					if (horizontalInput >= 0)
+					if (status == Status::Dash)
 					{
-						position.x = std::min(position.x, position.x - state.area.width);
-						SetPosition(position);
-						collided = true;
+						SetStatus(Status::Jump);
 					}
-				}
-			}
-			if (state.Left)
-			{
-				if (status == Status::Dash)
-				{
-					SetStatus(Status::Jump);
-				}
-				if (startHitBox.second.type == HitBoxData::Type::Immovable
-					&& state.area.height > 5.f
-					&& (status == Status::Jump || (state.AspectRatio() > 2.f && state.area.width < 5.f)))
-				{
-					if (horizontalInput <= 0)
+					if (startHitBox.second.type == HitBoxData::Type::Immovable
+						&& state.area.height > 5.f
+						&& (status == Status::Jump || (state.AspectRatio() > 2.f && state.area.width < 5.f)))
 					{
-						position.x = std::max(position.x, position.x + state.area.width);
-						SetPosition(position);
-						collided = true;
+						if (horizontalInput <= 0)
+						{
+							position.x = std::max(position.x, position.x + state.area.width);
+							SetPosition(position);
+							collided = true;
+						}
 					}
 				}
 			}
 		}
-	}
-	if (!collided && status == Status::Ground)
-	{
-		SetStatus(Status::Jump);
-	}
-
-	const auto& monsters = ROOM_MGR.GetCurrentRoom()->GetMonsters();
-	for (auto& monster : monsters)
-	{
-		if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
+		if (!collided && status == Status::Ground)
 		{
-			if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
+			SetStatus(Status::Jump);
+		}
+
+		const auto& monsters = ROOM_MGR.GetCurrentRoom()->GetMonsters();
+		for (auto& monster : monsters)
+		{
+			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
-				OnDamage(monster->GetOriginalDamage());
+				if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
+				{
+					OnDamage(monster->GetOriginalDamage());
+				}
 			}
 		}
-	}
 
-	/*const auto& bossSwords = dynamic_cast<SkellBossSword*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossSword"));*/
-	if (isDamaged)
-	{
-		invincibilityTimer += dt;
-		if (invincibilityTimer > 1.5f)
+		/*const auto& bossSwords = dynamic_cast<SkellBossSword*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossSword"));*/
+		if (isDamaged)
 		{
-			invincibilityTimer = 0.f;
-			isDamaged = false;
-			body.setColor(originalPlayerColor);
+			invincibilityTimer += dt;
+			if (invincibilityTimer > 0.2f)
+			{
+				invincibilityTimer = 0.f;
+				isDamaged = false;
+				body.setColor(originalPlayerColor);
+			}
 		}
-	}
 
-	if (hp <= 0)
-	{
-		isDead = true;
-		playerui->SetHp(0, 90);
-		animator.Play("animations/player Dead.csv");
-		SetStatus(Status::Dead);
+		if (hp <= 0)
+		{
+			SetStatus(Status::Dead);
+		}
 	}
 }
 
@@ -376,6 +392,11 @@ void Player::UpdateDash(float dt)
 	}
 }
 
+void Player::UpdateDead(float dt)
+{
+	deadAniTimer += dt;
+}
+
 void Player::Jump()
 {
 	velocity.y = -jumpForce;
@@ -394,10 +415,11 @@ void Player::OnDamage(int monsterDamage)
 	sf::Color currColor = body.getColor();
 	body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
 
-	if (playerui != nullptr)
-		playerui->SetHp(hp -= monsterDamage, maxhp);
-}
+	hp = Utils::Clamp(hp - monsterDamage, 0, maxhp);
 
+	if (playerui != nullptr)
+		playerui->SetHp(hp , maxhp);
+}
 
 
 void Player::SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon)
