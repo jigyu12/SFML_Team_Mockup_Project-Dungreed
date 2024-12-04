@@ -14,10 +14,21 @@ struct TileMapData
 
 struct ObjectData
 {
-	MapObjectType type;
-	sf::Vector2f origin;
+	enum class Type
+	{
+		Torch,
+		Door,
+		Gate,
+		Box,
+		BigBox,
+		OakDrum,
+		Count,
+	};
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(ObjectData, type, origin)
+	Type type;
+	sf::Vector2f position;
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(ObjectData, type, position)
 };
 
 struct HitBoxData
@@ -35,12 +46,12 @@ struct HitBoxData
 	};
 
 	sf::Vector2f size;
-	sf::Vector2f origin;
+	sf::Vector2f position;
 	float rotation = 0.f;
 
 	Type type;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(HitBoxData, size, origin, rotation, type)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(HitBoxData, size, position, rotation, type)
 };
 
 struct SpawnData

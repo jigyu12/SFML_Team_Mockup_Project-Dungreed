@@ -7,10 +7,25 @@
 #include "Monster.h"
 #include "Bat.h"
 #include "SkeletonDog.h"
+#include "ParticleGo.h"
+#include "TorchMo.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
 {
+}
+
+void Room::SetActive(bool active)
+{
+	GameObject::SetActive(active);
+	for (auto tileMap : tileMaps)
+	{
+		tileMap->SetActive(active);
+	}
+	for (auto& obj : objects)
+	{
+		obj.first->SetActive(active);
+	}
 }
 
 void Room::SetPosition(const sf::Vector2f& pos)
@@ -23,11 +38,11 @@ void Room::SetPosition(const sf::Vector2f& pos)
 	sf::Transform transform = tileMaps[0]->GetTransform();
 	for (auto& hitBox : hitBoxes)
 	{
-		hitBox.first->rect.setPosition(transform.transformPoint(hitBox.second.origin));
+		hitBox.first->rect.setPosition(transform.transformPoint(hitBox.second.position));
 	}
 	for (auto& obj : objects)
 	{
-		obj.first->SetPosition(position);
+		obj.first->SetPosition(transform.transformPoint(obj.second.position));
 	}
 }
 
@@ -77,15 +92,6 @@ void Room::SetOrigin(Origins preset)
 		{
 			tileMap->SetOrigin(originPreset);
 		}
-		origin = tileMaps[0]->GetOrigin();
-		//for (auto& hitBox : hitBoxes)
-		//{
-		//	hitBox.first->rect.setOrigin(origin);
-		//}
-		for (auto& obj : objects)
-		{
-			obj.first->SetOrigin(origin);
-		}
 	}
 }
 
@@ -125,18 +131,17 @@ void Room::Release()
 
 	for (auto& obj : objects)
 	{
+		obj.first->Release();
 		delete obj.first;
 	}
 	objects.clear();
 
 	for (auto tileMap : tileMaps)
 	{
+		tileMap->Release();
 		delete tileMap;
 	}
 	tileMaps.clear();
-
-	Scene* scene = SCENE_MGR.GetCurrentScene();
-
 }
 
 void Room::Reset()
@@ -145,6 +150,7 @@ void Room::Reset()
 	scene = SCENE_MGR.GetCurrentScene();
 	subBackground.setTexture(TEXTURE_MGR.Get("graphics/map/SubBG.png"));
 	SetOrigin(Origins::MC);
+	Scene* scene = SCENE_MGR.GetCurrentScene();
 }
 
 void Room::Update(float dt)
@@ -221,6 +227,20 @@ void Room::Update(float dt)
 	{
 		EnterRoom(enteredPortal);
 	}
+
+	for (auto& monster : monsters)
+	{
+		if (ROOM_MGR.GetCurrentRoom() == this
+			&& !tileMaps[0]->GetGlobalBounds().contains(monster.first->GetPosition()))
+		{
+			monster.first->SetPosition(tileMaps[0]->GetTransform().transformPoint(monster.second.position));
+		}
+	}
+
+	for (auto& obj : objects)
+	{
+		obj.first->Update(dt);
+	}
 }
 
 void Room::Draw(sf::RenderWindow& window)
@@ -265,13 +285,21 @@ void Room::LoadMapData(const std::string& path)
 
 	for (const ObjectData& objData : mapData.objectData)
 	{
-		MapObject* obj = new MapObject();
+		MapObject* obj = nullptr;
+		switch (objData.type)
+		{
+		case ObjectData::Type::Torch:
+			obj = new TorchMo();
+			break;
+		}
+		if (obj != nullptr)
+		{
+			obj->Init();
+			obj->Reset();
+			obj->Set(objData.type);
 
-		obj->Init();
-		obj->Reset();
-		obj->Set(objData.type);
-
-		objects.push_back({ obj,objData });
+			objects.push_back({ obj,objData });
+		}
 	}
 
 	for (const HitBoxData& hitBoxDatum : mapData.hitBoxData)
@@ -279,8 +307,7 @@ void Room::LoadMapData(const std::string& path)
 		HitBox* hitbox = new HitBox();
 
 		hitbox->rect.setSize(hitBoxDatum.size);
-		hitbox->rect.setPosition(hitBoxDatum.origin);
-		//hitbox->rect.setOrigin(-hitBoxDatum.origin);
+		hitbox->rect.setPosition(hitBoxDatum.position);
 		hitbox->rect.setRotation(hitBoxDatum.rotation);
 		switch (hitBoxDatum.type)
 		{
@@ -393,6 +420,27 @@ void Room::ClearMonsters()
 	monsters.clear();
 }
 
+ObjectParticle* Room::TakeObjectParticle()
+{
+	ObjectParticle* objectParticle = particlePool.Take();
+	particles.push_back(objectParticle);
+	if (scene != nullptr)
+	{
+		scene->AddGo(objectParticle);
+	}
+	return objectParticle;
+}
+
+void Room::ReturnObjectParticle(ObjectParticle* particle)
+{
+	if (scene != nullptr)
+	{
+		scene->RemoveGo((GameObject*)particle);
+	}
+	particles.remove(particle);
+	particlePool.Return(particle);
+}
+
 std::vector<Monster*> Room::GetMonsters() const
 {
 	std::vector<Monster*> data;
@@ -405,4 +453,25 @@ std::vector<Monster*> Room::GetMonsters() const
 		}
 	}
 	return data;
+}
+
+std::vector<GameObject*> Room::GetBreakableObjects() const
+{
+	std::vector<GameObject*> vect;
+
+	for (auto& obj : objects)
+	{
+		switch (obj.second.type)
+		{
+		case ObjectData::Type::BigBox:
+		case ObjectData::Type::Box:
+		case ObjectData::Type::OakDrum:
+
+			break;
+		default:
+			break;
+		}
+	}
+
+	return vect;
 }

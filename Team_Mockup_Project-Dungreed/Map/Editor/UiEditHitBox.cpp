@@ -31,7 +31,7 @@ void UiEditHitBox::SetPosition(const sf::Vector2f& pos)
 	}
 	for (int i = 0; i < hitBoxTypeButtons.size();++i)
 	{
-		hitBoxTypeButtons[i]->SetPosition(transform.transformPoint(50.f, 90.f + i * 60.f));
+		hitBoxTypeButtons[i]->SetPosition(transform.transformPoint(50.f + (i % 4) * 100.f, 90.f + (i / 4) * 60.f));
 	}
 }
 
@@ -193,16 +193,16 @@ void UiEditHitBox::Reset()
 		switch (i)
 		{
 		case (int)HitBoxData::Type::PortalUp:
-			hitBoxTypeButtons[i]->SetString("UpPortal", true);
+			hitBoxTypeButtons[i]->SetString("PortalUp", true);
 			break;
 		case (int)HitBoxData::Type::PortalDown:
-			hitBoxTypeButtons[i]->SetString("DownPortal", true);
+			hitBoxTypeButtons[i]->SetString("PortalDown", true);
 			break;
 		case (int)HitBoxData::Type::PortalLeft:
-			hitBoxTypeButtons[i]->SetString("LeftPortal", true);
+			hitBoxTypeButtons[i]->SetString("PortalLeft", true);
 			break;
 		case (int)HitBoxData::Type::PortalRight:
-			hitBoxTypeButtons[i]->SetString("RightPortal", true);
+			hitBoxTypeButtons[i]->SetString("PortalRight", true);
 			break;
 		case (int)HitBoxData::Type::Immovable:
 			hitBoxTypeButtons[i]->SetString("Immovable", true);
@@ -289,27 +289,38 @@ void UiEditHitBox::Update(float dt)
 						selectedHitBox = hitbox.first;
 						selectedHitBox->setFillColor({ 100,100,100,100 });
 						editStartPos = worldMousePos - selectedHitBox->getPosition();
+						hitBoxTypeButtons[(int)hitboxType]->SetPressed(false);
+						hitBoxTypeButtons[(int)hitbox.second]->SetPressed(true);
+						hitboxType = hitbox.second;
 					}
-					if (hitboxType != HitBoxData::Type::Downable
-						&& hitboxType != HitBoxData::Type::Immovable
-						&& hitboxType == hitbox.second)
+				}
+				if (selectedHitBox == nullptr)
+				{
+					for (auto& hitbox : hitboxes)
 					{
-						selectedHitBox = hitbox.first;
-						selectedHitBox->setFillColor({ 100,100,100,100 });
-						if (Utils::PointInTransformBounds(*hitbox.first, hitbox.first->getLocalBounds(), worldMousePos))
+						if (hitboxType != HitBoxData::Type::Downable
+							&& hitboxType != HitBoxData::Type::Immovable
+							&& hitboxType == hitbox.second)
 						{
-							hitboxStatus = HitBoxEditStatus::Move;
-							editStartPos = worldMousePos - selectedHitBox->getPosition();
-						}
-						else
-						{
-							hitboxStatus = HitBoxEditStatus::Create;
-							selectedHitBox->setSize({ 0.f,0.f });
-							editStartPos = worldMousePos;
-							selectedHitBox->setPosition(editStartPos);
+							selectedHitBox = hitbox.first;
+							selectedHitBox->setFillColor({ 100,100,100,100 });
+							if (Utils::PointInTransformBounds(*hitbox.first, hitbox.first->getLocalBounds(), worldMousePos))
+							{
+								hitboxStatus = HitBoxEditStatus::Move;
+								editStartPos = worldMousePos - selectedHitBox->getPosition();
+							}
+							else
+							{
+								hitboxStatus = HitBoxEditStatus::Create;
+								selectedHitBox->setSize({ 0.f,0.f });
+								editStartPos = worldMousePos;
+								selectedHitBox->setPosition(editStartPos);
+							}
 						}
 					}
 				}
+
+
 				if (selectedHitBox == nullptr)
 				{
 					hitboxStatus = HitBoxEditStatus::Create;
@@ -492,7 +503,7 @@ std::vector<HitBoxData> UiEditHitBox::GetHitBoxData() const
 	for (auto& hitBox : hitboxes)
 	{
 		HitBoxData datum;
-		datum.origin = hitBox.first->getPosition();
+		datum.position = hitBox.first->getPosition();
 		datum.rotation = hitBox.first->getRotation();
 		datum.size = hitBox.first->getSize();
 		datum.type = hitBox.second;
@@ -512,7 +523,7 @@ void UiEditHitBox::SetHitBoxData(const std::vector<HitBoxData>& data)
 	for (auto& datum : data)
 	{
 		sf::RectangleShape* shape = new sf::RectangleShape();
-		shape->setPosition(datum.origin);
+		shape->setPosition(datum.position);
 		shape->setRotation(datum.rotation);
 		shape->setSize(datum.size);
 		shape->setFillColor(sf::Color::Transparent);

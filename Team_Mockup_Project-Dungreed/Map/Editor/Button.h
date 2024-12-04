@@ -3,7 +3,15 @@ class TextGo;
 
 class Button : public GameObject
 {
+public:
+	enum class Type
+	{
+		TextButton,
+		IconButton,
+	};
 protected:
+
+	Type type;
 
 	sf::RectangleShape buttonBackground;
 	sf::Vector2i textureRect;
@@ -36,6 +44,7 @@ public:
 	bool isOnMouse() { return mouseon; }
 
 	void Set(const sf::Vector2f& buttonSize, int charSize, const sf::Color& charColor = sf::Color::Black);
+	void Set(const sf::Vector2f& buttonSize, const std::string& texId);
 	void SetString(const std::string& text, bool useTable = false);
 	void SetString(const std::string& textid, const std::wstring& text);
 	void SetCharSize(float size);

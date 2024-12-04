@@ -1,0 +1,12 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)"
+dooridle,10,1
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/map/objects/door/Stele08.png,0,0,66,20,0
+graphics/map/objects/door/Stele09.png,0,0,66,20,0
+graphics/map/objects/door/Stele10.png,0,0,66,20,0
+graphics/map/objects/door/Stele11.png,0,0,66,20,0
+graphics/map/objects/door/Stele12.png,0,0,66,20,0
+graphics/map/objects/door/Stele13.png,0,0,66,20,0
+graphics/map/objects/door/Stele14.png,0,0,66,20,0
+graphics/map/objects/door/Stele15.png,0,0,66,20,0

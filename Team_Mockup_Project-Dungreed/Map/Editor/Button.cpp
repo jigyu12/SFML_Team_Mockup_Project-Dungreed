@@ -52,6 +52,10 @@ void Button::Init()
 
 	buttonText = new TextGo(RESOURCEID_TABLE->Get("Font", "French"), "text");
 	buttonText->Init();
+
+	buttonBackground.setOutlineThickness(1.f);
+
+	type = Type::TextButton;
 }
 
 void Button::Release()
@@ -64,9 +68,7 @@ void Button::Reset()
 {
 	buttonText->Reset();
 
-	buttonBackground.setFillColor({ 150,150,150 });
-	buttonBackground.setOutlineColor(sf::Color::Black);
-	buttonBackground.setOutlineThickness(1.f);
+	SetPressed(false);
 
 	SetOrigin(Origins::TL);
 }
@@ -77,7 +79,14 @@ void Button::Update(float dt)
 	mouseon = buttonBackground.getGlobalBounds().contains(mousepos);
 	if (mouseon)
 	{
-		buttonBackground.setFillColor({ 200,200,200 });
+		if (type == Type::TextButton)
+		{
+			buttonBackground.setFillColor({ 200,200,200 });
+		}
+		else if (type == Type::IconButton)
+		{
+			buttonBackground.setOutlineColor({ 255,150,150 });
+		}
 
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left) && Clicked)
 		{
@@ -93,7 +102,10 @@ void Button::Update(float dt)
 void Button::Draw(sf::RenderWindow& window)
 {
 	window.draw(buttonBackground);
-	buttonText->Draw(window);
+	if (type == Type::TextButton)
+	{
+		buttonText->Draw(window);
+	}
 }
 
 void Button::SetPressed(bool pressed)
@@ -101,18 +113,43 @@ void Button::SetPressed(bool pressed)
 	this->pressed = pressed;
 	if (this->pressed)
 	{
-		buttonBackground.setFillColor({ 100,100,100 });
+		if (type == Type::TextButton)
+		{
+			buttonBackground.setFillColor({ 100,100,100 });
+		}
+		else if (type == Type::IconButton)
+		{
+			buttonBackground.setOutlineColor(sf::Color::Red);
+		}
 	}
 	else
 	{
-		buttonBackground.setFillColor({ 150,150,150 });
+		if (type == Type::TextButton)
+		{
+			buttonBackground.setFillColor({ 150,150,150 });
+		}
+		else if (type == Type::IconButton)
+		{
+			buttonBackground.setOutlineColor(sf::Color::White);
+		}
 	}
 }
 
 void Button::Set(const sf::Vector2f& buttonSize, int charSize, const sf::Color& charColor)
 {
+	type = Type::TextButton;
 	SetButtonSize(buttonSize);
 	buttonText->Set(charSize, charColor);
+	buttonBackground.setOutlineColor(sf::Color::Black);
+}
+
+void Button::Set(const sf::Vector2f& buttonSize, const std::string& texId)
+{
+	type = Type::IconButton;
+	SetButtonSize(buttonSize);
+	buttonBackground.setFillColor(sf::Color::White);
+	buttonBackground.setTexture(&TEXTURE_MGR.Get(texId));
+	buttonBackground.setOutlineColor(sf::Color::White);
 }
 
 void Button::SetString(const std::string& text, bool usetable)

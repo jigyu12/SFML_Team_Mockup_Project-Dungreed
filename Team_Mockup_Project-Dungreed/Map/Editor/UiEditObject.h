@@ -1,6 +1,7 @@
 #pragma once
 
 class UiEditor;
+class Button;
 
 class UiEditObject : public GameObject
 {
@@ -15,9 +16,12 @@ protected:
 	sf::RectangleShape boxWindow;
 
 	sf::RectangleShape* selectedObject;
-	std::vector<sf::RectangleShape> objectList;
+	std::vector<Button*> objectList;
 	std::unordered_map<sf::RectangleShape*, ObjectData> objectData;
 	UiEditor* uieditor;
+
+	ObjectData::Type selectedType;
+
 
 	sf::Vector2f startPos;
 
@@ -40,4 +44,8 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void ClearObjectData();
+	void SetObjectRect(sf::RectangleShape* shape,const ObjectData::Type& type);
+	std::vector<ObjectData> GetObjectData() const;
+	void SetObjectData(const std::vector<ObjectData>& data);
+
 };

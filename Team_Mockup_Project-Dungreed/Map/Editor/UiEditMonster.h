@@ -17,7 +17,7 @@ protected:
 	sf::RectangleShape boxWindow;
 
 	sf::RectangleShape* selectedMonster;
-	std::vector<sf::RectangleShape> monsterList;
+	std::vector<Button*> monsterList;
 	std::unordered_map<sf::RectangleShape*, SpawnData> spawnData;
 	UiEditor* uieditor;
 
@@ -49,7 +49,7 @@ public:
 
 	std::vector<SpawnData> GetSpawnData() const;
 	void SetSpawnData(const std::vector<SpawnData>& data);
+	void SetSpawnRect(sf::RectangleShape* shape, const Monster::MonsterType& type);
 	void ClearSpawnData();
-	void SetMonsterType(const Monster::MonsterType& type);
 	void UpDownSpawnWave(bool up);
 };

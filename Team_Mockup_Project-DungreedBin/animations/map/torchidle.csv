@@ -1,0 +1,12 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)"
+torchidle,15,1
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/map/objects/torch/Torch0.png,0,0,22,25,0
+graphics/map/objects/torch/Torch1.png,0,0,22,25,0
+graphics/map/objects/torch/Torch2.png,0,0,22,27,0
+graphics/map/objects/torch/Torch3.png,0,0,22,27,0
+graphics/map/objects/torch/Torch4.png,0,0,22,28,0
+graphics/map/objects/torch/Torch5.png,0,0,22,27,0
+graphics/map/objects/torch/Torch6.png,0,0,22,23,0
+graphics/map/objects/torch/Torch7.png,0,0,22,24,0

@@ -218,7 +218,7 @@ void UiEditor::Reset()
 
 	selectedFileName->Reset();
 	selectedFileName->Set(30);
-	selectedFileName->SetString("New File",true);
+	selectedFileName->SetString("New File", true);
 
 	buttonNew->Reset();
 	buttonNew->Set({ 90.f,45.f }, 20);
@@ -394,6 +394,7 @@ void UiEditor::NewFile()
 		editingTileMaps[i]->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
 	}
 	uiEditHitBox->ClearHitBoxData();
+	uiEditObject->ClearObjectData();
 }
 
 void UiEditor::SaveFile()
@@ -409,6 +410,7 @@ void UiEditor::SaveFile()
 			mapData.hitBoxData = uiEditHitBox->GetHitBoxData();
 			mapData.playerStartPoint = uiEditHitBox->GetStartPoints();
 			mapData.monsterSpawnData = uiEditMonster->GetSpawnData();
+			mapData.objectData = uiEditObject->GetObjectData();
 
 			MapDataLoader::Save(mapData, path);
 
@@ -428,15 +430,10 @@ void UiEditor::LoadFile()
 			{
 				editingTileMaps[i]->Set(mapdata.tileMapData[i]);
 			}
-			if (uiEditHitBox != nullptr)
-			{
-				uiEditHitBox->SetHitBoxData(mapdata.hitBoxData);
-				uiEditHitBox->SetStartPositionData(mapdata.playerStartPoint);
-			}
-			if (uiEditMonster != nullptr)
-			{
-				uiEditMonster->SetSpawnData(mapdata.monsterSpawnData);
-			}
+			uiEditHitBox->SetHitBoxData(mapdata.hitBoxData);
+			uiEditHitBox->SetStartPositionData(mapdata.playerStartPoint);
+			uiEditMonster->SetSpawnData(mapdata.monsterSpawnData);
+			uiEditObject->SetObjectData(mapdata.objectData);
 
 			int index = path.rfind(L"\\");
 			selectedFileName->SetString(path.substr(++index));
