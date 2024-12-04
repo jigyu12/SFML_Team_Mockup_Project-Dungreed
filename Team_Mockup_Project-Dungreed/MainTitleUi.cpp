@@ -41,7 +41,7 @@ void MainTitleUi::SetOrigin(const sf::Vector2f& newOrigin)
 void MainTitleUi::Init()
 {
 	sortingLayer = SortingLayers::UI;
-	
+	SetStatus(MainTitleUi::Staus::Aniplaytime);
 }
 
 void MainTitleUi::Release()
@@ -52,22 +52,45 @@ void MainTitleUi::Release()
 void MainTitleUi::Reset()
 {
 	animator.SetTarget(&mainbody);
+
 	mainbody.setPosition({1920.f/2,1080.f/2 });
 	mainbody.setScale({ 3.f,3.f });
 	animator.Play("animations/MainTitle.csv");
 
 	Utils::SetOrigin(mainbody, Origins::MC);
+	
 }
 
 void MainTitleUi::Update(float dt)
 {
 	animator.Update(dt);
+
+	aniTimer += dt;
+	if (aniTimer > 3.f)
+	{
+		SetStatus(MainTitleUi::Staus::AniStoptime);
+	}
 	
 }
 
 void MainTitleUi::Draw(sf::RenderWindow& window)
 {
-	window.draw(mainbody);
+	
+	switch (status)
+	{
+	case MainTitleUi::Staus::Aniplaytime:
+		window.draw(mainbody);
+		break;
+	case MainTitleUi::Staus::AniStoptime:
+		break;
+	default:
+		break;
+	}
+}
+
+void MainTitleUi::SetStatus(Staus status)
+{
+	this->status = (status);
 }
 
 

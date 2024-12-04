@@ -85,7 +85,7 @@
     <ClCompile Include="Map\Editor\Button.cpp" />
     <ClCompile Include="ResourceIdTable.cpp" />
     <ClCompile Include="SkellBossBullet.cpp" />
-    <ClCompile Include="MainTitle.cpp" />
+    <ClCompile Include="MainTitleScene.cpp" />
     <ClCompile Include="MainTitleUi.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -179,7 +179,7 @@
     <ClInclude Include="Map\Editor\Button.h" />
     <ClInclude Include="ResourceIdTable.h" />
     <ClInclude Include="SkellBossBullet.h" />
-    <ClInclude Include="MainTitle.h" />
+    <ClInclude Include="MainTitleScene.h" />
     <ClInclude Include="MainTitleUi.h" />
   </ItemGroup>
   <ItemGroup>

@@ -87,7 +87,6 @@ void Player::Reset()
 void Player::SetStatus(Status status)
 {
 	this->status = (status);
-	float horizontalInput = InputMgr::GetAxisRaw(Axis::Horizontal);
 	switch (status)
 	{
 	case Player::Status::Ground:

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "MainTitle.h"
+#include "MainTitleScene.h"
 #include "MainTitleUi.h"
 
 MainTitleScene::MainTitleScene()
