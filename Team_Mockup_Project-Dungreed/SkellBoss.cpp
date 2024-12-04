@@ -213,7 +213,7 @@ void SkellBoss::LateUpdate(float dt)
 
 	if (isDead)
 	{
-		auto& hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+		auto hitboxBounds = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 		float tempSpeed1 = 1.f;
 		for (auto& startHitBox : hitboxBounds)
 		{
