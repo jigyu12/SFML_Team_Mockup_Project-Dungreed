@@ -2,6 +2,8 @@
 
 class TileMap;
 class UiEditor;
+class Button;
+class TextGo;
 
 class UiEditTile : public GameObject
 {
@@ -17,12 +19,12 @@ protected:
 
 	sf::RectangleShape boxWindow;
 
-	std::vector<sf::Sprite> upButtons;
-	std::vector<sf::Text> buttonTexts;
-	std::vector<sf::Sprite> downButtons;
+	std::vector<Button*> upButtons;
+	std::vector<TextGo*> paramTexts;
+	std::vector<Button*> downButtons;
 
 	TileMap* selectedTile;
-	sf::Text selectedTileText;
+	TextGo* selectedTileText;
 
 	std::vector<TileMap*> tileList;
 	TileMap* editingTileMap;

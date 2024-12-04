@@ -4,6 +4,7 @@
 #include "SkellBossLeftHand.h"
 #include "SkellBossParticle.h"
 #include "SkellBossSword.h"
+#include "SkellBossBullet.h"
 
 class SkellBoss : public Monster
 {
@@ -38,8 +39,12 @@ protected:
 	sf::Sprite skellBossBackFx;
 
 	ObjectPool<SkellBossParticle> particlePool;
+
 	ObjectPool<SkellBossSword> swordPool;
 	std::vector<SkellBossSword*> swords;
+
+	ObjectPool<SkellBossBullet> bulletPool;
+	std::vector<SkellBossBullet*> bullets;
 
 	int swordCount;
 	float swordSpawnTimeAccum;
@@ -47,6 +52,20 @@ protected:
 
 	float afterSwordSpawnTimeAccum;
 	float afterSwordSpawnTimeDelay;
+
+	float attackBulletTimeAccum;
+	float attackBulletTimeDelay;
+	float bulletSpawnTimeAccum;
+	float bulletSpawnTimeDelay;
+
+	bool isattackBulletIng;
+	bool isattackBulletEnd;
+
+	float angleRight;
+	float angleLeft;
+	float angleUp;
+	float angleDown;
+	float randDir;
 
 public:
 	SkellBoss(const std::string& name = "SkellBoss");
@@ -83,6 +102,7 @@ public:
 
 	std::vector<SkellBossSword*>& GetSwords() { return swords; }
 
+	void ShootBullet(sf::Vector2f direction);
 	void ShootSword(int index);
 	void ShootParticle();
 };

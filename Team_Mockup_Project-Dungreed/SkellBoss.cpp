@@ -77,6 +77,9 @@ void SkellBoss::Reset()
 	swordSpawnTimeDelay = 0.15f;
 	afterSwordSpawnTimeDelay = 3.f;
 
+	attackBulletTimeDelay = 5.f;
+	bulletSpawnTimeDelay = 0.115f;
+
 	isDamaged = false;
 	isDead = false;
 
@@ -90,8 +93,15 @@ void SkellBoss::Reset()
 
 	animatorBackFx.SetTarget(&skellBossBackFx);
 	animatorBackFx.Play("animations/Boss/SkellBoss Back Idle.csv");
-	skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
-	skellBossBackFx.setPosition({ position.x  + 17.5f , position.y + 45.f });
+	//skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height});
+	//skellBossBackFx.setPosition({ position.x  + 17.5f , position.y + 45.f });
+	skellBossBackFx.setPosition({ position.x  + 17.5f , position.y });
+
+	angleRight = 0.f * Utils::PI;
+	angleLeft = 0.5f * Utils::PI;
+	angleUp = 1.f * Utils::PI;
+	angleDown = 1.5f * Utils::PI;
 }
 
 void SkellBoss::Update(float dt)
@@ -141,7 +151,7 @@ void SkellBoss::Update(float dt)
 	}
 
 	shootAccumTime += dt;
-	if (shootAccumTime >= shootTimeDelay)
+	if (shootAccumTime >= shootTimeDelay && !isDead)
 	{
 		shootAccumTime = 0.f;
 
@@ -156,7 +166,8 @@ void SkellBoss::Update(float dt)
 
 void SkellBoss::LateUpdate(float dt)
 {
-	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	//SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height});
 
 	skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 }
@@ -205,7 +216,20 @@ void SkellBoss::SetState(SkellBossState state)
 		break;
 	case SkellBoss::SkellBossState::AttackBullet:
 	{
+		attackBulletTimeAccum = 0.f;
+		bulletSpawnTimeAccum = 0.f;
 
+		angleRight = 0.f * Utils::PI;
+		angleLeft = 0.5f * Utils::PI;
+		angleUp = 1.f * Utils::PI;
+		angleDown = 1.5f * Utils::PI;
+
+		randDir = Utils::RandomValue() < 0.5f ? -1.f : 1.f;
+
+		isattackBulletIng = false;
+		isattackBulletEnd = false;
+
+		animator.Play("animations/Boss/SkellBoss AttackBullet start.csv");
 	}
 		break;
 	case SkellBoss::SkellBossState::AttackSword:
@@ -236,7 +260,7 @@ void SkellBoss::UpdateIdle(float dt)
 
 	if (attackAccumSpeed >= attackSpeedDelay)
 	{
-		SetState(SkellBossState::AttackSword);
+		SetState(SkellBossState::AttackBullet);
 
 		/*float randAttackValue = Utils::RandomRange(0, 3);
 
@@ -271,18 +295,65 @@ void SkellBoss::UpdateAttackBullet(float dt)
 {
 	if (hp <= 0)
 	{
+		for (auto& bullet : bullets)
+		{
+			SCENE_MGR.GetCurrentScene()->RemoveGo(bullet);
+		}
+
 		SetState(SkellBossState::Death);
 
 		return;
 	}
 
+	attackBulletTimeAccum += dt;
+	if (attackBulletTimeAccum < attackBulletTimeDelay)
+	{
+		if (attackBulletTimeAccum >= attackBulletTimeDelay / 10.f)
+		{
+			if (!isattackBulletIng)
+			{
+				isattackBulletIng = true;
 
+				animator.Play("animations/Boss/SkellBoss AttackBullet ing.csv");
+			}
+		}
+
+		if (attackBulletTimeAccum >= attackBulletTimeDelay * 9.65f / 10.f)
+		{
+			if (!isattackBulletEnd)
+			{
+				isattackBulletEnd = true;
+
+				animator.Play("animations/Boss/SkellBoss AttackBullet end.csv");
+			}
+		}
+
+		bulletSpawnTimeAccum += dt;
+		if (bulletSpawnTimeAccum >= bulletSpawnTimeDelay)
+		{
+			bulletSpawnTimeAccum = 0.f;
+
+			ShootBullet(Utils::OnUnitCircle(angleRight += dt * 10 * randDir));
+			ShootBullet(Utils::OnUnitCircle(angleLeft += dt * 10 * randDir));
+			ShootBullet(Utils::OnUnitCircle(angleUp += dt * 10 * randDir));
+			ShootBullet(Utils::OnUnitCircle(angleDown += dt * 10 * randDir));
+		}
+	}
+	else 
+	{
+		SetState(SkellBossState::Idle);
+	}
 }
 
 void SkellBoss::UpdateAttackSword(float dt)
 {
 	if (hp <= 0)
 	{
+		for (auto& sword : swords)
+		{
+			SCENE_MGR.GetCurrentScene()->RemoveGo(sword);
+		}
+
 		SetState(SkellBossState::Death);
 
 		return;
@@ -316,6 +387,15 @@ void SkellBoss::UpdateAttackSword(float dt)
 void SkellBoss::UpdateDeath(float dt)
 {
 
+}
+
+void SkellBoss::ShootBullet(sf::Vector2f direction)
+{
+	SkellBossBullet* bullet = bulletPool.Take();
+	SCENE_MGR.GetCurrentScene()->AddGo(bullet);
+	bullets.push_back(bullet);
+
+	bullet->Fire({ skellBossBackFx.getPosition().x - 10.f, skellBossBackFx.getPosition().y - 40.f }, direction);
 }
 
 void SkellBoss::ShootSword(int index)

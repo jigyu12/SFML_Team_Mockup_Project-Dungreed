@@ -55,17 +55,38 @@ void TextGo::OnLocalize(Languages lang)
 	SetOrigin(originPreset);
 }
 
-void TextGo::Set(int size, const sf::Color &color)
+void TextGo::Set(int size, const sf::Color& color)
 {
-	text.setCharacterSize(size);
-	text.setFillColor(color);
+	SetFillColor(color);
+	SetCharacterSize(size);
 }
 
-void TextGo::SetString(const std::string& id)
+void TextGo::SetString(const std::string& id, bool useTable)
 {
+	if (!useTable)
+	{
+		text.setString(id);
+		SetOrigin(originPreset);
+		return;
+	}
 	stringId = id;
-	text.setString(STRING_TABLE->Get(stringId));
+	std::wstring wstr = STRING_TABLE->Get(stringId);
+	std::wstring newline = L"\\n";
+	auto index = wstr.find(newline);
+	if (index < 0 || index >= wstr.length())
+	{
+		text.setString(wstr);
+		SetOrigin(originPreset);
+		return;
+	}
+	wstr.replace(wstr.find(newline), newline.length(), L"\n");
+	text.setString(wstr);
 	SetOrigin(originPreset);
+}
+
+void TextGo::SetString(const std::wstring& id)
+{
+	text.setString(id);
 }
 
 void TextGo::SetString(const std::string& id, const std::wstring& str)
@@ -73,6 +94,17 @@ void TextGo::SetString(const std::string& id, const std::wstring& str)
 	stringId = id;
 	text.setString(STRING_TABLE->Get(stringId) + str);
 	SetOrigin(originPreset);
+}
+
+void TextGo::SetCharacterSize(int size)
+{
+	text.setCharacterSize(size);
+	SetOrigin(originPreset);
+}
+
+void TextGo::SetFillColor(const sf::Color& color)
+{
+	text.setFillColor(color);
 }
 
 void TextGo::Init()

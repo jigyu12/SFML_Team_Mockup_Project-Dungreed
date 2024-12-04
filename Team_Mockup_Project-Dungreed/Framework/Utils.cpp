@@ -30,6 +30,11 @@ float Utils::RandomValue()
 	return RandomRange(0.f, 1.f);
 }
 
+sf::Vector2f Utils::OnUnitCircle(float angle)
+{
+	return sf::Vector2f(std::cosf(angle), std::sinf(angle));
+}
+
 sf::Vector2f Utils::RandomOnUnitCircle()
 {
 	float angle = RandomRange(0.f, 2.f * PI);
@@ -215,6 +220,11 @@ bool Utils::LineIntersect(const sf::Vector2f& a1, const sf::Vector2f& a2, const 
 	result.x = a1.x + t * (a2.x - a1.x);
 	result.y = a1.y + t * (a2.y - a1.y);
 	return true;
+}
+
+sf::Vector2f Utils::GetCenter(const sf::FloatRect& rect)
+{
+	return rect.getPosition()+ rect.getSize()*0.5f;
 }
 
 bool Utils::CheckCollision(const HitBox& boxA, const HitBox& boxB)

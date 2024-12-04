@@ -150,6 +150,7 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="Map\Editor\Button.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Map\RoomMgr.cpp" />
     <ClCompile Include="Map\Editor\FileDialog.cpp" />
@@ -199,6 +200,7 @@
     <ClCompile Include="Map\Editor\UiEditMonster.cpp" />
     <ClCompile Include="Map\Editor\UiEditObject.cpp" />
     <ClCompile Include="SkellBoss.cpp" />
+    <ClCompile Include="SkellBossBullet.cpp" />
     <ClCompile Include="SkellBossLeftHand.cpp" />
     <ClCompile Include="SkellBossParticle.cpp" />
     <ClCompile Include="SkellBossSword.cpp" />
@@ -209,6 +211,7 @@
     <ClInclude Include="Animator.h" />
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="Bat.h" />
+    <ClInclude Include="Map\Editor\Button.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Map\RoomMgr.h" />
     <ClInclude Include="Map\Editor\FileDialog.h" />
@@ -260,6 +263,7 @@
     <ClInclude Include="Map\Editor\UiEditMonster.h" />
     <ClInclude Include="Map\Editor\UiEditObject.h" />
     <ClInclude Include="SkellBoss.h" />
+    <ClInclude Include="SkellBossBullet.h" />
     <ClInclude Include="SkellBossLeftHand.h" />
     <ClInclude Include="SkellBossParticle.h" />
     <ClInclude Include="SkellBossSword.h" />

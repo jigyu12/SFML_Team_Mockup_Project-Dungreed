@@ -31,6 +31,7 @@ struct HitBoxData
 		Immovable,
 		Downable,
 		SpawnTrigger,
+		Count,
 	};
 
 	sf::Vector2f size;

@@ -12,6 +12,7 @@ Type,ID,string
 "Graphic","UiButtonSave","graphics/ui/mapeditor/uibuttonsave.png"
 "Graphic","UiButtonStartPos","graphics/ui/mapeditor/uibuttonstartpos.png"
 "Graphic","UiButtonTile","graphics/ui/mapeditor/uibuttontile.png"
+"Font","French","fonts/french.ttf"
 "Map","1FRoom1UL","maps/1froom1UL.json"
 "Map","1FRoom2DLR","maps/1froom2DLR.json"
 "Map","1FRoom3UDLR","maps/1froom3UDLR.json"
