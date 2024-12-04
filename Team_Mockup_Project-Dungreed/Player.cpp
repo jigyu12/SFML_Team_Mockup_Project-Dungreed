@@ -78,9 +78,10 @@ void Player::Reset()
 	SetPosition({ 0.f,0.f });
 	SetOrigin(Origins::BC);
 	SetRotation(0.f);
-
+	SetStatus(Status::Ground);
 	dashCoolTimer = 0.f;
 	hp = maxhp;
+
 }
 
 void Player::SetStatus(Status status)

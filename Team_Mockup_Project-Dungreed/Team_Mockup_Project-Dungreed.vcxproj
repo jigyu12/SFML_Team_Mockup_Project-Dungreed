@@ -150,6 +150,8 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="MainTitle.cpp" />
+    <ClCompile Include="MainTitleUi.cpp" />
     <ClCompile Include="Map\Editor\Button.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Map\RoomMgr.cpp" />
@@ -211,6 +213,8 @@
     <ClInclude Include="Animator.h" />
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="Bat.h" />
+    <ClInclude Include="MainTitle.h" />
+    <ClInclude Include="MainTitleUi.h" />
     <ClInclude Include="Map\Editor\Button.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Map\RoomMgr.h" />
