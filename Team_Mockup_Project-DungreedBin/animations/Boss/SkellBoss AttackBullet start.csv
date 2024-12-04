@@ -1,0 +1,10 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+AttackBulletStart,10,"0",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/boss/BossAttackBullet/Attack/SkellBossAttack00.png,0,"0",70,95,0
+graphics/boss/BossAttackBullet/Attack/SkellBossAttack01.png,0,"0",70,92,0
+graphics/boss/BossAttackBullet/Attack/SkellBossAttack02.png,0,"0",70,94,0
+graphics/boss/BossAttackBullet/Attack/SkellBossAttack03.png,0,"0",70,121,0
+graphics/boss/BossAttackBullet/Attack/SkellBossAttack04.png,0,"0",70,126,0
+graphics/boss/BossAttackBullet/Attack/SkellBossAttack05.png,0,"0",70,127,0

@@ -30,6 +30,11 @@ float Utils::RandomValue()
 	return RandomRange(0.f, 1.f);
 }
 
+sf::Vector2f Utils::OnUnitCircle(float angle)
+{
+	return sf::Vector2f(std::cosf(angle), std::sinf(angle));
+}
+
 sf::Vector2f Utils::RandomOnUnitCircle()
 {
 	float angle = RandomRange(0.f, 2.f * PI);

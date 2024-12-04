@@ -1,0 +1,6 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Bullet Idle,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/boss/BossAttackBullet/Bullet/BossBullet000.png,0,"0",13,13,0
+graphics/boss/BossAttackBullet/Bullet/BossBullet001.png,0,"0",13,13,0
