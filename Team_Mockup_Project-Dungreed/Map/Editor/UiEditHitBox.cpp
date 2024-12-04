@@ -2,6 +2,8 @@
 #include "UiEditHitBox.h"
 #include "TileMap.h"
 #include "UiEditor.h"
+#include "Button.h"
+#include "TextGo.h"
 
 UiEditHitBox::UiEditHitBox(const std::string& name)
 	: GameObject(name)
@@ -17,15 +19,19 @@ void UiEditHitBox::SetPosition(const sf::Vector2f& pos)
 
 	for (int i = 0; i < editStatusButtons.size();++i)
 	{
-		editStatusButtons[i].setPosition(transform.transformPoint(50.f + i * 100.f, 30.f));
+		editStatusButtons[i]->SetPosition(transform.transformPoint(50.f + i * 100.f, 30.f));
 	}
 	for (int i = 0; i < dirButtons.size();++i)
 	{
-		dirButtons[i].setPosition(transform.transformPoint(50.f, 90.f + i * 60.f));
+		dirButtons[i]->SetPosition(transform.transformPoint(50.f, 90.f + i * 60.f));
 	}
 	for (int i = 0; i < positionTexts.size();++i)
 	{
-		positionTexts[i].setPosition(transform.transformPoint(150.f, 90.f + i * 60.f));
+		positionTexts[i]->SetPosition(transform.transformPoint(150.f, 90.f + i * 60.f));
+	}
+	for (int i = 0; i < hitBoxTypeButtons.size();++i)
+	{
+		hitBoxTypeButtons[i]->SetPosition(transform.transformPoint(50.f, 90.f + i * 60.f));
 	}
 }
 
@@ -68,9 +74,29 @@ void UiEditHitBox::Init()
 	sortingOrder = 2;
 
 	editStatusButtons.resize((int)EditStatus::Count);
+	hitBoxTypeButtons.resize((int)HitBoxData::Type::Count);
 	dirButtons.resize(4);
 	positionTexts.resize(4);
 	startPositions.resize(4);
+
+	for (int i = 0;i < editStatusButtons.size();++i)
+	{
+		editStatusButtons[i] = new Button();
+		editStatusButtons[i]->Init();
+	}
+	for (int i = 0;i < hitBoxTypeButtons.size();++i)
+	{
+		hitBoxTypeButtons[i] = new Button();
+		hitBoxTypeButtons[i]->Init();
+	}
+	for (int i = 0;i < dirButtons.size();++i)
+	{
+		dirButtons[i] = new Button();
+		dirButtons[i]->Init();
+		positionTexts[i] = new TextGo(RESOURCEID_TABLE->Get("Font", "French"));
+		positionTexts[i]->Init();
+	}
+
 }
 
 void UiEditHitBox::Release()
@@ -79,7 +105,30 @@ void UiEditHitBox::Release()
 	{
 		delete hitbox.first;
 	}
+
 	hitboxes.clear();
+
+	for (int i = 0;i < editStatusButtons.size();++i)
+	{
+		editStatusButtons[i]->Release();
+		delete editStatusButtons[i];
+	}
+	editStatusButtons.clear();
+	for (int i = 0;i < hitBoxTypeButtons.size();++i)
+	{
+		hitBoxTypeButtons[i]->Release();
+		delete hitBoxTypeButtons[i];
+	}
+	hitBoxTypeButtons.clear();
+	for (int i = 0;i < dirButtons.size();++i)
+	{
+		dirButtons[i]->Release();
+		delete dirButtons[i];
+		positionTexts[i]->Release();
+		delete positionTexts[i];
+	}
+	dirButtons.clear();
+	positionTexts.clear();
 }
 
 void UiEditHitBox::Reset()
@@ -96,66 +145,125 @@ void UiEditHitBox::Reset()
 
 	for (int i = 0; i < editStatusButtons.size();++i)
 	{
+		editStatusButtons[i]->Reset();
+		editStatusButtons[i]->Set({ 90.f,45.f }, 16);
+		editStatusButtons[i]->SetClickedEvent([this, i]() { SetEditStatus((EditStatus)i); });
 		switch ((UiEditHitBox::EditStatus)i)
 		{
 		case UiEditHitBox::EditStatus::Hitbox:
-			editStatusButtons[i].setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondraw.png"));
-			editStatusButtons[i].setColor({ 150,150,150,255 });
+			editStatusButtons[i]->SetString("Draw", true);
 			break;
 		case UiEditHitBox::EditStatus::StartPosition:
-			editStatusButtons[i].setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonstartpos.png"));
+			editStatusButtons[i]->SetString("StartPos", true);
 			break;
 		}
 	}
-	dirButtons[0].setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
-	dirButtons[0].setColor({ 150,150,150,255 });
-	dirButtons[1].setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
-	dirButtons[2].setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonleft.png"));
-	dirButtons[3].setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonright.png"));
+
+	for (int i = 0; i < dirButtons.size();++i)
+	{
+		dirButtons[i]->Reset();
+		dirButtons[i]->Set({ 90.f,45.f }, 20);
+		switch (i)
+		{
+		case (int)HitBoxData::Type::PortalUp:
+			dirButtons[i]->SetString("Up", true);
+			break;
+		case (int)HitBoxData::Type::PortalDown:
+			dirButtons[i]->SetString("Down", true);
+			break;
+		case (int)HitBoxData::Type::PortalLeft:
+			dirButtons[i]->SetString("Left", true);
+			break;
+		case (int)HitBoxData::Type::PortalRight:
+			dirButtons[i]->SetString("Right", true);
+			break;
+		}
+		dirButtons[i]->SetClickedEvent([this, i]()
+			{
+				dirButtons[(int)hitboxType]->SetPressed(false);
+				hitboxType = (HitBoxData::Type)i;
+				dirButtons[(int)hitboxType]->SetPressed(true);
+			});
+	}
+
+	for (int i = 0;i < hitBoxTypeButtons.size();++i)
+	{
+		hitBoxTypeButtons[i]->Reset();
+		hitBoxTypeButtons[i]->Set({ 90.f,45.f }, 20);
+		switch (i)
+		{
+		case (int)HitBoxData::Type::PortalUp:
+			hitBoxTypeButtons[i]->SetString("UpPortal", true);
+			break;
+		case (int)HitBoxData::Type::PortalDown:
+			hitBoxTypeButtons[i]->SetString("DownPortal", true);
+			break;
+		case (int)HitBoxData::Type::PortalLeft:
+			hitBoxTypeButtons[i]->SetString("LeftPortal", true);
+			break;
+		case (int)HitBoxData::Type::PortalRight:
+			hitBoxTypeButtons[i]->SetString("RightPortal", true);
+			break;
+		case (int)HitBoxData::Type::Immovable:
+			hitBoxTypeButtons[i]->SetString("Immovable", true);
+			break;
+		case (int)HitBoxData::Type::Downable:
+			hitBoxTypeButtons[i]->SetString("Downable", true);
+			break;
+		case (int)HitBoxData::Type::SpawnTrigger:
+			hitBoxTypeButtons[i]->SetString("SpawnTrigger", true);
+			break;
+		}
+		hitBoxTypeButtons[i]->SetClickedEvent([this, i]()
+			{
+				hitBoxTypeButtons[(int)hitboxType]->SetPressed(false);
+				hitBoxTypeButtons[i]->SetPressed(true);
+				hitboxType = (HitBoxData::Type)i;
+			});
+
+	}
 
 	for (int i = 0; i < positionTexts.size();++i)
 	{
-		positionTexts[i].setFont(FONT_MGR.Get("fonts/french.ttf"));
+		positionTexts[i]->Reset();
+		positionTexts[i]->Set(30);
+		positionTexts[i]->SetString("Position", true);
 	}
 
 	spawnPoint.setTexture(TEXTURE_MGR.Get("graphics/player/CharIdle.png"));
-	spawnPoint.setTextureRect({0,0,32,32});
+	spawnPoint.setTextureRect({ 0,0,32,32 });
 	Utils::SetOrigin(spawnPoint, Origins::BC);
 
 	hitboxStatus = HitBoxEditStatus::Create;
 	editStatus = EditStatus::Hitbox;
-	startPosType = HitBoxData::Type::PortalUp;
+	editStatusButtons[0]->SetPressed(true);
+	hitboxType = HitBoxData::Type::Immovable;
+	hitBoxTypeButtons[(int)hitboxType]->SetPressed(true);
 }
 
 void UiEditHitBox::Update(float dt)
 {
 	if (InputMgr::GetMousePosition().x < 480.f)
 	{
-		sf::Vector2f uimousepos = SCENE_MGR.GetCurrentScene()->ScreenToUi(InputMgr::GetMousePosition());
-
-		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+		for (int i = 0; i < editStatusButtons.size();++i)
 		{
-			for (int i = 0; i < editStatusButtons.size();++i)
+			editStatusButtons[i]->Update(dt);
+		}
+		switch (editStatus)
+		{
+		case UiEditHitBox::EditStatus::Hitbox:
+			for (int i = 0; i < hitBoxTypeButtons.size();++i)
 			{
-				if (editStatusButtons[i].getGlobalBounds().contains(uimousepos))
-				{
-					editStatusButtons[(int)editStatus].setColor(sf::Color::White);
-					editStatusButtons[i].setColor({ 150,150,150,255 });
-					editStatus = (EditStatus)i;
-				}
+				hitBoxTypeButtons[i]->Update(dt);
 			}
-			if (editStatus == EditStatus::StartPosition)
+
+			break;
+		case UiEditHitBox::EditStatus::StartPosition:
+			for (int i = 0; i < dirButtons.size();++i)
 			{
-				for (int i = 0; i < dirButtons.size();++i)
-				{
-					if (dirButtons[i].getGlobalBounds().contains(uimousepos))
-					{
-						dirButtons[(int)startPosType].setColor(sf::Color::White);
-						dirButtons[i].setColor({ 150,150,150,255 });
-						startPosType = (HitBoxData::Type)i;
-					}
-				}
+				dirButtons[i]->Update(dt);
 			}
+			break;
 		}
 	}
 	else
@@ -167,6 +275,11 @@ void UiEditHitBox::Update(float dt)
 			{
 				sf::Vector2f worldMousePos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
 
+				if (selectedHitBox != nullptr)
+				{
+					selectedHitBox->setFillColor(sf::Color::Transparent);
+				}
+
 				selectedHitBox = nullptr;
 				for (auto& hitbox : hitboxes)
 				{
@@ -174,7 +287,27 @@ void UiEditHitBox::Update(float dt)
 					{
 						hitboxStatus = HitBoxEditStatus::Move;
 						selectedHitBox = hitbox.first;
+						selectedHitBox->setFillColor({ 100,100,100,100 });
 						editStartPos = worldMousePos - selectedHitBox->getPosition();
+					}
+					if (hitboxType != HitBoxData::Type::Downable
+						&& hitboxType != HitBoxData::Type::Immovable
+						&& hitboxType == hitbox.second)
+					{
+						selectedHitBox = hitbox.first;
+						selectedHitBox->setFillColor({ 100,100,100,100 });
+						if (Utils::PointInTransformBounds(*hitbox.first, hitbox.first->getLocalBounds(), worldMousePos))
+						{
+							hitboxStatus = HitBoxEditStatus::Move;
+							editStartPos = worldMousePos - selectedHitBox->getPosition();
+						}
+						else
+						{
+							hitboxStatus = HitBoxEditStatus::Create;
+							selectedHitBox->setSize({ 0.f,0.f });
+							editStartPos = worldMousePos;
+							selectedHitBox->setPosition(editStartPos);
+						}
 					}
 				}
 				if (selectedHitBox == nullptr)
@@ -182,107 +315,124 @@ void UiEditHitBox::Update(float dt)
 					hitboxStatus = HitBoxEditStatus::Create;
 					editStartPos = worldMousePos;
 					sf::RectangleShape* shape = new sf::RectangleShape();
-					shape->setFillColor(sf::Color::Transparent);
-					shape->setOutlineColor(sf::Color::Red);
+					shape->setFillColor({ 100,100,100,100 });
+					switch (hitboxType)
+					{
+					case HitBoxData::Type::PortalUp:
+					case HitBoxData::Type::PortalDown:
+					case HitBoxData::Type::PortalLeft:
+					case HitBoxData::Type::PortalRight:
+						shape->setOutlineColor(sf::Color::Cyan);
+						break;
+					case HitBoxData::Type::Immovable:
+						shape->setOutlineColor(sf::Color::Red);
+						break;
+					case HitBoxData::Type::Downable:
+						shape->setOutlineColor(sf::Color::Yellow);
+						break;
+					case HitBoxData::Type::SpawnTrigger:
+						shape->setOutlineColor(sf::Color::White);
+						break;
+					}
 					shape->setOutlineThickness(1.f);
 					shape->setPosition(editStartPos);
 					selectedHitBox = shape;
-					hitboxes.insert({ shape,HitBoxData::Type::Immovable });
+					hitboxes.insert({ shape,hitboxType });
 				}
 			}
-			else if (InputMgr::GetMouseButton(sf::Mouse::Left)
-				&& selectedHitBox != nullptr)
+			if (selectedHitBox != nullptr)
 			{
-				sf::Vector2f worldMousePos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
+				if (InputMgr::GetMouseButton(sf::Mouse::Left))
+				{
+					sf::Vector2f worldMousePos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
 
-				switch (hitboxStatus)
-				{
-				case UiEditHitBox::HitBoxEditStatus::Create:
-					selectedHitBox->setSize(worldMousePos - editStartPos);
-					break;
-				case UiEditHitBox::HitBoxEditStatus::Move:
-					selectedHitBox->setPosition(worldMousePos - editStartPos);
-					break;
-				}
-			}
-			if (InputMgr::GetMouseButtonDown(sf::Mouse::Right)
-				&& selectedHitBox != nullptr)
-			{
-				auto found = hitboxes.find(selectedHitBox);
-				if (found != hitboxes.end())
-				{
-					delete found->first;
-					hitboxes.erase(found);
-					selectedHitBox = nullptr;
-				}
-			}
-			if (InputMgr::GetMouseButtonDown(sf::Mouse::Middle)
-				&& selectedHitBox != nullptr)
-			{
-				if (hitboxes[selectedHitBox] == HitBoxData::Type::Immovable)
-				{
-					hitboxes[selectedHitBox] = HitBoxData::Type::Downable;
-					selectedHitBox->setOutlineColor(sf::Color::Yellow);
-				}
-				else
-				{
-					sf::FloatRect boxbound = selectedHitBox->getGlobalBounds();
-
-					if (boxbound.left <= 0.f
-						&& hitboxes[selectedHitBox] != HitBoxData::Type::PortalLeft)
+					switch (hitboxStatus)
 					{
-						hitboxes[selectedHitBox] = HitBoxData::Type::PortalLeft;
-						selectedHitBox->setOutlineColor(sf::Color::Cyan);
+					case UiEditHitBox::HitBoxEditStatus::Create:
+						selectedHitBox->setSize(worldMousePos - editStartPos);
+						break;
+					case UiEditHitBox::HitBoxEditStatus::Move:
+						selectedHitBox->setPosition(worldMousePos - editStartPos);
+						break;
 					}
-					else if (boxbound.top <= 0.f
-						&& hitboxes[selectedHitBox] != HitBoxData::Type::PortalUp)
+				}
+				if ((InputMgr::GetMouseButtonDown(sf::Mouse::Right))
+					|| (InputMgr::GetMouseButtonUp(sf::Mouse::Left)
+						&& selectedHitBox->getSize().x < 16.f
+						&& selectedHitBox->getSize().y < 16.f))
+				{
+					auto found = hitboxes.find(selectedHitBox);
+					if (found != hitboxes.end())
 					{
-						hitboxes[selectedHitBox] = HitBoxData::Type::PortalUp;
-						selectedHitBox->setOutlineColor(sf::Color::Cyan);
+						delete found->first;
+						hitboxes.erase(found);
+						selectedHitBox = nullptr;
 					}
-					else if (uieditor != nullptr && boxbound.left + boxbound.width >= uieditor->GetSelectedTileMap()->GetGlobalBounds().width
-						&& hitboxes[selectedHitBox] != HitBoxData::Type::PortalRight)
+				}
+				if (InputMgr::GetMouseButtonDown(sf::Mouse::Middle))
+				{
+					selectedHitBox->rotate(-45.f);
+				}
+				if (InputMgr::GetMouseButtonDown(sf::Mouse::XButton1))
+				{
+					if (hitboxes[selectedHitBox] == HitBoxData::Type::Immovable)
 					{
-						hitboxes[selectedHitBox] = HitBoxData::Type::PortalRight;
-						selectedHitBox->setOutlineColor(sf::Color::Cyan);
-					}
-					else if (uieditor != nullptr && boxbound.top + boxbound.height >= uieditor->GetSelectedTileMap()->GetGlobalBounds().height
-						&& hitboxes[selectedHitBox] != HitBoxData::Type::PortalDown)
-					{
-						hitboxes[selectedHitBox] = HitBoxData::Type::PortalDown;
-						selectedHitBox->setOutlineColor(sf::Color::Cyan);
+						hitboxes[selectedHitBox] = HitBoxData::Type::Downable;
+						selectedHitBox->setOutlineColor(sf::Color::Yellow);
 					}
 					else
 					{
-						hitboxes[selectedHitBox] = HitBoxData::Type::Immovable;
-						selectedHitBox->setOutlineColor(sf::Color::Red);
+						sf::FloatRect boxbound = selectedHitBox->getGlobalBounds();
+
+						if (boxbound.left <= 0.f
+							&& hitboxes[selectedHitBox] != HitBoxData::Type::PortalLeft)
+						{
+							hitboxes[selectedHitBox] = HitBoxData::Type::PortalLeft;
+							selectedHitBox->setOutlineColor(sf::Color::Cyan);
+						}
+						else if (boxbound.top <= 0.f
+							&& hitboxes[selectedHitBox] != HitBoxData::Type::PortalUp)
+						{
+							hitboxes[selectedHitBox] = HitBoxData::Type::PortalUp;
+							selectedHitBox->setOutlineColor(sf::Color::Cyan);
+						}
+						else if (uieditor != nullptr && boxbound.left + boxbound.width >= uieditor->GetSelectedTileMap()->GetGlobalBounds().width
+							&& hitboxes[selectedHitBox] != HitBoxData::Type::PortalRight)
+						{
+							hitboxes[selectedHitBox] = HitBoxData::Type::PortalRight;
+							selectedHitBox->setOutlineColor(sf::Color::Cyan);
+						}
+						else if (uieditor != nullptr && boxbound.top + boxbound.height >= uieditor->GetSelectedTileMap()->GetGlobalBounds().height
+							&& hitboxes[selectedHitBox] != HitBoxData::Type::PortalDown)
+						{
+							hitboxes[selectedHitBox] = HitBoxData::Type::PortalDown;
+							selectedHitBox->setOutlineColor(sf::Color::Cyan);
+						}
+						else
+						{
+							hitboxes[selectedHitBox] = HitBoxData::Type::Immovable;
+							selectedHitBox->setOutlineColor(sf::Color::Red);
+						}
 					}
 				}
 			}
-			if (InputMgr::GetMouseButtonDown(sf::Mouse::XButton1)
-				&& selectedHitBox != nullptr)
-			{
-				selectedHitBox->rotate(-45.f);
-			}
 			break;
 		case UiEditHitBox::EditStatus::StartPosition:
-			if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+			if (InputMgr::GetMouseButtonDown(sf::Mouse::Left)
+				&& hitboxType < (HitBoxData::Type)4)
 			{
 				sf::Vector2f worldMousePos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
-				startPositions[(int)startPosType] = worldMousePos;
+				startPositions[(int)hitboxType] = worldMousePos;
+				spawnPoint.setPosition(startPositions[(int)hitboxType]);
+				positionTexts[(int)hitboxType]->SetString("Position"
+					, std::to_wstring(startPositions[(int)hitboxType].x).substr(0, 5)
+					+ L", "
+					+ std::to_wstring(startPositions[(int)hitboxType].y).substr(0, 5));
 			}
 			break;
 		}
 	}
 
-	if (editStatus == EditStatus::StartPosition)
-	{
-		spawnPoint.setPosition(startPositions[(int)startPosType]);
-		for (int i = 0; i < positionTexts.size();++i)
-		{
-			positionTexts[i].setString("POSITION : " + std::to_string(startPositions[i].x).substr(0, 5) + ", " + std::to_string(startPositions[i].y).substr(0, 5));
-		}
-	}
 }
 
 void UiEditHitBox::Draw(sf::RenderWindow& window)
@@ -291,17 +441,24 @@ void UiEditHitBox::Draw(sf::RenderWindow& window)
 
 	for (int i = 0; i < editStatusButtons.size();++i)
 	{
-		window.draw(editStatusButtons[i]);
+		editStatusButtons[i]->Draw(window);
 	}
-	if (editStatus == EditStatus::StartPosition)
+	if (editStatus == EditStatus::Hitbox)
+	{
+		for (int i = 0; i < hitBoxTypeButtons.size();++i)
+		{
+			hitBoxTypeButtons[i]->Draw(window);
+		}
+	}
+	else if (editStatus == EditStatus::StartPosition)
 	{
 		for (int i = 0; i < dirButtons.size();++i)
 		{
-			window.draw(dirButtons[i]);
+			dirButtons[i]->Draw(window);
 		}
 		for (int i = 0; i < positionTexts.size();++i)
 		{
-			window.draw(positionTexts[i]);
+			positionTexts[i]->Draw(window);
 		}
 	}
 
@@ -374,8 +531,41 @@ void UiEditHitBox::SetHitBoxData(const std::vector<HitBoxData>& data)
 		case HitBoxData::Type::Downable:
 			shape->setOutlineColor(sf::Color::Yellow);
 			break;
+		case HitBoxData::Type::SpawnTrigger:
+			shape->setOutlineColor(sf::Color::White);
+			break;
 		}
 		hitboxes.insert({ shape ,datum.type });
+	}
+}
+
+void UiEditHitBox::SetEditStatus(const EditStatus& status)
+{
+	editStatusButtons[(int)editStatus]->SetPressed(false);
+	editStatusButtons[(int)status]->SetPressed(true);
+	switch (status)
+	{
+	case EditStatus::Hitbox:
+		dirButtons[(int)hitboxType]->SetPressed(false);
+		editStatus = status;
+		hitboxType = HitBoxData::Type::Immovable;
+		hitBoxTypeButtons[(int)hitboxType]->SetPressed(true);
+		break;
+	case EditStatus::StartPosition:
+		hitBoxTypeButtons[(int)hitboxType]->SetPressed(false);
+		editStatus = status;
+		hitboxType = HitBoxData::Type::PortalUp;
+		dirButtons[(int)hitboxType]->SetPressed(true);
+		for (int i = 0;i < startPositions.size();++i)
+		{
+			positionTexts[i]->SetString("Position"
+				, std::to_wstring(startPositions[i].x).substr(0, 5)
+				+ L", "
+				+ std::to_wstring(startPositions[i].y).substr(0, 5));
+		}
+		break;
+	default:
+		break;
 	}
 }
 

@@ -20,9 +20,10 @@ void Room::SetPosition(const sf::Vector2f& pos)
 	{
 		tileMap->SetPosition(position);
 	}
+	sf::Transform transform = tileMaps[0]->GetTransform();
 	for (auto& hitBox : hitBoxes)
 	{
-		hitBox.first->rect.setPosition(tileMaps[0]->GetTransform().transformPoint(hitBox.second.origin));
+		hitBox.first->rect.setPosition(transform.transformPoint(hitBox.second.origin));
 	}
 	for (auto& obj : objects)
 	{
@@ -40,7 +41,7 @@ void Room::SetRotation(float angle)
 	}
 	for (auto& hitBox : hitBoxes)
 	{
-		hitBox.first->rect.setRotation(rotation);
+		hitBox.first->rect.setRotation(rotation + hitBox.second.rotation);
 	}
 	for (auto& obj : objects)
 	{
@@ -134,6 +135,8 @@ void Room::Release()
 	}
 	tileMaps.clear();
 
+	Scene* scene = SCENE_MGR.GetCurrentScene();
+
 }
 
 void Room::Reset()
@@ -155,21 +158,29 @@ void Room::Update(float dt)
 		subBackground.setPosition(subBGCenter);
 		for (auto& hitbox : hitBoxes)
 		{
-			if (!cleared || hitbox.second.type > HitBoxData::Type::PortalRight)
+			switch (hitbox.second.type)
 			{
-				continue;
-			}
-			if (Utils::PointInTransformBounds(hitbox.first->rect, hitbox.first->rect.getLocalBounds(), player->GetHitBox().GetCenter()))
-			{
-				if (ROOM_MGR.RoomChange(hitbox.second.type))
+			case HitBoxData::Type::PortalRight:
+			case HitBoxData::Type::PortalLeft:
+			case HitBoxData::Type::PortalUp:
+			case HitBoxData::Type::PortalDown:
+				if ((cleared || wave == -2)
+					&& Utils::PointInTransformBounds(hitbox.first->rect, hitbox.first->rect.getLocalBounds(), player->GetHitBox().GetCenter()))
 				{
-					for (std::pair<Monster*, SpawnData> monster : monsters)
+					if (ROOM_MGR.RoomChange(hitbox.second.type))
 					{
-						if (monster.second.wave == this->wave)
+						for (std::pair<Monster*, SpawnData> monster : monsters)
 						{
 							monster.first->SetActive(false);
 						}
 					}
+				}
+				break;
+			case HitBoxData::Type::SpawnTrigger:
+				if (Utils::PointInTransformBounds(hitbox.first->rect, hitbox.first->rect.getLocalBounds(), player->GetHitBox().GetCenter())
+					&& wave == -2)
+				{
+					++wave;
 				}
 				break;
 			}
@@ -192,7 +203,7 @@ void Room::Update(float dt)
 	{
 		cleared = true;
 	}
-	else if (wavecount == 0)
+	else if (wavecount == 0 && wave != -2)
 	{
 		++wave;
 		for (const std::pair<Monster*, SpawnData>& monster : monsters)
@@ -202,6 +213,13 @@ void Room::Update(float dt)
 				monster.first->SetActive(true);
 			}
 		}
+	}
+
+	if (player != nullptr
+		&& ROOM_MGR.GetCurrentRoom() == this
+		&& !tileMaps[0]->GetGlobalBounds().contains(player->GetHitBox().GetCenter()))
+	{
+		EnterRoom(enteredPortal);
 	}
 }
 
@@ -278,6 +296,10 @@ void Room::LoadMapData(const std::string& path)
 		case HitBoxData::Type::Downable:
 			hitbox->rect.setOutlineColor(sf::Color::Yellow);
 			break;
+		case HitBoxData::Type::SpawnTrigger:
+			wave = -2;
+			hitbox->rect.setOutlineColor(sf::Color::White);
+			break;
 		default:
 			break;
 		}
@@ -335,6 +357,7 @@ const std::vector<std::pair<HitBox*, HitBoxData>>& Room::GetHitBoxes() const
 
 void Room::EnterRoom(HitBoxData::Type connection)
 {
+	enteredPortal = connection;
 	if (player != nullptr)
 	{
 		if (mapData.playerStartPoint[(int)connection] != sf::Vector2f(0.f, 0.f))
@@ -347,17 +370,27 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		}
 	}
 
-	if (cleared)
+	if (wave == 0 && !cleared)
 	{
-		return;
-	}
-	for (std::pair<Monster*, SpawnData>& monster : monsters)
-	{
-		if (monster.second.wave == 0)
+		for (const std::pair<Monster*, SpawnData>& monster : monsters)
 		{
-			monster.first->SetActive(true);
+			if (wave == monster.second.wave && !monster.first->IsDead())
+			{
+				monster.first->SetActive(true);
+			}
 		}
 	}
+}
+
+void Room::ClearMonsters()
+{
+	for (auto& monster : monsters)
+	{
+		monster.first->SetActive(false);
+		scene->RemoveGo(monster.first);
+		delete monster.first;
+	}
+	monsters.clear();
 }
 
 std::vector<Monster*> Room::GetMonsters() const

@@ -53,6 +53,8 @@ public:
 	/// </summary>
 	static bool LineIntersect(const sf::Vector2f& a1,const sf::Vector2f& a2, const sf::Vector2f& b1, const sf::Vector2f& b2, sf::Vector2f& result);
 
+	static sf::Vector2f GetCenter(const sf::FloatRect& rect);
+
 	// Ãæµ¹
 	static bool CheckCollision(const HitBox& boxA, const HitBox& boxB);
 	static bool CheckCollision(const HitBox& boxA, const HitBox& boxB, CollisionState& collisionState);

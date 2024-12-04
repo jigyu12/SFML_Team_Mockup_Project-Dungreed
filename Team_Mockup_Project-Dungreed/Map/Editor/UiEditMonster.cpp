@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "UiEditMonster.h"
+#include "Button.h"
+#include "TextGo.h"
 
 UiEditMonster::UiEditMonster(const std::string& name)
 	: GameObject(name)
@@ -18,9 +20,9 @@ void UiEditMonster::SetPosition(const sf::Vector2f& pos)
 		monsterList[i].setPosition(transform.transformPoint(50.f + (i % 4) * 100.f, 100.f + (i / 4) * 100.f));
 	}
 
-	waveText.setPosition(transform.transformPoint(50.f, 40.f));
-	waveUpButton.setPosition(transform.transformPoint(250.f, 40.f));
-	waveDownButton.setPosition(transform.transformPoint(350.f, 40.f));
+	waveText->SetPosition(transform.transformPoint(50.f, 40.f));
+	waveUpButton->SetPosition(transform.transformPoint(250.f, 40.f));
+	waveDownButton->SetPosition(transform.transformPoint(350.f, 40.f));
 }
 
 void UiEditMonster::SetRotation(float angle)
@@ -65,10 +67,24 @@ void UiEditMonster::Init()
 {
 	sortingLayer = SortingLayers::UI;
 	sortingOrder = 2;
+
+	waveUpButton = new Button();
+	waveUpButton->Init();
+	waveDownButton = new Button();
+	waveDownButton->Init();
+	waveText = new TextGo(RESOURCEID_TABLE->Get("Font", "French"));
+	waveText->Init();
 }
 
 void UiEditMonster::Release()
 {
+	waveUpButton->Release();
+	delete waveUpButton;
+	waveDownButton->Release();
+	delete waveDownButton;
+	waveText->Release();
+	delete waveText;
+
 	ClearSpawnData();
 }
 
@@ -88,10 +104,20 @@ void UiEditMonster::Reset()
 	monsterList[(int)Monster::MonsterType::Bat].setOutlineColor(sf::Color::White);
 	monsterList[(int)Monster::MonsterType::Bat].setOutlineThickness(1.f);
 
+	waveText->Reset();
+	waveText->Set(30);
+	waveText->SetString("Wave", true);
 
-	waveUpButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonup.png"));
-	waveDownButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttondown.png"));
-	waveText.setFont(FONT_MGR.Get("fonts/french.ttf"));
+	waveUpButton->Reset();
+	waveUpButton->Set({ 90.f,45.f }, 20);
+	waveUpButton->SetString("Up", true);
+	waveUpButton->SetClickedEvent([this]() { UpDownSpawnWave(true); });
+
+	waveDownButton->Reset();
+	waveDownButton->Set({ 90.f,45.f }, 20);
+	waveDownButton->SetString("Down", true);
+	waveDownButton->SetClickedEvent([this]() { UpDownSpawnWave(false); });
+
 	selectedMonster = nullptr;
 }
 
@@ -99,6 +125,8 @@ void UiEditMonster::Update(float dt)
 {
 	if (InputMgr::GetMousePosition().x < 480.f)
 	{
+		waveDownButton->Update(dt);
+		waveUpButton->Update(dt);
 		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
 		{
 			sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToUi(InputMgr::GetMousePosition());
@@ -115,19 +143,7 @@ void UiEditMonster::Update(float dt)
 					monsterList[i].setOutlineColor(sf::Color::White);
 				}
 			}
-
-			if (waveUpButton.getGlobalBounds().contains(mousepos)
-				&& selectedMonster != nullptr)
-			{
-				spawnData[selectedMonster].wave = Utils::Clamp(++spawnData[selectedMonster].wave, 0, 100);
-			}
-			if (waveDownButton.getGlobalBounds().contains(mousepos)
-				&& selectedMonster != nullptr)
-			{
-				spawnData[selectedMonster].wave = Utils::Clamp(--spawnData[selectedMonster].wave, 0, 100);
-			}
 		}
-
 	}
 	else
 	{
@@ -207,7 +223,7 @@ void UiEditMonster::Update(float dt)
 		}
 	}
 
-	waveText.setString("SPAWN WAVE : " + (selectedMonster != nullptr ? std::to_string(spawnData[selectedMonster].wave) : ""));
+	waveText->SetString("SpawnWave", selectedMonster != nullptr ? std::to_wstring(spawnData[selectedMonster].wave) : L"");
 }
 
 void UiEditMonster::Draw(sf::RenderWindow& window)
@@ -219,9 +235,9 @@ void UiEditMonster::Draw(sf::RenderWindow& window)
 		window.draw(monsterList[i]);
 	}
 
-	window.draw(waveText);
-	window.draw(waveUpButton);
-	window.draw(waveDownButton);
+	waveText->Draw(window);
+	waveUpButton->Draw(window);
+	waveDownButton->Draw(window);
 
 	sf::View prev = window.getView();
 	sf::View world = SCENE_MGR.GetCurrentScene()->GetWorldView();
@@ -292,4 +308,29 @@ void UiEditMonster::ClearSpawnData()
 void UiEditMonster::SetMonsterType(const Monster::MonsterType& type)
 {
 	selectedType = type;
+}
+
+void UiEditMonster::UpDownSpawnWave(bool up)
+{
+	int maxWave = -1;
+	bool exists = false;
+	for (const auto& spawndatum : spawnData)
+	{
+		maxWave = std::max(maxWave, spawndatum.second.wave);
+		if (spawndatum.first != selectedMonster)
+		{
+			if (spawndatum.second.wave == spawnData[selectedMonster].wave)
+			{
+				exists = true;
+			}
+		}
+	}
+	if (up && exists)
+	{
+		++spawnData[selectedMonster].wave;
+	}
+	else if (!up && (exists|| maxWave == spawnData[selectedMonster].wave))
+	{
+		spawnData[selectedMonster].wave = std::max(0, --spawnData[selectedMonster].wave);
+	}
 }

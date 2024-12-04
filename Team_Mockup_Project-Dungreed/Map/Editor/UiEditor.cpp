@@ -6,6 +6,8 @@
 #include "UiEditor.h"
 #include "TileMap.h"
 #include "FileDialog.h"
+#include "Button.h"
+#include "TextGo.h"
 
 UiEditor::UiEditor(const std::string& name)
 	: GameObject(name)
@@ -19,16 +21,16 @@ void UiEditor::SetPosition(const sf::Vector2f& pos)
 
 	sf::Transform transform = editorWindow.getTransform();
 
-	selectedFileName.setPosition(transform.transformPoint(40.f, 20.f));
+	selectedFileName->SetPosition(transform.transformPoint(40.f, 20.f));
 
-	newButton.setPosition(transform.transformPoint(40.f, 65.f));
-	saveButton.setPosition(transform.transformPoint(140.f, 65.f));
-	loadButton.setPosition(transform.transformPoint(240.f, 65.f));
+	buttonNew->SetPosition(transform.transformPoint(40.f, 65.f));
+	buttonSave->SetPosition(transform.transformPoint(140.f, 65.f));
+	buttonLoad->SetPosition(transform.transformPoint(240.f, 65.f));
 
-	tileButton.setPosition(transform.transformPoint(40.f, 125.f));
-	hitboxButton.setPosition(transform.transformPoint(140.f, 125.f));
-	monsterButton.setPosition(transform.transformPoint(240.f, 125.f));
-	objectButton.setPosition(transform.transformPoint(340.f, 125.f));
+	buttonTile->SetPosition(transform.transformPoint(40.f, 125.f));
+	buttonHitbox->SetPosition(transform.transformPoint(140.f, 125.f));
+	buttonMonster->SetPosition(transform.transformPoint(240.f, 125.f));
+	buttonObject->SetPosition(transform.transformPoint(340.f, 125.f));
 
 	uiEditTile->SetPosition(transform.transformPoint(0.f, 200.f));
 	uiEditHitBox->SetPosition(transform.transformPoint(0.f, 200.f));
@@ -41,16 +43,16 @@ void UiEditor::SetRotation(float angle)
 	rotation = angle;
 	editorWindow.setRotation(rotation);
 
-	selectedFileName.setRotation(rotation);
+	selectedFileName->SetRotation(rotation);
 
-	newButton.setRotation(rotation);
-	saveButton.setRotation(rotation);
-	loadButton.setRotation(rotation);
+	buttonNew->SetRotation(rotation);
+	buttonSave->SetRotation(rotation);
+	buttonLoad->SetRotation(rotation);
 
-	tileButton.setRotation(rotation);
-	hitboxButton.setRotation(rotation);
-	monsterButton.setRotation(rotation);
-	objectButton.setRotation(rotation);
+	buttonTile->SetRotation(rotation);
+	buttonHitbox->SetRotation(rotation);
+	buttonMonster->SetRotation(rotation);
+	buttonObject->SetRotation(rotation);
 
 	uiEditTile->SetRotation(rotation);
 	uiEditHitBox->SetRotation(rotation);
@@ -65,16 +67,16 @@ void UiEditor::SetScale(const sf::Vector2f& s)
 	scale = s;
 	editorWindow.setScale(scale);
 
-	selectedFileName.setScale(scale);
+	selectedFileName->SetScale(scale);
 
-	newButton.setScale(scale);
-	saveButton.setScale(scale);
-	loadButton.setScale(scale);
+	buttonNew->SetScale(scale);
+	buttonSave->SetScale(scale);
+	buttonLoad->SetScale(scale);
 
-	tileButton.setScale(scale);
-	hitboxButton.setScale(scale);
-	monsterButton.setScale(scale);
-	objectButton.setScale(scale);
+	buttonTile->SetScale(scale);
+	buttonHitbox->SetScale(scale);
+	buttonMonster->SetScale(scale);
+	buttonObject->SetScale(scale);
 
 	uiEditTile->SetScale(scale);
 	uiEditHitBox->SetScale(scale);
@@ -119,6 +121,9 @@ void UiEditor::Init()
 	sortingLayer = SortingLayers::UI;
 	sortingOrder = 1;
 
+	selectedFileName = new TextGo(RESOURCEID_TABLE->Get("Font", "French"));
+	selectedFileName->Init();
+
 	uiEditTile = new UiEditTile();
 	uiEditTile->Init();
 
@@ -130,6 +135,27 @@ void UiEditor::Init()
 
 	uiEditObject = new UiEditObject();
 	uiEditObject->Init();
+
+	buttonNew = new Button();
+	buttonNew->Init();
+
+	buttonSave = new Button();
+	buttonSave->Init();
+
+	buttonLoad = new Button();
+	buttonLoad->Init();
+
+	buttonTile = new Button();
+	buttonTile->Init();
+
+	buttonHitbox = new Button();
+	buttonHitbox->Init();
+
+	buttonMonster = new Button();
+	buttonMonster->Init();
+
+	buttonObject = new Button();
+	buttonObject->Init();
 
 	Scene* scene = SCENE_MGR.GetCurrentScene();
 	for (int i = 0;i < MapData::TileMapCount;++i)
@@ -143,10 +169,33 @@ void UiEditor::Init()
 
 void UiEditor::Release()
 {
+	uiEditTile->Release();
 	delete uiEditTile;
+	uiEditHitBox->Release();
 	delete uiEditHitBox;
+	uiEditMonster->Release();
 	delete uiEditMonster;
+	uiEditObject->Release();
 	delete uiEditObject;
+
+	selectedFileName->Release();
+	delete selectedFileName;
+
+	buttonNew->Release();
+	delete buttonNew;
+	buttonSave->Release();
+	delete buttonSave;
+	buttonLoad->Release();
+	delete buttonLoad;
+
+	buttonTile->Release();
+	delete buttonTile;
+	buttonHitbox->Release();
+	delete buttonHitbox;
+	buttonMonster->Release();
+	delete buttonMonster;
+	buttonObject->Release();
+	delete buttonObject;
 }
 
 void UiEditor::Reset()
@@ -167,17 +216,44 @@ void UiEditor::Reset()
 
 	editorWindow.setFillColor({ 100,100,100,255 });
 
-	newButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonnew.png"));
-	saveButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonsave.png"));
-	loadButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonload.png"));
+	selectedFileName->Reset();
+	selectedFileName->Set(30);
+	selectedFileName->SetString("New File",true);
 
-	tileButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttontile.png"));
-	hitboxButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonhitbox.png"));
-	monsterButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonmonster.png"));
-	objectButton.setTexture(TEXTURE_MGR.Get("graphics/ui/mapeditor/uibuttonobject.png"));
+	buttonNew->Reset();
+	buttonNew->Set({ 90.f,45.f }, 20);
+	buttonNew->SetString("New", true);
+	buttonNew->SetClickedEvent([this]() { NewFile(); });
 
-	selectedFileName.setFont(FONT_MGR.Get("fonts/french.ttf"));
-	selectedFileName.setString("New File");
+	buttonSave->Reset();
+	buttonSave->Set({ 90.f,45.f }, 20);
+	buttonSave->SetString("Save", true);
+	buttonSave->SetClickedEvent([this]() { SaveFile(); });
+
+	buttonLoad->Reset();
+	buttonLoad->Set({ 90.f,45.f }, 20);
+	buttonLoad->SetString("Load", true);
+	buttonLoad->SetClickedEvent([this]() { LoadFile(); });
+
+	buttonTile->Reset();
+	buttonTile->Set({ 90.f,45.f }, 20);
+	buttonTile->SetString("Tile", true);
+	buttonTile->SetClickedEvent([this]() { ChangeGroupbox(GroupBox::Tile); });
+
+	buttonHitbox->Reset();
+	buttonHitbox->Set({ 90.f,45.f }, 20);
+	buttonHitbox->SetString("Hitbox", true);
+	buttonHitbox->SetClickedEvent([this]() { ChangeGroupbox(GroupBox::HitBox); });
+
+	buttonMonster->Reset();
+	buttonMonster->Set({ 90.f,45.f }, 20);
+	buttonMonster->SetString("Monster", true);
+	buttonMonster->SetClickedEvent([this]() { ChangeGroupbox(GroupBox::Monster); });
+
+	buttonObject->Reset();
+	buttonObject->Set({ 90.f,45.f }, 20);
+	buttonObject->SetString("Object", true);
+	buttonObject->SetClickedEvent([this]() { ChangeGroupbox(GroupBox::Object); });
 
 	SetSelectedTileLayer(-1);
 	ChangeGroupbox(GroupBox::Tile);
@@ -201,96 +277,30 @@ void UiEditor::Update(float dt)
 		break;
 	}
 
-	if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
-	{
-		sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToUi(InputMgr::GetMousePosition());
-		if (saveButton.getGlobalBounds().contains(mousepos))
-		{
-			FileDialog::OpenDialog([this](const std::wstring& path)
-				{
-					MapDataVC mapData;
+	buttonNew->Update(dt);
+	buttonSave->Update(dt);
+	buttonLoad->Update(dt);
 
-					for (int i = 0; i < MapData::TileMapCount;++i)
-					{
-						mapData.tileMapData[i] = editingTileMaps[i]->GetTileMapData();
-					}
-					mapData.hitBoxData = uiEditHitBox->GetHitBoxData();
-					mapData.playerStartPoint = uiEditHitBox->GetStartPoints();
-					mapData.monsterSpawnData = uiEditMonster->GetSpawnData();
-
-					MapDataLoader::Save(mapData, path);
-
-					int index = path.rfind(L"\\");
-					selectedFileName.setString(path.substr(++index));
-				}, false);
-			InputMgr::ResetMouseButton(sf::Mouse::Left);
-		}
-		else if (loadButton.getGlobalBounds().contains(mousepos))
-		{
-			FileDialog::OpenDialog([this](const std::wstring& path)
-				{
-					const MapDataVC& mapdata = MapDataLoader::Load(path);
-
-					for (int i = 0; i < MapData::TileMapCount;++i)
-					{
-						editingTileMaps[i]->Set(mapdata.tileMapData[i]);
-					}
-					if (uiEditHitBox != nullptr)
-					{
-						uiEditHitBox->SetHitBoxData(mapdata.hitBoxData);
-						uiEditHitBox->SetStartPositionData(mapdata.playerStartPoint);
-					}
-					if (uiEditMonster != nullptr)
-					{
-						uiEditMonster->SetSpawnData(mapdata.monsterSpawnData);
-					}
-
-					int index = path.rfind(L"\\");
-					selectedFileName.setString(path.substr(++index));
-				}, true);
-			InputMgr::ResetMouseButton(sf::Mouse::Left);
-		}
-		else if (newButton.getGlobalBounds().contains(mousepos))
-		{
-			selectedFileName.setString("New File");
-			for (int i = 0;i < MapData::TileMapCount;++i)
-			{
-				editingTileMaps[i]->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
-			}
-			uiEditHitBox->ClearHitBoxData();
-		}
-		else if (tileButton.getGlobalBounds().contains(mousepos))
-		{
-			ChangeGroupbox(GroupBox::Tile);
-		}
-		else if (hitboxButton.getGlobalBounds().contains(mousepos))
-		{
-			ChangeGroupbox(GroupBox::HitBox);
-		}
-		else if (monsterButton.getGlobalBounds().contains(mousepos))
-		{
-			ChangeGroupbox(GroupBox::Monster);
-		}
-		else if (objectButton.getGlobalBounds().contains(mousepos))
-		{
-			ChangeGroupbox(GroupBox::Object);
-		}
-	}
+	buttonTile->Update(dt);
+	buttonHitbox->Update(dt);
+	buttonMonster->Update(dt);
+	buttonObject->Update(dt);
 }
 
 void UiEditor::Draw(sf::RenderWindow& window)
 {
 	window.draw(editorWindow);
-	window.draw(newButton);
-	window.draw(loadButton);
-	window.draw(saveButton);
+	//window.draw(newButton);
+	buttonNew->Draw(window);
+	buttonLoad->Draw(window);
+	buttonSave->Draw(window);
 
-	window.draw(selectedFileName);
+	buttonTile->Draw(window);
+	buttonHitbox->Draw(window);
+	buttonMonster->Draw(window);
+	buttonObject->Draw(window);
 
-	window.draw(tileButton);
-	window.draw(hitboxButton);
-	window.draw(monsterButton);
-	window.draw(objectButton);
+	selectedFileName->Draw(window);
 
 	switch (selectedGroupBox)
 	{
@@ -346,32 +356,90 @@ void UiEditor::ChangeGroupbox(const UiEditor::GroupBox& selectedGroupBox)
 	switch (this->selectedGroupBox)
 	{
 	case UiEditor::GroupBox::Tile:
-		tileButton.setColor(sf::Color::White);
+		buttonTile->SetPressed(false);
 		break;
 	case UiEditor::GroupBox::HitBox:
-		hitboxButton.setColor(sf::Color::White);
+		buttonHitbox->SetPressed(false);
 		break;
 	case UiEditor::GroupBox::Monster:
-		monsterButton.setColor(sf::Color::White);
+		buttonMonster->SetPressed(false);
 		break;
 	case UiEditor::GroupBox::Object:
-		objectButton.setColor(sf::Color::White);
+		buttonObject->SetPressed(false);
 		break;
 	}
 	this->selectedGroupBox = selectedGroupBox;
 	switch (this->selectedGroupBox)
 	{
 	case UiEditor::GroupBox::Tile:
-		tileButton.setColor({ 150,150,150,255 });
+		buttonTile->SetPressed(true);
 		break;
 	case UiEditor::GroupBox::HitBox:
-		hitboxButton.setColor({ 150,150,150,255 });
+		buttonHitbox->SetPressed(true);
 		break;
 	case UiEditor::GroupBox::Monster:
-		monsterButton.setColor({ 150,150,150,255 });
+		buttonMonster->SetPressed(true);
 		break;
 	case UiEditor::GroupBox::Object:
-		objectButton.setColor({ 150,150,150,255 });
+		buttonObject->SetPressed(true);
 		break;
 	}
+}
+
+void UiEditor::NewFile()
+{
+	selectedFileName->SetString("New File", true);
+	for (int i = 0;i < MapData::TileMapCount;++i)
+	{
+		editingTileMaps[i]->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
+	}
+	uiEditHitBox->ClearHitBoxData();
+}
+
+void UiEditor::SaveFile()
+{
+	FileDialog::OpenDialog([this](const std::wstring& path)
+		{
+			MapDataVC mapData;
+
+			for (int i = 0; i < MapData::TileMapCount;++i)
+			{
+				mapData.tileMapData[i] = editingTileMaps[i]->GetTileMapData();
+			}
+			mapData.hitBoxData = uiEditHitBox->GetHitBoxData();
+			mapData.playerStartPoint = uiEditHitBox->GetStartPoints();
+			mapData.monsterSpawnData = uiEditMonster->GetSpawnData();
+
+			MapDataLoader::Save(mapData, path);
+
+			int index = path.rfind(L"\\");
+			selectedFileName->SetString(path.substr(++index));
+		}, false);
+	InputMgr::ResetMouseButton(sf::Mouse::Left);
+}
+
+void UiEditor::LoadFile()
+{
+	FileDialog::OpenDialog([this](const std::wstring& path)
+		{
+			const MapDataVC& mapdata = MapDataLoader::Load(path);
+
+			for (int i = 0; i < MapData::TileMapCount;++i)
+			{
+				editingTileMaps[i]->Set(mapdata.tileMapData[i]);
+			}
+			if (uiEditHitBox != nullptr)
+			{
+				uiEditHitBox->SetHitBoxData(mapdata.hitBoxData);
+				uiEditHitBox->SetStartPositionData(mapdata.playerStartPoint);
+			}
+			if (uiEditMonster != nullptr)
+			{
+				uiEditMonster->SetSpawnData(mapdata.monsterSpawnData);
+			}
+
+			int index = path.rfind(L"\\");
+			selectedFileName->SetString(path.substr(++index));
+		}, true);
+	InputMgr::ResetMouseButton(sf::Mouse::Left);
 }

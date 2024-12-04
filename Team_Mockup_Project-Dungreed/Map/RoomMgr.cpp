@@ -21,6 +21,7 @@ void RoomMgr::Reset()
 	for (auto& room : rooms)
 	{
 		scene->RemoveGo(room.second);
+		room.second->ClearMonsters();
 		room.second->Release();
 		delete room.second;
 	}

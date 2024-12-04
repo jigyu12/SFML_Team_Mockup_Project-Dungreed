@@ -2,6 +2,8 @@
 
 class TileMap;
 class UiEditor;
+class Button;
+class TextGo;
 
 class UiEditHitBox : public GameObject
 {
@@ -20,14 +22,15 @@ protected:
 
 	EditStatus editStatus;
 	HitBoxEditStatus hitboxStatus;
-	HitBoxData::Type startPosType;
+	HitBoxData::Type hitboxType;
 
 	sf::RectangleShape boxWindow;
 
-	std::vector<sf::Sprite> editStatusButtons;
-	std::vector<sf::Sprite> dirButtons;
+	std::vector<Button*> editStatusButtons;
+	std::vector<Button*> hitBoxTypeButtons;
+	std::vector<Button*> dirButtons;
 	std::vector<sf::Vector2f> startPositions;
-	std::vector<sf::Text> positionTexts;
+	std::vector<TextGo*> positionTexts;
 
 	sf::Sprite spawnPoint;
 
@@ -55,6 +58,7 @@ public:
 
 	std::vector<HitBoxData> GetHitBoxData() const;
 	void SetHitBoxData(const std::vector<HitBoxData>& data);
+	void SetEditStatus(const EditStatus& status);
 	std::vector<sf::Vector2f> GetStartPoints() { return startPositions; }
 	void SetStartPositionData(const std::vector<sf::Vector2f>& points) { startPositions = points; }
 	void ClearHitBoxData();
