@@ -72,7 +72,7 @@ void MapObject::Set(const ObjectData::Type& type)
 {
 	animator.ClearEvent();
 	this->type = type;
-
+	
 	switch (this->type)
 	{
 	case ObjectData::Type::Box:
@@ -86,10 +86,6 @@ void MapObject::Set(const ObjectData::Type& type)
 		break;
 	}
 	SetOrigin(Origins::BC);
-}
-
-void MapObject::SetStatus()
-{
 }
 
 void MapObject::OnDamaged(int damage)

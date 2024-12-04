@@ -12,30 +12,40 @@ void TorchMo::SetActive(bool active)
 	GameObject::SetActive(active);
 	if (light != nullptr)
 	{
-		light->SetActive(false);
+		light->SetActive(active);
 	}
 }
 
 void TorchMo::SetPosition(const sf::Vector2f& pos)
 {
 	MapObject::SetPosition(pos);
-	light->SetPosition(position);
+	if (light != nullptr)
+	{
+		light->SetPosition(position);
+	}
 }
 
 void TorchMo::SetRotation(float angle)
 {
 	MapObject::SetRotation(angle);
-	light->SetRotation(angle);
+	if (light != nullptr)
+	{
+		light->SetRotation(angle);
+	}
 }
 
 void TorchMo::SetScale(const sf::Vector2f& scale)
 {
 	MapObject::SetScale(scale);
-	light->SetScale(scale);
+	if (light != nullptr)
+	{
+		light->SetScale(scale);
+	}
 }
 
-void TorchMo::Set(const ObjectData::Type& datum)
+void TorchMo::Set(const ObjectData::Type& type)
 {
+	MapObject::Set(type);
 	animator.ClearEvent();
 	animator.Play(RESOURCEID_TABLE->Get("Animation", "Torch"));
 	animator.AddEvent("torchidle", 0, [this]() {SetOrigin(originPreset);});

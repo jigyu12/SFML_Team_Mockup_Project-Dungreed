@@ -213,6 +213,9 @@ void UiEditHitBox::Reset()
 		case (int)HitBoxData::Type::SpawnTrigger:
 			hitBoxTypeButtons[i]->SetString("SpawnTrigger", true);
 			break;
+		case (int)HitBoxData::Type::Spike:
+			hitBoxTypeButtons[i]->SetString("Spike", true);
+			break;
 		}
 		hitBoxTypeButtons[i]->SetClickedEvent([this, i]()
 			{
@@ -344,6 +347,9 @@ void UiEditHitBox::Update(float dt)
 					case HitBoxData::Type::SpawnTrigger:
 						shape->setOutlineColor(sf::Color::White);
 						break;
+					case HitBoxData::Type::Spike:
+						shape->setOutlineColor(sf::Color::Black);
+						break;
 					}
 					shape->setOutlineThickness(1.f);
 					shape->setPosition(editStartPos);
@@ -382,7 +388,7 @@ void UiEditHitBox::Update(float dt)
 				}
 				if (InputMgr::GetMouseButtonDown(sf::Mouse::Middle))
 				{
-					selectedHitBox->rotate(-45.f);
+					selectedHitBox->rotate(45.f);
 				}
 				if (InputMgr::GetMouseButtonDown(sf::Mouse::XButton1))
 				{

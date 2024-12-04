@@ -53,21 +53,23 @@ void ObjectParticle::Release()
 
 void ObjectParticle::Reset()
 {
-	room = ROOM_MGR.GetCurrentRoom();
 }
 
 void ObjectParticle::Update(float dt)
 {
+	velocity += gravity * dt;
+	if (returnThis)
+	{
+		returnThis();
+	}
 }
 
 void ObjectParticle::Draw(sf::RenderWindow& window)
 {
+	window.draw(body);
 }
 
-void ObjectParticle::ReturnThis()
+void ObjectParticle::Start(const std::string& name)
 {
-	if (room != nullptr)
-	{
-		room->ReturnObjectParticle(this);
-	}
+	body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("", "")));
 }

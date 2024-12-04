@@ -388,7 +388,7 @@ void UiEditor::ChangeGroupbox(const UiEditor::GroupBox& selectedGroupBox)
 
 void UiEditor::NewFile()
 {
-	selectedFileName->SetString("New File", true);
+	selectedFileName->SetString("New File", true); 
 	for (int i = 0;i < MapData::TileMapCount;++i)
 	{
 		editingTileMaps[i]->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));

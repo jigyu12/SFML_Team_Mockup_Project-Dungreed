@@ -27,8 +27,9 @@ struct ObjectData
 
 	Type type;
 	sf::Vector2f position;
+	float rotation;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(ObjectData, type, position)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(ObjectData, type, position, rotation)
 };
 
 struct HitBoxData
@@ -42,6 +43,7 @@ struct HitBoxData
 		Immovable,
 		Downable,
 		SpawnTrigger,
+		Spike,
 		Count,
 	};
 

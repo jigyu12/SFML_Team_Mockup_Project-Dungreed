@@ -27,3 +27,4 @@ ID,string
 "Immovable","IMMOVABLE"
 "Downable","DOWNABLE"
 "SpawnTrigger","SPAWN\nTRIGGER"
+"Spike","SPIKE"

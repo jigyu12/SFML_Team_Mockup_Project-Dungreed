@@ -9,6 +9,8 @@
 #include "SkeletonDog.h"
 #include "ParticleGo.h"
 #include "TorchMo.h"
+#include "DoorMo.h"
+#include "BreakableMo.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -123,6 +125,9 @@ void Room::Init()
 
 void Room::Release()
 {
+	ClearTookObject();
+
+
 	for (auto& hitbox : hitBoxes)
 	{
 		delete hitbox.first;
@@ -154,6 +159,14 @@ void Room::Reset()
 }
 
 void Room::Update(float dt)
+{
+	for (auto& obj : objects)
+	{
+		obj.first->Update(dt);
+	}
+}
+
+void Room::LateUpdate(float dt)
 {
 	if (player != nullptr)
 	{
@@ -187,9 +200,28 @@ void Room::Update(float dt)
 					&& wave == -2)
 				{
 					++wave;
+					for (const auto& object : objects)
+					{
+						if (object.second.type == ObjectData::Type::Door)
+						{
+							object.first->SetStatus(MapObject::Status::Close);
+						}
+					}
+				}
+				break;
+			case HitBoxData::Type::Spike:
+				if (Utils::CheckCollision(player->GetHitBox(), *hitbox.first))
+				{
+					player->OnDamage(5);
 				}
 				break;
 			}
+		}
+
+		if (ROOM_MGR.GetCurrentRoom() == this
+			&& !tileMaps[0]->GetGlobalBounds().contains(player->GetHitBox().GetCenter()))
+		{
+			EnterRoom(enteredPortal);
 		}
 	}
 	int count = 0;
@@ -208,6 +240,13 @@ void Room::Update(float dt)
 	if (monsters.size() == count)
 	{
 		cleared = true;
+		for (const auto& object : objects)
+		{
+			if (object.second.type == ObjectData::Type::Door)
+			{
+				object.first->SetStatus(MapObject::Status::Open);
+			}
+		}
 	}
 	else if (wavecount == 0 && wave != -2)
 	{
@@ -221,13 +260,6 @@ void Room::Update(float dt)
 		}
 	}
 
-	if (player != nullptr
-		&& ROOM_MGR.GetCurrentRoom() == this
-		&& !tileMaps[0]->GetGlobalBounds().contains(player->GetHitBox().GetCenter()))
-	{
-		EnterRoom(enteredPortal);
-	}
-
 	for (auto& monster : monsters)
 	{
 		if (ROOM_MGR.GetCurrentRoom() == this
@@ -235,11 +267,6 @@ void Room::Update(float dt)
 		{
 			monster.first->SetPosition(tileMaps[0]->GetTransform().transformPoint(monster.second.position));
 		}
-	}
-
-	for (auto& obj : objects)
-	{
-		obj.first->Update(dt);
 	}
 }
 
@@ -291,12 +318,16 @@ void Room::LoadMapData(const std::string& path)
 		case ObjectData::Type::Torch:
 			obj = new TorchMo();
 			break;
+		case ObjectData::Type::Door:
+			obj = new DoorMo();
+			break;
 		}
 		if (obj != nullptr)
 		{
 			obj->Init();
 			obj->Reset();
 			obj->Set(objData.type);
+			obj->SetRotation(objData.rotation);
 
 			objects.push_back({ obj,objData });
 		}
@@ -327,7 +358,8 @@ void Room::LoadMapData(const std::string& path)
 			wave = -2;
 			hitbox->rect.setOutlineColor(sf::Color::White);
 			break;
-		default:
+		case HitBoxData::Type::Spike:
+			hitbox->rect.setOutlineColor(sf::Color::Black);
 			break;
 		}
 		hitBoxes.push_back({ hitbox,hitBoxDatum });
@@ -377,9 +409,25 @@ void Room::LoadMapData(const std::string& path)
 	viewbounds.height -= worldViewSize.y;
 }
 
-const std::vector<std::pair<HitBox*, HitBoxData>>& Room::GetHitBoxes() const
+std::vector<std::pair<HitBox*, HitBoxData>> Room::GetHitBoxes() const
 {
-	return hitBoxes;
+	std::vector<std::pair<HitBox*, HitBoxData>> data;
+
+	data = hitBoxes;
+
+	for (const auto& object : objects)
+	{
+		if (object.second.type == ObjectData::Type::Door
+			&& object.first->GetStatus() == MapObject::Status::Close)
+		{
+			HitBoxData hitBoxData;
+			hitBoxData.type = HitBoxData::Type::Immovable;
+
+			data.push_back({&object.first->GetHitBox(),hitBoxData });
+		}
+	}
+
+	return data;
 }
 
 void Room::EnterRoom(HitBoxData::Type connection)
@@ -399,6 +447,14 @@ void Room::EnterRoom(HitBoxData::Type connection)
 
 	if (wave == 0 && !cleared)
 	{
+		for (const auto& object : objects)
+		{
+			if (object.second.type == ObjectData::Type::Door)
+			{
+				object.first->SetStatus(MapObject::Status::Close);
+			}
+		}
+
 		for (const std::pair<Monster*, SpawnData>& monster : monsters)
 		{
 			if (wave == monster.second.wave && !monster.first->IsDead())
@@ -423,6 +479,7 @@ void Room::ClearMonsters()
 ObjectParticle* Room::TakeObjectParticle()
 {
 	ObjectParticle* objectParticle = particlePool.Take();
+	objectParticle->SetReturnThis([this, objectParticle]() {ReturnObjectParticle(objectParticle);});
 	particles.push_back(objectParticle);
 	if (scene != nullptr)
 	{
@@ -439,6 +496,19 @@ void Room::ReturnObjectParticle(ObjectParticle* particle)
 	}
 	particles.remove(particle);
 	particlePool.Return(particle);
+}
+
+void Room::ClearTookObject()
+{
+	if (scene != nullptr)
+	{
+		for (auto particle : particles)
+		{
+			scene->RemoveGo(particle);
+			particlePool.Return(particle);
+		}
+		particles.clear();
+	}
 }
 
 std::vector<Monster*> Room::GetMonsters() const

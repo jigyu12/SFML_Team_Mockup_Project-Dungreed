@@ -85,7 +85,7 @@ void SceneGame::Enter()
 	size.y /= 6.f;
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
-	ROOM_MGR.Reset();
+	ROOM_MGR.Reset(RESOURCEID_TABLE->Get("Map", "FloorData"));
 }
 
 void SceneGame::Exit()

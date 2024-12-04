@@ -17,7 +17,7 @@ protected:
 
 	sf::RectangleShape* selectedObject;
 	std::vector<Button*> objectList;
-	std::unordered_map<sf::RectangleShape*, ObjectData> objectData;
+	std::unordered_map<sf::RectangleShape*, ObjectData::Type> objectData;
 	UiEditor* uieditor;
 
 	ObjectData::Type selectedType;

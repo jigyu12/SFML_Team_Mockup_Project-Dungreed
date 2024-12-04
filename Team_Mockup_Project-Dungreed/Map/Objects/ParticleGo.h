@@ -8,10 +8,11 @@ protected:
 
 	sf::Sprite body;
 	
-	sf::Vector2f speed;
-	
-	Room* room;
+	sf::Vector2f velocity;
+	sf::Vector2f gravity;
+	float speed;
 
+	std::function<void()> returnThis;
 public:
 	ObjectParticle(const std::string& name = "");
 	~ObjectParticle() = default;
@@ -29,5 +30,7 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	void ReturnThis();
+	void Start(const std::string& name);
+
+	void SetReturnThis(std::function<void()> func) { returnThis = func; }
 };

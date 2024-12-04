@@ -6,7 +6,7 @@ class LightGo;
 
 class MapObject : public GameObject
 {
-protected:
+public:
 	enum class Status
 	{
 		Idle,
@@ -14,6 +14,7 @@ protected:
 		Close,
 		Broken,
 	};
+protected:
 
 	Status status;
 
@@ -42,6 +43,7 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	virtual void Set(const ObjectData::Type& datum);
-	virtual void SetStatus();
+	Status GetStatus() { return status; }
+	virtual void SetStatus(const Status& status) {}
 	virtual void OnDamaged(int damage);
 };

@@ -50,6 +50,7 @@ public:
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
+	void LateUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
 	void LoadMapData(const std::string& path);
@@ -57,7 +58,7 @@ public:
 	const sf::Vector2f& GetSubBGCenter() { return subBGCenter; }
 	const sf::FloatRect& GetViewBounds() { return viewbounds; }
 
-	const std::vector<std::pair<HitBox*, HitBoxData>>& GetHitBoxes() const;
+	std::vector<std::pair<HitBox*, HitBoxData>> GetHitBoxes() const;
 	std::vector<Monster*> GetMonsters() const;
 	std::vector<GameObject*> GetBreakableObjects() const;
 
@@ -67,4 +68,5 @@ public:
 
 	ObjectParticle* TakeObjectParticle();
 	void ReturnObjectParticle(ObjectParticle* particle);
+	void ClearTookObject();
 };

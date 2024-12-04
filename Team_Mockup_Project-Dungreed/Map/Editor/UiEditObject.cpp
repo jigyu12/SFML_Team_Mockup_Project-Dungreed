@@ -150,16 +150,12 @@ void UiEditObject::Update(float dt)
 			{
 				startPos = worldMousePos;
 
-				ObjectData objectDatum;
-				objectDatum.position = startPos;
-				objectDatum.type = selectedType;
-
 				status = EditStatus::Create;
 				sf::RectangleShape* shape = new sf::RectangleShape();
 				SetObjectRect(shape, selectedType);
 				shape->setPosition(startPos);
 				selectedObject = shape;
-				objectData.insert({ shape,objectDatum });
+				objectData.insert({ shape,selectedType });
 			}
 		}
 		else if (InputMgr::GetMouseButton(sf::Mouse::Left)
@@ -184,6 +180,10 @@ void UiEditObject::Update(float dt)
 				objectData.erase(found);
 				selectedObject = nullptr;
 			}
+		}
+		if (InputMgr::GetMouseButtonDown(sf::Mouse::Middle))
+		{
+			selectedObject->rotate(45.f);
 		}
 	}
 
@@ -233,7 +233,7 @@ void UiEditObject::ClearObjectData()
 
 void UiEditObject::SetObjectRect(sf::RectangleShape* shape, const ObjectData::Type& type)
 {
-	switch (selectedType)
+	switch (type)
 	{
 	case ObjectData::Type::Torch:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "TorchIcon")));
@@ -264,9 +264,15 @@ std::vector<ObjectData> UiEditObject::GetObjectData() const
 {
 	std::vector<ObjectData> data;
 
-	for (const auto& objectDatum : objectData)
+	for (const auto& object : objectData)
 	{
-		data.push_back(objectDatum.second);
+		ObjectData datum;
+
+		datum.position = object.first->getPosition();
+		datum.rotation = object.first->getRotation();
+		datum.type = object.second;
+
+		data.push_back(datum);
 	}
 	return data;
 }
@@ -279,9 +285,10 @@ void UiEditObject::SetObjectData(const std::vector<ObjectData>& data)
 	{
 		sf::RectangleShape* shape = new sf::RectangleShape();
 		shape->setPosition(datum.position);
+		shape->setRotation(datum.rotation);
 		SetObjectRect(shape, datum.type);
 		shape->setOutlineThickness(1.f);
 		selectedObject = shape;
-		objectData.insert({ shape,datum });
+		objectData.insert({ shape,datum.type });
 	}
 }

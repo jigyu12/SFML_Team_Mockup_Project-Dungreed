@@ -189,9 +189,11 @@ void RoomMgr::Reset(const std::string& path)
 			room->Init();
 			room->Reset();
 			room->LoadMapData(RESOURCEID_TABLE->Get("Map", datum.second));
+			room->SetActive(false);
 			scene->AddGo(room);
 			floors[floor.first].insert({ datum.first, room });
 		}
 	}
+	floors[currentFloor][currentRoom]->SetActive(true);
 	floors[currentFloor][currentRoom]->EnterRoom(HitBoxData::Type::PortalDown);
 }

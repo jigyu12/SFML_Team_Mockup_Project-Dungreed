@@ -266,7 +266,13 @@ std::vector<SpawnData> UiEditMonster::GetSpawnData() const
 	std::vector<SpawnData> data;
 	for (const auto& spawndatum : spawnData)
 	{
-		data.push_back(spawndatum.second);
+		SpawnData datum;
+
+		datum.position = spawndatum.first->getPosition();
+		datum.type = spawndatum.second.type;
+		datum.wave = spawndatum.second.wave;
+
+		data.push_back(datum);
 	}
 	return data;
 }

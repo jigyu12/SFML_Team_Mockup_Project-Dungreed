@@ -99,7 +99,7 @@ void HandCrossbow::LateUpdate(float dt)
 		isOnGround = false;
 
 		auto globalBounds = hitbox.rect.getGlobalBounds();
-		auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+		const auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 		for (auto& roomHitBox : roomHitBoxes)
 		{
 			if (Utils::CheckCollision(*roomHitBox.first, hitbox))
