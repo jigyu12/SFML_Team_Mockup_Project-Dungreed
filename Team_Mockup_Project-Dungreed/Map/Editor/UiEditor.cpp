@@ -429,6 +429,7 @@ void UiEditor::SaveFile()
 			}
 			mapData.hitBoxData = uiEditHitBox->GetHitBoxData();
 			mapData.playerStartPoint = uiEditHitBox->GetStartPoints();
+			mapData.roomData = uiEditHitBox->GetRoomData();
 			mapData.monsterSpawnData = uiEditMonster->GetSpawnData();
 			mapData.objectData = uiEditObject->GetObjectData();
 
@@ -452,6 +453,7 @@ void UiEditor::LoadFile()
 			}
 			uiEditHitBox->SetHitBoxData(mapdata.hitBoxData);
 			uiEditHitBox->SetStartPositionData(mapdata.playerStartPoint);
+			uiEditHitBox->SetRoomData(mapdata.roomData);
 			uiEditMonster->SetSpawnData(mapdata.monsterSpawnData);
 			uiEditObject->SetObjectData(mapdata.objectData);
 

@@ -27,16 +27,19 @@ void BreakableMo::Set(const ObjectData::Type& type)
 	switch (this->type)
 	{
 	case ObjectData::Type::Box:
-		animator.Play(RESOURCEID_TABLE->Get("Animation", "BoxIdle"));
+		body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BoxIcon")));
 		break;
 	case ObjectData::Type::BigBox:
-		animator.Play(RESOURCEID_TABLE->Get("Animation", "BigBoxIdle"));
+		body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BigBoxIcon")));
 		break;
 	case ObjectData::Type::OakDrum:
-		animator.Play(RESOURCEID_TABLE->Get("Animation", "OakDrumIdle"));
+		body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "OakDrumIcon")));
 		break;
 	case ObjectData::Type::Table:
-		animator.Play(RESOURCEID_TABLE->Get("Animation", "TableIdle"));
+		body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "TableIcon")));
+		break;
+	case ObjectData::Type::SkullTable:
+		body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SkullTableIcon")));
 		break;
 	}
 	SetOrigin(Origins::BC);
@@ -87,10 +90,19 @@ void BreakableMo::OnDamaged(int damage)
 			particle->Start("OakDrumParticle" + std::to_string(rand), pos);
 		}
 		break;
-	case ObjectData::Type::Table:
+	case ObjectData::Type::SkullTable:
 		for (int i = 0; i < particlecount;++i)
 		{
 			int rand = Utils::RandomRange(0, 7);
+			ParticleGo* particle = scene->TakeObjectParticle();
+
+			particle->Start("TableParticle" + std::to_string(rand), pos);
+		}
+		break;
+	case ObjectData::Type::Table:
+		for (int i = 0; i < particlecount;++i)
+		{
+			int rand = Utils::RandomRange(2, 7);
 			ParticleGo* particle = scene->TakeObjectParticle();
 
 			particle->Start("TableParticle" + std::to_string(rand), pos);

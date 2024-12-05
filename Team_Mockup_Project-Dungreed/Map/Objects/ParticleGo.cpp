@@ -125,8 +125,8 @@ void ParticleGo::Start(const std::string& name, const sf::Vector2f& position)
 {
 	body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", name)));
 	SetPosition(position);
-	velocity = Utils::RandomInUnitCircle() * 100.f;
-	rotationSpeed = Utils::RandomRange(-10.f, 10.f);
+	velocity = Utils::RandomInUnitCircle() * 30.f;
+	rotationSpeed = Utils::RandomRange(-5.f, 5.f);
 	gravity.y = 50.f;
 	timer = 0.f;
 	SetOrigin(Origins::MC);

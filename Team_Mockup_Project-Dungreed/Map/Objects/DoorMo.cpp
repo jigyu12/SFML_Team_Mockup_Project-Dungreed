@@ -6,24 +6,12 @@ DoorMo::DoorMo(const std::string& name)
 {
 }
 
-void DoorMo::Update(float dt)
-{
-	MapObject::Update(dt);
-
-	hitbox.UpdateTr(body, { 1,2,64,16 });
-	hitbox.rect.setOutlineColor(sf::Color::Red);
-}
-
-void DoorMo::Draw(sf::RenderWindow& window)
-{
-	MapObject::Draw(window);
-	hitbox.Draw(window);
-}
-
 void DoorMo::Set(const ObjectData::Type& type)
 {
 	MapObject::Set(type);
-	animator.AddEvent("dooropen", 7, [this]() {SetStatus(Status::Broken);});
+	animator.AddEvent("dooropen", 10, [this]() {SetStatus(Status::Broken);});
+	animator.AddEvent("doorclose", 10, [this]() {SetStatus(Status::Broken);});
+
 }
 
 void DoorMo::SetStatus(const Status& status)
@@ -32,19 +20,19 @@ void DoorMo::SetStatus(const Status& status)
 	switch (status)
 	{
 	case MapObject::Status::Idle:
-		SetActive(false);
+		animator.Resume();
 		break;
 	case MapObject::Status::Open:
 		animator.Play(RESOURCEID_TABLE->Get("Animation", "DoorOpen"));
+		SetOrigin(Origins::BC);
+		animator.Stop();
 		break;
 	case MapObject::Status::Close:
-		SetActive(true);
 		animator.Play(RESOURCEID_TABLE->Get("Animation", "DoorClose"));
-		animator.PlayQueue(RESOURCEID_TABLE->Get("Animation", "DoorIdle"));
-		SetOrigin(originPreset);
+		SetOrigin(Origins::BC);
+		animator.Stop();
 		break;
 	case MapObject::Status::Broken:
-		SetActive(false);
 		break;
 	}
 	SetOrigin(Origins::BC);

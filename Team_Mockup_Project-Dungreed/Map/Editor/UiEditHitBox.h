@@ -20,6 +20,8 @@ protected:
 		Count,
 	};
 
+	std::vector<Button*> roomTypeButtons;
+
 	EditStatus editStatus;
 	HitBoxEditStatus hitboxStatus;
 	HitBoxData::Type hitboxType;
@@ -38,6 +40,9 @@ protected:
 	std::unordered_map<sf::RectangleShape*, HitBoxData::Type> hitboxes;
 	UiEditor* uieditor;
 	sf::Vector2f editStartPos;
+
+	RoomData::Type selectedRoomType;
+
 public:
 	UiEditHitBox(const std::string& name = "");
 	~UiEditHitBox() = default;
@@ -57,7 +62,9 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	std::vector<HitBoxData> GetHitBoxData() const;
+	RoomData GetRoomData() const;
 	void SetHitBoxData(const std::vector<HitBoxData>& data);
+	void SetRoomData(const RoomData& data);
 	void SetEditStatus(const EditStatus& status);
 	std::vector<sf::Vector2f> GetStartPoints() { return startPositions; }
 	void SetStartPositionData(const std::vector<sf::Vector2f>& points) { startPositions = points; }

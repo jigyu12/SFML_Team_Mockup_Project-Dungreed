@@ -87,6 +87,7 @@ void TextGo::SetString(const std::string& id, bool useTable)
 void TextGo::SetString(const std::wstring& id)
 {
 	text.setString(id);
+	SetOrigin(originPreset);
 }
 
 void TextGo::SetString(const std::string& id, const std::wstring& str)

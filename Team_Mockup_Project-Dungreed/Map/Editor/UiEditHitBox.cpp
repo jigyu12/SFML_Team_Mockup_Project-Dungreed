@@ -31,7 +31,11 @@ void UiEditHitBox::SetPosition(const sf::Vector2f& pos)
 	}
 	for (int i = 0; i < hitBoxTypeButtons.size();++i)
 	{
-		hitBoxTypeButtons[i]->SetPosition(transform.transformPoint(50.f + (i % 4) * 100.f, 90.f + (i / 4) * 60.f));
+		hitBoxTypeButtons[i]->SetPosition(transform.transformPoint(50.f + (i % 4) * 100.f, 150.f + (i / 4) * 60.f));
+	}
+	for (int i = 0; i < roomTypeButtons.size();++i)
+	{
+		roomTypeButtons[i]->SetPosition(transform.transformPoint(50.f + 100 * i, 90.f));
 	}
 }
 
@@ -78,6 +82,7 @@ void UiEditHitBox::Init()
 	dirButtons.resize(4);
 	positionTexts.resize(4);
 	startPositions.resize(4);
+	roomTypeButtons.resize((int)RoomData::Type::Count);
 
 	for (int i = 0;i < editStatusButtons.size();++i)
 	{
@@ -96,7 +101,11 @@ void UiEditHitBox::Init()
 		positionTexts[i] = new TextGo(RESOURCEID_TABLE->Get("Font", "French"));
 		positionTexts[i]->Init();
 	}
-
+	for (int i = 0; i < roomTypeButtons.size();++i)
+	{
+		roomTypeButtons[i] = new Button();
+		roomTypeButtons[i]->Init();
+	}
 }
 
 void UiEditHitBox::Release()
@@ -129,6 +138,12 @@ void UiEditHitBox::Release()
 	}
 	dirButtons.clear();
 	positionTexts.clear();
+	for (int i = 0; i < roomTypeButtons.size();++i)
+	{
+		roomTypeButtons[i]->Release();
+		delete roomTypeButtons[i];
+	}
+	roomTypeButtons.clear();
 }
 
 void UiEditHitBox::Reset()
@@ -178,18 +193,13 @@ void UiEditHitBox::Reset()
 			dirButtons[i]->SetString("Right", true);
 			break;
 		}
-		dirButtons[i]->SetClickedEvent([this, i]()
-			{
-				dirButtons[(int)hitboxType]->SetPressed(false);
-				hitboxType = (HitBoxData::Type)i;
-				dirButtons[(int)hitboxType]->SetPressed(true);
-			});
+		dirButtons[i]->SetClickedEvent([this, i]() { hitboxType = (HitBoxData::Type)i; });
 	}
 
 	for (int i = 0;i < hitBoxTypeButtons.size();++i)
 	{
 		hitBoxTypeButtons[i]->Reset();
-		hitBoxTypeButtons[i]->Set({ 90.f,45.f }, 20);
+		hitBoxTypeButtons[i]->Set({ 90.f,45.f }, 16);
 		switch (i)
 		{
 		case (int)HitBoxData::Type::PortalUp:
@@ -217,13 +227,27 @@ void UiEditHitBox::Reset()
 			hitBoxTypeButtons[i]->SetString("Spike", true);
 			break;
 		}
-		hitBoxTypeButtons[i]->SetClickedEvent([this, i]()
-			{
-				hitBoxTypeButtons[(int)hitboxType]->SetPressed(false);
-				hitBoxTypeButtons[i]->SetPressed(true);
-				hitboxType = (HitBoxData::Type)i;
-			});
+		hitBoxTypeButtons[i]->SetClickedEvent([this, i]() { hitboxType = (HitBoxData::Type)i; });
 
+	}
+
+	for (int i = 0; i < roomTypeButtons.size();++i)
+	{
+		roomTypeButtons[i]->Reset();
+		roomTypeButtons[i]->Set({ 90.f,45.f }, 16);
+		switch ((RoomData::Type)i)
+		{
+		case RoomData::Type::Enter:
+			roomTypeButtons[i]->SetString("Enter", true);
+			break;
+		case RoomData::Type::Exit:
+			roomTypeButtons[i]->SetString("Exit", true);
+			break;
+		case RoomData::Type::Normal:
+			roomTypeButtons[i]->SetString("Normal", true);
+			break;
+		}
+		roomTypeButtons[i]->SetClickedEvent([this, i]() { selectedRoomType = (RoomData::Type)i; });
 	}
 
 	for (int i = 0; i < positionTexts.size();++i)
@@ -239,15 +263,26 @@ void UiEditHitBox::Reset()
 
 	hitboxStatus = HitBoxEditStatus::Create;
 	editStatus = EditStatus::Hitbox;
-	editStatusButtons[0]->SetPressed(true);
 	hitboxType = HitBoxData::Type::Immovable;
-	hitBoxTypeButtons[(int)hitboxType]->SetPressed(true);
+	selectedRoomType = RoomData::Type::Normal;
 }
 
 void UiEditHitBox::Update(float dt)
 {
 	if (InputMgr::GetMousePosition().x < 480.f)
 	{
+		for (int i = 0; i < hitBoxTypeButtons.size();++i)
+		{
+			hitBoxTypeButtons[i]->SetPressed(i == (int)hitboxType);
+		}
+		for (int i = 0; i < roomTypeButtons.size();++i)
+		{
+			roomTypeButtons[i]->SetPressed(i == (int)selectedRoomType);
+		}
+		for (int i = 0; i < dirButtons.size();++i)
+		{
+			dirButtons[i]->SetPressed(i == (int)hitboxType);
+		}
 		for (int i = 0; i < editStatusButtons.size();++i)
 		{
 			editStatusButtons[i]->Update(dt);
@@ -259,7 +294,10 @@ void UiEditHitBox::Update(float dt)
 			{
 				hitBoxTypeButtons[i]->Update(dt);
 			}
-
+			for (int i = 0; i < roomTypeButtons.size();++i)
+			{
+				roomTypeButtons[i]->Update(dt);
+			}
 			break;
 		case UiEditHitBox::EditStatus::StartPosition:
 			for (int i = 0; i < dirButtons.size();++i)
@@ -268,6 +306,7 @@ void UiEditHitBox::Update(float dt)
 			}
 			break;
 		}
+		
 	}
 	else
 	{
@@ -322,7 +361,6 @@ void UiEditHitBox::Update(float dt)
 						}
 					}
 				}
-
 
 				if (selectedHitBox == nullptr)
 				{
@@ -466,6 +504,10 @@ void UiEditHitBox::Draw(sf::RenderWindow& window)
 		{
 			hitBoxTypeButtons[i]->Draw(window);
 		}
+		for (int i = 0; i < roomTypeButtons.size();++i)
+		{
+			roomTypeButtons[i]->Draw(window);
+		}
 	}
 	else if (editStatus == EditStatus::StartPosition)
 	{
@@ -518,6 +560,23 @@ std::vector<HitBoxData> UiEditHitBox::GetHitBoxData() const
 	return data;
 }
 
+RoomData UiEditHitBox::GetRoomData() const
+{
+	RoomData roomData;
+
+	roomData.type = selectedRoomType;
+
+	for (const auto& hitBox : hitboxes)
+	{
+		if ((int)hitBox.second < 4)
+		{
+			roomData.connection[(int)hitBox.second] = true;
+		}
+	}
+
+	return roomData;
+}
+
 void UiEditHitBox::SetHitBoxData(const std::vector<HitBoxData>& data)
 {
 	for (auto& hitbox : hitboxes)
@@ -554,6 +613,11 @@ void UiEditHitBox::SetHitBoxData(const std::vector<HitBoxData>& data)
 		}
 		hitboxes.insert({ shape ,datum.type });
 	}
+}
+
+void UiEditHitBox::SetRoomData(const RoomData& data)
+{
+	selectedRoomType = data.type;
 }
 
 void UiEditHitBox::SetEditStatus(const EditStatus& status)

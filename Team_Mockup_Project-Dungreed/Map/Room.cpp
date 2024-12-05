@@ -10,6 +10,7 @@
 #include "ParticleGo.h"
 #include "TorchMo.h"
 #include "DoorMo.h"
+#include "SealStoneMo.h"
 #include "BreakableMo.h"
 #include "SkellBoss.h"
 #include "SkellBossLeftHand.h"
@@ -201,7 +202,7 @@ void Room::LateUpdate(float dt)
 					++wave;
 					for (const auto& object : objects)
 					{
-						if (object.second.type == ObjectData::Type::Door)
+						if (object.second.type == ObjectData::Type::SealStone)
 						{
 							object.first->SetStatus(MapObject::Status::Close);
 						}
@@ -242,7 +243,7 @@ void Room::LateUpdate(float dt)
 		cleared = true;
 		for (const auto& object : objects)
 		{
-			if (object.second.type == ObjectData::Type::Door)
+			if (object.second.type == ObjectData::Type::SealStone)
 			{
 				object.first->SetStatus(MapObject::Status::Open);
 			}
@@ -319,14 +320,18 @@ void Room::LoadMapData(const std::string& path)
 		case ObjectData::Type::Torch:
 			obj = new TorchMo();
 			break;
-		case ObjectData::Type::Door:
-			obj = new DoorMo();
+		case ObjectData::Type::SealStone:
+			obj = new SealStoneMo();
 			break;
 		case ObjectData::Type::BigBox:
 		case ObjectData::Type::Box:
 		case ObjectData::Type::OakDrum:
 		case ObjectData::Type::Table:
+		case ObjectData::Type::SkullTable:
 			obj = new BreakableMo();
+			break;
+		case ObjectData::Type::Door:
+			obj = new DoorMo();
 			break;
 		}
 		if (obj != nullptr)
@@ -335,7 +340,17 @@ void Room::LoadMapData(const std::string& path)
 			obj->Reset();
 			obj->Set(objData.type);
 			obj->SetRotation(objData.rotation);
-
+			if (objData.type == ObjectData::Type::Door)
+			{
+				if (mapData.roomData.type == RoomData::Type::Enter)
+				{
+					obj->SetStatus(MapObject::Status::Close);
+				}
+				else if (mapData.roomData.type == RoomData::Type::Exit)
+				{
+					obj->SetStatus(MapObject::Status::Open);
+				}
+			}
 			objects.push_back({ obj,objData });
 		}
 	}
@@ -434,7 +449,7 @@ std::vector<std::pair<HitBox*, HitBoxData>> Room::GetHitBoxes() const
 
 	for (const auto& object : objects)
 	{
-		if (object.second.type == ObjectData::Type::Door
+		if (object.second.type == ObjectData::Type::SealStone
 			&& object.first->GetStatus() == MapObject::Status::Close)
 		{
 			HitBoxData hitBoxData;
@@ -462,11 +477,23 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		}
 	}
 
+	if (mapData.roomData.type == RoomData::Type::Enter)
+	{
+		for (auto& object : objects)
+		{
+			if (object.second.type == ObjectData::Type::Door
+				&& object.first->GetStatus() == MapObject::Status::Close)
+			{
+				object.first->SetStatus(MapObject::Status::Idle);
+			}
+		}
+	}
+
 	if (wave == 0 && !cleared)
 	{
 		for (const auto& object : objects)
 		{
-			if (object.second.type == ObjectData::Type::Door
+			if (object.second.type == ObjectData::Type::SealStone
 				&& object.first->GetStatus() != MapObject::Status::Close)
 			{
 				object.first->SetStatus(MapObject::Status::Close);
@@ -521,6 +548,7 @@ std::vector<MapObject*> Room::GetBreakableObjects() const
 		case ObjectData::Type::Box:
 		case ObjectData::Type::OakDrum:
 		case ObjectData::Type::Table:
+		case ObjectData::Type::SkullTable:
 			vect.push_back(obj.first);
 			break;
 		default:

@@ -1,5 +1,0 @@
-ID,FPS,"LoopType (0: Single, 1: Loop)"
-tableidle,1,0
-
-TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
-graphics/map/objects/table/TortureTable1.png,0,0,45,19,0

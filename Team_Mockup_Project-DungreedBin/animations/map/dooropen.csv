@@ -1,12 +1,15 @@
 ID,FPS,"LoopType (0: Single, 1: Loop)"
-dooropen,10,0
+dooropen,24,0
 
 TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
-graphics/map/objects/door/Stele16.png,0,0,66,20,0
-graphics/map/objects/door/Stele17.png,0,0,66,20,0
-graphics/map/objects/door/Stele18.png,0,0,66,20,0
-graphics/map/objects/door/Stele19.png,0,0,66,20,0
-graphics/map/objects/door/Stele20.png,0,0,66,20,0
-graphics/map/objects/door/Stele21.png,0,0,66,20,0
-graphics/map/objects/door/Stele22.png,0,0,66,20,0
-graphics/map/objects/door/Stele22.png,0,0,66,20,0
+graphics/map/objects/door/Door9.png,0,0,55,65,0
+graphics/map/objects/door/Door8.png,0,0,55,65,0
+graphics/map/objects/door/Door7.png,0,0,55,65,0
+graphics/map/objects/door/Door6.png,0,0,55,65,0
+graphics/map/objects/door/Door5.png,0,0,55,65,0
+graphics/map/objects/door/Door4.png,0,0,55,65,0
+graphics/map/objects/door/Door3.png,0,0,55,65,0
+graphics/map/objects/door/Door2.png,0,0,55,65,0
+graphics/map/objects/door/Door1.png,0,0,55,65,0
+graphics/map/objects/door/Door0.png,0,0,55,65,0
+graphics/map/objects/door/Door0.png,0,0,55,65,0

@@ -104,6 +104,11 @@ void Animator::Stop()
 	isPlaying = false;
 }
 
+void Animator::Resume()
+{
+	isPlaying = true;
+}
+
 void Animator::SetFrame(const AnimationFrame& frame)
 {
 	sprite->setTexture(TEXTURE_MGR.Get(frame.texId));

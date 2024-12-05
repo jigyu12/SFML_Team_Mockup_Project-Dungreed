@@ -30,7 +30,6 @@
     </ClCompile>
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Framework\SceneDev3.cpp" />
-    <ClCompile Include="Map\MapObject.cpp" />
     <ClCompile Include="Map\MapData.cpp" />
     <ClCompile Include="Map\Room.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -87,6 +86,15 @@
     <ClCompile Include="SkellBossBullet.cpp" />
     <ClCompile Include="MainTitleScene.cpp" />
     <ClCompile Include="MainTitleUi.cpp" />
+    <ClCompile Include="Map\Objects\BreakableMo.cpp" />
+    <ClCompile Include="Map\Objects\SealStoneMo.cpp" />
+    <ClCompile Include="Map\Objects\LightGo.cpp" />
+    <ClCompile Include="Map\Objects\MapObject.cpp" />
+    <ClCompile Include="Map\Objects\ParticleGo.cpp" />
+    <ClCompile Include="SkellBossLaser.cpp" />
+    <ClCompile Include="Map\Objects\TorchMo.cpp" />
+    <ClCompile Include="Map\Objects\BackgroundMo.cpp" />
+    <ClCompile Include="Map\Objects\DoorMo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -124,7 +132,6 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="Framework\DefineJson.h" />
     <ClInclude Include="Framework\SceneDev3.h" />
-    <ClInclude Include="Map\MapObject.h" />
     <ClInclude Include="Map\MapData.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Map\Room.h" />
@@ -181,6 +188,15 @@
     <ClInclude Include="SkellBossBullet.h" />
     <ClInclude Include="MainTitleScene.h" />
     <ClInclude Include="MainTitleUi.h" />
+    <ClInclude Include="Map\Objects\BreakableMo.h" />
+    <ClInclude Include="Map\Objects\SealStoneMo.h" />
+    <ClInclude Include="Map\Objects\LightGo.h" />
+    <ClInclude Include="Map\Objects\MapObject.h" />
+    <ClInclude Include="Map\Objects\ParticleGo.h" />
+    <ClInclude Include="SkellBossLaser.h" />
+    <ClInclude Include="Map\Objects\TorchMo.h" />
+    <ClInclude Include="Map\Objects\BackgroundMo.h" />
+    <ClInclude Include="Map\Objects\DoorMo.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">
