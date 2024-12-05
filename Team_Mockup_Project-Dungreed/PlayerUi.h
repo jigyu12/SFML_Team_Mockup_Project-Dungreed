@@ -1,36 +1,39 @@
 #pragma once
 #include "GameObject.h"
+
+
 class PlayerUi : public GameObject
 {
 protected:
 	sf::Vector2f maxHpSize = { 200.f,30.f };
 	sf::RectangleShape maxHp;
 	sf::Text textHp;
+	sf::Text level;
 	
 	Player* player;
 	//피통
-	sf::Sprite PlayerLife;
-	sf::Sprite PlayerLifeBackGround;
-	sf::Sprite PlayerHpBar;
+	sf::Sprite playerLife;
+	sf::Sprite playerLifeBackGround;
+	sf::Sprite playerHpBar;
 	//대쉬 이미지
 
 	//대쉬 비워져있을때
-	sf::Sprite PlayerDashFirstFrame;
-	sf::Sprite PlayerDashSecondFrame;
+	sf::Sprite playerDashFirstFrame;
+	sf::Sprite playerDashSecondFrame;
 	
 	//대쉬 채워져있을때
-	sf::Sprite PlayerDashFirstGauge;
-	sf::Sprite PlayerDashSecondGauge;
-	
+	sf::Sprite playerDashFirstGauge;
+	sf::Sprite playerDashSecondGauge;
+	//
 	
 
 
-	std::string PlayerLifeBase = "graphics/ui/PlayerLifeBase 1.png";
-	std::string PlayerLifeBack = "graphics/ui/PlayerLifeBack1.png";
-	std::string PlayerRedBar = "graphics/ui/LifeBar.png";
+	std::string playerLifeBase = "graphics/ui/PlayerLifeBase 1.png";
+	std::string playerLifeBack = "graphics/ui/PlayerLifeBack1.png";
+	std::string playerRedBar = "graphics/ui/LifeBar.png";
 
 	//대쉬 (비워져있을때)
-	std::string PlayerDashBase0 = "graphics/ui/DashCountBase0.png";
+	std::string playerDashBase0 = "graphics/ui/DashCountBase0.png";
 	std::string playerDashBase2 = "graphics/ui/DashCountBase2.png";
 
 	//대쉬 (채워져있을때 이미지)
@@ -58,6 +61,6 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 	void SetHp(int hp, int max);
-
+	void SetLevel(int level);
 };
 

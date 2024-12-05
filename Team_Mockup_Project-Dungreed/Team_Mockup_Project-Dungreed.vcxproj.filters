@@ -95,6 +95,7 @@
     <ClCompile Include="Map\Objects\TorchMo.cpp" />
     <ClCompile Include="Map\Objects\BackgroundMo.cpp" />
     <ClCompile Include="Map\Objects\DoorMo.cpp" />
+    <ClCompile Include="BridGo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Map\Objects\TorchMo.h" />
     <ClInclude Include="Map\Objects\BackgroundMo.h" />
     <ClInclude Include="Map\Objects\DoorMo.h" />
+    <ClInclude Include="BridGo.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">

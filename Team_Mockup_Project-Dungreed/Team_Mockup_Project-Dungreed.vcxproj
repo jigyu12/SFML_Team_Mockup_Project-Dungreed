@@ -152,6 +152,7 @@
     <ClCompile Include="Map\Objects\DoorMo.cpp" />
     <ClCompile Include="Map\Objects\BackgroundMo.cpp" />
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="BirdGo.cpp" />
     <ClCompile Include="Map\Objects\BreakableMo.cpp" />
     <ClCompile Include="Map\Objects\SealStoneMo.cpp" />
     <ClCompile Include="Map\Objects\LightGo.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="Map\Objects\DoorMo.h" />
     <ClInclude Include="Map\Objects\BackgroundMo.h" />
     <ClInclude Include="Bat.h" />
+    <ClInclude Include="BirdGo.h" />
     <ClInclude Include="Map\Objects\BreakableMo.h" />
     <ClInclude Include="Map\Objects\SealStoneMo.h" />
     <ClInclude Include="Map\Objects\LightGo.h" />

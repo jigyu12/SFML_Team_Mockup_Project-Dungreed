@@ -48,5 +48,10 @@ void MainTitleScene::Update(float dt)
 
 void MainTitleScene::Draw(sf::RenderWindow& window)
 {
+	if (mainTitleui->GetStatus() == MainTitleUi::Status::AniStoptime)
+	{
+		window.clear({ 121,185,255 });
+	}
+	
 	Scene::Draw(window);
 }
