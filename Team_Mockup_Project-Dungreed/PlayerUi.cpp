@@ -52,6 +52,7 @@ void PlayerUi::Release()
 void PlayerUi::Reset()
 {
 	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
+	
 	float fontsize = 50.f;
 	sf::Font& font = FONT_MGR.Get("fonts/french.ttf");
 	textHp.setFont(font);

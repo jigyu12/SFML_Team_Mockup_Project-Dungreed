@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "MainTitleUi.h"
+#include "Button.h"
+#include "BirdGo.h"
 
 MainTitleUi::MainTitleUi(const std::string& name)
 	:GameObject(name)
@@ -9,19 +11,16 @@ MainTitleUi::MainTitleUi(const std::string& name)
 void MainTitleUi::SetPosition(const sf::Vector2f& pos)
 {
 	position = pos;
-	SetPosition(position);
 }
 
 void MainTitleUi::SetRotation(float angle)
 {
 	rotation = angle;
-	SetRotation(rotation);
 }
 
 void MainTitleUi::SetScale(const sf::Vector2f& scale)
 {
 	this->scale = scale;
-	SetScale(this->scale);
 }
 
 void MainTitleUi::SetOrigin(Origins preset)
@@ -40,8 +39,20 @@ void MainTitleUi::SetOrigin(const sf::Vector2f& newOrigin)
 
 void MainTitleUi::Init()
 {
+	startButton.Init();
+	editorButton.Init();
+	endButton.Init();
+
+
 	sortingLayer = SortingLayers::UI;
-	SetStatus(MainTitleUi::Staus::Aniplaytime);
+	SetStatus(MainTitleUi::Status::Aniplaytime);
+
+
+	birds.resize(3);
+	for (int i = 0; i < birds.size(); ++i)
+	{
+		birds[i].Init();
+	}
 }
 
 void MainTitleUi::Release()
@@ -51,6 +62,43 @@ void MainTitleUi::Release()
 
 void MainTitleUi::Reset()
 {
+	startButton.Reset();
+	editorButton.Reset();
+	endButton.Reset();
+	//
+	sf::Vector2f buttonpos = FRAMEWORK.GetWindowSizeF();
+	float mousePosX = buttonpos.x / 2;
+	float startMousePosY = buttonpos.y / 2;
+
+	startButton.SetPosition({ mousePosX ,startMousePosY+100.f });
+	startButton.Set({ 400.f,100.f }, 50);
+	startButton.SetString(L"게임시작");
+	startButton.SetOrigin(Origins::MC);
+	startButton.SetClickedEvent([this]()
+		{
+			SCENE_MGR.ChangeScene(SceneIds::Game);
+		});
+
+	endButton.SetPosition({ mousePosX ,startMousePosY + 200.f });
+	endButton.Set({ 400.f,100.f }, 48);
+	endButton.SetString(L"종료");
+	endButton.SetOrigin(Origins::MC);
+	endButton.SetClickedEvent([this]()
+		{
+			FRAMEWORK.GetWindow().close();
+		});
+
+	editorButton.SetPosition({ mousePosX ,startMousePosY + 300.f });
+	editorButton.Set({ 400.f,100.f }, 50);
+	editorButton.SetString(L"맵 편집");
+	editorButton.SetOrigin(Origins::MC);
+	editorButton.SetClickedEvent([this]()
+		{
+			SCENE_MGR.ChangeScene(SceneIds::MapEdit);
+		});
+	//
+
+
 	animator.SetTarget(&mainbody);
 	//
 	mainbody.setPosition({ 1920.f / 2,1080.f / 2 });
@@ -58,8 +106,8 @@ void MainTitleUi::Reset()
 	animator.Play("animations/MainTitle.csv");
 	Utils::SetOrigin(mainbody, Origins::MC);
 	//
-	backCloud.setTexture(TEXTURE_MGR.Get("graphics/maintitle/BackCloud.png"));
-	frontCloud.setTexture(TEXTURE_MGR.Get("graphics/maintitle/FrontCloud.png"));
+	backCloud.setTexture(TEXTURE_MGR.Get("graphics/maintitle/BackCloud1.png"));
+	frontCloud.setTexture(TEXTURE_MGR.Get("graphics/maintitle/FrontCloud1.png"));
 	//
 	exitButton.setTexture(TEXTURE_MGR.Get("graphics/maintitle/ExitOff.png"));
 	playButton.setTexture(TEXTURE_MGR.Get("graphics/maintitle/PlayOff.png"));
@@ -81,8 +129,10 @@ void MainTitleUi::Reset()
 	frontCloud.setPosition(0.f, 0.f);
 	frontCloud.setScale(6.f, 6.f);
 	Utils::SetOrigin(frontCloud, Origins::TL);
-	SetPosition(position);
-
+	for (int i = 0; i < birds.size(); ++i)
+	{
+		birds[i].Reset();
+	}
 }
 
 void MainTitleUi::AniplayertimeUpdate(float dt)
@@ -91,22 +141,92 @@ void MainTitleUi::AniplayertimeUpdate(float dt)
 
 void MainTitleUi::AniStopTimeUpdate(float dt)
 {
-	position.x += backCloudSpeed * dt;
-	backCloud.setPosition(position);
+	for (int i = 0; i < birds.size(); ++i)
+	{
+		birds[i].Update(dt);
+	}
+
+	bCloudPos.x -= backCloudSpeed * dt;
+
+	if (bCloudPos.x < -640.f * 6.f)
+	{
+		bCloudPos.x += 640.f * 6.f;
+
+	}
+	backCloud.setPosition(bCloudPos);
+	fCloudPos.x -= frontCloudSpeed * dt;
+
+	if (fCloudPos.x < -640.f * 6.f)
+	{
+		fCloudPos.x += 640.f * 6.f;
+	}
+	frontCloud.setPosition(fCloudPos);
+}
+
+void MainTitleUi::ButtonUpdate(float dt)
+{
+	startButton.Update(dt);
+	editorButton.Update(dt);
+	endButton.Update(dt);
+
+	startButton.SetTextOutlineColor(sf::Color::Black);
+	startButton.SetTextOutlineThickness(3.f);
+
+	editorButton.SetTextOutlineColor(sf::Color::Black);
+	editorButton.SetTextOutlineThickness(3.f);
+
+	endButton.SetTextOutlineColor(sf::Color::Black);
+	endButton.SetTextOutlineThickness(3.f);
+
+	if (startButton.isMouseOn())
+	{
+		startButton.SetTextFillColor(sf::Color::Red);
+	}
+	else
+	{
+		startButton.SetTextFillColor(sf::Color::White);
+	}
+	startButton.SetButtonFillColor(sf::Color::Transparent);
+	startButton.SetButtonOutlineColor(sf::Color::Transparent);
+
+	if (editorButton.isMouseOn())
+	{
+		editorButton.SetTextFillColor(sf::Color::Red);
+	}
+	else
+	{
+		editorButton.SetTextFillColor(sf::Color::White);
+	}
+	editorButton.SetButtonFillColor(sf::Color::Transparent);
+	editorButton.SetButtonOutlineColor(sf::Color::Transparent);
+
+	if (endButton.isMouseOn())
+	{
+		endButton.SetTextFillColor(sf::Color::Red);
+	}
+	else
+	{
+		endButton.SetTextFillColor(sf::Color::White);
+	}
+	endButton.SetButtonFillColor(sf::Color::Transparent);
+	endButton.SetButtonOutlineColor(sf::Color::Transparent);
 }
 
 void MainTitleUi::Update(float dt)
 {
 	animator.Update(dt);
 
+	ButtonUpdate(dt);
+
+
 	aniTimer += dt;
 
 	switch (status)
 	{
-	case MainTitleUi::Staus::Aniplaytime:
+	case MainTitleUi::Status::Aniplaytime:
 		AniplayertimeUpdate(dt);
 		break;
-	case MainTitleUi::Staus::AniStoptime:
+	case MainTitleUi::Status::AniStoptime:
 		AniStopTimeUpdate(dt);
 		break;
 	default:
@@ -115,7 +235,7 @@ void MainTitleUi::Update(float dt)
 
 	if (aniTimer > 3.f)
 	{
-		SetStatus(MainTitleUi::Staus::AniStoptime);
+		SetStatus(MainTitleUi::Status::AniStoptime);
 	}
 
 }
@@ -125,14 +245,20 @@ void MainTitleUi::Draw(sf::RenderWindow& window)
 
 	switch (status)
 	{
-	case MainTitleUi::Staus::Aniplaytime:
+	case MainTitleUi::Status::Aniplaytime:
 		window.draw(mainbody);
 		break;
-	case MainTitleUi::Staus::AniStoptime:
-		window.draw(frontCloud);
+	case MainTitleUi::Status::AniStoptime:
 		window.draw(backCloud);
+		window.draw(frontCloud);
+		for (int i = 0; i < birds.size(); ++i)
+		{
+			birds[i].Draw(window);
+		}
 		window.draw(mainLogo);
-		
+		startButton.Draw(window);
+		endButton.Draw(window);
+		editorButton.Draw(window);
 		break;
 	default:
 		break;
@@ -140,7 +266,7 @@ void MainTitleUi::Draw(sf::RenderWindow& window)
 }
 
 
-void MainTitleUi::SetStatus(Staus status)
+void MainTitleUi::SetStatus(Status status)
 {
 	this->status = (status);
 }

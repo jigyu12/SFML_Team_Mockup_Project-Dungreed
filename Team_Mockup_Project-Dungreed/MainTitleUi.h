@@ -1,10 +1,12 @@
 #pragma once
-#include "GameObject.h"
+#include "Button.h"
+#include "BirdGo.h"
+
 class MainTitleUi :
     public GameObject
 {
 public:
-	enum class Staus
+	enum class Status
 	{
 		Aniplaytime,
 		AniStoptime,
@@ -13,8 +15,9 @@ public:
 
 
 protected:
-	Staus status;
+	Status status;
 	
+	std::vector<BirdGo> birds;
 	//메인로드
 	sf::Sprite mainbody;
 
@@ -28,12 +31,18 @@ protected:
 	//메인 로고
 	sf::Sprite mainLogo;
 	
+	Button startButton;
+	Button editorButton;
+	Button endButton;
 
 	Animator animator;
 
+	sf::Vector2f bCloudPos;
+	sf::Vector2f fCloudPos;
+
 	float aniTimer = 0.f;
 	float frontCloudSpeed = 100.f;
-	float backCloudSpeed = 200.f;
+	float backCloudSpeed = 250.f;
 
 public:
 	MainTitleUi(const std::string& name = "MainTitleUi");
@@ -53,8 +62,9 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 	void AniplayertimeUpdate(float dt);
 	void AniStopTimeUpdate(float dt);
+	void ButtonUpdate(float dt);
 
-
-	void SetStatus(Staus status);
+	Status GetStatus() const { return status; }
+	void SetStatus(Status status);
 };
 
