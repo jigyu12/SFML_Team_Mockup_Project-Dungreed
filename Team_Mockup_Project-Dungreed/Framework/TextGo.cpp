@@ -107,6 +107,16 @@ void TextGo::SetFillColor(const sf::Color& color)
 	text.setFillColor(color);
 }
 
+void TextGo::SetOutlineColor(const sf::Color& color)
+{
+	text.setOutlineColor(color);
+}
+
+void TextGo::SetOutlineThickness(float thickness)
+{
+	text.setOutlineThickness(thickness);
+}
+
 void TextGo::Init()
 {
 }

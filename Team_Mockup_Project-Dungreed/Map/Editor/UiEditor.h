@@ -25,6 +25,7 @@ protected:
 	Button* buttonNew;
 	Button* buttonSave;
 	Button* buttonLoad;
+	Button* buttonReset;
 
 	Button* buttonTile;
 	Button* buttonHitbox;
