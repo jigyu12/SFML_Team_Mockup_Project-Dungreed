@@ -17,9 +17,9 @@ protected:
 	Player* player;
 	std::vector<Weapon*> weaponList;
 
-	SkellBoss* skellBoss;
-	SkellBossLeftHand* leftHand;
-	SkellBossLeftHand* rightHand;
+	//SkellBoss* skellBoss;
+	//SkellBossLeftHand* leftHand;
+	//SkellBossLeftHand* rightHand;
 	//std::vector<Bat*> batList;
 	//std::vector<SkeletonDog*> skeletonDogList;
 

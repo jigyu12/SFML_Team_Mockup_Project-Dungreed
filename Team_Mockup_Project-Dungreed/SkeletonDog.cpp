@@ -105,12 +105,12 @@ void SkeletonDog::Reset()
 	detectionRange.setOutlineThickness(1.f);
 	detectionRange.setPosition(body.getPosition());
 	detectionRange.setSize({120.f, 40.f});
-	detectionRange.setOrigin({ detectionRange.getSize().x / 2, detectionRange.getSize().y });
+	detectionRange.setOrigin({ detectionRange.getSize().x / 2, detectionRange.getSize().y});
 
 	detectionLine.setFillColor(sf::Color::Magenta);
 	detectionLine.setSize({ 1.f, 40.f });
 	detectionLine.setOrigin({ detectionLine.getSize().x / 2.f ,detectionLine.getSize().y});
-	detectionLine.setPosition({ body.getPosition().x + direction.x * 10.f ,body.getPosition().y});
+	detectionLine.setPosition({ body.getPosition().x + direction.x * 12.f ,body.getPosition().y - 2.f });
 	
 	shader.loadFromFile("shader/red.frag", sf::Shader::Type::Fragment);
 
@@ -123,7 +123,7 @@ void SkeletonDog::Reset()
 void SkeletonDog::Update(float dt)
 {
 	detectionRange.setPosition(body.getPosition());
-	detectionLine.setPosition({ body.getPosition().x + direction.x * 12.f ,body.getPosition().y });
+	detectionLine.setPosition({ body.getPosition().x + direction.x * 12.f ,body.getPosition().y - 2.f });
 
 	switch (state)
 	{
@@ -162,7 +162,7 @@ void SkeletonDog::Update(float dt)
 			const auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 			for (auto& roomHitBox : roomHitBoxes)
 			{
-				if (roomHitBox.second.type != HitBoxData::Type::Downable)
+				if (roomHitBox.second.type == HitBoxData::Type::Immovable)
 				{
 					if (detectionLine.getGlobalBounds().intersects(roomHitBox.first->rect.getGlobalBounds()))
 					{
@@ -197,7 +197,7 @@ void SkeletonDog::Update(float dt)
 			const auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 			for (auto& roomHitBox : roomHitBoxes)
 			{
-				if (roomHitBox.second.type != HitBoxData::Type::Downable)
+				if (roomHitBox.second.type == HitBoxData::Type::Immovable)
 				{
 					if (detectionLine.getGlobalBounds().intersects(roomHitBox.first->rect.getGlobalBounds()))
 					{

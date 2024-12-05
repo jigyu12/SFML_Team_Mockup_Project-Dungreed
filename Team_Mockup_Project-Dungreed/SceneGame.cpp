@@ -38,7 +38,7 @@ void SceneGame::Init()
 			player->SetWeaponToWeaponSlot2(handCrossbow);
 		}
 	}
-	{
+	/*{
 		skellBoss = AddGo(new SkellBoss());
 		skellBoss->SetPosition({ -7.5f, 50.f });
 
@@ -51,7 +51,7 @@ void SceneGame::Init()
 			rightHand->SetPosition({ 92.5f , -50.f });
 			rightHand->SetScale({ -1.f, 1.f });
 		}
-	}
+	}*/
 	{
 		PlayerUi* playerui = AddGo(new PlayerUi());
 	}

@@ -2,8 +2,8 @@ ID,FPS,"LoopType (0: Single, 1: Loop)",,,
 Idle,10,"1",,,
 ,,,,,
 TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
-graphics/monster/SkelDogIdle0.png,0,"0",20,18,0
-graphics/monster/SkelDogIdle1.png,0,"0",20,18,0
-graphics/monster/SkelDogIdle2.png,0,"0",20,18,0
-graphics/monster/SkelDogIdle3.png,0,"0",20,18,0
-graphics/monster/SkelDogIdle4.png,0,"0",20,18,0
+graphics/monster/SkelDog/SkelDogIdle0.png,0,"0",20,18,0
+graphics/monster/SkelDog/SkelDogIdle1.png,0,"0",20,18,0
+graphics/monster/SkelDog/SkelDogIdle2.png,0,"0",20,18,0
+graphics/monster/SkelDog/SkelDogIdle3.png,0,"0",20,18,0
+graphics/monster/SkelDog/SkelDogIdle4.png,0,"0",20,18,0
