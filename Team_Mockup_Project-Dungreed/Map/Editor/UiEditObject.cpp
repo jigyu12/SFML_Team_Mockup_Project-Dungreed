@@ -109,6 +109,9 @@ void UiEditObject::Reset()
 		case ObjectData::Type::Gate:
 			objectList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "GateIcon"));
 			break;
+		case ObjectData::Type::Table:
+			objectList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "TableIcon"));
+			break;
 		}
 		objectList[i]->SetClickedEvent([this, i]() 
 			{
@@ -253,6 +256,9 @@ void UiEditObject::SetObjectRect(sf::RectangleShape* shape, const ObjectData::Ty
 		break;
 	case ObjectData::Type::OakDrum:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "OakDrumIcon")));
+		break;
+	case ObjectData::Type::Table:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "TableIcon")));
 		break;
 	}
 	shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));

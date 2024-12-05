@@ -16,12 +16,13 @@ struct ObjectData
 {
 	enum class Type
 	{
-		Torch,
-		Door,
-		Gate,
 		Box,
 		BigBox,
 		OakDrum,
+		Table,
+		Torch,
+		Door,
+		Gate,
 		Count,
 	};
 

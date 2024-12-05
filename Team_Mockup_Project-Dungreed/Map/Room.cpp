@@ -323,6 +323,7 @@ void Room::LoadMapData(const std::string& path)
 		case ObjectData::Type::BigBox:
 		case ObjectData::Type::Box:
 		case ObjectData::Type::OakDrum:
+		case ObjectData::Type::Table:
 			obj = new BreakableMo();
 			break;
 		}
@@ -507,6 +508,7 @@ std::vector<MapObject*> Room::GetBreakableObjects() const
 		case ObjectData::Type::BigBox:
 		case ObjectData::Type::Box:
 		case ObjectData::Type::OakDrum:
+		case ObjectData::Type::Table:
 			vect.push_back(obj.first);
 			break;
 		default:

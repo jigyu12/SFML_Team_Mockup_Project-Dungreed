@@ -76,15 +76,4 @@ void MapObject::Set(const ObjectData::Type& type)
 
 void MapObject::OnDamaged(int damage)
 {
-	room = ROOM_MGR.GetCurrentRoom();
-
-	switch (type)
-	{
-	case ObjectData::Type::Box:
-		break;
-	case ObjectData::Type::BigBox:
-		break;
-	case ObjectData::Type::OakDrum:
-		break;
-	}
 }

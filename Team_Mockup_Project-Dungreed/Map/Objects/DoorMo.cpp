@@ -10,7 +10,7 @@ void DoorMo::Update(float dt)
 {
 	MapObject::Update(dt);
 
-	hitbox.UpdateTr(body, body.getLocalBounds());
+	hitbox.UpdateTr(body, { 1,2,64,16 });
 	hitbox.rect.setOutlineColor(sf::Color::Red);
 }
 
@@ -28,7 +28,7 @@ void DoorMo::Set(const ObjectData::Type& type)
 
 void DoorMo::SetStatus(const Status& status)
 {
-	MapObject::SetStatus(status);
+	this->status = status;
 	switch (status)
 	{
 	case MapObject::Status::Idle:

@@ -35,6 +35,9 @@ void BreakableMo::Set(const ObjectData::Type& type)
 	case ObjectData::Type::OakDrum:
 		animator.Play(RESOURCEID_TABLE->Get("Animation", "OakDrumIdle"));
 		break;
+	case ObjectData::Type::Table:
+		animator.Play(RESOURCEID_TABLE->Get("Animation", "TableIdle"));
+		break;
 	}
 	SetOrigin(Origins::BC);
 }
@@ -54,10 +57,11 @@ void BreakableMo::OnDamaged(int damage)
 	if (scene == nullptr)
 		return;
 	sf::Vector2f pos = Utils::GetCenter(body, body.getLocalBounds());
+	int particlecount = Utils::RandomRange(2, 4);
 	switch (type)
 	{
 	case ObjectData::Type::Box:
-		for (int i = 0; i < 3;++i)
+		for (int i = 0; i < particlecount;++i)
 		{
 			int rand = Utils::RandomRange(0, 6);
 			ParticleGo* particle = scene->TakeObjectParticle();
@@ -66,7 +70,7 @@ void BreakableMo::OnDamaged(int damage)
 		}
 		break;
 	case ObjectData::Type::BigBox:
-		for (int i = 0; i < 4;++i)
+		for (int i = 0; i < particlecount + 1;++i)
 		{
 			int rand = Utils::RandomRange(0, 6);
 			ParticleGo* particle = scene->TakeObjectParticle();
@@ -75,12 +79,21 @@ void BreakableMo::OnDamaged(int damage)
 		}
 		break;
 	case ObjectData::Type::OakDrum:
-		for (int i = 0; i < 3;++i)
+		for (int i = 0; i < particlecount;++i)
 		{
 			int rand = Utils::RandomRange(0, 4);
 			ParticleGo* particle = scene->TakeObjectParticle();
 
 			particle->Start("OakDrumParticle" + std::to_string(rand), pos);
+		}
+		break;
+	case ObjectData::Type::Table:
+		for (int i = 0; i < particlecount;++i)
+		{
+			int rand = Utils::RandomRange(0, 7);
+			ParticleGo* particle = scene->TakeObjectParticle();
+
+			particle->Start("TableParticle" + std::to_string(rand), pos);
 		}
 		break;
 	}

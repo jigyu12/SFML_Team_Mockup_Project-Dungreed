@@ -49,20 +49,28 @@ void RoomMgr::Reset()
 	currentRoom = { 0,0 };
 	currentFloor = 1;
 
-	Room* room = new Room("2FBoss");
+	Room* room = new Room("1FEnterLR");
 	room->Init();
 	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FBoss"));
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FEnterLR"));
 	scene->AddGo(room);
 	floors[1].insert({ {0,0}, room });
 
-	room = new Room("1FRoom1UL");
+	room = new Room("1FRoom5LR");
 	room->Init();
 	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom1UL"));
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom5LR"));
 	room->SetActive(false);
 	scene->AddGo(room);
 	floors[1].insert({ {1,0}, room });
+
+	room = new Room("2FBoss");
+	room->Init();
+	room->Reset();
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FBoss"));
+	room->SetActive(false);
+	scene->AddGo(room);
+	floors[1].insert({ {2,0}, room });
 
 	room = new Room("1FRoom2DLR");
 	room->Init();

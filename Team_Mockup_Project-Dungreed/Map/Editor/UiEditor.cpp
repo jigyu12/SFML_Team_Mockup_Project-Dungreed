@@ -245,7 +245,7 @@ void UiEditor::Reset()
 
 	buttonReset->Reset();
 	buttonReset->Set({ 90.f,45.f }, 20);
-	buttonReset->SetString("Reset",true);
+	buttonReset->SetString("Reset", true);
 	buttonReset->SetClickedEvent([this]()
 		{
 			sf::View view = SCENE_MGR.GetCurrentScene()->GetWorldView();
@@ -299,19 +299,6 @@ void UiEditor::Update(float dt)
 	buttonSave->Update(dt);
 	buttonLoad->Update(dt);
 	buttonReset->Update(dt);
-
-	buttonReset->SetTextOutlineColor(sf::Color::Black);
-	buttonReset->SetTextOutlineThickness(3.f);
-	if (buttonReset->isMouseOn())
-	{
-		buttonReset->SetTextFillColor(sf::Color::Red);
-	}
-	else
-	{
-		buttonReset->SetTextFillColor(sf::Color::White);
-	}
-	buttonReset->SetButtonFillColor(sf::Color::Transparent);
-	buttonReset->SetButtonOutlineColor(sf::Color::Transparent);
 
 	buttonTile->Update(dt);
 	buttonHitbox->Update(dt);
