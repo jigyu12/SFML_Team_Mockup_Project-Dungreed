@@ -23,6 +23,7 @@ protected:
 	Status status;
 	Weapon* weaponSlot1;
 	Weapon* weaponSlot2;
+	
 
 	sf::Vector2f velocity;
 	sf::Vector2f look;
@@ -33,6 +34,8 @@ protected:
 	HitBox* DownPlatform;
 	std::string swordId = "graphics/weapon/Sword.png";
 	std::string playerDeadId = "graphics/player/CharDie.png";
+	 
+	SavePlayerStatus playerStatus;
 
 	float telePortTimer = 0.f;
 	float deadAniTimer = 0.f;
@@ -90,6 +93,7 @@ public:
 
 	void Jump();
 	void OnDamage(int monsterDamage);
+	int GetCurrentLevel() const { return playerStatus.level; }
 	int GetCurrentHp() const { return hp; }
 	int GetMaxHp() const { return maxhp; }
 	bool IsDamaged() const { return isDamaged; }
@@ -107,3 +111,17 @@ public:
 	void SetWeaponToWeaponSlot2(Weapon* weapon, bool isCurrentWeapon = false);
 	void SwitchWeaponSlot(sf::Keyboard::Key key);
 };
+//if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	//{
+	//	SaveDataV1 test;
+	//	test.status.level = 1;
+	//	SaveLoadMgr::Instance().SaveV1(test);
+	//}
+
+	//if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	//{
+	//	SaveDataVC test = SaveLoadMgr::Instance().Load();
+
+	//	SavePlayerStatus sksldffkldsm = test.status;
+	//	std::cout << test.version << test.status.level << std::endl;
+	//}

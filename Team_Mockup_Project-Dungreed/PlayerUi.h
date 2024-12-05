@@ -8,6 +8,7 @@ protected:
 	sf::Vector2f maxHpSize = { 200.f,30.f };
 	sf::RectangleShape maxHp;
 	sf::Text textHp;
+	sf::Text level;
 	
 	Player* player;
 	//피통
@@ -23,7 +24,7 @@ protected:
 	//대쉬 채워져있을때
 	sf::Sprite playerDashFirstGauge;
 	sf::Sprite playerDashSecondGauge;
-	
+	//
 	
 
 
@@ -60,6 +61,6 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 	void SetHp(int hp, int max);
-
+	void SetLevel(int level);
 };
 

@@ -60,6 +60,13 @@ void PlayerUi::Reset()
 	textHp.setFillColor(sf::Color::Black);
 	Utils::SetOrigin(textHp, Origins::TL);
 
+	level.setFont(font);
+	level.setCharacterSize(fontsize);
+	level.setFillColor(sf::Color::Black);
+	SetLevel(player->GetCurrentLevel());
+	level.setPosition({ 65.f,18.f });
+	Utils::SetOrigin(level, Origins::TL);
+
 	playerLife.setTexture(TEXTURE_MGR.Get(playerLifeBase));
 	playerLifeBackGround.setTexture(TEXTURE_MGR.Get(playerLifeBack));
 	playerHpBar.setTexture(TEXTURE_MGR.Get(playerRedBar));
@@ -151,6 +158,7 @@ void PlayerUi::Draw(sf::RenderWindow& window)
 	{
 		window.draw(playerDashSecondGauge);
 	}
+	window.draw(level);
 	
 }
 
@@ -160,4 +168,10 @@ void PlayerUi::SetHp(int hp, int max)
 	//maxHp.setSize({ maxHpSize.x * value,maxHpSize.y });
 	textHp.setString(std::to_string(hp) + " / " + std::to_string(max));
 	Utils::SetOrigin(textHp, Origins::BL);
+}
+
+void PlayerUi::SetLevel(int level)
+{
+	this->level.setString(std::to_string(level));
+	Utils::SetOrigin(this->level, Origins::BL);
 }

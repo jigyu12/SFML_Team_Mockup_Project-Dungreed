@@ -259,6 +259,7 @@ void MainTitleUi::Draw(sf::RenderWindow& window)
 		startButton.Draw(window);
 		endButton.Draw(window);
 		editorButton.Draw(window);
+		
 		break;
 	default:
 		break;

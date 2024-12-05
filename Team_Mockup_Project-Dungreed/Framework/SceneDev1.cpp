@@ -40,18 +40,20 @@ void SceneDev1::Update(float dt)
 {
 	Scene::Update(dt);
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
-	{
-		SaveDataV1 test;
-		test.highscore = 123;
-		SaveLoadMgr::Instance().SaveV1(test);
-	}
+	//if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	//{
+	//	SaveDataV1 test;
+	//	test.status.level = 1;
+	//	SaveLoadMgr::Instance().SaveV1(test);
+	//}
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
-	{
-		SaveDataVC test = SaveLoadMgr::Instance().Load();
-		std::cout << test.version << test.highscore << " " << test.gold << std::endl;
-	}
+	//if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	//{
+	//	SaveDataVC test = SaveLoadMgr::Instance().Load();
+
+	//	SavePlayerStatus sksldffkldsm = test.status;
+	//	std::cout << test.version << test.status.level << std::endl;
+	//}
 }
 
 void SceneDev1::Draw(sf::RenderWindow& window)
