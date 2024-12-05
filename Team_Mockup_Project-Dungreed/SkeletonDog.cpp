@@ -416,7 +416,8 @@ void SkeletonDog::UpdateAttack(float dt)
 		if (isAttackMove)
 		{
 			isAttackMove = false;
-			velocityY = -gravity;
+			velocityY = -gravity * 1.f / 2.f;
+			speed = 100.f;
 			animator.Play("animations/SkeletonDog Attack.csv");
 		}
 		else
@@ -439,17 +440,20 @@ void SkeletonDog::UpdateAttack(float dt)
 
 				if (Utils::CheckCollision(hitbox, *roomHitbox.first, state))
 				{
-					if (state.Down && velocityY > 0.f)
+					if (roomHitbox.second.type == HitBoxData::Type::Immovable || roomHitbox.second.type == HitBoxData::Type::Downable)
 					{
-						position.y = std::min(position.y, state.area.top);
-						SetPosition(position);
-						collided = true;
+						if (state.Down && velocityY > 0.f)
+						{
+							position.y = std::min(position.y, state.area.top);
+							SetPosition(position);
+							collided = true;
+						}
 					}
 				}
 
 				if (roomHitbox.second.type == HitBoxData::Type::Immovable)
 				{
-					if (Utils::CheckCollision(detectionLineHitbox, *roomHitbox.first, state))
+					if (Utils::CheckCollision(hitbox/*detectionLineHitbox*/, *roomHitbox.first, state))
 					{
 						lineCollided = true;
 					}
