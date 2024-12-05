@@ -94,7 +94,7 @@ void Arrow::LateUpdate(float dt)
 	{
 		if (Utils::CheckCollision(*roomHitbox.first, hitbox))
 		{
-			if(roomHitbox.second.type != HitBoxData::Type::Downable)
+			if(roomHitbox.second.type == HitBoxData::Type::Immovable)
 				SCENE_MGR.GetCurrentScene()->RemoveGo(this);
 		}
 	}
