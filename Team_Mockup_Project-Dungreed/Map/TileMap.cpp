@@ -39,6 +39,7 @@ void TileMap::SetOrigin(Origins preset)
 void TileMap::SetOrigin(const sf::Vector2f& newOrigin)
 {
 	originPreset = Origins::Custom;
+	origin = newOrigin;
 	UpdateTransform();
 }
 

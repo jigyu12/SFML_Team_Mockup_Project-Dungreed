@@ -6,6 +6,7 @@ MapObject::MapObject(const std::string& name)
 {
 }
 
+
 void MapObject::SetPosition(const sf::Vector2f& pos)
 {
 	position = pos;
@@ -44,6 +45,8 @@ void MapObject::Init()
 {
 	sortingLayer = SortingLayers::Background;
 	sortingOrder = 10;
+
+	animator.SetTarget(&body);
 }
 
 void MapObject::Release()
@@ -65,14 +68,23 @@ void MapObject::Draw(sf::RenderWindow& window)
 	window.draw(body);
 }
 
-void MapObject::Set(MapObjectType objType)
+void MapObject::Set(const ObjectData::Type& type)
 {
-	switch (objType)
+	animator.ClearEvent();
+	this->type = type;
+}
+
+void MapObject::OnDamaged(int damage)
+{
+	room = ROOM_MGR.GetCurrentRoom();
+
+	switch (type)
 	{
-	case MapObjectType::Platform:
-		animator.Play("animations/map/platformidle.csv");
+	case ObjectData::Type::Box:
 		break;
-	default:
+	case ObjectData::Type::BigBox:
 		break;
-	} 
+	case ObjectData::Type::OakDrum:
+		break;
+	}
 }

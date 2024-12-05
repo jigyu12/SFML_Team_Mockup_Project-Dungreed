@@ -46,13 +46,6 @@ enum class Sides
 	None,
 };
 
-enum class MapObjectType
-{
-	Platform,
-	Torch,
-	Door,
-};
-
 /// <summary>
 /// A,B 중 A 기준 충돌 여부
 /// </summary>

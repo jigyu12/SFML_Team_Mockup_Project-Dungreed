@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SFML-2.6.1\include;.\Framework;.\Map;.\Map\Editor;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SFML-2.6.1\include;.\Framework;.\Map;.\Map\Editor;.\Map\Objects;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\SFML-2.6.1\include;.\Framework;.\Map;.\Map\Editor;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\SFML-2.6.1\include;.\Framework;.\Map;.\Map\Editor;.\Map\Objects;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,6 +151,9 @@
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="BridGo.cpp" />
+    <ClCompile Include="Map\Objects\BreakableMo.cpp" />
+    <ClCompile Include="Map\Objects\DoorMo.cpp" />
+    <ClCompile Include="Map\Objects\LightGo.cpp" />
     <ClCompile Include="MainTitleScene.cpp" />
     <ClCompile Include="MainTitleUi.cpp" />
     <ClCompile Include="Map\Editor\Button.cpp" />
@@ -163,10 +166,11 @@
     <ClCompile Include="Framework\SoundMgr.cpp" />
     <ClCompile Include="Framework\StringTable.cpp" />
     <ClCompile Include="HandCrossbow.cpp" />
-    <ClCompile Include="Map\MapObject.cpp" />
+    <ClCompile Include="Map\Objects\MapObject.cpp" />
     <ClCompile Include="Map\MapData.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Map\Room.cpp" />
+    <ClCompile Include="Map\Objects\ParticleGo.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerUi.cpp" />
     <ClCompile Include="ResourceIdTable.cpp" />
@@ -208,6 +212,7 @@
     <ClCompile Include="SkellBossLeftHand.cpp" />
     <ClCompile Include="SkellBossParticle.cpp" />
     <ClCompile Include="SkellBossSword.cpp" />
+    <ClCompile Include="Map\Objects\TorchMo.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -216,6 +221,9 @@
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="BridGo.h" />
+    <ClInclude Include="Map\Objects\BreakableMo.h" />
+    <ClInclude Include="Map\Objects\DoorMo.h" />
+    <ClInclude Include="Map\Objects\LightGo.h" />
     <ClInclude Include="MainTitleScene.h" />
     <ClInclude Include="MainTitleUi.h" />
     <ClInclude Include="Map\Editor\Button.h" />
@@ -245,9 +253,10 @@
     <ClInclude Include="Framework\SoundMgr.h" />
     <ClInclude Include="Framework\StringTable.h" />
     <ClInclude Include="HandCrossbow.h" />
-    <ClInclude Include="Map\MapObject.h" />
+    <ClInclude Include="Map\Objects\MapObject.h" />
     <ClInclude Include="Map\MapData.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="Map\Objects\ParticleGo.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerUi.h" />
     <ClInclude Include="resource.h" />
@@ -275,6 +284,7 @@
     <ClInclude Include="SkellBossLeftHand.h" />
     <ClInclude Include="SkellBossParticle.h" />
     <ClInclude Include="SkellBossSword.h" />
+    <ClInclude Include="Map\Objects\TorchMo.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>

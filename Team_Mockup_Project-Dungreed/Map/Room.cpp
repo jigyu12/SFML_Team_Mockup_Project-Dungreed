@@ -7,10 +7,27 @@
 #include "Monster.h"
 #include "Bat.h"
 #include "SkeletonDog.h"
+#include "ParticleGo.h"
+#include "TorchMo.h"
+#include "DoorMo.h"
+#include "BreakableMo.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
 {
+}
+
+void Room::SetActive(bool active)
+{
+	GameObject::SetActive(active);
+	for (auto tileMap : tileMaps)
+	{
+		tileMap->SetActive(active);
+	}
+	for (auto& obj : objects)
+	{
+		obj.first->SetActive(active);
+	}
 }
 
 void Room::SetPosition(const sf::Vector2f& pos)
@@ -23,11 +40,11 @@ void Room::SetPosition(const sf::Vector2f& pos)
 	sf::Transform transform = tileMaps[0]->GetTransform();
 	for (auto& hitBox : hitBoxes)
 	{
-		hitBox.first->rect.setPosition(transform.transformPoint(hitBox.second.origin));
+		hitBox.first->rect.setPosition(transform.transformPoint(hitBox.second.position));
 	}
 	for (auto& obj : objects)
 	{
-		obj.first->SetPosition(position);
+		obj.first->SetPosition(transform.transformPoint(obj.second.position));
 	}
 }
 
@@ -77,15 +94,6 @@ void Room::SetOrigin(Origins preset)
 		{
 			tileMap->SetOrigin(originPreset);
 		}
-		origin = tileMaps[0]->GetOrigin();
-		//for (auto& hitBox : hitBoxes)
-		//{
-		//	hitBox.first->rect.setOrigin(origin);
-		//}
-		for (auto& obj : objects)
-		{
-			obj.first->SetOrigin(origin);
-		}
 	}
 }
 
@@ -125,18 +133,17 @@ void Room::Release()
 
 	for (auto& obj : objects)
 	{
+		obj.first->Release();
 		delete obj.first;
 	}
 	objects.clear();
 
 	for (auto tileMap : tileMaps)
 	{
+		tileMap->Release();
 		delete tileMap;
 	}
 	tileMaps.clear();
-
-	Scene* scene = SCENE_MGR.GetCurrentScene();
-
 }
 
 void Room::Reset()
@@ -145,9 +152,18 @@ void Room::Reset()
 	scene = SCENE_MGR.GetCurrentScene();
 	subBackground.setTexture(TEXTURE_MGR.Get("graphics/map/SubBG.png"));
 	SetOrigin(Origins::MC);
+	Scene* scene = SCENE_MGR.GetCurrentScene();
 }
 
 void Room::Update(float dt)
+{
+	for (auto& obj : objects)
+	{
+		obj.first->Update(dt);
+	}
+}
+
+void Room::LateUpdate(float dt)
 {
 	if (player != nullptr)
 	{
@@ -181,9 +197,28 @@ void Room::Update(float dt)
 					&& wave == -2)
 				{
 					++wave;
+					for (const auto& object : objects)
+					{
+						if (object.second.type == ObjectData::Type::Door)
+						{
+							object.first->SetStatus(MapObject::Status::Close);
+						}
+					}
+				}
+				break;
+			case HitBoxData::Type::Spike:
+				if (Utils::CheckCollision(player->GetHitBox(), *hitbox.first))
+				{
+					player->OnDamage(5);
 				}
 				break;
 			}
+		}
+
+		if (ROOM_MGR.GetCurrentRoom() == this
+			&& !tileMaps[0]->GetGlobalBounds().contains(player->GetHitBox().GetCenter()))
+		{
+			EnterRoom(enteredPortal);
 		}
 	}
 	int count = 0;
@@ -199,9 +234,17 @@ void Room::Update(float dt)
 			++wavecount;
 		}
 	}
-	if (monsters.size() == count)
+	if (monsters.size() == count
+		&& !cleared)
 	{
 		cleared = true;
+		for (const auto& object : objects)
+		{
+			if (object.second.type == ObjectData::Type::Door)
+			{
+				object.first->SetStatus(MapObject::Status::Open);
+			}
+		}
 	}
 	else if (wavecount == 0 && wave != -2)
 	{
@@ -215,11 +258,13 @@ void Room::Update(float dt)
 		}
 	}
 
-	if (player != nullptr
-		&& ROOM_MGR.GetCurrentRoom() == this
-		&& !tileMaps[0]->GetGlobalBounds().contains(player->GetHitBox().GetCenter()))
+	for (auto& monster : monsters)
 	{
-		EnterRoom(enteredPortal);
+		if (ROOM_MGR.GetCurrentRoom() == this
+			&& !tileMaps[0]->GetGlobalBounds().contains(monster.first->GetPosition()))
+		{
+			monster.first->SetPosition(tileMaps[0]->GetTransform().transformPoint(monster.second.position));
+		}
 	}
 }
 
@@ -233,14 +278,15 @@ void Room::Draw(sf::RenderWindow& window)
 
 	for (auto& obj : objects)
 	{
-		obj.first->Draw(window);
-	}
-	if (Variables::isDrawHitBox)
-	{
-		for (auto& hitBox : hitBoxes)
+		if (obj.first->IsActive())
 		{
-			window.draw(hitBox.first->rect);
+			obj.first->Draw(window);
 		}
+	}
+
+	for (auto& hitBox : hitBoxes)
+	{
+		hitBox.first->Draw(window);
 	}
 }
 
@@ -265,13 +311,30 @@ void Room::LoadMapData(const std::string& path)
 
 	for (const ObjectData& objData : mapData.objectData)
 	{
-		MapObject* obj = new MapObject();
+		MapObject* obj = nullptr;
+		switch (objData.type)
+		{
+		case ObjectData::Type::Torch:
+			obj = new TorchMo();
+			break;
+		case ObjectData::Type::Door:
+			obj = new DoorMo();
+			break;
+		case ObjectData::Type::BigBox:
+		case ObjectData::Type::Box:
+		case ObjectData::Type::OakDrum:
+			obj = new BreakableMo();
+			break;
+		}
+		if (obj != nullptr)
+		{
+			obj->Init();
+			obj->Reset();
+			obj->Set(objData.type);
+			obj->SetRotation(objData.rotation);
 
-		obj->Init();
-		obj->Reset();
-		obj->Set(objData.type);
-
-		objects.push_back({ obj,objData });
+			objects.push_back({ obj,objData });
+		}
 	}
 
 	for (const HitBoxData& hitBoxDatum : mapData.hitBoxData)
@@ -279,8 +342,7 @@ void Room::LoadMapData(const std::string& path)
 		HitBox* hitbox = new HitBox();
 
 		hitbox->rect.setSize(hitBoxDatum.size);
-		hitbox->rect.setPosition(hitBoxDatum.origin);
-		//hitbox->rect.setOrigin(-hitBoxDatum.origin);
+		hitbox->rect.setPosition(hitBoxDatum.position);
 		hitbox->rect.setRotation(hitBoxDatum.rotation);
 		switch (hitBoxDatum.type)
 		{
@@ -300,7 +362,8 @@ void Room::LoadMapData(const std::string& path)
 			wave = -2;
 			hitbox->rect.setOutlineColor(sf::Color::White);
 			break;
-		default:
+		case HitBoxData::Type::Spike:
+			hitbox->rect.setOutlineColor(sf::Color::Black);
 			break;
 		}
 		hitBoxes.push_back({ hitbox,hitBoxDatum });
@@ -350,9 +413,25 @@ void Room::LoadMapData(const std::string& path)
 	viewbounds.height -= worldViewSize.y;
 }
 
-const std::vector<std::pair<HitBox*, HitBoxData>>& Room::GetHitBoxes() const
+std::vector<std::pair<HitBox*, HitBoxData>> Room::GetHitBoxes() const
 {
-	return hitBoxes;
+	std::vector<std::pair<HitBox*, HitBoxData>> data;
+
+	data = hitBoxes;
+
+	for (const auto& object : objects)
+	{
+		if (object.second.type == ObjectData::Type::Door
+			&& object.first->GetStatus() == MapObject::Status::Close)
+		{
+			HitBoxData hitBoxData;
+			hitBoxData.type = HitBoxData::Type::Immovable;
+
+			data.push_back({ &object.first->GetHitBox(),hitBoxData });
+		}
+	}
+
+	return data;
 }
 
 void Room::EnterRoom(HitBoxData::Type connection)
@@ -372,6 +451,15 @@ void Room::EnterRoom(HitBoxData::Type connection)
 
 	if (wave == 0 && !cleared)
 	{
+		for (const auto& object : objects)
+		{
+			if (object.second.type == ObjectData::Type::Door
+				&& object.first->GetStatus() != MapObject::Status::Close)
+			{
+				object.first->SetStatus(MapObject::Status::Close);
+			}
+		}
+
 		for (const std::pair<Monster*, SpawnData>& monster : monsters)
 		{
 			if (wave == monster.second.wave && !monster.first->IsDead())
@@ -393,6 +481,7 @@ void Room::ClearMonsters()
 	monsters.clear();
 }
 
+
 std::vector<Monster*> Room::GetMonsters() const
 {
 	std::vector<Monster*> data;
@@ -405,4 +494,25 @@ std::vector<Monster*> Room::GetMonsters() const
 		}
 	}
 	return data;
+}
+
+std::vector<MapObject*> Room::GetBreakableObjects() const
+{
+	std::vector<MapObject*> vect;
+
+	for (auto& obj : objects)
+	{
+		switch (obj.second.type)
+		{
+		case ObjectData::Type::BigBox:
+		case ObjectData::Type::Box:
+		case ObjectData::Type::OakDrum:
+			vect.push_back(obj.first);
+			break;
+		default:
+			break;
+		}
+	}
+
+	return vect;
 }

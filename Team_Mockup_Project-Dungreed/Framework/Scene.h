@@ -56,7 +56,8 @@ public:
 	sf::Vector2f WorldToUi(sf::Vector2f worldPos);
 	sf::Vector2f UiToWorld(sf::Vector2f uiPos);
 
-	sf::View GetWorldView() const{return worldView;}
+	sf::View GetWorldView() const { return worldView; }
+	void SetWorldView(const sf::View& view) { worldView = view; }
 	sf::View GetUiView() const { return uiView; }
 };
 

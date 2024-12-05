@@ -17,7 +17,7 @@ void UiEditMonster::SetPosition(const sf::Vector2f& pos)
 
 	for (int i = 0;i < monsterList.size();++i)
 	{
-		monsterList[i].setPosition(transform.transformPoint(50.f + (i % 4) * 100.f, 100.f + (i / 4) * 100.f));
+		monsterList[i]->SetPosition(transform.transformPoint(50.f + (i % 4) * 100.f, 100.f + (i / 4) * 100.f));
 	}
 
 	waveText->SetPosition(transform.transformPoint(50.f, 40.f));
@@ -74,10 +74,23 @@ void UiEditMonster::Init()
 	waveDownButton->Init();
 	waveText = new TextGo(RESOURCEID_TABLE->Get("Font", "French"));
 	waveText->Init();
+
+	monsterList.resize((int)Monster::MonsterType::Count);
+	for (int i = 0;i < monsterList.size();++i)
+	{
+		monsterList[i] = new Button();
+		monsterList[i]->Init();
+	}
 }
 
 void UiEditMonster::Release()
 {
+	for (int i = 0;i < monsterList.size();++i)
+	{
+		delete monsterList[i];
+	}
+	monsterList.clear();
+
 	waveUpButton->Release();
 	delete waveUpButton;
 	waveDownButton->Release();
@@ -92,17 +105,28 @@ void UiEditMonster::Reset()
 {
 	boxWindow.setFillColor({ 150,150,150,255 });
 
-	monsterList.resize((int)Monster::MonsterType::Count);
-
-	monsterList[(int)Monster::MonsterType::SkeletonDog].setTexture(&TEXTURE_MGR.Get("graphics/monster/SkelDogIdle0.png"));
-	monsterList[(int)Monster::MonsterType::SkeletonDog].setSize({ 90.f,90.f });
-	monsterList[(int)Monster::MonsterType::SkeletonDog].setOutlineColor(sf::Color::White);
-	monsterList[(int)Monster::MonsterType::SkeletonDog].setOutlineThickness(1.f);
-
-	monsterList[(int)Monster::MonsterType::Bat].setTexture(&TEXTURE_MGR.Get("graphics/monster/Bat0.png"));
-	monsterList[(int)Monster::MonsterType::Bat].setSize({ 90.f,90.f });
-	monsterList[(int)Monster::MonsterType::Bat].setOutlineColor(sf::Color::White);
-	monsterList[(int)Monster::MonsterType::Bat].setOutlineThickness(1.f);
+	for (int i = 0;i < monsterList.size();++i)
+	{
+		monsterList[i]->Reset();
+		switch ((Monster::MonsterType)i)
+		{
+		case Monster::MonsterType::SkeletonDog:
+			monsterList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "SkelDogIcon"));
+			break;
+		case Monster::MonsterType::Bat:
+			monsterList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "BatIcon"));
+			break;
+		case Monster::MonsterType::SkellBoss:
+			monsterList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "SkellBossIcon"));
+			break;
+		}
+		monsterList[i]->SetClickedEvent([this,i]() 
+			{ 
+				monsterList[(int)selectedType]->SetPressed(false);
+				selectedType = (Monster::MonsterType)i;
+				monsterList[(int)selectedType]->SetPressed(true);
+			});
+	}
 
 	waveText->Reset();
 	waveText->Set(30);
@@ -127,22 +151,9 @@ void UiEditMonster::Update(float dt)
 	{
 		waveDownButton->Update(dt);
 		waveUpButton->Update(dt);
-		if (InputMgr::GetMouseButtonDown(sf::Mouse::Left))
+		for (int i = 0;i < monsterList.size();++i)
 		{
-			sf::Vector2f mousepos = SCENE_MGR.GetCurrentScene()->ScreenToUi(InputMgr::GetMousePosition());
-
-			for (int i = 0;i < monsterList.size();++i)
-			{
-				if (monsterList[i].getGlobalBounds().contains(mousepos))
-				{
-					monsterList[i].setOutlineColor(sf::Color::Red);
-					selectedType = (Monster::MonsterType)i;
-				}
-				else
-				{
-					monsterList[i].setOutlineColor(sf::Color::White);
-				}
-			}
+			monsterList[i]->Update(dt);
 		}
 	}
 	else
@@ -162,7 +173,6 @@ void UiEditMonster::Update(float dt)
 				{
 					status = EditStatus::Move;
 					selectedMonster = spawnDatum.first;
-					selectedMonster->setOutlineColor(sf::Color::Red);
 					startPos = worldMousePos - selectedMonster->getPosition();
 				}
 			}
@@ -177,21 +187,7 @@ void UiEditMonster::Update(float dt)
 
 				status = EditStatus::Create;
 				sf::RectangleShape* shape = new sf::RectangleShape();
-				switch (selectedType)
-				{
-				case Monster::MonsterType::SkeletonDog:
-					shape->setTexture(&TEXTURE_MGR.Get("graphics/monster/SkelDogIdle0.png"));
-					shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
-					Utils::SetOrigin(*shape, Origins::BC);
-					break;
-				case Monster::MonsterType::Bat:
-					shape->setTexture(&TEXTURE_MGR.Get("graphics/monster/Bat0.png"));
-					shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
-					Utils::SetOrigin(*shape, Origins::MC);
-					break;
-				}
-
-				shape->setOutlineColor(sf::Color::Red);
+				SetSpawnRect(shape, selectedType);
 				shape->setOutlineThickness(1.f);
 				shape->setPosition(startPos);
 				selectedMonster = shape;
@@ -223,6 +219,18 @@ void UiEditMonster::Update(float dt)
 		}
 	}
 
+	for (auto& datum:spawnData)
+	{
+		if (selectedMonster == datum.first)
+		{
+			datum.first->setOutlineColor(sf::Color::Red);
+		}
+		else
+		{
+			datum.first->setOutlineColor(sf::Color::Green);
+		}
+	}
+
 	waveText->SetString("SpawnWave", selectedMonster != nullptr ? std::to_wstring(spawnData[selectedMonster].wave) : L"");
 }
 
@@ -232,7 +240,7 @@ void UiEditMonster::Draw(sf::RenderWindow& window)
 
 	for (int i = 0; i < monsterList.size();++i)
 	{
-		window.draw(monsterList[i]);
+		monsterList[i]->Draw(window);
 	}
 
 	waveText->Draw(window);
@@ -256,9 +264,15 @@ void UiEditMonster::Draw(sf::RenderWindow& window)
 std::vector<SpawnData> UiEditMonster::GetSpawnData() const
 {
 	std::vector<SpawnData> data;
-	for (auto& spawndatum : spawnData)
+	for (const auto& spawndatum : spawnData)
 	{
-		data.push_back(spawndatum.second);
+		SpawnData datum;
+
+		datum.position = spawndatum.first->getPosition();
+		datum.type = spawndatum.second.type;
+		datum.wave = spawndatum.second.wave;
+
+		data.push_back(datum);
 	}
 	return data;
 }
@@ -270,44 +284,45 @@ void UiEditMonster::SetSpawnData(const std::vector<SpawnData>& data)
 	for (const SpawnData& datum : data)
 	{
 		sf::RectangleShape* shape = new sf::RectangleShape();
-		switch (datum.type)
-		{
-		case Monster::MonsterType::SkeletonDog:
-			shape->setTexture(&TEXTURE_MGR.Get("graphics/monster/SkelDogIdle0.png"));
-			shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
-			Utils::SetOrigin(*shape, Origins::BC);
-			break;
-		case Monster::MonsterType::Bat:
-			shape->setTexture(&TEXTURE_MGR.Get("graphics/monster/Bat0.png"));
-			shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
-			Utils::SetOrigin(*shape, Origins::MC);
-			break;
-		}
+		SetSpawnRect(shape, datum.type);
 
-		shape->setOutlineColor(sf::Color::Red);
 		shape->setOutlineThickness(1.f);
 		shape->setPosition(datum.position);
-		if (selectedMonster != nullptr)
-		{
-			selectedMonster->setOutlineColor(sf::Color::Green);
-		}
 		selectedMonster = shape;
 		spawnData.insert({ shape,datum });
 	}
 }
 
+void UiEditMonster::SetSpawnRect(sf::RectangleShape* shape, const Monster::MonsterType& type)
+{
+	switch (type)
+	{
+	case Monster::MonsterType::SkeletonDog:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SkelDogIcon")));
+		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
+		Utils::SetOrigin(*shape, Origins::BC);
+		break;
+	case Monster::MonsterType::Bat:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BatIcon")));
+		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
+		Utils::SetOrigin(*shape, Origins::MC);
+		break;
+	case Monster::MonsterType::SkellBoss:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SkellBossIcon")));
+		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
+		Utils::SetOrigin(*shape, Origins::BC);
+		break;
+	}
+}
+
 void UiEditMonster::ClearSpawnData()
 {
+	selectedMonster = nullptr;
 	for (auto& spawndatum : spawnData)
 	{
 		delete spawndatum.first;
 	}
 	spawnData.clear();
-}
-
-void UiEditMonster::SetMonsterType(const Monster::MonsterType& type)
-{
-	selectedType = type;
 }
 
 void UiEditMonster::UpDownSpawnWave(bool up)

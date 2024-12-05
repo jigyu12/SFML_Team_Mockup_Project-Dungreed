@@ -78,6 +78,15 @@ protected:
 
 	int laserAttackCountMax;
 
+	sf::Texture texDeath;
+
+	std::vector<sf::Texture*> otherDeathTextures;
+	std::vector<sf::Sprite*> otherDeathSprites;
+	std::vector<HitBox*> otherDeathHitBoxes;
+	int otherDeathsSize;
+
+	float gravity;
+
 public:
 	SkellBoss(const std::string& name = "SkellBoss");
 	virtual ~SkellBoss() = default;

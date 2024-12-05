@@ -3,7 +3,15 @@ class TextGo;
 
 class Button : public GameObject
 {
+public:
+	enum class Type
+	{
+		TextButton,
+		IconButton,
+	};
 protected:
+
+	Type type;
 
 	sf::RectangleShape buttonBackground;
 	sf::Vector2i textureRect;
@@ -33,13 +41,22 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void SetPressed(bool pressed);
-	bool isOnMouse() { return mouseon; }
+	bool isMouseOn() { return mouseon; }
 
 	void Set(const sf::Vector2f& buttonSize, int charSize, const sf::Color& charColor = sf::Color::Black);
+	void Set(const sf::Vector2f& buttonSize, const std::string& texId);
 	void SetString(const std::string& text, bool useTable = false);
 	void SetString(const std::string& textid, const std::wstring& text);
+	void SetString(const std::wstring& id) { buttonText->SetString(id); }
 	void SetCharSize(float size);
 	void SetButtonSize(const sf::Vector2f& size);
+
+	void SetButtonFillColor(const sf::Color& color) { buttonBackground.setFillColor(color); }
+	void SetButtonOutlineColor(const sf::Color& color) { buttonBackground.setOutlineColor(color); }
+	void SetButtonOutlineThickness(float thickness) { buttonBackground.setOutlineThickness(thickness); }
+	void SetTextFillColor(const sf::Color& color) { buttonText->SetFillColor(color); }
+	void SetTextOutlineColor(const sf::Color& color) { buttonText->SetOutlineColor(color); }
+	void SetTextOutlineThickness(float thickness) { buttonText->SetOutlineThickness(thickness); }
 
 	void SetClickedEvent(const std::function<void()>& event);
 };

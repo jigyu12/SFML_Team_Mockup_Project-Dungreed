@@ -89,7 +89,7 @@ void Arrow::LateUpdate(float dt)
 		}
 	}
 
-	auto& roomHitboxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+	const auto& roomHitboxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 	for (auto& roomHitbox : roomHitboxes)
 	{
 		if (Utils::CheckCollision(*roomHitbox.first, hitbox))

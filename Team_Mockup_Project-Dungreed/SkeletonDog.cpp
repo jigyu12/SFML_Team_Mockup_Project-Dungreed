@@ -159,7 +159,7 @@ void SkeletonDog::Update(float dt)
 			isAttackMove = true;
 			isMoving = true;
 
-			auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+			const auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 			for (auto& roomHitBox : roomHitBoxes)
 			{
 				if (roomHitBox.second.type != HitBoxData::Type::Downable)
@@ -194,7 +194,7 @@ void SkeletonDog::Update(float dt)
 				animator.Play("animations/SkeletonDog Move.csv");
 				isMoving = true;
 			}
-			auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+			const auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 			for (auto& roomHitBox : roomHitBoxes)
 			{
 				if (roomHitBox.second.type != HitBoxData::Type::Downable)
@@ -264,7 +264,7 @@ void SkeletonDog::Update(float dt)
 			}
 
 			auto skelDogGlobalBounds = hitbox.rect.getGlobalBounds();
-			auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+			const auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 			bool breakWhile = false;
 			while (true)
 			{
@@ -368,7 +368,7 @@ void SkeletonDog::LateUpdate(float dt)
 	isOnGround = false;
 
 	auto skelDogGlobalBounds = hitbox.rect.getGlobalBounds();
-	auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+	const auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 	for (auto& roomHitBox : roomHitBoxes)
 	{
 		if (Utils::CheckCollision(*roomHitBox.first, hitbox))

@@ -1,0 +1,15 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)"
+gateclose,10,0
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/map/objects/gate/Door0.png,0,0,55,65,0
+graphics/map/objects/gate/Door1.png,0,0,55,65,0
+graphics/map/objects/gate/Door2.png,0,0,55,65,0
+graphics/map/objects/gate/Door3.png,0,0,55,65,0
+graphics/map/objects/gate/Door4.png,0,0,55,65,0
+graphics/map/objects/gate/Door5.png,0,0,55,65,0
+graphics/map/objects/gate/Door6.png,0,0,55,65,0
+graphics/map/objects/gate/Door7.png,0,0,55,65,0
+graphics/map/objects/gate/Door8.png,0,0,55,65,0
+graphics/map/objects/gate/Door9.png,0,0,55,65,0
+graphics/map/objects/gate/Door9.png,0,0,55,65,0

@@ -1,0 +1,12 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)"
+dooropen,10,0
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/map/objects/door/Stele16.png,0,0,66,20,0
+graphics/map/objects/door/Stele17.png,0,0,66,20,0
+graphics/map/objects/door/Stele18.png,0,0,66,20,0
+graphics/map/objects/door/Stele19.png,0,0,66,20,0
+graphics/map/objects/door/Stele20.png,0,0,66,20,0
+graphics/map/objects/door/Stele21.png,0,0,66,20,0
+graphics/map/objects/door/Stele22.png,0,0,66,20,0
+graphics/map/objects/door/Stele22.png,0,0,66,20,0
