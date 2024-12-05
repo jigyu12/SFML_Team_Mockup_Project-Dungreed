@@ -458,7 +458,7 @@ void SkeletonDog::UpdateAttack(float dt)
 
 			if (lineCollided)
 			{
-				
+				SetPosition({ position.x - direction.x * speed * dt , position.y });
 			}
 
 			if (collided)
