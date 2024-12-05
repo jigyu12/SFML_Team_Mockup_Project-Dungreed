@@ -59,53 +59,53 @@ void PlayerUi::Reset()
 	textHp.setFillColor(sf::Color::Black);
 	Utils::SetOrigin(textHp, Origins::TL);
 
-	PlayerLife.setTexture(TEXTURE_MGR.Get(PlayerLifeBase));
-	PlayerLifeBackGround.setTexture(TEXTURE_MGR.Get(PlayerLifeBack));
-	PlayerHpBar.setTexture(TEXTURE_MGR.Get(PlayerRedBar));
+	playerLife.setTexture(TEXTURE_MGR.Get(playerLifeBase));
+	playerLifeBackGround.setTexture(TEXTURE_MGR.Get(playerLifeBack));
+	playerHpBar.setTexture(TEXTURE_MGR.Get(playerRedBar));
 	//채워진거
-	PlayerDashFirstFrame.setTexture(TEXTURE_MGR.Get(PlayerDashBase0));
-	PlayerDashSecondFrame.setTexture(TEXTURE_MGR.Get(playerDashBase2));
+	playerDashFirstFrame.setTexture(TEXTURE_MGR.Get(playerDashBase0));
+	playerDashSecondFrame.setTexture(TEXTURE_MGR.Get(playerDashBase2));
 	//안채워진거
-	PlayerDashFirstGauge.setTexture(TEXTURE_MGR.Get(playerDashBase01));
-	PlayerDashSecondGauge.setTexture(TEXTURE_MGR.Get(playerDashBase21));
+	playerDashFirstGauge.setTexture(TEXTURE_MGR.Get(playerDashBase01));
+	playerDashSecondGauge.setTexture(TEXTURE_MGR.Get(playerDashBase21));
 
 
 
 
 	//대쉬 (사용전)
 
-	PlayerDashFirstFrame.setPosition({ 5.f,95.f });
-	PlayerDashFirstFrame.setScale({ 6.f,5.5f });
+	playerDashFirstFrame.setPosition({ 5.f,95.f });
+	playerDashFirstFrame.setScale({ 6.f,5.5f });
 
-	PlayerDashSecondFrame.setPosition({ 70.f,95.f });
-	PlayerDashSecondFrame.setScale({ 6.f,5.5f });
+	playerDashSecondFrame.setPosition({ 70.f,95.f });
+	playerDashSecondFrame.setScale({ 6.f,5.5f });
 
 	//대쉬 (사용후)
 	
-	PlayerDashFirstGauge.setPosition({ 5.f+12.f,95.f + 10.5f });
-	PlayerDashFirstGauge.setScale({ 6.f,5.5f });
+	playerDashFirstGauge.setPosition({ 5.f+12.f,95.f + 10.5f });
+	playerDashFirstGauge.setScale({ 6.f,5.5f });
 
-	PlayerDashSecondGauge.setPosition({ 70.f+6.f,95.f + 10.5f });
-	PlayerDashSecondGauge.setScale({ 6.f,5.5f });
+	playerDashSecondGauge.setPosition({ 70.f+6.f,95.f + 10.5f });
+	playerDashSecondGauge.setScale({ 6.f,5.5f });
 
 
 
 	//플레이어 hp바
-	PlayerLifeBackGround.setPosition({ 5.f,5.f });
-	PlayerLifeBackGround.setScale({ 6.f,5.5f });
+	playerLifeBackGround.setPosition({ 5.f,5.f });
+	playerLifeBackGround.setScale({ 6.f,5.5f });
 
-	PlayerLife.setPosition({ 5.f,5.f });
-	PlayerLife.setScale({ 6.f,5.5f });
+	playerLife.setPosition({ 5.f,5.f });
+	playerLife.setScale({ 6.f,5.5f });
 
-	PlayerHpBar.setPosition({ 137.f,19.f });
-	PlayerHpBar.setScale({ 300.f,6.f });
+	playerHpBar.setPosition({ 137.f,19.f });
+	playerHpBar.setScale({ 300.f,6.f });
 
 	textHp.setPosition({ 200.f,55.f });
 	SetHp(player->GetCurrentHp(), player->GetMaxHp());
 
 
 
-	sf::FloatRect playerBar = PlayerLife.getGlobalBounds();
+	sf::FloatRect playerBar = playerLife.getGlobalBounds();
 }
 
 void PlayerUi::Update(float dt)
@@ -113,42 +113,42 @@ void PlayerUi::Update(float dt)
 	float dashTime = player->GetCurrentCoolTime();
 	if (dashTime < 1.f)
 	{
-		PlayerDashFirstGauge.setScale({ 6.f* dashTime,5.5f });
-		PlayerDashFirstGauge.setColor({ 100,100,100 });
+		playerDashFirstGauge.setScale({ 6.f* dashTime,5.5f });
+		playerDashFirstGauge.setColor({ 100,100,100 });
 	}
 	if (dashTime >= 1.f
 		&& dashTime < 2.f)
 	{
-		PlayerDashFirstGauge.setScale({ 6.f,5.5f });
-		PlayerDashFirstGauge.setColor(sf::Color::White);
-		PlayerDashSecondGauge.setScale({ 6.f*(dashTime-1),5.5f });
-		PlayerDashSecondGauge.setColor({ 100,100,100 });
+		playerDashFirstGauge.setScale({ 6.f,5.5f });
+		playerDashFirstGauge.setColor(sf::Color::White);
+		playerDashSecondGauge.setScale({ 6.f*(dashTime-1),5.5f });
+		playerDashSecondGauge.setColor({ 100,100,100 });
 	}
 	if (dashTime >= 2.f)
 	{
-		PlayerDashFirstGauge.setScale({ 6.f,5.5f });
-		PlayerDashFirstGauge.setColor(sf::Color::White);
-		PlayerDashSecondGauge.setScale({ 6.f ,5.5f });
-		PlayerDashSecondGauge.setColor(sf::Color::White);
+		playerDashFirstGauge.setScale({ 6.f,5.5f });
+		playerDashFirstGauge.setColor(sf::Color::White);
+		playerDashSecondGauge.setScale({ 6.f ,5.5f });
+		playerDashSecondGauge.setColor(sf::Color::White);
 	}
 
 	
-		PlayerHpBar.setScale(300.f * player->GetCurrentHpRatio(), PlayerHpBar.getScale().y);
+		playerHpBar.setScale(300.f * player->GetCurrentHpRatio(), playerHpBar.getScale().y);
 	
 }
 
 void PlayerUi::Draw(sf::RenderWindow& window)
 {
-	window.draw(PlayerLifeBackGround);
-	window.draw(PlayerHpBar);
-	window.draw(PlayerLife);
+	window.draw(playerLifeBackGround);
+	window.draw(playerHpBar);
+	window.draw(playerLife);
 	window.draw(textHp);
-	window.draw(PlayerDashFirstFrame);
-	window.draw(PlayerDashSecondFrame);
-	window.draw(PlayerDashFirstGauge);
+	window.draw(playerDashFirstFrame);
+	window.draw(playerDashSecondFrame);
+	window.draw(playerDashFirstGauge);
 	if (player->GetCurrentCoolTime() >= 1.f)
 	{
-		window.draw(PlayerDashSecondGauge);
+		window.draw(playerDashSecondGauge);
 	}
 	
 }

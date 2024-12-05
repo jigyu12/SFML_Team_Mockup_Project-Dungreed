@@ -179,10 +179,6 @@ void Player::Update(float dt)
 		SetStatus(Player::Status::Dash);
 	}
 
-	if (InputMgr::GetKey(sf::Keyboard::S) && InputMgr::GetKeyDown(sf::Keyboard::Space))
-	{
-		SetStatus(Player::Status::DownJump);
-	}
 
 
 
@@ -345,6 +341,12 @@ void Player::UpdateGrounded(float dt)
 	velocity.x = direction.x * speed;
 	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
 	{
+		if (InputMgr::GetKey(sf::Keyboard::S))
+		{
+			SetStatus(Player::Status::DownJump);
+
+		}
+		else
 		Jump();
 	}
 	if (horizontalInput == 0 && animator.GetCurrentClipId() != "Idle")

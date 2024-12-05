@@ -23,15 +23,18 @@ protected:
 	sf::Sprite frontCloud;
 
 	//메인 화면버튼
-	sf::Sprite eixtButton;
+	sf::Sprite exitButton;
 	sf::Sprite playButton;
-
+	//메인 로고
 	sf::Sprite mainLogo;
+	
 
 	Animator animator;
 
 	float aniTimer = 0.f;
-	
+	float frontCloudSpeed = 100.f;
+	float backCloudSpeed = 200.f;
+
 public:
 	MainTitleUi(const std::string& name = "MainTitleUi");
 	~MainTitleUi() = default;
@@ -48,6 +51,9 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+	void AniplayertimeUpdate(float dt);
+	void AniStopTimeUpdate(float dt);
+
 
 	void SetStatus(Staus status);
 };

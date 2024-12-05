@@ -87,6 +87,8 @@
     <ClCompile Include="SkellBossBullet.cpp" />
     <ClCompile Include="MainTitleScene.cpp" />
     <ClCompile Include="MainTitleUi.cpp" />
+    <ClCompile Include="SkellBossLaser.cpp" />
+    <ClCompile Include="BridGo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -181,6 +183,8 @@
     <ClInclude Include="SkellBossBullet.h" />
     <ClInclude Include="MainTitleScene.h" />
     <ClInclude Include="MainTitleUi.h" />
+    <ClInclude Include="SkellBossLaser.h" />
+    <ClInclude Include="BridGo.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">
