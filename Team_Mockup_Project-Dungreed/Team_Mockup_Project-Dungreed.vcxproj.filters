@@ -83,19 +83,20 @@
     <ClCompile Include="SkellBossLeftHand.cpp" />
     <ClCompile Include="Map\Editor\Button.cpp" />
     <ClCompile Include="ResourceIdTable.cpp" />
-    <ClCompile Include="SkellBossBullet.cpp" />
     <ClCompile Include="MainTitleScene.cpp" />
     <ClCompile Include="MainTitleUi.cpp" />
     <ClCompile Include="Map\Objects\BreakableMo.cpp" />
-    <ClCompile Include="Map\Objects\SealStoneMo.cpp" />
+    <ClCompile Include="Map\Objects\DoorMo.cpp" />
     <ClCompile Include="Map\Objects\LightGo.cpp" />
     <ClCompile Include="Map\Objects\MapObject.cpp" />
     <ClCompile Include="Map\Objects\ParticleGo.cpp" />
-    <ClCompile Include="SkellBossLaser.cpp" />
     <ClCompile Include="Map\Objects\TorchMo.cpp" />
-    <ClCompile Include="Map\Objects\BackgroundMo.cpp" />
-    <ClCompile Include="Map\Objects\DoorMo.cpp" />
-    <ClCompile Include="BridGo.cpp" />
+    <ClCompile Include="SkellBossBullet.cpp">
+      <Filter>Monsters\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="SkellBossLaser.cpp">
+      <Filter>Monsters\Boss</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -186,19 +187,20 @@
     <ClInclude Include="SkellBossLeftHand.h" />
     <ClInclude Include="Map\Editor\Button.h" />
     <ClInclude Include="ResourceIdTable.h" />
-    <ClInclude Include="SkellBossBullet.h" />
     <ClInclude Include="MainTitleScene.h" />
     <ClInclude Include="MainTitleUi.h" />
     <ClInclude Include="Map\Objects\BreakableMo.h" />
-    <ClInclude Include="Map\Objects\SealStoneMo.h" />
+    <ClInclude Include="Map\Objects\DoorMo.h" />
     <ClInclude Include="Map\Objects\LightGo.h" />
     <ClInclude Include="Map\Objects\MapObject.h" />
     <ClInclude Include="Map\Objects\ParticleGo.h" />
-    <ClInclude Include="SkellBossLaser.h" />
     <ClInclude Include="Map\Objects\TorchMo.h" />
-    <ClInclude Include="Map\Objects\BackgroundMo.h" />
-    <ClInclude Include="Map\Objects\DoorMo.h" />
-    <ClInclude Include="BridGo.h" />
+    <ClInclude Include="SkellBossBullet.h">
+      <Filter>Monsters\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="SkellBossLaser.h">
+      <Filter>Monsters\Boss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">
