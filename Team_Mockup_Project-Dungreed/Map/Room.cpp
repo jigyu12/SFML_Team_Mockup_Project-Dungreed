@@ -340,17 +340,6 @@ void Room::LoadMapData(const std::string& path)
 			obj->Reset();
 			obj->Set(objData.type);
 			obj->SetRotation(objData.rotation);
-			if (objData.type == ObjectData::Type::Door)
-			{
-				if (mapData.roomData.type == RoomData::Type::Enter)
-				{
-					obj->SetStatus(MapObject::Status::Close);
-				}
-				else if (mapData.roomData.type == RoomData::Type::Exit)
-				{
-					obj->SetStatus(MapObject::Status::Open);
-				}
-			}
 			objects.push_back({ obj,objData });
 		}
 	}
@@ -477,14 +466,18 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		}
 	}
 
-	if (mapData.roomData.type == RoomData::Type::Enter)
+	for (const auto& object : objects)
 	{
-		for (auto& object : objects)
+		if (object.second.type == ObjectData::Type::Door
+			&& object.first->GetStatus() == MapObject::Status::Idle)
 		{
-			if (object.second.type == ObjectData::Type::Door
-				&& object.first->GetStatus() == MapObject::Status::Close)
+			if (mapData.roomData.type == RoomData::Type::Enter)
 			{
-				object.first->SetStatus(MapObject::Status::Idle);
+				object.first->SetStatus(MapObject::Status::Close);
+			}
+			if (mapData.roomData.type == RoomData::Type::Exit)
+			{
+				object.first->SetStatus(MapObject::Status::Open);
 			}
 		}
 	}

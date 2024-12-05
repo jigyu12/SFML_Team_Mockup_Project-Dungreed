@@ -154,7 +154,7 @@ void UiEditHitBox::Reset()
 	}
 	hitboxes.clear();
 	selectedHitBox = nullptr;
-	boxWindow.setFillColor({ 150,150,150,255 });
+	boxWindow.setFillColor({ 120,120,120 });
 
 	uieditor = dynamic_cast<UiEditor*>(SCENE_MGR.GetCurrentScene()->FindGo("uieditor"));
 

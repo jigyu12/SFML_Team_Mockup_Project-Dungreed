@@ -24,8 +24,10 @@ Room* RoomMgr::GetCurrentRoom()
 
 void RoomMgr::NextFloor()
 {
+	GetCurrentRoom()->SetActive(false);
 	currentRoom = { 0,0 };
 	++currentFloor;
+	GetCurrentRoom()->SetActive(true);
 	floors[currentFloor][currentRoom]->EnterRoom(HitBoxData::Type::PortalDown);
 }
 
@@ -56,13 +58,21 @@ void RoomMgr::Reset()
 	scene->AddGo(room);
 	floors[1].insert({ {0,0}, room });
 
-	room = new Room("1FRoom5LR");
+	room = new Room("1FExitL");
 	room->Init();
 	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom5LR"));
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FExitL"));
 	room->SetActive(false);
 	scene->AddGo(room);
 	floors[1].insert({ {1,0}, room });
+
+	room = new Room("2FEnter1R");
+	room->Init();
+	room->Reset();
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FEnter1R"));
+	room->SetActive(false);
+	scene->AddGo(room);
+	floors[2].insert({ {0,0}, room });
 
 	room = new Room("2FBoss");
 	room->Init();
@@ -70,7 +80,7 @@ void RoomMgr::Reset()
 	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FBoss"));
 	room->SetActive(false);
 	scene->AddGo(room);
-	floors[1].insert({ {2,0}, room });
+	floors[2].insert({ {1,0}, room });
 
 	room = new Room("1FRoom2DLR");
 	room->Init();

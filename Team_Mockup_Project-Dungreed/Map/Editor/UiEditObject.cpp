@@ -84,7 +84,7 @@ void UiEditObject::Release()
 
 void UiEditObject::Reset()
 {
-	boxWindow.setFillColor({ 150,150,150,255 });
+	boxWindow.setFillColor({ 120,120,120 });
 
 	for (int i = 0;i < objectList.size();++i)
 	{
