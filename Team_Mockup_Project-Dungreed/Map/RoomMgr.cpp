@@ -1,39 +1,47 @@
 #include "stdafx.h"
 #include "RoomMgr.h"
 #include "Room.h"
-#include "Scene.h"
+#include "SceneGame.h"
 
 Room* RoomMgr::GetCurrentRoom()
 {
+	return currentRoom;
+}
+
+void RoomMgr::SetCurrentRoom(int floor, sf::Vector2i coord)
+{
+	currentFloor = floor;
+	currentRoomCoord = coord;
 	auto findit = floors.find(currentFloor);
 
 	if (findit == floors.end())
 	{
-		return nullptr;
+		currentRoom = nullptr;
+		return;
 	}
 
-	auto findit2 = findit->second.find(currentRoom);
+	auto findit2 = findit->second.find(currentRoomCoord);
 
 	if (findit2 == findit->second.end())
 	{
-		return nullptr;
+		currentRoom = nullptr;
+		return;
 	}
-
-	return findit2->second;
+	currentRoom = findit2->second;
 }
 
 void RoomMgr::NextFloor()
 {
-	GetCurrentRoom()->SetActive(false);
-	currentRoom = { 0,0 };
-	++currentFloor;
-	GetCurrentRoom()->SetActive(true);
-	floors[currentFloor][currentRoom]->EnterRoom(HitBoxData::Type::PortalDown);
+	scene->ClearTookObject();
+	currentRoom->SetActive(false);
+	SetCurrentRoom(++currentFloor, { 0,0 });
+	currentRoom->SetActive(true);
+	currentRoom->EnterRoom(HitBoxData::Type::PortalDown);
 }
 
 void RoomMgr::Reset()
 {
-	Scene* scene = SCENE_MGR.GetCurrentScene();
+	scene = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	for (auto& floor : floors)
 	{
 		for (auto& room : floor.second)
@@ -46,10 +54,8 @@ void RoomMgr::Reset()
 		floor.second.clear();
 	}
 	scene->ApplyRemoveGO();
+	scene->ClearTookObject();
 	floors.clear();
-
-	currentRoom = { 0,0 };
-	currentFloor = 1;
 
 	Room* room = new Room("1FEnterLR");
 	room->Init();
@@ -123,18 +129,19 @@ void RoomMgr::Reset()
 			floorData.floors[floor.first][datum.first] = datum.second->GetName();
 		}
 	}
+	SetCurrentRoom(1, { 0,0 });
 
 	json j = floorData;
-	std::ofstream f(RESOURCEID_TABLE->Get("Map","FloorData"));
+	std::ofstream f(RESOURCEID_TABLE->Get("Map", "FloorData"));
 	f << j.dump(4) << std::endl;
 	f.close();
 
-	floors[currentFloor][currentRoom]->EnterRoom(HitBoxData::Type::PortalDown);
+	currentRoom->EnterRoom(HitBoxData::Type::PortalDown);
 }
 
 bool RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 {
-	sf::Vector2i nextroom = currentRoom;
+	sf::Vector2i nextroom = currentRoomCoord;
 	HitBoxData::Type entertype = HitBoxData::Type::PortalDown;
 	switch (portalType)
 	{
@@ -166,16 +173,22 @@ bool RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 		return false;
 	}
 
-	GetCurrentRoom()->SetActive(false);
-	findit2->second->SetActive(true);
-	findit2->second->EnterRoom(entertype);
-	currentRoom = nextroom;
+	scene->ClearTookObject();
+
+	currentRoom->SetActive(false);
+
+	currentRoom = findit2->second;
+	currentRoomCoord = nextroom;
+
+	currentRoom->SetActive(true);
+	currentRoom->EnterRoom(entertype);
+
 	return true;
 }
 
 void RoomMgr::Reset(const std::string& path)
 {
-	Scene* scene = SCENE_MGR.GetCurrentScene();
+	scene = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	for (auto& floor : floors)
 	{
 		for (auto& room : floor.second)
@@ -188,10 +201,8 @@ void RoomMgr::Reset(const std::string& path)
 		floor.second.clear();
 	}
 	scene->ApplyRemoveGO();
+	scene->ClearTookObject();
 	floors.clear();
-
-	currentRoom = { 0,0 };
-	currentFloor = 1;
 
 	std::ifstream f(path);
 	json j = json::parse(f);
@@ -212,6 +223,9 @@ void RoomMgr::Reset(const std::string& path)
 			floors[floor.first].insert({ datum.first, room });
 		}
 	}
-	floors[currentFloor][currentRoom]->SetActive(true);
-	floors[currentFloor][currentRoom]->EnterRoom(HitBoxData::Type::PortalDown);
+
+	SetCurrentRoom(1, { 0,0 });
+
+	currentRoom->SetActive(true);
+	currentRoom->EnterRoom(HitBoxData::Type::PortalDown);
 }

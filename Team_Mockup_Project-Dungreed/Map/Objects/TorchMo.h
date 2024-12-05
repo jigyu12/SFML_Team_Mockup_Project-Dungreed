@@ -16,6 +16,8 @@ public:
 
 	void SetActive(bool active) override;
 
+	void Release() override;
+
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float angle) override;
 	void SetScale(const sf::Vector2f& scale) override;

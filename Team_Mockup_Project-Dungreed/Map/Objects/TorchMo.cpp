@@ -16,6 +16,11 @@ void TorchMo::SetActive(bool active)
 	}
 }
 
+void TorchMo::Release()
+{
+	MapObject::Release();
+}
+
 void TorchMo::SetPosition(const sf::Vector2f& pos)
 {
 	MapObject::SetPosition(pos);

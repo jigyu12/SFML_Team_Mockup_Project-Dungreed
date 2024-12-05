@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ShortSword.h"
 #include "Room.h"
+#include "BreakableMo.h"
 
 ShortSword::ShortSword(const std::string& name)
 	: Weapon(name)
@@ -46,7 +47,7 @@ void ShortSword::SetScale(const sf::Vector2f& scale)
 }
 
 void ShortSword::Init()
-{	
+{
 	sortingLayer = SortingLayers::Foreground;
 
 	weaponType = WeaponType::Melee;
@@ -69,8 +70,8 @@ void ShortSword::Reset()
 
 	isUp = true;
 
-	attackBound.setSize({40.f, 30.f});
-	attackBound.setOrigin({attackBound.getSize().x / 2.f, attackBound.getSize().y / 2.f});
+	attackBound.setSize({ 40.f, 30.f });
+	attackBound.setOrigin({ attackBound.getSize().x / 2.f, attackBound.getSize().y / 2.f });
 
 	animatorFx.SetTarget(&swordSwingFx);
 
@@ -87,7 +88,7 @@ void ShortSword::Update(float dt)
 			SetOwnerPlayer(player);
 		}
 	}
-	
+
 	animatorFx.Update(dt);
 
 	hitbox.UpdateTr(sprite, GetLocalBounds());
@@ -150,7 +151,7 @@ void ShortSword::LateUpdate(float dt)
 		sf::Vector2i mousePos = InputMgr::GetMousePosition();
 		sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
 		look = Utils::GetNormal(mouseworldPos - sprite.getPosition());
-		
+
 		attackBound.setPosition({ owner->GetPosition().x + owner->GetPlayerLookNormal().x * 30.f, owner->GetPosition().y - 4.f + owner->GetPlayerLookNormal().y * 30.f });
 		attackBound.setRotation(Utils::Angle(look) + 90);
 		attackBoundHitbox.UpdateTr(attackBound, attackBound.getLocalBounds());
@@ -164,7 +165,7 @@ void ShortSword::LateUpdate(float dt)
 			Attack();
 
 			isUp = !isUp;
-	
+
 			animatorFx.Play("animations/Sword Swing Fx.csv");
 
 			Utils::SetOrigin(swordSwingFx, Origins::MC);
@@ -227,6 +228,14 @@ void ShortSword::Attack()
 			{
 				monster->OnDamaged(Utils::RandomRange(originalDamageMin, originalDamageMax));
 			}
+		}
+	}
+	const auto& mapObjects = ROOM_MGR.GetCurrentRoom()->GetBreakableObjects();
+	for (auto& mapObject : mapObjects)
+	{
+		if (Utils::CheckCollision(mapObject->GetHitBox(), attackBoundHitbox))
+		{
+			mapObject->OnDamaged(1);
 		}
 	}
 }
