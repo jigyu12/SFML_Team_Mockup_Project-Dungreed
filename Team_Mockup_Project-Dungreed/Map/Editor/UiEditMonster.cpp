@@ -103,7 +103,7 @@ void UiEditMonster::Release()
 
 void UiEditMonster::Reset()
 {
-	boxWindow.setFillColor({ 150,150,150,255 });
+	boxWindow.setFillColor({ 120,120,120 });
 
 	for (int i = 0;i < monsterList.size();++i)
 	{

@@ -1,0 +1,12 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Bird Fly,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/maintitle/Bird0.png,0,"0",12,8,0
+graphics/maintitle/Bird1.png,0,"0",12,8,0
+graphics/maintitle/Bird2.png,0,"0",12,8,0
+graphics/maintitle/Bird3.png,0,"0",12,8,0
+graphics/maintitle/Bird4.png,0,"0",12,8,0
+graphics/maintitle/Bird5.png,0,"0",12,8,0
+graphics/maintitle/Bird6.png,0,"0",12,8,0
+graphics/maintitle/Bird7.png,0,"0",12,8,0

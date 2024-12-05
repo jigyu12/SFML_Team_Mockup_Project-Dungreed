@@ -26,6 +26,7 @@ void UiEditor::SetPosition(const sf::Vector2f& pos)
 	buttonNew->SetPosition(transform.transformPoint(40.f, 65.f));
 	buttonSave->SetPosition(transform.transformPoint(140.f, 65.f));
 	buttonLoad->SetPosition(transform.transformPoint(240.f, 65.f));
+	buttonReset->SetPosition(transform.transformPoint(340.f, 65.f));
 
 	buttonTile->SetPosition(transform.transformPoint(40.f, 125.f));
 	buttonHitbox->SetPosition(transform.transformPoint(140.f, 125.f));
@@ -48,6 +49,7 @@ void UiEditor::SetRotation(float angle)
 	buttonNew->SetRotation(rotation);
 	buttonSave->SetRotation(rotation);
 	buttonLoad->SetRotation(rotation);
+	buttonReset->SetRotation(rotation);
 
 	buttonTile->SetRotation(rotation);
 	buttonHitbox->SetRotation(rotation);
@@ -72,6 +74,7 @@ void UiEditor::SetScale(const sf::Vector2f& s)
 	buttonNew->SetScale(scale);
 	buttonSave->SetScale(scale);
 	buttonLoad->SetScale(scale);
+	buttonReset->SetScale(scale);
 
 	buttonTile->SetScale(scale);
 	buttonHitbox->SetScale(scale);
@@ -145,6 +148,9 @@ void UiEditor::Init()
 	buttonLoad = new Button();
 	buttonLoad->Init();
 
+	buttonReset = new Button();
+	buttonReset->Init();
+
 	buttonTile = new Button();
 	buttonTile->Init();
 
@@ -187,6 +193,8 @@ void UiEditor::Release()
 	delete buttonSave;
 	buttonLoad->Release();
 	delete buttonLoad;
+	buttonReset->Release();
+	delete buttonReset;
 
 	buttonTile->Release();
 	delete buttonTile;
@@ -235,6 +243,16 @@ void UiEditor::Reset()
 	buttonLoad->SetString("Load", true);
 	buttonLoad->SetClickedEvent([this]() { LoadFile(); });
 
+	buttonReset->Reset();
+	buttonReset->Set({ 90.f,45.f }, 20);
+	buttonReset->SetString("Reset", true);
+	buttonReset->SetClickedEvent([this]()
+		{
+			sf::View view = SCENE_MGR.GetCurrentScene()->GetWorldView();
+			view.setCenter(0.f, 0.f);
+			SCENE_MGR.GetCurrentScene()->SetWorldView(view);
+		});
+
 	buttonTile->Reset();
 	buttonTile->Set({ 90.f,45.f }, 20);
 	buttonTile->SetString("Tile", true);
@@ -280,6 +298,7 @@ void UiEditor::Update(float dt)
 	buttonNew->Update(dt);
 	buttonSave->Update(dt);
 	buttonLoad->Update(dt);
+	buttonReset->Update(dt);
 
 	buttonTile->Update(dt);
 	buttonHitbox->Update(dt);
@@ -294,6 +313,7 @@ void UiEditor::Draw(sf::RenderWindow& window)
 	buttonNew->Draw(window);
 	buttonLoad->Draw(window);
 	buttonSave->Draw(window);
+	buttonReset->Draw(window);
 
 	buttonTile->Draw(window);
 	buttonHitbox->Draw(window);
@@ -388,7 +408,7 @@ void UiEditor::ChangeGroupbox(const UiEditor::GroupBox& selectedGroupBox)
 
 void UiEditor::NewFile()
 {
-	selectedFileName->SetString("New File", true); 
+	selectedFileName->SetString("New File", true);
 	for (int i = 0;i < MapData::TileMapCount;++i)
 	{
 		editingTileMaps[i]->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
@@ -409,6 +429,7 @@ void UiEditor::SaveFile()
 			}
 			mapData.hitBoxData = uiEditHitBox->GetHitBoxData();
 			mapData.playerStartPoint = uiEditHitBox->GetStartPoints();
+			mapData.roomData = uiEditHitBox->GetRoomData();
 			mapData.monsterSpawnData = uiEditMonster->GetSpawnData();
 			mapData.objectData = uiEditObject->GetObjectData();
 
@@ -432,6 +453,7 @@ void UiEditor::LoadFile()
 			}
 			uiEditHitBox->SetHitBoxData(mapdata.hitBoxData);
 			uiEditHitBox->SetStartPositionData(mapdata.playerStartPoint);
+			uiEditHitBox->SetRoomData(mapdata.roomData);
 			uiEditMonster->SetSpawnData(mapdata.monsterSpawnData);
 			uiEditObject->SetObjectData(mapdata.objectData);
 

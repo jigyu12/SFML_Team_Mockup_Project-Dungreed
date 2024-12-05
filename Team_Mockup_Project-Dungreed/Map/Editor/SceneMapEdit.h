@@ -9,7 +9,6 @@ class SceneMapEdit :
 protected:
 	UiEditor* uiEditor;
 
-	sf::Vector2f centerpos;
 
 	float speed;
 

@@ -17,9 +17,9 @@ void UiEditTile::SetPosition(const sf::Vector2f& pos)
 
 	sf::Transform transform = boxWindow.getTransform();
 
-	for (int k = 0; k < tileList.size();++k)
+	for (int i = 0; i < tileList.size();++i)
 	{
-		tileList[k]->SetPosition(transform.transformPoint(40.f, 360.f));
+		tileList[i]->SetPosition(transform.transformPoint(40.f, 360.f));
 	}
 
 	selectedTile->SetPosition(transform.transformPoint(50.f, 30.f));
@@ -133,6 +133,7 @@ void UiEditTile::Release()
 	upButtons.clear();
 	paramTexts.clear();
 	downButtons.clear();
+
 }
 
 void UiEditTile::Reset()
@@ -186,7 +187,6 @@ void UiEditTile::Reset()
 	selectedTile->Set({ 1,1 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
 	selectedTile->SetScale({ 3.f, 3.f });
 	selectedTile->SetShowGridLine(true);
-
 
 	selectedTileText->Reset();
 	selectedTileText->Set(30);
@@ -242,7 +242,7 @@ void UiEditTile::Reset()
 						return;
 					}
 					sf::Vector2i count = editingTileMap->GetCellCount();
-					uieditor->ResizeTileMaps({std::max(1, count.x - 1), count.y });
+					uieditor->ResizeTileMaps({ std::max(1, count.x - 1), count.y });
 				});
 			break;
 		case (int)UiType::CountY:
@@ -270,6 +270,7 @@ void UiEditTile::Reset()
 		paramTexts[i]->Reset();
 		paramTexts[i]->Set(30);
 	}
+
 }
 
 void UiEditTile::Update(float dt)
@@ -307,8 +308,8 @@ void UiEditTile::Update(float dt)
 	{
 		sf::Vector2i count = uieditor->GetSelectedTileMap()->GetCellCount();
 
-		paramTexts[(int)UiType::CountX]->SetString("CountX" , std::to_wstring(count.x));
-		paramTexts[(int)UiType::CountY]->SetString("CountY" , std::to_wstring(count.y));
+		paramTexts[(int)UiType::CountX]->SetString("CountX", std::to_wstring(count.x));
+		paramTexts[(int)UiType::CountY]->SetString("CountY", std::to_wstring(count.y));
 	}
 }
 

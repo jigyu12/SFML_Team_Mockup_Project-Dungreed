@@ -1,14 +1,16 @@
 #pragma once
 
-struct SaveZombie
+struct SavePlayerStatus
 {
-	int type = 0;
-	sf::Vector2f position;
-	float rotation;
-	sf::Vector2f scale;
-	int hp = 0;
-
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(SaveZombie, type, position, rotation, scale, hp)
+	float attackDamage;
+	int level;
+	float criticalDamage;
+	float criticalPercent;
+	float exp;
+	float armor;
+	
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(SavePlayerStatus, attackDamage, level, criticalDamage, criticalPercent,
+		exp, armor);
 };
 
 struct SaveData
@@ -22,25 +24,23 @@ struct SaveDataV1 : public SaveData
 {
 public:
 	SaveDataV1() { version = 1; }
-
-	int highscore = 0;
+	SavePlayerStatus status;
 	SaveData* VersionUp() override;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(SaveDataV1, version, highscore)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(SaveDataV1, version, status)
 };
 
 struct SaveDataV2 : public SaveData
 {
 	SaveDataV2() { version = 2; }
 
-	int highscore = 0;
-	int gold = 100;
+	
 
-	std::vector<SaveZombie> zombies;
+	SavePlayerStatus status;
 
 	SaveData* VersionUp() override { return nullptr; }
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(SaveDataV2, version, highscore, gold, zombies)
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(SaveDataV2, version, status )
 };
 
-typedef SaveDataV2 SaveDataVC;
+typedef SaveDataV1 SaveDataVC;

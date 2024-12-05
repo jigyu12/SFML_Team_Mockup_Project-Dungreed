@@ -59,6 +59,12 @@ MapDataVC MapDataLoader::Load(const std::wstring& path)
 		saveData = new MapDataV3(v3);
 		break;
 	}
+	case 4:
+	{
+		MapDataV4 v4 = j.get<MapDataV4>();
+		saveData = new MapDataV4(v4);
+		break;
+	}
 	}
 	f.close();
 
@@ -121,9 +127,35 @@ MapData* MapDataV2::VersionUp()
 	return newData;
 }
 
+
+MapData* MapDataV3::VersionUp()
+{
+	MapDataV4* newData = new MapDataV4();
+
+	newData->hitBoxData = hitBoxData;
+	newData->objectData = objectData;
+	newData->playerStartPoint = playerStartPoint;
+	newData->tileMapData = tileMapData;
+	newData->monsterSpawnData = monsterSpawnData;
+
+	return newData;
+}
+
 MapDataV3::MapDataV3()
 {
 	version = 3;
 	tileMapData.resize(TileMapCount);
 	playerStartPoint.resize(StartPointCount);
+}
+
+MapDataV4::MapDataV4()
+{
+	version = 4;
+	tileMapData.resize(TileMapCount);
+	playerStartPoint.resize(StartPointCount);
+}
+
+RoomData::RoomData()
+{
+	connection.resize(4,false);
 }

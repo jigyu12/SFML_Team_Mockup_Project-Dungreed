@@ -4,7 +4,6 @@
 SaveData* SaveDataV1::VersionUp()
 {
     SaveDataV2* newData = new SaveDataV2();
-    newData->highscore = highscore;
-    //newData->gold
+    newData->status = status;
     return newData;
 }

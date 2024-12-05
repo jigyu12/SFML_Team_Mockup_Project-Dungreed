@@ -91,6 +91,8 @@ public:
 	SkellBoss(const std::string& name = "SkellBoss");
 	virtual ~SkellBoss() = default;
 
+	void SetActive(bool active) override;
+
 	virtual void SetOrigin(Origins preset) override;
 	virtual void SetOrigin(const sf::Vector2f& newOrigin) override;
 	virtual void SetPosition(const sf::Vector2f& pos) override;

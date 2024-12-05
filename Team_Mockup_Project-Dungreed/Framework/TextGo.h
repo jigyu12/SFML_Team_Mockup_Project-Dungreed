@@ -31,6 +31,8 @@ public:
 	void SetString(const std::string& id, const std::wstring& wstr);
 	void SetCharacterSize(int size);
 	void SetFillColor(const sf::Color& color);
+	void SetOutlineColor(const sf::Color& color);
+	void SetOutlineThickness(float thickness);
 
 	void OnLocalize(Languages lang) override;
 };

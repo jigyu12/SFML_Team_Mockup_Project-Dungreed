@@ -11,6 +11,7 @@ struct Vector2iHash
 };
 
 class Room;
+class SceneGame;
 
 struct FloorData
 {
@@ -27,7 +28,10 @@ protected:
 
 	std::unordered_map<int, std::unordered_map<sf::Vector2i, Room*, Vector2iHash>> floors;
 
-	sf::Vector2i currentRoom;
+	SceneGame* scene;
+
+	sf::Vector2i currentRoomCoord;
+	Room* currentRoom;
 	int currentFloor;
 
 	RoomMgr() = default;
@@ -39,6 +43,7 @@ public:
 
 	bool RoomChange(const HitBoxData::Type& portalType);
 	Room* GetCurrentRoom();
+	void SetCurrentRoom(int floor,sf::Vector2i coord);
 	int GetCurrentFloor() { return currentFloor; }
 	void NextFloor();
 };

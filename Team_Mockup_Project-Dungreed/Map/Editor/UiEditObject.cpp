@@ -84,7 +84,7 @@ void UiEditObject::Release()
 
 void UiEditObject::Reset()
 {
-	boxWindow.setFillColor({ 150,150,150,255 });
+	boxWindow.setFillColor({ 120,120,120 });
 
 	for (int i = 0;i < objectList.size();++i)
 	{
@@ -103,11 +103,17 @@ void UiEditObject::Reset()
 		case ObjectData::Type::Box:
 			objectList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "BoxIcon"));
 			break;
+		case ObjectData::Type::SealStone:
+			objectList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "SealStoneIcon"));
+			break;
 		case ObjectData::Type::Door:
 			objectList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "DoorIcon"));
 			break;
-		case ObjectData::Type::Gate:
-			objectList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "GateIcon"));
+		case ObjectData::Type::Table:
+			objectList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "TableIcon"));
+			break;
+		case ObjectData::Type::SkullTable:
+			objectList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "SkullTableIcon"));
 			break;
 		}
 		objectList[i]->SetClickedEvent([this, i]() 
@@ -181,7 +187,8 @@ void UiEditObject::Update(float dt)
 				selectedObject = nullptr;
 			}
 		}
-		if (InputMgr::GetMouseButtonDown(sf::Mouse::Middle))
+		if (InputMgr::GetMouseButtonDown(sf::Mouse::Middle)
+			&& selectedObject !=nullptr)
 		{
 			selectedObject->rotate(45.f);
 		}
@@ -239,11 +246,11 @@ void UiEditObject::SetObjectRect(sf::RectangleShape* shape, const ObjectData::Ty
 	case ObjectData::Type::Torch:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "TorchIcon")));
 		break;
+	case ObjectData::Type::SealStone:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SealStoneIcon")));
+		break;
 	case ObjectData::Type::Door:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "DoorIcon")));
-		break;
-	case ObjectData::Type::Gate:
-		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "GateIcon")));
 		break;
 	case ObjectData::Type::BigBox:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BigBoxIcon")));
@@ -253,6 +260,12 @@ void UiEditObject::SetObjectRect(sf::RectangleShape* shape, const ObjectData::Ty
 		break;
 	case ObjectData::Type::OakDrum:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "OakDrumIcon")));
+		break;
+	case ObjectData::Type::Table:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "TableIcon")));
+		break;
+	case ObjectData::Type::SkullTable:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SkullTableIcon")));
 		break;
 	}
 	shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));

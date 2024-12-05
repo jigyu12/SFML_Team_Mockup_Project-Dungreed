@@ -20,7 +20,7 @@ SceneGame::SceneGame()
 void SceneGame::Init()
 {
 	{
-		player = AddGo(new Player());
+		player = AddGo(new Player("Player"));
 
 		// 두 무기 중에 하나는 SetWeaponToWeaponSlot->true로 켜져 있어야 시작 무기로 사용됨 
 		{
@@ -86,7 +86,7 @@ void SceneGame::Enter()
 	size.y /= 6.f;
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
-	ROOM_MGR.Reset(RESOURCEID_TABLE->Get("Map", "FloorData"));
+	ROOM_MGR.Reset();
 }
 
 void SceneGame::Exit()

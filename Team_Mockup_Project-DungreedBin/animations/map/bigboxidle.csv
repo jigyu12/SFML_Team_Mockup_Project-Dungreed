@@ -1,5 +1,0 @@
-ID,FPS,"LoopType (0: Single, 1: Loop)"
-bigboxidle,1,0
-
-TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
-graphics/map/objects/box/BigBox0.png,0,0,23,16,0

@@ -6,7 +6,7 @@ struct TileMapData
 	std::string name;
 	sf::Vector2f cellsize;
 	sf::Vector2i cellcount;
-	
+
 	std::vector<std::vector<int>> tileIndexes;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TileMapData, texId, name, cellsize, cellcount, tileIndexes)
@@ -17,11 +17,13 @@ struct ObjectData
 	enum class Type
 	{
 		Torch,
+		SealStone,
 		Door,
-		Gate,
 		Box,
 		BigBox,
 		OakDrum,
+		SkullTable,
+		Table,
 		Count,
 	};
 
@@ -63,6 +65,23 @@ struct SpawnData
 	int wave;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(SpawnData, type, position, wave)
+};
+
+struct RoomData
+{
+	RoomData();
+
+	enum class Type
+	{
+		Normal,
+		Enter,
+		Exit,
+		Count,
+	};
+	Type type;
+	std::vector<bool> connection;
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(RoomData, type, connection)
 };
 
 struct MapData
@@ -108,24 +127,41 @@ struct MapDataV2 : public MapData
 struct MapDataV3 : public MapData
 {
 	MapDataV3();
-	
+
 	std::vector<sf::Vector2f> playerStartPoint;
 	std::vector<TileMapData> tileMapData;
 	std::vector<ObjectData> objectData;
 	std::vector<HitBoxData> hitBoxData;
 	std::vector<SpawnData> monsterSpawnData;
 
-	MapData* VersionUp() override { return this; }
+	MapData* VersionUp() override;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(MapDataV3, version, playerStartPoint, tileMapData, objectData, hitBoxData, monsterSpawnData)
 };
 
-typedef MapDataV3 MapDataVC;
+
+struct MapDataV4 : public MapData
+{
+	MapDataV4();
+
+	std::vector<sf::Vector2f> playerStartPoint;
+	std::vector<TileMapData> tileMapData;
+	std::vector<ObjectData> objectData;
+	std::vector<HitBoxData> hitBoxData;
+	std::vector<SpawnData> monsterSpawnData;
+	RoomData roomData;
+
+	MapData* VersionUp() override { return this; }
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(MapDataV4, version, playerStartPoint, tileMapData, objectData, hitBoxData, monsterSpawnData, roomData)
+};
+
+typedef MapDataV4 MapDataVC;
 
 class MapDataLoader
 {
 protected:
-	const static int currentVersion = 3;
+	const static int currentVersion = 4;
 	MapDataLoader() = delete;
 	~MapDataLoader() = delete;
 public:

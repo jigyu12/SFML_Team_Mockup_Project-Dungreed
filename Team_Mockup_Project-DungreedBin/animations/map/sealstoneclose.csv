@@ -1,0 +1,13 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)"
+sealstoneclose,24,0
+
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/map/objects/sealstone/Stele00.png,0,0,66,20,0
+graphics/map/objects/sealstone/Stele01.png,0,0,66,20,0
+graphics/map/objects/sealstone/Stele02.png,0,0,66,20,0
+graphics/map/objects/sealstone/Stele03.png,0,0,66,20,0
+graphics/map/objects/sealstone/Stele04.png,0,0,66,20,0
+graphics/map/objects/sealstone/Stele05.png,0,0,66,20,0
+graphics/map/objects/sealstone/Stele06.png,0,0,66,20,0
+graphics/map/objects/sealstone/Stele07.png,0,0,66,20,0
+graphics/map/objects/sealstone/Stele07.png,0,0,66,20,0
