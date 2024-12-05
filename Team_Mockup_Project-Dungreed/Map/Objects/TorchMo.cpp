@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TorchMo.h"
 #include "LightGo.h"
+#include "SceneGame.h"
 
 TorchMo::TorchMo(const std::string& name)
 	: MapObject(name)
@@ -10,15 +11,20 @@ TorchMo::TorchMo(const std::string& name)
 void TorchMo::SetActive(bool active)
 {
 	GameObject::SetActive(active);
-	if (light != nullptr)
+	if (active)
 	{
-		light->SetActive(active);
+		SceneGame* scene = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
+		if (scene == nullptr)
+		{
+			return;
+		}
+		light = scene->TakeObjectLight();
+		light->Init();
+		light->Reset();
+		light->SetOrigin(Origins::MC);
+		light->SetOrigin(light->GetOrigin() + sf::Vector2f(0.f, 13.f));
+		SetPosition(position);
 	}
-}
-
-void TorchMo::Release()
-{
-	MapObject::Release();
 }
 
 void TorchMo::SetPosition(const sf::Vector2f& pos)
@@ -60,9 +66,5 @@ void TorchMo::Set(const ObjectData::Type& type)
 	animator.AddEvent("torchidle", 6, [this]() {SetOrigin(originPreset);});
 	animator.AddEvent("torchidle", 7, [this]() {SetOrigin(originPreset);});
 	SetOrigin(Origins::BC);
-	light = SCENE_MGR.GetCurrentScene()->AddGo(new LightGo());
-	light->Init();
-	light->Reset();
-	light->SetOrigin(Origins::MC);
-	light->SetOrigin(light->GetOrigin() + sf::Vector2f(0.f, 13.f));
+
 }

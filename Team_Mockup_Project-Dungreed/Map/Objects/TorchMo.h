@@ -1,5 +1,4 @@
 #pragma once
-
 #include "MapObject.h"
 
 class LightGo;
@@ -15,8 +14,6 @@ public:
 	~TorchMo() = default;
 
 	void SetActive(bool active) override;
-
-	void Release() override;
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetRotation(float angle) override;
