@@ -7,6 +7,13 @@ SkellBoss::SkellBoss(const std::string& name)
 {
 }
 
+void SkellBoss::SetActive(bool active)
+{
+	GameObject::SetActive(active);
+	leftHand->SetActive(active);
+	rightHand->SetActive(active);
+}
+
 void SkellBoss::SetOrigin(Origins preset)
 {
 	if (originPreset != Origins::Custom)
@@ -31,6 +38,15 @@ void SkellBoss::SetPosition(const sf::Vector2f& pos)
 {
 	position = pos;
 	body.setPosition(position);
+	skellBossBackFx.setPosition({ position.x + 17.5f , position.y });
+	if (leftHand != nullptr)
+	{
+		leftHand->SetPosition({ position.x - 100.f , position.y });
+	}
+	if (rightHand != nullptr)
+	{
+		rightHand->SetPosition({ position.x + 100.f , position.y });
+	}
 }
 
 void SkellBoss::SetRotation(float angle)
@@ -48,8 +64,13 @@ void SkellBoss::SetScale(const sf::Vector2f& scale)
 void SkellBoss::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
-
 	monsterType = MonsterType::SkellBoss;
+	Scene* scene = SCENE_MGR.GetCurrentScene();
+	leftHand = scene->AddGo(new SkellBossLeftHand("SkellBossLeftHand"));
+	leftHand->Init();
+	rightHand = scene->AddGo(new SkellBossLeftHand("SkellBossRightHand"));
+	rightHand->Init();
+	rightHand->SetScale({ -1.f, 1.f });
 }
 
 void SkellBoss::Reset()
@@ -60,6 +81,10 @@ void SkellBoss::Reset()
 
 		return;
 	}
+
+	leftHand->Reset();
+	rightHand->Reset();
+
 	sortingOrder = target->sortingOrder - 1;
 
 	hp = 80;
@@ -96,9 +121,9 @@ void SkellBoss::Reset()
 	animatorBackFx.SetTarget(&skellBossBackFx);
 	animatorBackFx.Play("animations/Boss/SkellBoss Back Idle.csv");
 	//skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
-	skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height});
+	skellBossBackFx.setOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
 	//skellBossBackFx.setPosition({ position.x  + 17.5f , position.y + 45.f });
-	skellBossBackFx.setPosition({ position.x  + 17.5f , position.y });
+	skellBossBackFx.setPosition({ position.x + 17.5f , position.y });
 
 	angleRight = 0.f * Utils::PI;
 	angleLeft = 0.5f * Utils::PI;
@@ -107,8 +132,8 @@ void SkellBoss::Reset()
 
 	attackLaserTimeDelay = 1.3f + 0.5f; // SkellLeftHand attackSpeedDelay + targetFindTimeDelay
 
-	leftHand = dynamic_cast<SkellBossLeftHand*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossLeftHand"));
-	rightHand = dynamic_cast<SkellBossLeftHand*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossRightHand"));
+	//leftHand = dynamic_cast<SkellBossLeftHand*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossLeftHand"));
+	//rightHand = dynamic_cast<SkellBossLeftHand*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossRightHand"));
 
 	texDeath.loadFromFile("graphics/boss/BossDead/SkellBossDead_0.png");
 
@@ -137,31 +162,31 @@ void SkellBoss::Update(float dt)
 {
 	switch (state)
 	{
-	case SkellBoss::SkellBossState::Idle: 
+	case SkellBoss::SkellBossState::Idle:
 	{
 		UpdateIdle(dt);
 	}
-		break;
+	break;
 	case SkellBoss::SkellBossState::AttackLaser:
 	{
 		UpdateAttackLaser(dt);
 	}
-		break;
+	break;
 	case SkellBoss::SkellBossState::AttackBullet:
 	{
 		UpdateAttackBullet(dt);
 	}
-		break;
+	break;
 	case SkellBoss::SkellBossState::AttackSword:
 	{
 		UpdateAttackSword(dt);
 	}
-		break;
+	break;
 	case SkellBoss::SkellBossState::Death:
 	{
 		UpdateDeath(dt);
 	}
-		break;
+	break;
 	}
 
 	if (isDamaged && hp > 0)
@@ -206,7 +231,7 @@ void SkellBoss::Update(float dt)
 void SkellBoss::LateUpdate(float dt)
 {
 	//SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
-	if(state == SkellBossState::Death)
+	if (state == SkellBossState::Death)
 		SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().top });
 	else
 		SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
@@ -224,7 +249,7 @@ void SkellBoss::LateUpdate(float dt)
 			}
 		}
 
-		SetPosition({position.x , position.y + (gravity += dt * 10.f) * dt * tempSpeed1 });
+		SetPosition({ position.x , position.y + (gravity += dt * 10.f) * dt * tempSpeed1 });
 
 		for (int i = 0; i < otherDeathsSize; ++i)
 		{
@@ -271,7 +296,7 @@ void SkellBoss::Draw(sf::RenderWindow& window)
 		window.draw(skellBossBackFx);
 		window.draw(body, &shader);
 	}
-	
+
 	hitbox.Draw(window);
 }
 
@@ -299,13 +324,13 @@ void SkellBoss::SetState(SkellBossState state)
 
 	switch (state)
 	{
-	case SkellBoss::SkellBossState::Idle: 
+	case SkellBoss::SkellBossState::Idle:
 	{
 		attackAccumSpeed = 0.f;
 
 		animator.Play("animations/Boss/SkellBoss Idle.csv");
 	}
-		break;
+	break;
 	case SkellBoss::SkellBossState::AttackLaser:
 	{
 		attackLaserRandPatternValue = Utils::RandomValue() < 0.5f ? -1 : 1;
@@ -324,7 +349,7 @@ void SkellBoss::SetState(SkellBossState state)
 
 		laserAttackCountMax = Utils::RandomRange(1, 3);
 	}
-		break;
+	break;
 	case SkellBoss::SkellBossState::AttackBullet:
 	{
 		attackBulletTimeAccum = 0.f;
@@ -342,14 +367,14 @@ void SkellBoss::SetState(SkellBossState state)
 
 		animator.Play("animations/Boss/SkellBoss AttackBullet start.csv");
 	}
-		break;
+	break;
 	case SkellBoss::SkellBossState::AttackSword:
 	{
 		swordCount = 0;
 		swordSpawnTimeAccum = 0.f;
 		afterSwordSpawnTimeAccum = 0.f;
 	}
-		break;
+	break;
 	case SkellBoss::SkellBossState::Death:
 	{
 		animator.Stop();
@@ -370,13 +395,13 @@ void SkellBoss::SetState(SkellBossState state)
 			otherDeathSprites[4]->setOrigin({ otherDeathSprites[4]->getLocalBounds().width / 2.f , otherDeathSprites[4]->getLocalBounds().height });
 			otherDeathSprites[4]->setPosition({ position.x + 7.5f + 18.5f, position.y - 10.f });
 		}
-		SetPosition({position.x, position.y - body.getLocalBounds().height});
-		
+		SetPosition({ position.x, position.y - body.getLocalBounds().height });
+
 		body.setTexture(texDeath, true);
 
 		gravity = 0.98f;
 	}
-		break;
+	break;
 	}
 }
 
@@ -526,7 +551,7 @@ void SkellBoss::UpdateAttackBullet(float dt)
 			ShootBullet(Utils::OnUnitCircle(angleDown += dt * 10 * randDir));
 		}
 	}
-	else 
+	else
 	{
 		SetState(SkellBossState::Idle);
 	}
@@ -562,7 +587,7 @@ void SkellBoss::UpdateAttackSword(float dt)
 
 		return;
 	}
-	
+
 	if (swordSpawnTimeAccum >= swordSpawnTimeDelay)
 	{
 		swordSpawnTimeAccum = 0.f;
@@ -575,7 +600,7 @@ void SkellBoss::UpdateAttackSword(float dt)
 
 void SkellBoss::UpdateDeath(float dt)
 {
-	
+
 }
 
 void SkellBoss::ShootBullet(sf::Vector2f direction)

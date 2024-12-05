@@ -11,6 +11,8 @@
 #include "TorchMo.h"
 #include "DoorMo.h"
 #include "BreakableMo.h"
+#include "SkellBoss.h"
+#include "SkellBossLeftHand.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -397,6 +399,16 @@ void Room::LoadMapData(const std::string& path)
 			skeletonDog->SetActive(false);
 			skeletonDog->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
 			monsters.push_back({ skeletonDog ,spawndatum });
+		}
+		break;
+		case Monster::MonsterType::SkellBoss:
+		{
+			SkellBoss* skellBoss = scene->AddGo(new SkellBoss());
+			skellBoss->Init();
+			skellBoss->Reset();
+			skellBoss->SetActive(false);
+			skellBoss->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ skellBoss ,spawndatum });
 		}
 		break;
 		}
