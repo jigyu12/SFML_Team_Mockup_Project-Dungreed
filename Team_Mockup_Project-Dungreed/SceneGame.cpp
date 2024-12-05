@@ -11,6 +11,7 @@
 #include "SkellBoss.h"
 #include "SkellBossLeftHand.h"
 #include "ParticleGo.h"
+#include "LightGo.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -137,6 +138,21 @@ void SceneGame::ReturnObjectParticle(ParticleGo* particle)
 	particlePool.Return(particle);
 }
 
+LightGo* SceneGame::TakeObjectLight()
+{
+	LightGo* objectLight = lightPool.Take();
+	lights.push_back(objectLight);
+	AddGo(objectLight);
+	return objectLight;
+}
+
+void SceneGame::ReturnObjectLight(LightGo* light)
+{
+	RemoveGo((GameObject*)light);
+	lights.remove(light);
+	lightPool.Return(light);
+}
+
 void SceneGame::ClearTookObject()
 {
 	for (auto particle : particles)
@@ -145,4 +161,10 @@ void SceneGame::ClearTookObject()
 		particlePool.Return(particle);
 	}
 	particles.clear();
+	for (auto light : lights)
+	{
+		RemoveGo(light);
+		lightPool.Return(light);
+	}
+	lights.clear();
 }

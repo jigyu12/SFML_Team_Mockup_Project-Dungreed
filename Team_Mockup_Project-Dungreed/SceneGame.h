@@ -10,6 +10,7 @@ class Weapon;
 class SkellBoss;
 class SkellBossLeftHand;
 class ParticleGo;
+class LightGo;
 
 class SceneGame : public Scene
 {
@@ -26,6 +27,9 @@ protected:
 	std::list<ParticleGo*> particles;
 	ObjectPool<ParticleGo> particlePool;
 
+	std::list<LightGo*> lights;
+	ObjectPool<LightGo> lightPool;
+
 public:
 	SceneGame();
 	virtual ~SceneGame() = default;
@@ -39,6 +43,10 @@ public:
 
 	ParticleGo* TakeObjectParticle();
 	void ReturnObjectParticle(ParticleGo* particle);
+
+	LightGo* TakeObjectLight();
+	void ReturnObjectLight(LightGo* light);
+
 	void ClearTookObject();
 };
 

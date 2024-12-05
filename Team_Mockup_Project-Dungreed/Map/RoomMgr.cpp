@@ -62,6 +62,7 @@ void RoomMgr::Reset()
 	room->Reset();
 	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FEnterLR"));
 	scene->AddGo(room);
+	room->SetActive(true);
 	floors[1].insert({ {0,0}, room });
 
 	room = new Room("1FExitL");

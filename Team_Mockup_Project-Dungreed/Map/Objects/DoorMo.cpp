@@ -29,8 +29,10 @@ void DoorMo::Update(float dt)
 		collide = Utils::CheckCollision(hitbox, player->GetHitBox());
 	}
 	if (collide
-		&& InputMgr::GetKeyDown(sf::Keyboard::E))
+		&& InputMgr::GetKeyDown(sf::Keyboard::E)
+		&&status == MapObject::Status::Open)
 	{
+		SetStatus(MapObject::Status::Broken);
 		ROOM_MGR.NextFloor();
 	}
 }
