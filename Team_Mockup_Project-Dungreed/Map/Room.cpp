@@ -114,6 +114,16 @@ void Room::SetOrigin(const sf::Vector2f& newOrigin)
 	}
 }
 
+sf::FloatRect Room::GetLocalBounds() const
+{
+	return tileMaps[0]->GetLocalBounds();
+}
+
+sf::FloatRect Room::GetGlobalBounds() const
+{
+	return tileMaps[0]->GetGlobalBounds();
+}
+
 void Room::Init()
 {
 	sortingLayer = SortingLayers::Background;
