@@ -63,6 +63,10 @@ void RoomMgr::Init()
 				dir += 0x01 << i;
 			}
 		}
+		if (dir == 0)
+		{
+			std::cout << path << std::endl;
+		}
 		normalRooms[dir].push_back(mapdata);
 		path = RESOURCEID_TABLE->Get("Map", "1FRoom" + std::to_string(++count));
 	}
@@ -355,7 +359,7 @@ void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& 
 		{
 			std::cout << "?" << std::endl;
 		}
-		room->SetMapData(normalRooms[s][Utils::RandomRange(0, normalRooms[0x01 << dir].size() - 1)]);
+		room->SetMapData(normalRooms[s][Utils::RandomRange(0, normalRooms[s].size() - 1)]);
 	}
 	room->SetActive(false);
 	scene->AddGo(room);

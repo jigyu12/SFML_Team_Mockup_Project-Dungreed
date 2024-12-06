@@ -27,6 +27,7 @@ ID,string
 "PortalRight","RIGHT\nPORTAL"
 "Enter","ENTRENCE\nROOM"
 "Exit","EXIT\nROOM"
+"ExitEditor","EXIT\nEDITOR"
 "Normal","NORMAL\nROOM"
 "Immovable","IMMOVABLE"
 "Downable","DOWNABLE"
