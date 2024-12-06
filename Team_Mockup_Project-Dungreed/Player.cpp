@@ -154,7 +154,7 @@ void Player::Update(float dt)
 	//dashCoolTimer = std::max(dashCoolTimer, 0.f);
 
 	dashCoolTimer = Utils::Clamp(dashCoolTimer, 0.f, 2.f);
-	
+
 
 
 	switch (status)
@@ -191,6 +191,13 @@ void Player::Update(float dt)
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
 	sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
 	look = Utils::GetNormal(mouseworldPos - position);
+	if ((look.x > 0.f && scale.x < 0.f)
+		|| (look.x < 0.f && scale.x >0.f))
+	{
+		SetScale({ -scale.x,scale.y });
+	}
+
+	//Utils::Angle(look);
 	SetOrigin(Origins::BC);
 
 
@@ -350,7 +357,7 @@ void Player::UpdateGrounded(float dt)
 
 		}
 		else
-		Jump();
+			Jump();
 	}
 	if (horizontalInput == 0 && animator.GetCurrentClipId() != "Idle")
 	{
@@ -423,7 +430,7 @@ void Player::OnDamage(int monsterDamage)
 	hp = Utils::Clamp(hp - monsterDamage, 0, maxhp);
 
 	if (playerui != nullptr)
-		playerui->SetHp(hp , maxhp);
+		playerui->SetHp(hp, maxhp);
 }
 
 
