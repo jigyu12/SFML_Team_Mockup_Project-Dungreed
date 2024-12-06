@@ -2,6 +2,9 @@
 #include "GameObject.h"
 
 
+class MainTitleUi;
+
+
 class PlayerUi : public GameObject
 {
 protected:
@@ -11,6 +14,7 @@ protected:
 	sf::Text level;
 
 	Player* player;
+	
 	//««≈Î
 	sf::Sprite playerLife;
 	sf::Sprite playerLifeBackGround;
@@ -25,7 +29,7 @@ protected:
 	sf::Sprite playerDashFirstGauge;
 	sf::Sprite playerDashSecondGauge;
 	//
-
+	MainTitleUi* mainTitleui;
 
 
 	std::string playerLifeBase = "graphics/ui/PlayerLifeBase 1.png";

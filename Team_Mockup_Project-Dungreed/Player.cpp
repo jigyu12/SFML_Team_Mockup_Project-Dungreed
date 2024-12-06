@@ -68,6 +68,15 @@ void Player::Reset()
 	playerui = dynamic_cast<PlayerUi*>(SCENE_MGR.GetCurrentScene()->FindGo("playerUi"));
 
 	playerStatus.level = 1;
+	//float attackDamage;
+	//int level;
+	//float criticalDamage;
+	//float exp;
+	//float armor;
+	//float armorPercent;
+	//float movementSpeed;
+	//float criticalPercent;
+	//float dashDamage;
 
 	animator.SetTarget(&body);
 	animator.Play("animations/player Idle.csv");

@@ -12,6 +12,7 @@
 #include "SkellBossLeftHand.h"
 #include "ParticleGo.h"
 #include "LightGo.h"
+#include "UiAbility.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -38,6 +39,8 @@ void SceneGame::Init()
 			handCrossbow->SetOwnerPlayer(player);
 			player->SetWeaponToWeaponSlot2(handCrossbow);
 		}
+		uiAbility = AddGo(new UiAbility());
+		uiAbility->SetActive(false);
 	}
 	/*{
 		skellBoss = AddGo(new SkellBoss());
@@ -77,7 +80,12 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
+	
+
+
 	Scene::Enter();
+	
+	
 	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
 
 	uiView.setSize(size);
@@ -111,12 +119,19 @@ void SceneGame::Update(float dt)
 	{
 		SCENE_MGR.ChangeScene(SceneIds::Game);
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::C))
+	{
+		uiAbility->SetActive(true);
+	}
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
 {
 	window.clear({ 51,49,67 });
+	
 	Scene::Draw(window);
+	
+
 }
 
 

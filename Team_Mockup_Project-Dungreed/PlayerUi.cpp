@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PlayerUi.h"
+#include "UiAbility.h"
 
 
 
@@ -163,6 +164,7 @@ void PlayerUi::Draw(sf::RenderWindow& window)
 		window.draw(playerDashSecondGauge);
 	}
 	window.draw(level);
+
 	
 }
 
