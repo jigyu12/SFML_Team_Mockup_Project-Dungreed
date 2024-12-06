@@ -149,6 +149,9 @@
     <ClCompile Include="AnimationClip.cpp" />
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Arrow.cpp" />
+    <ClCompile Include="Banshee.cpp" />
+    <ClCompile Include="BansheeBullet.cpp" />
+    <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Map\Objects\DoorMo.cpp" />
     <ClCompile Include="Map\Objects\BackgroundMo.cpp" />
     <ClCompile Include="Bat.cpp" />
@@ -221,6 +224,9 @@
     <ClInclude Include="AnimationClip.h" />
     <ClInclude Include="Animator.h" />
     <ClInclude Include="Arrow.h" />
+    <ClInclude Include="Banshee.h" />
+    <ClInclude Include="BansheeBullet.h" />
+    <ClInclude Include="Ghost.h" />
     <ClInclude Include="Map\Objects\DoorMo.h" />
     <ClInclude Include="Map\Objects\BackgroundMo.h" />
     <ClInclude Include="Bat.h" />

@@ -429,7 +429,6 @@ void SkeletonDog::UpdateAttack(float dt)
 			auto roomHitboxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 			bool collided = false;
 			bool lineCollided = false;
-			float fixedXpos;
 
 			sf::Vector2f newPosition = position + direction * speed * dt;
 			SetPosition({ newPosition.x, newPosition.y + (velocityY += gravity * dt) * dt});

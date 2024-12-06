@@ -1,0 +1,7 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Attack,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/monster/LittleGhost/LittleGhostAttack0.png,0,"0",20,20,0
+graphics/monster/LittleGhost/LittleGhostAttack1.png,0,"0",20,20,0
+graphics/monster/LittleGhost/LittleGhostAttack2.png,0,"0",20,20,0
