@@ -12,6 +12,7 @@ public:
 		SkeletonDog,
 		Bat,
 		Ghost,
+		Banshee,
 
 		SkellBoss,
 
