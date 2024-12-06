@@ -58,6 +58,10 @@ void ShortSword::Reset()
 	SetTextureId("graphics/weapon/Sword.png");
 	sprite.setTexture(TEXTURE_MGR.Get(textureId));
 
+	
+
+	
+
 	originalDamageMin = 8;
 	originalDamageMax = 10;
 
@@ -226,7 +230,8 @@ void ShortSword::Attack()
 		{
 			if (Utils::CheckCollision(monster->GetHitBox(), attackBoundHitbox))
 			{
-				monster->OnDamaged(Utils::RandomRange(originalDamageMin, originalDamageMax));
+				int realDamage = owner->CalculationDamage(Utils::RandomRange(originalDamageMin, originalDamageMax));
+				monster->OnDamaged(realDamage);
 			}
 		}
 	}

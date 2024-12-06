@@ -9,6 +9,6 @@ BackgroundMo::BackgroundMo(const std::string& name)
 void BackgroundMo::Set(const ObjectData::Type& type)
 {
 	MapObject::Set(type);
-	body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Animation", ObjectData::ToString(type) + "Icon")));
+	body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", ObjectData::ToString(type) + "Icon")));
 	SetOrigin(Origins::BC);
 }

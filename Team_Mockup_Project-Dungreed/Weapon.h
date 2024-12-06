@@ -31,6 +31,8 @@ protected:
 	int originalDamageMin;
 	int originalDamageMax;
 
+	
+
 	float attackSpeedAccumTime;
 	float attackSpeedDelayTime;
 
@@ -77,6 +79,10 @@ public:
 	void SetOwnerPlayer(Player* player) { owner = player; }
 	void SetIsCurrentWeapon(bool isCurrWeapon) { isCurrentWeapon = isCurrWeapon; }
 	void SetAttackSpeedAccumTime(float accumTime) { attackSpeedAccumTime = accumTime; }
+
+	
+	
+	
 
 	CollisionState GetCollsionState(const sf::FloatRect& weapon, const sf::FloatRect& stage);
 };

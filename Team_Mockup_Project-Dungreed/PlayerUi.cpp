@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PlayerUi.h"
+#include "UiAbility.h"
 
 
 
@@ -109,7 +110,10 @@ void PlayerUi::Reset()
 	playerHpBar.setScale({ 300.f,6.f });
 
 	textHp.setPosition({ 200.f,55.f });
+
 	SetHp(player->GetCurrentHp(), player->GetMaxHp());
+	level.setPosition({ 65.f,18.f });
+	Utils::SetOrigin(level, Origins::TL);
 
 
 
@@ -140,6 +144,7 @@ void PlayerUi::Update(float dt)
 		playerDashSecondGauge.setColor(sf::Color::White);
 	}
 
+	SetLevel(player->GetCurrentLevel());
 	
 		playerHpBar.setScale(300.f * player->GetCurrentHpRatio(), playerHpBar.getScale().y);
 	
@@ -159,6 +164,7 @@ void PlayerUi::Draw(sf::RenderWindow& window)
 		window.draw(playerDashSecondGauge);
 	}
 	window.draw(level);
+
 	
 }
 
@@ -172,6 +178,6 @@ void PlayerUi::SetHp(int hp, int max)
 
 void PlayerUi::SetLevel(int level)
 {
+	level == player->GetCurrentLevel();
 	this->level.setString(std::to_string(level));
-	Utils::SetOrigin(this->level, Origins::BL);
 }

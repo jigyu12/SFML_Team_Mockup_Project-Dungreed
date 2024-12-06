@@ -218,6 +218,7 @@
     <ClCompile Include="SkellBossParticle.cpp" />
     <ClCompile Include="SkellBossSword.cpp" />
     <ClCompile Include="Map\Objects\TorchMo.cpp" />
+    <ClCompile Include="UiAbility.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +296,7 @@
     <ClInclude Include="SkellBossParticle.h" />
     <ClInclude Include="SkellBossSword.h" />
     <ClInclude Include="Map\Objects\TorchMo.h" />
+    <ClInclude Include="UiAbility.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>

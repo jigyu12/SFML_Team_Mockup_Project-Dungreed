@@ -12,6 +12,7 @@ protected:
 	Animator animatorFx;
 	sf::Sprite swordSwingFx;
 
+
 	bool isSwing;
 	float swingTimeAccum;
 	float swingTimeDelay;

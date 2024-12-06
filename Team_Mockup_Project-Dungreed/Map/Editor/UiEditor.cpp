@@ -21,17 +21,19 @@ void UiEditor::SetPosition(const sf::Vector2f& pos)
 
 	sf::Transform transform = editorWindow.getTransform();
 
-	selectedFileName->SetPosition(transform.transformPoint(40.f, 20.f));
+	selectedFileName->SetPosition(transform.transformPoint(140.f, 25.f));
 
-	buttonNew->SetPosition(transform.transformPoint(40.f, 65.f));
-	buttonSave->SetPosition(transform.transformPoint(140.f, 65.f));
-	buttonLoad->SetPosition(transform.transformPoint(240.f, 65.f));
-	buttonReset->SetPosition(transform.transformPoint(340.f, 65.f));
+	buttonExit->SetPosition(transform.transformPoint(40.f, 20.f));
 
-	buttonTile->SetPosition(transform.transformPoint(40.f, 125.f));
-	buttonHitbox->SetPosition(transform.transformPoint(140.f, 125.f));
-	buttonMonster->SetPosition(transform.transformPoint(240.f, 125.f));
-	buttonObject->SetPosition(transform.transformPoint(340.f, 125.f));
+	buttonNew->SetPosition(transform.transformPoint(40.f, 75.f));
+	buttonSave->SetPosition(transform.transformPoint(140.f, 75.f));
+	buttonLoad->SetPosition(transform.transformPoint(240.f, 75.f));
+	buttonReset->SetPosition(transform.transformPoint(340.f, 75.f));
+
+	buttonTile->SetPosition(transform.transformPoint(40.f, 130.f));
+	buttonHitbox->SetPosition(transform.transformPoint(140.f, 130.f));
+	buttonMonster->SetPosition(transform.transformPoint(240.f, 130.f));
+	buttonObject->SetPosition(transform.transformPoint(340.f, 130.f));
 
 	uiEditTile->SetPosition(transform.transformPoint(0.f, 200.f));
 	uiEditHitBox->SetPosition(transform.transformPoint(0.f, 200.f));
@@ -70,6 +72,8 @@ void UiEditor::SetScale(const sf::Vector2f& s)
 	editorWindow.setScale(scale);
 
 	selectedFileName->SetScale(scale);
+
+	buttonExit->SetScale(scale);
 
 	buttonNew->SetScale(scale);
 	buttonSave->SetScale(scale);
@@ -139,6 +143,9 @@ void UiEditor::Init()
 	uiEditObject = new UiEditObject();
 	uiEditObject->Init();
 
+	buttonExit = new Button();
+	buttonExit->Init();
+
 	buttonNew = new Button();
 	buttonNew->Init();
 
@@ -187,6 +194,9 @@ void UiEditor::Release()
 	selectedFileName->Release();
 	delete selectedFileName;
 
+	buttonExit->Release();
+	delete buttonExit;
+
 	buttonNew->Release();
 	delete buttonNew;
 	buttonSave->Release();
@@ -227,6 +237,11 @@ void UiEditor::Reset()
 	selectedFileName->Reset();
 	selectedFileName->Set(30);
 	selectedFileName->SetString("New File", true);
+
+	buttonExit->Reset();
+	buttonExit->Set({ 90.f,45.f }, 16);
+	buttonExit->SetString("ExitEditor", true);
+	buttonExit->SetClickedEvent([this]() { SCENE_MGR.ChangeScene(SceneIds::MainTitle); });
 
 	buttonNew->Reset();
 	buttonNew->Set({ 90.f,45.f }, 20);
@@ -295,6 +310,8 @@ void UiEditor::Update(float dt)
 		break;
 	}
 
+	buttonExit->Update(dt);
+
 	buttonNew->Update(dt);
 	buttonSave->Update(dt);
 	buttonLoad->Update(dt);
@@ -310,6 +327,8 @@ void UiEditor::Draw(sf::RenderWindow& window)
 {
 	window.draw(editorWindow);
 	//window.draw(newButton);
+	buttonExit->Draw(window);
+
 	buttonNew->Draw(window);
 	buttonLoad->Draw(window);
 	buttonSave->Draw(window);

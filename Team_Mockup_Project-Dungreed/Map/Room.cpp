@@ -207,7 +207,8 @@ void Room::LateUpdate(float dt)
 				break;
 			case HitBoxData::Type::SpawnTrigger:
 				if (Utils::PointInTransformBounds(hitbox.first->rect, hitbox.first->rect.getLocalBounds(), player->GetHitBox().GetCenter())
-					&& wave == -2)
+					&& wave == -2
+					&& !cleared)
 				{
 					++wave;
 					for (const auto& object : objects)
@@ -326,11 +327,14 @@ void Room::SetMapData(const MapDataVC& mapData)
 	}
 	hitBoxes.clear();
 
+	// 황규영 빈 맵데이터 입력 확인용
+	assert(mapData.tileMapData[0].cellcount.x != 0);
+
 	for (int i = 0; i < tileMaps.size(); ++i)
 	{
 		tileMaps[i]->Set(mapData.tileMapData[i]);
 	}
-	
+
 	for (const ObjectData& objData : mapData.objectData)
 	{
 		MapObject* obj = nullptr;

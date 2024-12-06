@@ -2,6 +2,7 @@
 
 #include "Character.h"
 
+
 class Monster;
 class PlayerUi;
 
@@ -21,20 +22,25 @@ public:
 
 protected:
 	Status status;
+
 	Weapon* weaponSlot1;
 	Weapon* weaponSlot2;
+
 	
+
 
 	sf::Vector2f velocity;
 	sf::Vector2f look;
-	
+
 	PlayerUi* playerui;
 	sf::Color originalPlayerColor;
-	
+
 	HitBox* DownPlatform;
 	std::string swordId = "graphics/weapon/Sword.png";
 	std::string playerDeadId = "graphics/player/CharDie.png";
-	 
+
+
+
 	SavePlayerStatus playerStatus;
 
 	float telePortTimer = 0.f;
@@ -52,11 +58,11 @@ protected:
 
 	bool isDamaged = false;
 	bool isDead = false;
-	
+
 
 	float dashCoolTimer = 1.f;
 	sf::Vector2f dashDirection = look;
-	
+
 public:
 	Player(const std::string& name = "Player");
 	virtual ~Player() = default;
@@ -68,7 +74,7 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
-	virtual sf::FloatRect GetLocalBounds() const 
+	virtual sf::FloatRect GetLocalBounds() const
 	{
 		return body.getLocalBounds();
 	}
@@ -92,36 +98,42 @@ public:
 	void UpdateDead(float dt);
 
 	void Jump();
+
 	void OnDamage(int monsterDamage);
+	//¿˙¿Â
+
 	int GetCurrentLevel() const { return playerStatus.level; }
+	float GetCurrnetExp() const { return playerStatus.exp; }
+	float GetCurrentAttackDamage() const { return playerStatus.attackDamage; }
+	float GetCurrentCriticalDamage() const { return playerStatus.criticalDamage; }
+	float GetCurrentArmor() const { return playerStatus.armor; }
+	float GetCurrentArmorPercent() const { return playerStatus.armorPercent; }
+	float GetCurrentMovementSpeed() const { return playerStatus.movementSpeed; }
+	float GetCurrentCriticalPercent() const { return playerStatus.criticalPercent; }
+	float GetCurrentDashDamage() const { return playerStatus.dashDamage; }
+	//
+
 	int GetCurrentHp() const { return hp; }
 	int GetMaxHp() const { return maxhp; }
 	bool IsDamaged() const { return isDamaged; }
 	bool IsDead() const { return isDead; }
 
 	float GetCurrentCoolTime() const { return dashCoolTimer; }
-	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp/maxhp); }
-	
-	
+	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp / maxhp); }
 
+	int GetRealSwordMaxDamage();
+	void AddExp();
+
+	int CalculationDamage(int damage);
 
 	sf::Vector2f GetPlayerLookNormal() const { return Utils::GetNormal(look); }
 
 	void SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon = false);
 	void SetWeaponToWeaponSlot2(Weapon* weapon, bool isCurrentWeapon = false);
 	void SwitchWeaponSlot(sf::Keyboard::Key key);
+
+	Weapon* GetCurrentWeapon() const ;
+	
+
+	
 };
-//if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
-	//{
-	//	SaveDataV1 test;
-	//	test.status.level = 1;
-	//	SaveLoadMgr::Instance().SaveV1(test);
-	//}
-
-	//if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
-	//{
-	//	SaveDataVC test = SaveLoadMgr::Instance().Load();
-
-	//	SavePlayerStatus sksldffkldsm = test.status;
-	//	std::cout << test.version << test.status.level << std::endl;
-	//}
