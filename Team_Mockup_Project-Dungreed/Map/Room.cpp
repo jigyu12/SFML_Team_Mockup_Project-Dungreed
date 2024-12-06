@@ -232,7 +232,8 @@ void Room::LateUpdate(float dt)
 		if (ROOM_MGR.GetCurrentRoom() == this
 			&& !tileMaps[0]->GetGlobalBounds().contains(player->GetHitBox().GetCenter()))
 		{
-			EnterRoom(enteredPortal);
+			player->SetPosition(tileMaps[0]->GetTransform().transformPoint(mapData.playerStartPoint[(int)enteredPortal]));
+			player->SetStatus(Player::Status::Ground);
 		}
 	}
 	int count = 0;

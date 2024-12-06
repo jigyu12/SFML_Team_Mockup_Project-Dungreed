@@ -106,6 +106,7 @@ void Player::SetStatus(Status status)
 	switch (status)
 	{
 	case Player::Status::Ground:
+		velocity.y = 0.f;
 		break;
 	case Player::Status::Jump:
 		break;
@@ -309,7 +310,7 @@ void Player::LateUpdate(float dt)
 			{
 				if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
 				{
-					OnDamage(monster->GetOriginalDamage());
+					//OnDamage(monster->GetOriginalDamage());
 				}
 			}
 		}

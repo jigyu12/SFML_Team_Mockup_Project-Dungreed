@@ -56,6 +56,7 @@ public:
 	void Reset();
 	void Start();
 
+	std::unordered_map<sf::Vector2i, Room*, Vector2iHash> CreateBossFloor();
 	std::unordered_map<sf::Vector2i, Room*, Vector2iHash> CreateFloor();
 	void CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& floor, std::queue<std::pair<sf::Vector2i, int>>& queue, const sf::Vector2i& mother, int dir);
 

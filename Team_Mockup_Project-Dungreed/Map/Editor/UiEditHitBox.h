@@ -69,4 +69,5 @@ public:
 	std::vector<sf::Vector2f> GetStartPoints() { return startPositions; }
 	void SetStartPositionData(const std::vector<sf::Vector2f>& points) { startPositions = points; }
 	void ClearHitBoxData();
+	void ClearRoomData();
 };

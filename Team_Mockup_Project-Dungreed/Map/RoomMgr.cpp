@@ -32,9 +32,16 @@ void RoomMgr::SetCurrentRoom(int floor, sf::Vector2i coord)
 
 void RoomMgr::NextFloor()
 {
+	auto it = floors.find(++currentFloor);
+	if (it == floors.end())
+	{
+		floors.insert({ currentFloor,CreateFloor() });
+		floors.insert({ currentFloor+1,CreateBossFloor() });
+	}
+
 	scene->ClearTookObject();
 	currentRoom->SetActive(false);
-	SetCurrentRoom(++currentFloor, { 0,0 });
+	SetCurrentRoom(currentFloor, { 0,0 });
 	currentRoom->SetActive(true);
 	currentRoom->EnterRoom(HitBoxData::Type::PortalDown);
 }
@@ -209,22 +216,8 @@ void RoomMgr::Start()
 	f.close();
 
 	floors.insert({ 1,CreateFloor() });
+	floors.insert({ 2,CreateBossFloor() });
 
-	Room* room = new Room("2FEnter1R");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FEnter1R"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[2].insert({ {0,0}, room });
-
-	room = new Room("2FBoss");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FBoss"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[2].insert({ {1,0}, room });
 
 	SetCurrentRoom(1, { 0,0 });
 
@@ -262,6 +255,38 @@ bool RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 	return true;
 }
 
+
+std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateBossFloor()
+{
+	std::unordered_map<sf::Vector2i, Room*, Vector2iHash> floor;
+
+	Room* room = new Room("2FEnter1R");
+	room->Init();
+	room->Reset();
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FEnter1R"));
+	room->SetActive(false);
+	scene->AddGo(room);
+	floor.insert({ {0,0}, room });
+
+	room = new Room("2FBoss");
+	room->Init();
+	room->Reset();
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FBoss"));
+	room->SetActive(false);
+	scene->AddGo(room);
+	floor.insert({ {1,0}, room });
+
+	room = new Room("2FExit1L");
+	room->Init();
+	room->Reset();
+	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FExit1L"));
+	room->SetActive(false);
+	scene->AddGo(room);
+	floor.insert({ {2,0}, room });
+
+
+	return floor;
+}
 
 std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateFloor()
 {
@@ -325,13 +350,12 @@ void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& 
 
 	for (int i = 0; i < 4;++i)
 	{
-		if (i == dir
-			|| Utils::RandomRange(0, 1) == 0)
+		if (i == dir)
 		{
 			continue;
 		}
 		auto it = floor.find(me + dirVector[i]);
-		if (it != floor.end())
+		if (it != floor.end() || Utils::RandomRange(0, 1) == 0)
 		{
 			continue;
 		}

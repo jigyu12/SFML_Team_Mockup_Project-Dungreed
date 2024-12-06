@@ -306,7 +306,7 @@ void UiEditHitBox::Update(float dt)
 			}
 			break;
 		}
-		
+
 	}
 	else
 	{
@@ -478,7 +478,6 @@ void UiEditHitBox::Update(float dt)
 			{
 				sf::Vector2f worldMousePos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
 				startPositions[(int)hitboxType] = worldMousePos;
-				spawnPoint.setPosition(startPositions[(int)hitboxType]);
 				positionTexts[(int)hitboxType]->SetString("Position"
 					, std::to_wstring(startPositions[(int)hitboxType].x).substr(0, 5)
 					+ L", "
@@ -487,7 +486,10 @@ void UiEditHitBox::Update(float dt)
 			break;
 		}
 	}
-
+	if (editStatus == UiEditHitBox::EditStatus::StartPosition)
+	{
+		spawnPoint.setPosition(startPositions[(int)hitboxType]);
+	}
 }
 
 void UiEditHitBox::Draw(sf::RenderWindow& window)
@@ -658,4 +660,14 @@ void UiEditHitBox::ClearHitBoxData()
 		delete hitbox.first;
 	}
 	hitboxes.clear();
+}
+
+void UiEditHitBox::ClearRoomData()
+{
+	for (int i = 0;i < startPositions.size();++i)
+	{
+		startPositions[i].x = 0.f;
+		startPositions[i].y = 0.f;
+	}
+	selectedRoomType = RoomData::Type::Normal;
 }
