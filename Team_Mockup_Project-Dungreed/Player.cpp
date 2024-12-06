@@ -50,7 +50,7 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 void Player::Init()
 {
 	speed = 100.f;
-	jumpForce = 200.f;
+	jumpForce = 100.f;
 	gravity = 300.f;
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 2;
@@ -182,7 +182,10 @@ void Player::Update(float dt)
 		SetStatus(Player::Status::Dash);
 	}
 
-
+	if (InputMgr::GetKeyDown(sf::Keyboard::K))
+	{
+		AddExp();
+	}
 
 
 	SetPosition(position + velocity * dt);
@@ -191,6 +194,7 @@ void Player::Update(float dt)
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
 	sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
 	look = Utils::GetNormal(mouseworldPos - position);
+
 	if ((look.x > 0.f && scale.x < 0.f)
 		|| (look.x < 0.f && scale.x >0.f))
 	{
@@ -377,7 +381,7 @@ void Player::UpdateJump(float dt)
 	velocity.x = direction.x * speed;
 	jumpTimer += dt;
 
-	if (jumpTimer > 1.f || !InputMgr::GetKey(sf::Keyboard::Space) || velocity.y > 0.f)
+	if (jumpTimer > 0.5f || !InputMgr::GetKey(sf::Keyboard::Space) || velocity.y > 0.f)
 	{
 		velocity.y += gravity * dt;
 	}
@@ -397,7 +401,7 @@ void Player::UpdateDownJump(float dt)
 void Player::UpdateDash(float dt)
 {
 	dashTimer += dt;
-	if (dashTimer > 0.3f)
+	if (dashTimer > 0.2f)
 	{
 		velocity = { 0.f,0.f };
 		SetStatus(Status::Jump);
@@ -433,6 +437,15 @@ void Player::OnDamage(int monsterDamage)
 		playerui->SetHp(hp, maxhp);
 }
 
+
+
+
+
+
+void Player::AddExp()
+{
+	playerStatus.level += 1;
+}
 
 void Player::SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon)
 {

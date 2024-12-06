@@ -93,7 +93,11 @@ public:
 
 	void Jump();
 	void OnDamage(int monsterDamage);
+	//¿˙¿Â
 	int GetCurrentLevel() const { return playerStatus.level; }
+	float GetCurrnetExp() const { return playerStatus.exp; }
+	//
+
 	int GetCurrentHp() const { return hp; }
 	int GetMaxHp() const { return maxhp; }
 	bool IsDamaged() const { return isDamaged; }
@@ -102,6 +106,8 @@ public:
 	float GetCurrentCoolTime() const { return dashCoolTimer; }
 	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp/maxhp); }
 	
+	
+	void AddExp();
 	
 
 

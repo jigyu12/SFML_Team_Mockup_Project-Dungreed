@@ -9,7 +9,7 @@ protected:
 	sf::RectangleShape maxHp;
 	sf::Text textHp;
 	sf::Text level;
-	
+
 	Player* player;
 	//피통
 	sf::Sprite playerLife;
@@ -20,12 +20,12 @@ protected:
 	//대쉬 비워져있을때
 	sf::Sprite playerDashFirstFrame;
 	sf::Sprite playerDashSecondFrame;
-	
+
 	//대쉬 채워져있을때
 	sf::Sprite playerDashFirstGauge;
 	sf::Sprite playerDashSecondGauge;
 	//
-	
+
 
 
 	std::string playerLifeBase = "graphics/ui/PlayerLifeBase 1.png";
@@ -39,11 +39,11 @@ protected:
 	//대쉬 (채워져있을때 이미지)
 	std::string playerDashBase01 = "graphics/ui/DashCount.png";
 	std::string playerDashBase21 = "graphics/ui/DashCount.png";
-	
-	
 
 
-	
+
+
+
 public:
 	PlayerUi(const std::string& name = "playerUi");
 	~PlayerUi() = default;
@@ -62,5 +62,6 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 	void SetHp(int hp, int max);
 	void SetLevel(int level);
+
 };
 
