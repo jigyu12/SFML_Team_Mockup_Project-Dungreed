@@ -100,7 +100,15 @@
     <ClCompile Include="Map\Objects\BackgroundMo.cpp" />
     <ClCompile Include="BirdGo.cpp" />
     <ClCompile Include="Map\Objects\SealStoneMo.cpp" />
-    <ClCompile Include="Ghost.cpp" />
+    <ClCompile Include="Ghost.cpp">
+      <Filter>Monsters\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Banshee.cpp">
+      <Filter>Monsters\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="BansheeBullet.cpp">
+      <Filter>Monsters\Monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -139,7 +147,6 @@
     <ClInclude Include="Framework\DefineJson.h" />
     <ClInclude Include="Framework\SceneDev3.h" />
     <ClInclude Include="Map\MapData.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="Map\Room.h" />
     <ClInclude Include="Map\TileMap.h" />
     <ClInclude Include="Map\Editor\SceneMapEdit.h" />
@@ -208,7 +215,16 @@
     <ClInclude Include="Map\Objects\BackgroundMo.h" />
     <ClInclude Include="BirdGo.h" />
     <ClInclude Include="Map\Objects\SealStoneMo.h" />
-    <ClInclude Include="Ghost.h" />
+    <ClInclude Include="Ghost.h">
+      <Filter>Monsters\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Banshee.h">
+      <Filter>Monsters\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="BansheeBullet.h">
+      <Filter>Monsters\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">
