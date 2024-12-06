@@ -217,7 +217,7 @@ void UiEditor::Reset()
 	{
 		editingTileMaps[i]->Reset();
 		editingTileMaps[i]->SetTexture("graphics/map/Map.png");
-		editingTileMaps[i]->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
+		editingTileMaps[i]->Set({ 20,12 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
 		editingTileMaps[i]->SetShowGridLine(true);
 		scene->AddGo(editingTileMaps[i]);
 	}
@@ -411,7 +411,7 @@ void UiEditor::NewFile()
 	selectedFileName->SetString("New File", true);
 	for (int i = 0;i < MapData::TileMapCount;++i)
 	{
-		editingTileMaps[i]->Set({ 10,10 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
+		editingTileMaps[i]->Set({ 20,12 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
 	}
 	uiEditHitBox->ClearHitBoxData();
 	uiEditObject->ClearObjectData();

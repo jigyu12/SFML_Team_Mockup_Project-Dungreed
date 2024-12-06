@@ -17,7 +17,7 @@ void DoorMo::Update(float dt)
 	MapObject::Update(dt);
 
 	timer += dt;
-	if (timer > 3.f
+	if (timer > 0.5f
 		&& status == MapObject::Status::Close
 		&& !animator.IsPlaying())
 	{
@@ -30,7 +30,7 @@ void DoorMo::Update(float dt)
 	}
 	if (collide
 		&& InputMgr::GetKeyDown(sf::Keyboard::E)
-		&&status == MapObject::Status::Open)
+		&& status == MapObject::Status::Open)
 	{
 		SetStatus(MapObject::Status::Broken);
 		ROOM_MGR.NextFloor();
@@ -50,6 +50,9 @@ void DoorMo::Draw(sf::RenderWindow& window)
 void DoorMo::Reset()
 {
 	MapObject::Reset();
+	body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "DoorIcon")));
+	SetOrigin(Origins::BC);
+	SetPosition(position);
 	key.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "KeyboardEIcon")));
 }
 

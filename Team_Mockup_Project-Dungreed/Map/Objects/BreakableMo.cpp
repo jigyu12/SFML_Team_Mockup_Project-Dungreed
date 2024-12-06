@@ -24,24 +24,8 @@ void BreakableMo::Set(const ObjectData::Type& type)
 {
 	MapObject::Set(type);
 
-	switch (this->type)
-	{
-	case ObjectData::Type::Box:
-		body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BoxIcon")));
-		break;
-	case ObjectData::Type::BigBox:
-		body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BigBoxIcon")));
-		break;
-	case ObjectData::Type::OakDrum:
-		body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "OakDrumIcon")));
-		break;
-	case ObjectData::Type::Table:
-		body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "TableIcon")));
-		break;
-	case ObjectData::Type::SkullTable:
-		body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SkullTableIcon")));
-		break;
-	}
+	body.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", ObjectData::ToString(this->type) + "Icon")));
+
 	SetOrigin(Origins::BC);
 }
 
@@ -73,6 +57,7 @@ void BreakableMo::OnDamaged(int damage)
 		}
 		break;
 	case ObjectData::Type::BigBox:
+
 		for (int i = 0; i < particlecount + 1;++i)
 		{
 			int rand = Utils::RandomRange(0, 6);
