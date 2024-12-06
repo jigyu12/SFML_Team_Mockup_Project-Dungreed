@@ -71,7 +71,6 @@ void RoomMgr::Init()
 	while (path != "")
 	{
 		MapDataVC mapdata = MapDataLoader::Load(path);
-
 		int dir = 0;
 		for (int i = 0; i < mapdata.roomData.connection.size();++i)
 		{
@@ -309,7 +308,7 @@ std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateFloor()
 	}
 	std::pair<sf::Vector2i, int> deadend = deadends[Utils::RandomRange(0, deadends.size() - 1)];
 
-	floor[deadend.first]->SetMapData(exitRooms[0x01<<deadend.second][0]);
+	floor[deadend.first]->SetMapData(exitRooms[0x01 << deadend.second][Utils::RandomRange(0, exitRooms[0x01 << deadend.second].size() - 1)]);
 
 	return floor;
 }
@@ -340,7 +339,7 @@ void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& 
 	room->Reset();
 	if (floor.size() > floorData.maxCount)
 	{
-		room->SetMapData(normalRooms[0x01 << dir][0]);
+		room->SetMapData(normalRooms[0x01 << dir][Utils::RandomRange(0, normalRooms[0x01 << dir].size() - 1)]);
 	}
 	else
 	{
@@ -356,7 +355,7 @@ void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& 
 		{
 			std::cout << "?" << std::endl;
 		}
-		room->SetMapData(normalRooms[s][0]);
+		room->SetMapData(normalRooms[s][Utils::RandomRange(0, normalRooms[0x01 << dir].size() - 1)]);
 	}
 	room->SetActive(false);
 	scene->AddGo(room);
