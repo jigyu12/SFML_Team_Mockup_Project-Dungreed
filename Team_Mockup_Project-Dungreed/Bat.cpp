@@ -66,7 +66,7 @@ void Bat::Reset()
 	hp = maxhp;
 	speed = 30.f;
 	originalDamage = 5;
-	direction = Utils::GetNormal(target->GetPosition() - position);
+	direction = {Utils::RandomRange(0, 1) < 1 ? -1.f : 1.f , 0.f};
 	if (direction.x > 0)
 	{
 		SetScale({ 1.f, 1.f });
