@@ -413,8 +413,8 @@ void UiEditHitBox::Update(float dt)
 				}
 				if ((InputMgr::GetMouseButtonDown(sf::Mouse::Right))
 					|| (InputMgr::GetMouseButtonUp(sf::Mouse::Left)
-						&& selectedHitBox->getSize().x < 16.f
-						&& selectedHitBox->getSize().y < 16.f))
+						&& std::fabs(selectedHitBox->getSize().x) < 16.f
+						&& std::fabs(selectedHitBox->getSize().y) < 16.f))
 				{
 					auto found = hitboxes.find(selectedHitBox);
 					if (found != hitboxes.end())
@@ -584,7 +584,7 @@ void UiEditHitBox::SetHitBoxData(const std::vector<HitBoxData>& data)
 		delete hitbox.first;
 	}
 	hitboxes.clear();
-
+	selectedHitBox = nullptr;
 	for (auto& datum : data)
 	{
 		sf::RectangleShape* shape = new sf::RectangleShape();

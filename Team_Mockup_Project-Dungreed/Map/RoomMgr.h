@@ -15,9 +15,14 @@ class SceneGame;
 
 struct FloorData
 {
-	std::unordered_map<int, std::unordered_map<sf::Vector2i, std::string, Vector2iHash>> floors;
+	//std::unordered_map<int, std::unordered_map<sf::Vector2i, std::string, Vector2iHash>> floors;
+	//
+	//NLOHMANN_DEFINE_TYPE_INTRUSIVE(FloorData, floors)
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(FloorData, floors)
+	int minDepth;
+	int maxCount;
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(FloorData, minDepth, maxCount)
 };
 
 class RoomMgr : public Singleton<RoomMgr>
@@ -27,6 +32,14 @@ public:
 protected:
 
 	std::unordered_map<int, std::unordered_map<sf::Vector2i, Room*, Vector2iHash>> floors;
+
+	std::vector<MapDataVC> entranceRooms;
+	std::unordered_map<int, std::vector<MapDataVC>> normalRooms;
+	std::unordered_map<int, std::vector<MapDataVC>> exitRooms;
+
+	std::vector<sf::Vector2i> dirVector = { {0,-1},{0,1}, {-1,0}, {1,0} };
+	std::vector<int> dirFlip = { 1,0,3,2 };
+	FloorData floorData;
 
 	SceneGame* scene;
 
@@ -38,12 +51,17 @@ protected:
 	~RoomMgr() = default;
 public:
 
+	void Init();
+
 	void Reset();
-	void Reset(const std::string& path);
+	void Start();
+
+	std::unordered_map<sf::Vector2i, Room*, Vector2iHash> CreateFloor();
+	void CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& floor, std::queue<std::pair<sf::Vector2i, int>>& queue, const sf::Vector2i& mother, int dir);
 
 	bool RoomChange(const HitBoxData::Type& portalType);
 	Room* GetCurrentRoom();
-	void SetCurrentRoom(int floor,sf::Vector2i coord);
+	void SetCurrentRoom(int floor, sf::Vector2i coord);
 	int GetCurrentFloor() { return currentFloor; }
 	void NextFloor();
 };

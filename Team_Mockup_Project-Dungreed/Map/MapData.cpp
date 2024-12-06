@@ -159,3 +159,43 @@ RoomData::RoomData()
 {
 	connection.resize(4,false);
 }
+
+std::string ObjectData::ToString(const Type& type)
+{
+	switch (type)
+	{
+	case Type::Torch:
+		return "Torch";
+	case Type::SealStone:
+		return "SealStone";
+	case Type::Door:
+		return "Door";
+	case Type::Box:
+		return "Box";
+	case Type::BigBox:
+		return "BigBox";
+	case Type::OakDrum:
+		return "OakDrum";
+	case Type::SkullTable:
+		return "SkullTable";
+	case Type::Table:
+		return "Table";
+	case Type::Cell:
+		return "Cell";
+	case Type::BrokenCell:
+		return "BrokenCell";
+	case Type::UpperCell0:
+		return "UpperCell0";
+	case Type::UpperCell1:
+		return "UpperCell1";
+	case Type::Skull0:
+		return "Skull0";
+	case Type::Skull1:
+		return "Skull1";
+	case Type::Bone0:
+		return "Bone0";
+	case Type::Bone1:
+		return "Bone1";
+	}
+	return std::string();
+}
