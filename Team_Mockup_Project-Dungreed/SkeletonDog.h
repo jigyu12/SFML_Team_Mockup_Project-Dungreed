@@ -50,8 +50,8 @@ protected:
 	float deathTimeAccum;
 	float deathTimeDelay;
 
-	float testA = 0.f;
-	float testB = 0.2f;
+	float colTimeAccum;
+	float colTimeDelay;
 
 public:
 	SkeletonDog(const std::string& name = "SkeletonDog");
