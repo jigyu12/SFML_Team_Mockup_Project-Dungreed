@@ -58,7 +58,7 @@ const std::string& ResourceIdTable::Get(const std::string& type, const std::stri
 	auto find = table.find(type);
 	if (find == table.end())
 	{
-	return Undefined;
+		return Undefined;
 	}
 	auto find2 = find->second.find(idx);
 	if (find2 == find->second.end())

@@ -1,27 +1,10 @@
 #include "stdafx.h"
 #include "Bat.h"
+#include "Room.h"
 
 Bat::Bat(const std::string& name)
 	: Monster(name)
 {
-}
-
-void Bat::SetPosition(const sf::Vector2f& pos)
-{
-	position = pos;
-	body.setPosition(position);
-}
-
-void Bat::SetRotation(float angle)
-{
-	rotation = angle;
-	body.setRotation(rotation);
-}
-
-void Bat::SetScale(const sf::Vector2f& scale)
-{
-	this->scale = scale;
-	body.setScale(this->scale);
 }
 
 void Bat::SetOrigin(Origins preset)
@@ -44,6 +27,24 @@ void Bat::SetOrigin(const sf::Vector2f& newOrigin)
 	body.setOrigin(origin);
 }
 
+void Bat::SetPosition(const sf::Vector2f& pos)
+{
+	position = pos;
+	body.setPosition(position);
+}
+
+void Bat::SetRotation(float angle)
+{
+	rotation = angle;
+	body.setRotation(rotation);
+}
+
+void Bat::SetScale(const sf::Vector2f& scale)
+{
+	this->scale = scale;
+	body.setScale(this->scale);
+}
+
 void Bat::Init()
 {
 	sortingLayer = SortingLayers::Foreground;
@@ -57,229 +58,108 @@ void Bat::Reset()
 	{
 		std::cerr << "target player was nullptr" << std::endl;
 
-		return; 
+		return;
 	}
 	sortingOrder = target->sortingOrder - 1;
-	direction = Utils::GetNormal({ target->GetPosition().x - position.x , target->GetPosition().y - position.y - target->GetLocalBounds().height / 2.f});
-	
 
-	hp = 6;
+	maxhp = 6;
+	hp = maxhp;
 	speed = 30.f;
 	originalDamage = 5;
+	direction = {Utils::RandomRange(0, 1) < 1 ? -1.f : 1.f , 0.f};
+	if (direction.x > 0)
+	{
+		SetScale({ 1.f, 1.f });
+	}
+	else
+	{
+		SetScale({ -1.f, 1.f });
+	}
 
-	attackAccumSpeed = 0.f;
-	attackSpeedDelay = 1.f;
-
-	idleAccumTime = 0.f;
-	idleTimeDelay = 1.5f;
-	idleRandMoveAccumTime = 0.f;
-	idleRandMoveTimeDelay = 2.f;
-	isRandMoving = false;
-
-	hitAccumTime = 0.f;
 	hitTimeDelay = 0.1f;
-	isDamaged = false;
 
-	deathAccumTime = 0.f;
+	idleTimeDelay = 2.f;
+
+	randMoveTimeDelay = 5.f;
+
 	deathTimeDelay = 1.f;
+
+	isDamaged = false;
 	isDead = false;
-	
+
 	animator.SetTarget(&body);
-	animator.Play("animations/Bat Idle.csv");
 
 	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
 
-	state = BatState::Idle;
+	SetState(BatState::Idle);
 
-	movableBound = {-FRAMEWORK.GetWindowBounds().width / 2.f / 6.f, -FRAMEWORK.GetWindowBounds().height / 2.f / 6.f,FRAMEWORK.GetWindowBounds().width / 6.f, FRAMEWORK.GetWindowBounds().height / 6.f };
-
-	detectionRange.setFillColor(sf::Color::Transparent);
-	detectionRange.setOutlineColor(sf::Color::Blue);
-	detectionRange.setOutlineThickness(1.f);
-	detectionRange.setPosition(body.getPosition());
-	detectionRange.setRadius(50.f);
-	detectionRange.setOrigin({ detectionRange.getLocalBounds().width / 2.f, detectionRange.getLocalBounds().height / 2.f });
+	{
+		detectionRange.setFillColor(sf::Color::Transparent);
+		detectionRange.setOutlineColor(sf::Color::Blue);
+		detectionRange.setOutlineThickness(1.f);
+		detectionRange.setPosition(body.getPosition());
+		detectionRange.setRadius(100.f);
+		detectionRange.setOrigin({ detectionRange.getLocalBounds().width / 2.f, detectionRange.getLocalBounds().height / 2.f });
+	}
 
 	shader.loadFromFile("shader/red.frag", sf::Shader::Type::Fragment);
 }
 
 void Bat::Update(float dt)
 {
-	detectionRange.setPosition(body.getPosition());
-	
+	hitbox.UpdateTr(body, GetLocalBounds());
+
 	switch (state)
 	{
 	case Bat::BatState::Idle:
 	{
-		idleAccumTime += dt;
-
-		if (Utils::Distance(detectionRange.getPosition(), { target->GetPosition().x,  target->GetPosition().y - target->GetLocalBounds().height / 2.f }) < target->GetLocalBounds().height / 2.f + detectionRange.getRadius())
-		{
-			idleAccumTime = 0.f;
-			idleRandMoveAccumTime = 0.f;
-			isRandMoving = false;
-			state = BatState::Move;
-		}
-
-		if (idleAccumTime > idleTimeDelay)
-		{
-			if (!isRandMoving)
-			{
-				isRandMoving = true;
-
-				float dirX;
-				if ((std::fabs(dirX = (float)Utils::RandomRange(-1, 1))) < EPSILON)
-				{
-					dirX = 0.f;
-				}
-				else
-				{
-					dirX = dirX < EPSILON ? -1 : 1;
-				}
-				float dirY;
-				if (std::fabs(dirX) < EPSILON)
-				{
-					while (true)
-					{
-						dirY = (float)Utils::RandomRange(-1, 1);
-						if (std::fabs(dirY) > EPSILON)
-						{
-							break;
-						}
-					}
-					dirY = dirY < EPSILON ? -1 : 1;
-				}
-				else
-				{
-					if (std::fabs(dirY = (float)Utils::RandomRange(-1, 1)) < EPSILON)
-					{
-						dirY = 0.f;
-					}
-					else
-					{
-						dirY = dirY < EPSILON ? -1 : 1;
-					}
-				}
-				direction = {dirX, dirY};
-				float mag = Utils::Magnitude(direction);
-				if (mag > 1.f)
-				{
-					Utils::Normailize(direction);
-				}
-				if (direction.x > 0)
-				{
-					SetScale({ 1.f, 1.f });
-				}
-				else
-				{
-					SetScale({ -1.f, 1.f });
-				}
-			}
-			else
-			{
-				idleRandMoveAccumTime += dt;
-				if (idleRandMoveAccumTime < idleRandMoveTimeDelay)
-				{
-					sf::Vector2f newPosition = position + direction * speed * dt;
-					if (newPosition.x - body.getLocalBounds().width / 2.f < movableBound.left )
-					{
-						SetPosition({newPosition.x = movableBound.left + body.getLocalBounds().width / 2.f, newPosition.y});
-						direction = {-direction.x, -direction.y};
-						isRandMoving = false;
-					}
-					if (newPosition.x + body.getLocalBounds().width / 2.f > movableBound.left + movableBound.width)
-					{
-						SetPosition({ newPosition.x = movableBound.left + movableBound.width - body.getLocalBounds().width / 2.f, newPosition.y });
-						direction = { -direction.x, -direction.y };
-						isRandMoving = false;
-					}
-					if (newPosition.y - body.getLocalBounds().height / 2.f < movableBound.top)
-					{
-						SetPosition({ newPosition.x, newPosition.y = movableBound.top + body.getLocalBounds().height / 2.f });
-						direction = { -direction.x, -direction.y };
-						isRandMoving = false;
-					}
-					if (newPosition.y + body.getLocalBounds().height / 2.f > movableBound.top + movableBound.height)
-					{
-						SetPosition({ newPosition.x, newPosition.y = movableBound.top + movableBound.height - body.getLocalBounds().height / 2.f });
-						direction = { -direction.x, -direction.y };
-						isRandMoving = false;
-					}
-
-					SetPosition(newPosition);
-				}
-				else
-				{
-					idleAccumTime = 0.f;
-					idleRandMoveAccumTime = 0.f;
-					isRandMoving = false;
-				}
-			}
-		}
+		UpdateIdle(dt);
 	}
 		break;
-	case Bat::BatState::Move:
+	case Bat::BatState::RandMove:
 	{
-		if (Utils::Distance(detectionRange.getPosition(), { target->GetPosition().x,  target->GetPosition().y - target->GetLocalBounds().height / 2.f }) > target->GetLocalBounds().height / 2.f + detectionRange.getRadius())
-		{
-			idleAccumTime = idleTimeDelay;
-			idleRandMoveAccumTime = 0.f;
-			isRandMoving = false;
-			state = BatState::Idle;
-		}
-
-		direction = Utils::GetNormal({ target->GetPosition().x - position.x , target->GetPosition().y - position.y - target->GetLocalBounds().height / 2.f });
-		float mag = Utils::Magnitude(direction);
-		if (mag > 1.f)
-		{
-			Utils::Normailize(direction);
-		}
-		if (direction.x > 0)
-		{
-			SetScale({ 1.f, 1.f });
-		}
-		else
-		{
-			SetScale({ -1.f, 1.f });
-		}
-		sf::Vector2f newPosition = position + direction * speed * dt;
-		SetPosition(newPosition);
+		UpdateRandMove(dt);
 	}
 		break;
-	case Bat::BatState::Death: 
+	case Bat::BatState::Attack:
 	{
-		deathAccumTime += dt;
-		if (deathAccumTime > deathTimeDelay)
-		{
-			SCENE_MGR.GetCurrentScene()->RemoveGo(this);
-		}
+		UpdateAttack(dt);
 	}
 		break;
+	case Bat::BatState::Death:
+	{
+		UpdateDeath(dt);
+	}
+		break;
+	}
+
+	if (direction.x > 0)
+	{
+		SetScale({ 1.f, 1.f });
+	}
+	else
+	{
+		SetScale({ -1.f, 1.f });
 	}
 
 	if (isDamaged && hp > 0)
 	{
-		hitAccumTime += dt;
-		if (hitAccumTime >= hitTimeDelay)
+		hitTimeAccum += dt;
+		if (hitTimeAccum >= hitTimeDelay)
 		{
 			isDamaged = false;
-			hitAccumTime = 0.f;
+			hitTimeAccum = 0.f;
 		}
 	}
 	else if (isDamaged && hp <= 0)
 	{
 		if (!isDead)
-		{
-			state = BatState::Death;
-			animator.Play("animations/Monster Die.csv");
-			isDead = true;
-		}
+			SetState(BatState::Death);
 	}
 
-	
-	animator.Update(dt);
+	detectionRange.setPosition(body.getPosition());
 
-	hitbox.UpdateTr(body, GetLocalBounds());
+	animator.Update(dt);
 }
 
 void Bat::LateUpdate(float dt)
@@ -303,11 +183,169 @@ void Bat::Draw(sf::RenderWindow& window)
 	}
 
 	if (Variables::isDrawHitBox)
+	{
 		window.draw(detectionRange);
+	}
 
 	hitbox.Draw(window);
 }
 
 void Bat::Release()
 {
+}
+
+void Bat::SetState(BatState state)
+{
+	this->state = state;
+
+	switch (state)
+	{
+	case Bat::BatState::Idle: 
+	{
+		idleTimeAccum = 0.f;
+
+		animator.Play("animations/Bat Idle.csv");
+	}
+		break;
+	case Bat::BatState::RandMove:
+	{
+		randMoveTimeAccum = 0.f;
+
+		do
+		{
+			direction = Utils::GetNormal({ Utils::RandomRange(-1.f, 1.f),Utils::RandomRange(-1.f, 1.f) });
+		} while (Utils::Magnitude(direction) < EPSILON);
+
+		movableBound = ROOM_MGR.GetCurrentRoom()->GetGlobalBounds();
+	}
+		break;
+	case Bat::BatState::Attack:
+	{
+		movableBound = ROOM_MGR.GetCurrentRoom()->GetGlobalBounds();
+	}
+		break;
+	case Bat::BatState::Death:
+	{
+		deathTimeAccum = 0.f;
+
+		isDead = true;
+
+		animator.Play("animations/Monster Die.csv");
+	}
+		break;
+	}
+}
+
+void Bat::UpdateIdle(float dt)
+{
+	if (Utils::Distance(detectionRange.getPosition(), { target->GetPosition().x,  target->GetPosition().y - target->GetLocalBounds().height / 2.f }) < target->GetLocalBounds().height / 2.f + detectionRange.getRadius())
+	{
+		SetState(BatState::Attack);
+
+		return;
+	}
+
+	idleTimeAccum += dt;
+
+	if (idleTimeAccum >= idleTimeDelay)
+	{
+		SetState(BatState::RandMove);
+
+		return;
+	}
+}
+
+void Bat::UpdateRandMove(float dt)
+{
+	if (Utils::Distance(detectionRange.getPosition(), { target->GetPosition().x,  target->GetPosition().y - target->GetLocalBounds().height / 2.f }) < target->GetLocalBounds().height / 2.f + detectionRange.getRadius())
+	{
+		SetState(BatState::Attack);
+
+		return;
+	}
+
+	randMoveTimeAccum += dt;
+
+	if (randMoveTimeAccum >= randMoveTimeDelay)
+	{
+		SetState(BatState::Idle);
+
+		return;
+	}
+	
+	sf::Vector2f newPosition = position + direction * speed * dt;
+	if (newPosition.x - body.getLocalBounds().width / 2.f < movableBound.left)
+	{
+		SetPosition({ newPosition.x = movableBound.left + body.getLocalBounds().width / 2.f, newPosition.y });
+		direction = { -direction.x, -direction.y };
+	}
+	if (newPosition.x + body.getLocalBounds().width / 2.f > movableBound.left + movableBound.width)
+	{
+		SetPosition({ newPosition.x = movableBound.left + movableBound.width - body.getLocalBounds().width / 2.f, newPosition.y });
+		direction = { -direction.x, -direction.y };
+	}
+	if (newPosition.y - body.getLocalBounds().height / 2.f < movableBound.top)
+	{
+		SetPosition({ newPosition.x, newPosition.y = movableBound.top + body.getLocalBounds().height / 2.f });
+		direction = { -direction.x, -direction.y };
+	}
+	if (newPosition.y + body.getLocalBounds().height / 2.f > movableBound.top + movableBound.height)
+	{
+		SetPosition({ newPosition.x, newPosition.y = movableBound.top + movableBound.height - body.getLocalBounds().height / 2.f });
+		direction = { -direction.x, -direction.y };
+	}
+
+	SetPosition(newPosition);
+}
+
+void Bat::UpdateAttack(float dt)
+{
+	if (Utils::Distance(detectionRange.getPosition(), { target->GetPosition().x,  target->GetPosition().y - target->GetLocalBounds().height / 2.f }) >= target->GetLocalBounds().height / 2.f + detectionRange.getRadius())
+	{
+		SetState(BatState::RandMove);
+
+		return;
+	}
+
+	direction = Utils::GetNormal({ target->GetPosition().x - position.x , target->GetPosition().y - position.y });
+	if (direction.x > 0)
+	{
+		SetScale({ 1.f, 1.f });
+	}
+	else
+	{
+		SetScale({ -1.f, 1.f });
+	}
+
+	sf::Vector2f newPosition = position + direction * speed * dt;
+	if (newPosition.x - body.getLocalBounds().width / 2.f < movableBound.left)
+	{
+		SetPosition({ newPosition.x = movableBound.left + body.getLocalBounds().width / 2.f, newPosition.y });
+		direction = { -direction.x, -direction.y };
+	}
+	if (newPosition.x + body.getLocalBounds().width / 2.f > movableBound.left + movableBound.width)
+	{
+		SetPosition({ newPosition.x = movableBound.left + movableBound.width - body.getLocalBounds().width / 2.f, newPosition.y });
+		direction = { -direction.x, -direction.y };
+	}
+	if (newPosition.y - body.getLocalBounds().height / 2.f < movableBound.top)
+	{
+		SetPosition({ newPosition.x, newPosition.y = movableBound.top + body.getLocalBounds().height / 2.f });
+		direction = { -direction.x, -direction.y };
+	}
+	if (newPosition.y + body.getLocalBounds().height / 2.f > movableBound.top + movableBound.height)
+	{
+		SetPosition({ newPosition.x, newPosition.y = movableBound.top + movableBound.height - body.getLocalBounds().height / 2.f });
+		direction = { -direction.x, -direction.y };
+	}
+	SetPosition(newPosition);
+}
+
+void Bat::UpdateDeath(float dt)
+{
+	deathTimeAccum += dt;
+	if (deathTimeAccum >= deathTimeDelay)
+	{
+		SCENE_MGR.GetCurrentScene()->RemoveGo(this);
+	}
 }

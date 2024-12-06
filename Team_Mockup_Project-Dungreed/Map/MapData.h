@@ -24,8 +24,18 @@ struct ObjectData
 		OakDrum,
 		SkullTable,
 		Table,
+		Cell,
+		BrokenCell,
+		UpperCell0,
+		UpperCell1,
+		Skull0,
+		Skull1,
+		Bone0,
+		Bone1,
 		Count,
 	};
+
+	static std::string ToString(const Type& type);
 
 	Type type;
 	sf::Vector2f position;

@@ -3,7 +3,6 @@
 #include "Room.h"
 #include "TileMap.h"
 #include "Player.h"
-#include "MapObject.h"
 #include "Monster.h"
 #include "Bat.h"
 #include "SkeletonDog.h"
@@ -12,6 +11,7 @@
 #include "DoorMo.h"
 #include "SealStoneMo.h"
 #include "BreakableMo.h"
+#include "BackgroundMo.h"
 #include "SkellBoss.h"
 #include "SkellBossLeftHand.h"
 
@@ -114,6 +114,16 @@ void Room::SetOrigin(const sf::Vector2f& newOrigin)
 	}
 }
 
+sf::FloatRect Room::GetLocalBounds() const
+{
+	return tileMaps[0]->GetLocalBounds();
+}
+
+sf::FloatRect Room::GetGlobalBounds() const
+{
+	return tileMaps[0]->GetGlobalBounds();
+}
+
 void Room::Init()
 {
 	sortingLayer = SortingLayers::Background;
@@ -197,7 +207,8 @@ void Room::LateUpdate(float dt)
 				break;
 			case HitBoxData::Type::SpawnTrigger:
 				if (Utils::PointInTransformBounds(hitbox.first->rect, hitbox.first->rect.getLocalBounds(), player->GetHitBox().GetCenter())
-					&& wave == -2)
+					&& wave == -2
+					&& !cleared)
 				{
 					++wave;
 					for (const auto& object : objects)
@@ -295,9 +306,20 @@ void Room::Draw(sf::RenderWindow& window)
 
 void Room::LoadMapData(const std::string& path)
 {
-	sf::Vector2f worldViewSize = SCENE_MGR.GetCurrentScene()->GetWorldView().getSize();
+	SetMapData(MapDataLoader::Load(path));
+}
+
+void Room::SetMapData(const MapDataVC& mapData)
+{
+	this->mapData = mapData;
 
 	monsters.clear();
+
+	for (auto& object : objects)
+	{
+		delete object.first;
+	}
+	objects.clear();
 
 	for (auto& hitbox : hitBoxes)
 	{
@@ -305,7 +327,8 @@ void Room::LoadMapData(const std::string& path)
 	}
 	hitBoxes.clear();
 
-	mapData = MapDataLoader::Load(path);
+	// 황규영 빈 맵데이터 입력 확인용
+	assert(mapData.tileMapData[0].cellcount.x != 0);
 
 	for (int i = 0; i < tileMaps.size(); ++i)
 	{
@@ -332,6 +355,16 @@ void Room::LoadMapData(const std::string& path)
 			break;
 		case ObjectData::Type::Door:
 			obj = new DoorMo();
+			break;
+		case ObjectData::Type::Cell:
+		case ObjectData::Type::BrokenCell:
+		case ObjectData::Type::UpperCell0:
+		case ObjectData::Type::UpperCell1:
+		case ObjectData::Type::Skull0:
+		case ObjectData::Type::Skull1:
+		case ObjectData::Type::Bone0:
+		case ObjectData::Type::Bone1:
+			obj = new BackgroundMo();
 			break;
 		}
 		if (obj != nullptr)
@@ -423,6 +456,7 @@ void Room::LoadMapData(const std::string& path)
 	}
 
 	viewbounds = tileMaps[0]->GetGlobalBounds();
+	sf::Vector2f worldViewSize = SCENE_MGR.GetCurrentScene()->GetWorldView().getSize();
 
 	viewbounds.left += worldViewSize.x * 0.5f;
 	viewbounds.top += worldViewSize.y * 0.5f;
@@ -473,6 +507,7 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		{
 			if (mapData.roomData.type == RoomData::Type::Enter)
 			{
+				player->SetPosition(object.first->GetPosition());
 				object.first->SetStatus(MapObject::Status::Close);
 			}
 			if (mapData.roomData.type == RoomData::Type::Exit)

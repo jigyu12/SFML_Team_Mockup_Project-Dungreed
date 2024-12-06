@@ -1,0 +1,11 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Destory,10,"0",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/monster/Banshee/BansheeBullet Destroy 0 (1).png,0,"0",13,16,0
+graphics/monster/Banshee/BansheeBullet Destroy 1.png,0,"0",20,27,0
+graphics/monster/Banshee/BansheeBullet Destroy 2.png,0,"0",20,27,0
+graphics/monster/Banshee/BansheeBullet Destroy 3.png,0,"0",20,27,0
+graphics/monster/Banshee/BansheeBullet Destroy 4.png,0,"0",20,27,0
+graphics/monster/Banshee/BansheeBullet Destroy 5.png,0,"0",20,27,0
+graphics/monster/Banshee/BansheeBullet Destroy 6.png,0,"0",20,27,0

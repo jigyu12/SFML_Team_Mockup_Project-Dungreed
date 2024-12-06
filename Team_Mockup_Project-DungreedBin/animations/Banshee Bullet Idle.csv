@@ -1,0 +1,8 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Idle,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/monster/Banshee/BansheeBullet0.png,0,"0",13,16,0
+graphics/monster/Banshee/BansheeBullet1.png,0,"0",13,16,0
+graphics/monster/Banshee/BansheeBullet2.png,0,"0",13,16,0
+graphics/monster/Banshee/BansheeBullet3.png,0,"0",13,16,0

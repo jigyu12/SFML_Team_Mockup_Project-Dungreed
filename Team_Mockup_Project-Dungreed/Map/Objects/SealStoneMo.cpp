@@ -10,7 +10,7 @@ void SealStoneMo::Update(float dt)
 {
 	MapObject::Update(dt);
 
-	hitbox.UpdateTr(body, { 1,2,64,16 });
+	hitbox.UpdateTr(body, { 2,3,62,14 });
 	hitbox.rect.setOutlineColor(sf::Color::Red);
 }
 

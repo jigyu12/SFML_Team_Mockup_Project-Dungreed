@@ -10,6 +10,7 @@ void Framework::Init(int width, int height, const std::string& name)
     Utils::Init();
     SCENE_MGR.Init();
     InputMgr::Init();
+    ROOM_MGR.Init();
 }
 
 void Framework::Do()

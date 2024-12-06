@@ -89,6 +89,8 @@ void SkeletonDog::Reset()
 
 	deathTimeDelay = 1.f;
 
+	colTimeDelay = 0.2f;
+
 	isDamaged = false;
 	isDead = false;
 
@@ -237,6 +239,8 @@ void SkeletonDog::SetState(SkeletonDogState state)
 	{
 		attackMoveTimeAccum = 0.f;
 		attackAccumSpeed = 0.f;
+		colTimeAccum = 0.f;
+
 		isAttackMove = true;
 
 		speed = 80.f;
@@ -425,13 +429,12 @@ void SkeletonDog::UpdateAttack(float dt)
 			auto roomHitboxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 			bool collided = false;
 			bool lineCollided = false;
-			float fixedXpos;
 
 			sf::Vector2f newPosition = position + direction * speed * dt;
 			SetPosition({ newPosition.x, newPosition.y + (velocityY += gravity * dt) * dt});
 
-			testA += dt;
-			if (testA <= testB)
+			colTimeAccum += dt;
+			if (colTimeAccum <= colTimeDelay)
 				return;
 
 			for (auto& roomHitbox : roomHitboxes)
@@ -468,7 +471,6 @@ void SkeletonDog::UpdateAttack(float dt)
 			if (collided)
 			{
 				speed = 50.f;
-				testA = 0.f;
 
 				int val = Utils::RandomRange(0, 2);
 				if (val == 0 || val == 1)
