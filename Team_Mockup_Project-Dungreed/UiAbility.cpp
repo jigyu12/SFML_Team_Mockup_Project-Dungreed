@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "UiAbility.h"
 #include "MainTitleUi.h"
+#include "Player.h"
 
 UiAbility::UiAbility(const std::string& name)
 	:GameObject(name)
@@ -39,6 +40,7 @@ void UiAbility::SetOrigin(const sf::Vector2f& newOrigin)
 void UiAbility::Init()
 {
 	sortingLayer = SortingLayers::UI;
+	
 }
 
 void UiAbility::Release()
@@ -49,6 +51,7 @@ void UiAbility::Release()
 
 void UiAbility::Reset()
 {
+	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
 
 	float fontsize = 50.f;
 	sf::Font& font = FONT_MGR.Get("fonts/french.ttf");
@@ -102,6 +105,9 @@ void UiAbility::Reset()
 
 void UiAbility::SetAttackDamage(float currentDamage, float maxDamage)
 {
+	/*if(player->GetCurrentWeapon() == )*/
+	currentDamage == player->GetCurrentAttackDamage();
+	maxDamage = player->GetRealSwordMaxDamage();
 	textDamage.setString(std::to_string(currentDamage) + "~" + std::to_string(maxDamage));
 	Utils::SetOrigin(textDamage, Origins::TL);
 }

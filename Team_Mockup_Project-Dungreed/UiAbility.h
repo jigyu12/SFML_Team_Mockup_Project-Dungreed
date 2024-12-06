@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "MainTitleUi.h"
 
+class Player;
+
 class UiAbility : public GameObject
 {
 protected:
@@ -21,7 +23,7 @@ protected:
 
 	SavePlayerStatus playerStatus;
 
-
+	Player* player;
 
 public:
 

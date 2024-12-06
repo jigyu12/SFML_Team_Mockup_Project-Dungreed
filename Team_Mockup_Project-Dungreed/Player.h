@@ -22,8 +22,11 @@ public:
 
 protected:
 	Status status;
+
 	Weapon* weaponSlot1;
 	Weapon* weaponSlot2;
+
+	
 
 
 	sf::Vector2f velocity;
@@ -95,6 +98,7 @@ public:
 	void UpdateDead(float dt);
 
 	void Jump();
+
 	void OnDamage(int monsterDamage);
 	//¿˙¿Â
 
@@ -117,14 +121,19 @@ public:
 	float GetCurrentCoolTime() const { return dashCoolTimer; }
 	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp / maxhp); }
 
-
+	int GetRealSwordMaxDamage();
 	void AddExp();
 
-
+	int CalculationDamage(int damage);
 
 	sf::Vector2f GetPlayerLookNormal() const { return Utils::GetNormal(look); }
 
 	void SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon = false);
 	void SetWeaponToWeaponSlot2(Weapon* weapon, bool isCurrentWeapon = false);
 	void SwitchWeaponSlot(sf::Keyboard::Key key);
+
+	Weapon* GetCurrentWeapon() const ;
+	
+
+	
 };

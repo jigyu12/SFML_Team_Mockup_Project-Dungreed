@@ -66,7 +66,8 @@ void Player::Reset()
 {
 
 	playerui = dynamic_cast<PlayerUi*>(SCENE_MGR.GetCurrentScene()->FindGo("playerUi"));
-
+	
+	playerStatus.attackDamage = 4;
 	playerStatus.level = 1;
 	//float attackDamage;
 	//int level;
@@ -220,6 +221,17 @@ void Player::Update(float dt)
 
 void Player::LateUpdate(float dt)
 {
+	if (weaponSlot1)
+	{
+		playerStatus.criticalPercent = 0.3;
+		playerStatus.criticalDamage = 2;
+	}
+	else
+	{
+		playerStatus.criticalPercent = 0.2;
+		playerStatus.criticalDamage = 1.5;
+	}
+
 	if (status != Status::Dead)
 	{
 		auto playerGlobalBounds = hitbox.rect.getGlobalBounds();
@@ -451,9 +463,27 @@ void Player::OnDamage(int monsterDamage)
 
 
 
+int Player::GetRealSwordMaxDamage()
+{
+	playerStatus.criticalDamage *= 2;
+	int realDamage = playerStatus.attackDamage + weaponSlot1->GetOriginalDamageMax() * playerStatus.criticalDamage;
+	return realDamage;
+}
+
 void Player::AddExp()
 {
 	playerStatus.level += 1;
+}
+
+int Player::CalculationDamage(int damage)
+{
+	damage += Utils::RandomRange(0.f, playerStatus.attackDamage);
+	if (playerStatus.criticalPercent > Utils::RandomValue())
+	{
+		damage *= playerStatus.criticalDamage;
+		std::cout << damage << std::endl;
+	}
+	return damage;
 }
 
 void Player::SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon)
@@ -491,6 +521,18 @@ void Player::SwitchWeaponSlot(sf::Keyboard::Key key)
 			weaponSlot1->SetIsCurrentWeapon(false);
 		}
 
+	}
+}
+
+Weapon* Player::GetCurrentWeapon() const
+{
+	if (weaponSlot1->IsCurrentWeapon())
+	{
+		return weaponSlot1;
+	}
+	else
+	{
+		return weaponSlot2;
 	}
 }
 

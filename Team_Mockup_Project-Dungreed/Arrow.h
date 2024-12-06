@@ -15,6 +15,7 @@ protected:
 	int damage;
 
 	Player* owner;
+	
 	HandCrossbow* ownerWeapon;
 
 public:

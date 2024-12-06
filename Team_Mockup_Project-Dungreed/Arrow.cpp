@@ -83,7 +83,8 @@ void Arrow::LateUpdate(float dt)
 		{
 			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
-				monster->OnDamaged(damage);
+				int realDamage = owner->CalculationDamage(damage);
+				monster->OnDamaged(realDamage);
 				SCENE_MGR.GetCurrentScene()->RemoveGo(this);
 			}
 		}
