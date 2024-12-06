@@ -320,7 +320,7 @@ void Room::SetMapData(const MapDataVC& mapData)
 	{
 		tileMaps[i]->Set(mapData.tileMapData[i]);
 	}
-
+	
 	for (const ObjectData& objData : mapData.objectData)
 	{
 		MapObject* obj = nullptr;

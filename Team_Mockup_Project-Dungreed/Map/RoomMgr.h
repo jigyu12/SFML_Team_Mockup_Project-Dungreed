@@ -33,9 +33,9 @@ protected:
 
 	std::unordered_map<int, std::unordered_map<sf::Vector2i, Room*, Vector2iHash>> floors;
 
-	std::unordered_map<int, MapDataVC> entranceRooms;
-	std::unordered_map<int, MapDataVC> normalRooms;
-	std::unordered_map<int, MapDataVC> exitRooms;
+	std::vector<MapDataVC> entranceRooms;
+	std::unordered_map<int, std::vector<MapDataVC>> normalRooms;
+	std::unordered_map<int, std::vector<MapDataVC>> exitRooms;
 
 	std::vector<sf::Vector2i> dirVector = { {0,-1},{0,1}, {-1,0}, {1,0} };
 	std::vector<int> dirFlip = { 1,0,3,2 };

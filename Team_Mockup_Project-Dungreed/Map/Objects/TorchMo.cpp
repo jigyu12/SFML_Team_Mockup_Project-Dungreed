@@ -11,7 +11,7 @@ TorchMo::TorchMo(const std::string& name)
 void TorchMo::SetActive(bool active)
 {
 	GameObject::SetActive(active);
-	if (active)
+	if (active && light == nullptr)
 	{
 		SceneGame* scene = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 		if (scene == nullptr)

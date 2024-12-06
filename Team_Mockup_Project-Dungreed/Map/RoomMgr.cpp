@@ -46,12 +46,8 @@ void RoomMgr::Init()
 	while (path != "")
 	{
 		MapDataVC mapdata = MapDataLoader::Load(path);
-		int dir = 0;
-		for (int i = 0; i < mapdata.roomData.connection.size();++i)
-		{
-			dir += mapdata.roomData.connection[i] ? 0x01 << i : 0;
-		}
-		entranceRooms.insert({ dir, mapdata });
+
+		entranceRooms.push_back(mapdata);
 		path = RESOURCEID_TABLE->Get("Map", "1FEnter" + std::to_string(++count));
 	}
 	count = 0;
@@ -62,9 +58,12 @@ void RoomMgr::Init()
 		int dir = 0;
 		for (int i = 0; i < mapdata.roomData.connection.size();++i)
 		{
-			dir += mapdata.roomData.connection[i] ? 0x01 << i : 0;
+			if (mapdata.roomData.connection[i])
+			{
+				dir += 0x01 << i;
+			}
 		}
-		normalRooms.insert({ dir, mapdata });
+		normalRooms[dir].push_back(mapdata);
 		path = RESOURCEID_TABLE->Get("Map", "1FRoom" + std::to_string(++count));
 	}
 	count = 0;
@@ -72,12 +71,16 @@ void RoomMgr::Init()
 	while (path != "")
 	{
 		MapDataVC mapdata = MapDataLoader::Load(path);
+
 		int dir = 0;
 		for (int i = 0; i < mapdata.roomData.connection.size();++i)
 		{
-			dir += mapdata.roomData.connection[i] ? 0x01 << i : 0;
+			if (mapdata.roomData.connection[i])
+			{
+				dir += 0x01 << i;
+			}
 		}
-		exitRooms.insert({ dir, mapdata });
+		exitRooms[dir].push_back(mapdata);
 		path = RESOURCEID_TABLE->Get("Map", "1FExit" + std::to_string(++count));
 	}
 }
@@ -199,7 +202,7 @@ void RoomMgr::Start()
 	std::ifstream f(RESOURCEID_TABLE->Get("Map", "FloorData"));
 	json j = json::parse(f);
 
-	FloorData floordata = j.get<FloorData>();
+	floorData = j.get<FloorData>();
 	f.close();
 
 	floors.insert({ 1,CreateFloor() });
@@ -228,26 +231,9 @@ void RoomMgr::Start()
 
 bool RoomMgr::RoomChange(const HitBoxData::Type& portalType)
 {
-	sf::Vector2i nextroom = currentRoomCoord;
-	HitBoxData::Type entertype = HitBoxData::Type::PortalDown;
-	switch (portalType)
-	{
-	case HitBoxData::Type::PortalUp:
-		--nextroom.y;
-		break;
-	case HitBoxData::Type::PortalDown:
-		entertype = HitBoxData::Type::PortalUp;
-		++nextroom.y;
-		break;
-	case HitBoxData::Type::PortalLeft:
-		entertype = HitBoxData::Type::PortalRight;
-		--nextroom.x;
-		break;
-	case HitBoxData::Type::PortalRight:
-		entertype = HitBoxData::Type::PortalLeft;
-		++nextroom.x;
-		break;
-	}
+	sf::Vector2i nextroom = currentRoomCoord + dirVector[(int)portalType];
+	HitBoxData::Type entertype = (HitBoxData::Type)dirFlip[(int)portalType];
+
 	auto findit = floors.find(currentFloor);
 
 	if (findit == floors.end())
@@ -282,7 +268,7 @@ std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateFloor()
 	Room* room = new Room();
 	room->Init();
 	room->Reset();
-	MapDataVC mapdata = entranceRooms[Utils::RandomRange(0, entranceRooms.size())];
+	MapDataVC mapdata = entranceRooms[Utils::RandomRange(0, entranceRooms.size() - 1)];
 	room->SetMapData(mapdata);
 	room->SetActive(false);
 	scene->AddGo(room);
@@ -323,7 +309,7 @@ std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateFloor()
 	}
 	std::pair<sf::Vector2i, int> deadend = deadends[Utils::RandomRange(0, deadends.size() - 1)];
 
-	floor[deadend.first]->SetMapData(exitRooms[deadend.second]);
+	floor[deadend.first]->SetMapData(exitRooms[0x01<<deadend.second][0]);
 
 	return floor;
 }
@@ -332,48 +318,32 @@ void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& 
 {
 	sf::Vector2i me = mother + dirVector[dir];
 	dir = dirFlip[dir];
-	std::bitset<4> createroom;
+	std::bitset<4> createroom(false);
 
-	bool ok = false;
-
-	while (!ok)
+	for (int i = 0; i < 4;++i)
 	{
-		int pathcount = 0;
-		for (int i = 0; i < 4;++i)
-		{
-			createroom[i] = false;
-		}
-		for (int i = 0; i < 4;++i)
-		{
-			if (i == dir
-				|| Utils::RandomRange(0, 1) != 0)
-			{
-				continue;
-			}
-			auto it = floor.find(me + dirVector[i]);
-			if (it != floor.end())
-			{
-				continue;
-			}
-			createroom[i] = true;
-			++pathcount;
-		}
-		if (std::abs(me.x) + std::abs(me.y) < floorData.minDepth && pathcount == 0)
+		if (i == dir
+			|| Utils::RandomRange(0, 1) == 0)
 		{
 			continue;
 		}
-		ok = true;
+		auto it = floor.find(me + dirVector[i]);
+		if (it != floor.end())
+		{
+			continue;
+		}
+		createroom[i] = true;
 	}
+
 	Room* room = new Room();
 	room->Init();
 	room->Reset();
 	if (floor.size() > floorData.maxCount)
 	{
-		room->SetMapData(normalRooms[0x01 << dir]);
+		room->SetMapData(normalRooms[0x01 << dir][0]);
 	}
 	else
 	{
-		room->SetMapData(normalRooms[(int)createroom.to_ulong()]);
 		for (int i = 0; i < 4;++i)
 		{
 			if (createroom[i])
@@ -381,6 +351,12 @@ void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& 
 				queue.push({ me,i });
 			}
 		}
+		int s = (int)createroom.to_ulong() | (0x01 << dir);
+		if (s == 0)
+		{
+			std::cout << "?" << std::endl;
+		}
+		room->SetMapData(normalRooms[s][0]);
 	}
 	room->SetActive(false);
 	scene->AddGo(room);
