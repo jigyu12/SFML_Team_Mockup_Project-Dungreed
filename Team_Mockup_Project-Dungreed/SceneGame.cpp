@@ -1,15 +1,11 @@
 #include "stdafx.h"
 #include "SceneGame.h"
 #include "TileMap.h"
-#include "Bat.h"
-#include "SkeletonDog.h"
 #include "Weapon.h"
 #include "ShortSword.h"
 #include "HandCrossbow.h"
 #include "PlayerUi.h"
 #include "Room.h"
-#include "SkellBoss.h"
-#include "SkellBossLeftHand.h"
 #include "ParticleGo.h"
 #include "LightGo.h"
 
@@ -39,33 +35,13 @@ void SceneGame::Init()
 			player->SetWeaponToWeaponSlot2(handCrossbow);
 		}
 	}
-	/*{
-		skellBoss = AddGo(new SkellBoss());
-		skellBoss->SetPosition({ -7.5f, 50.f });
-
-		{
-			leftHand = AddGo(new SkellBossLeftHand("SkellBossLeftHand"));
-			leftHand->SetPosition({ -107.5f , 50.f });
-		}
-		{
-			rightHand = AddGo(new SkellBossLeftHand("SkellBossRightHand"));
-			rightHand->SetPosition({ 92.5f , -50.f });
-			rightHand->SetScale({ -1.f, 1.f });
-		}
-	}*/
+	// 몬스터 테스트용 공간
+	{
+		//Ghost* ghost = AddGo(new Ghost());
+	}
 	{
 		PlayerUi* playerui = AddGo(new PlayerUi());
 	}
-	/*{
-		Bat* bat = AddGo(new Bat());
-		bat->SetPosition({ 140.f, -80.f });
-		batList.push_back(bat);
-	}
-	{
-		SkeletonDog* skeletonDog = AddGo(new SkeletonDog());
-		skeletonDog->SetPosition({ 0.f, 0.f });
-		skeletonDogList.push_back(skeletonDog);
-	}*/
 
 	Scene::Init();
 }

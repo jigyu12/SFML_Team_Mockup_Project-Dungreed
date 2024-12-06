@@ -11,6 +11,7 @@ public:
 
 		SkeletonDog,
 		Bat,
+		Ghost,
 
 		SkellBoss,
 
