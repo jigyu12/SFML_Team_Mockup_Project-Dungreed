@@ -543,7 +543,7 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		{
 			if (mapData.roomData.type == RoomData::Type::Enter)
 			{
-				player->SetPosition(object.first->GetPosition() + sf::Vector2f(0.f, -5.f));
+				player->SetPosition(object.first->GetPosition() + sf::Vector2f(0.f, -7.5f));
 				object.first->SetStatus(MapObject::Status::Close);
 			}
 			if (mapData.roomData.type == RoomData::Type::Exit)

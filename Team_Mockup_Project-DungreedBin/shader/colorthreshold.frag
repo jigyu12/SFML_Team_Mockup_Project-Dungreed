@@ -8,8 +8,8 @@ void main()
 	
 	if(pixel.r>0.5)
 	{
-	pixel.g += th_g;
-	pixel.b += th_b;
+		pixel.g += th_g;
+		pixel.b += th_b;
 	}
 	gl_FragColor = vec4(pixel.r,pixel.g,pixel.b, pixel.a);
 }
