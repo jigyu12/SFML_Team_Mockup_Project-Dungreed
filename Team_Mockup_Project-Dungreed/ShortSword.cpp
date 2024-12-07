@@ -232,7 +232,7 @@ void ShortSword::Attack()
 			{
 				int realDamage = owner->CalculationDamage(GetAttackDamage());
 				monster->OnDamaged(realDamage);
-				DashDamage = realDamage/2;
+				
 			}
 
 			
