@@ -62,7 +62,10 @@ public:
 	bool RoomChange(const HitBoxData::Type& portalType);
 	Room* GetCurrentRoom();
 	void SetCurrentRoom(int floor, sf::Vector2i coord);
-	int GetCurrentFloor() { return currentFloor; }
+	int GetCurrentFloor() 
+	{
+		return currentFloor; 
+	}
 	void NextFloor();
 };
 

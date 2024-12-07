@@ -1,5 +1,5 @@
 ID,FPS,"LoopType (0: Single, 1: Loop)",,,
-Attack,10,"0",,,
+Attack,5,"0",,,
 ,,,,,
 TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
 graphics/monster/Skels/OakBow0.png,0,"0",17,13,0

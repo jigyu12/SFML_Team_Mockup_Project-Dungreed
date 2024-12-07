@@ -63,7 +63,6 @@ public:
 
 	void SetState(BansheeState state);
 	void UpdateIdle(float dt);
-	void UpdateRandMove(float dt);
 	void UpdateAttack(float dt);
 	void UpdateDeath(float dt);
 
