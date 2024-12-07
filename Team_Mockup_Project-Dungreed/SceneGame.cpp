@@ -47,7 +47,7 @@ void SceneGame::Init()
 		PlayerUi* playerui = AddGo(new PlayerUi());
 	}
 
-	worldMapUi = AddGo(new WorldMapUi());
+	worldMapUi = AddGo(new WorldMapUi("WorldMapUi"));
 
 	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
 

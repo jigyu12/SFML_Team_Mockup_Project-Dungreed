@@ -2,6 +2,7 @@
 #include "RoomMgr.h"
 #include "Room.h"
 #include "SceneGame.h"
+#include "WorldMapUi.h"
 
 Room* RoomMgr::GetCurrentRoom()
 {
@@ -44,6 +45,12 @@ void RoomMgr::NextFloor()
 	SetCurrentRoom(currentFloor, { 0,0 });
 	currentRoom->SetActive(true);
 	currentRoom->EnterRoom(HitBoxData::Type::PortalDown);
+
+	WorldMapUi* ui = dynamic_cast<WorldMapUi*>( scene->FindGo("WorldMapUi"));
+	if (ui != nullptr)
+	{
+		ui->RefreshData();
+	}
 }
 
 std::unordered_map<sf::Vector2i, RoomData, Vector2iHash> RoomMgr::GetFloorData()
