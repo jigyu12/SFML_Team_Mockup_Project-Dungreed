@@ -146,7 +146,7 @@ void PlayerUi::Update(float dt)
 
 	SetLevel(player->GetCurrentLevel());
 	
-		playerHpBar.setScale(300.f * player->GetCurrentHpRatio(), playerHpBar.getScale().y);
+	playerHpBar.setScale(300.f * player->GetCurrentHpRatio(), playerHpBar.getScale().y);
 	
 }
 

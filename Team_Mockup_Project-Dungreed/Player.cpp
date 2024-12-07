@@ -147,10 +147,11 @@ void Player::SetStatus(Status status)
 
 void Player::Update(float dt)
 {
-	
-	if (playerStatus.exp >= 4)
+
+	if (playerStatus.exp >= 8)
 	{
-		playerStatus.level + 1;
+		playerStatus.level += 1;
+		playerStatus.attackDamage += 1;
 		playerStatus.exp = 0;
 	}
 
@@ -348,10 +349,10 @@ void Player::LateUpdate(float dt)
 		const auto& monsters = ROOM_MGR.GetCurrentRoom()->GetMonsters();
 		for (auto& monster : monsters)
 		{
-			
-			
 
-			auto it = std::find(DamagedMonster.begin(),DamagedMonster.end(),monster);
+
+
+			auto it = std::find(DamagedMonster.begin(), DamagedMonster.end(), monster);
 			if (it != DamagedMonster.end())
 				continue;
 
@@ -360,23 +361,26 @@ void Player::LateUpdate(float dt)
 			{
 				if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
 				{
-					
-
-					if (GetCurrentWeapon() == weaponSlot1)
+					OnDamage(monster->GetOriginalDamage());
+					if (status == Status::Dash)
 					{
-						int swordDashDamage = CalculationDamage(weaponSlot1->GetAttackDamage() / 2);
-						DamagedMonster.push_back(monster);
-						monster->OnDamaged(swordDashDamage);
-					}
-					else
-					{
-						int bowDashDamage = CalculationDamage(weaponSlot2->GetAttackDamage() / 2);
-						DamagedMonster.push_back(monster);
-						monster->OnDamaged(bowDashDamage);
+						if (GetCurrentWeapon() == weaponSlot1)
+						{
+							int swordDashDamage = CalculationDamage(weaponSlot1->GetAttackDamage() / 2);
+							DamagedMonster.push_back(monster);
+							monster->OnDamaged(swordDashDamage);
+						}
+						else
+						{
+							int bowDashDamage = CalculationDamage(weaponSlot2->GetAttackDamage() / 2);
+							DamagedMonster.push_back(monster);
+							monster->OnDamaged(bowDashDamage);
+						}
 					}
 				}
 			}
 		}
+
 
 		/*const auto& bossSwords = dynamic_cast<SkellBossSword*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossSword"));*/
 		if (isDamaged)
@@ -513,7 +517,7 @@ int Player::CalculationDamage(int damage)
 	if (playerStatus.criticalPercent > Utils::RandomRange(0.f, 100.f))
 	{
 		damage *= playerStatus.criticalDamage;
-		
+
 	}
 	return damage;
 }
