@@ -72,7 +72,6 @@ void SceneGame::Enter()
 	mouseCursor.setScale(4.f, 4.f);
 	Utils::SetOrigin(mouseCursor, Origins::MC);
 
-
 	ROOM_MGR.Start();
 	
 	worldMapUi->RefreshData();

@@ -116,98 +116,11 @@ void RoomMgr::Init()
 
 void RoomMgr::Reset()
 {
-	scene = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
-	for (auto& floor : floors)
-	{
-		for (auto& room : floor.second)
-		{
-			scene->RemoveGo(room.second);
-			room.second->ClearMonsters();
-			room.second->Release();
-			delete room.second;
-		}
-		floor.second.clear();
-	}
-	scene->ApplyRemoveGO();
-	scene->ClearTookObject();
-	floors.clear();
+	entranceRooms.clear();
+	normalRooms.clear();
+	exitRooms.clear();
 
-	Room* room = new Room("1FEnterLR");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FEnterLR"));
-	scene->AddGo(room);
-	room->SetActive(true);
-	floors[1].insert({ {0,0}, room });
-
-	room = new Room("1FExitL");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FExitL"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[1].insert({ {1,0}, room });
-
-	room = new Room("2FEnter1R");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FEnter1R"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[2].insert({ {0,0}, room });
-
-	room = new Room("2FBoss");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FBoss"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[2].insert({ {1,0}, room });
-
-	room = new Room("1FRoom2DLR");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom2DLR"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[1].insert({ {1,-1}, room });
-
-	room = new Room("1FRoom4ULR");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom4ULR"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[1].insert({ {0,-1}, room });
-
-	room = new Room("1FRoom5LR");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom5LR"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[1].insert({ {-1,0}, room });
-
-	room = new Room("1FRoom3UDLR");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom3UDLR"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[1].insert({ {-2,0}, room });
-
-
-	SetCurrentRoom(1, { 0,0 });
-
-	FloorData floorData;
-	floorData.maxCount = 20;
-	floorData.minDepth = 4;
-	json j = floorData;
-	std::ofstream f(RESOURCEID_TABLE->Get("Map", "FloorData"));
-	f << j.dump(4) << std::endl;
-	f.close();
-
-	currentRoom->EnterRoom(HitBoxData::Type::PortalDown);
+	Init();
 }
 
 void RoomMgr::Start()
