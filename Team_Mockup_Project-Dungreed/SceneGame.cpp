@@ -40,7 +40,7 @@ void SceneGame::Init()
 	}
 	// 몬스터 테스트용 공간
 	{
-		//Banshee* banshee = AddGo(new Banshee());
+		//SkelBow* skelbow = AddGo(new SkelBow());
 	}
 	{
 		PlayerUi* playerui = AddGo(new PlayerUi());

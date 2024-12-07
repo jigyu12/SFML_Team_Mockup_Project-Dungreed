@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Monster.h"
-#include "BansheeBullet.h"
+#include "SkelBowArrow.h"
 
-class Banshee : public Monster
+class SkelBow : public Monster
 {
 public:
-	enum class BansheeState
+	enum class SkelBowState
 	{
 		None = -1,
 
@@ -18,7 +18,7 @@ public:
 	};
 
 protected:
-	BansheeState state;
+	SkelBowState state;
 
 	Animator animator;
 
@@ -33,20 +33,30 @@ protected:
 
 	float idleTimeAccum;
 	float idleTimeDelay;
-
+	
+	float beforeAttackTimeAccum;
+	float beforeAttackTimeDelay;
+	bool isBeforeAttack;
 	float attackTimeAccum;
 	float attackTimeDelay;
 
 	float deathTimeAccum;
 	float deathTimeDelay;
 
-	ObjectPool<BansheeBullet> bulletPool;
+	float gravity;
 
-	int shootBulletNumber;
+	ObjectPool<SkelBowArrow> arrowPool;
+
+	sf::Sprite bow;
+	Animator animatorBow;
+
+	sf::Texture handTexture;
+	sf::Sprite hand1;
+	sf::Sprite hand2;
 
 public:
-	Banshee(const std::string& name = "Banshee");
-	virtual ~Banshee() = default;
+	SkelBow(const std::string& name = "SkelBow");
+	virtual ~SkelBow() = default;
 
 	virtual void SetOrigin(Origins preset) override;
 	virtual void SetOrigin(const sf::Vector2f& newOrigin) override;
@@ -61,7 +71,7 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
 
-	void SetState(BansheeState state);
+	void SetState(SkelBowState state);
 	void UpdateIdle(float dt);
 	void UpdateAttack(float dt);
 	void UpdateDeath(float dt);

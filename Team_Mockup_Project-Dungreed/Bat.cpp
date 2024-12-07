@@ -62,7 +62,7 @@ void Bat::Reset()
 	}
 	sortingOrder = target->sortingOrder - 1;
 
-	maxhp = 6;
+	maxhp = 6 * ((ROOM_MGR.GetCurrentFloor() + 1) / 2);
 	hp = maxhp;
 	speed = 30.f;
 	originalDamage = 5;
