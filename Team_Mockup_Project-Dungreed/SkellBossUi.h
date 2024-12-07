@@ -1,12 +1,18 @@
 #pragma once
 #include "GameObject.h"
+
+class SkellBoss;
+
 class SkellBossUi : public GameObject
 {
-
-
+protected:
+	sf::Sprite skellBossHp;
+	
+	sf::Sprite redBar;
+	SkellBoss* skellBoss;
 public:
 
-	SkellBossUi(const std::string& name = "playerUi");
+	SkellBossUi(const std::string& name = "SkellBossUi");
 	~SkellBossUi() = default;
 
 	void SetPosition(const sf::Vector2f& pos) override;
@@ -16,11 +22,12 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
+
 	void Init() override;
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
-	void SetHp(int hp, int max);
+	
 };
 

@@ -117,7 +117,7 @@ void PlayerUi::Reset()
 
 
 
-	sf::FloatRect playerBar = playerLife.getGlobalBounds();
+	
 }
 
 void PlayerUi::Update(float dt)

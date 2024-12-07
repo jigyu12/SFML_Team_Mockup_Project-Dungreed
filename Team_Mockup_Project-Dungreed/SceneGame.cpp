@@ -10,6 +10,7 @@
 #include "LightGo.h"
 #include "WorldMapUi.h"
 #include "UiAbility.h"
+#include "SkellBossUi.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -20,7 +21,8 @@ void SceneGame::Init()
 {
 	{
 		player = AddGo(new Player("Player"));
-
+		//
+		skellBossUi = AddGo(new SkellBossUi("SkellBossUi"));
 		// �� ���� �߿� �ϳ��� SetWeaponToWeaponSlot->true�� ���� �־�� ���� ����� ���� 
 		{
 			ShortSword* shortSword = AddGo(new ShortSword());
