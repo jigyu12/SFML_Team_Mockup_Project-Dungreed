@@ -9,6 +9,8 @@ protected:
 	sf::Sprite skellBossHp;
 	
 	sf::Sprite redBar;
+	sf::Sprite bossHpBarBack;
+
 	SkellBoss* skellBoss;
 public:
 

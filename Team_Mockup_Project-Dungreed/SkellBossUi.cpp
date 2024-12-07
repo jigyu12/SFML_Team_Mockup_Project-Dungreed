@@ -59,6 +59,7 @@ void SkellBossUi::Reset()
 {
 	skellBoss = dynamic_cast<SkellBoss*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBoss"));
 	skellBossHp.setTexture(TEXTURE_MGR.Get("graphics/ui/skellbossHpbar.png"));
+	bossHpBarBack.setTexture(TEXTURE_MGR.Get("graphics/ui/BossHpBarBack.png"));
 	redBar.setTexture(TEXTURE_MGR.Get("graphics/ui/LifeBar.png"));
 
 	sf::Vector2f pos = FRAMEWORK.GetWindowSizeF();
@@ -68,8 +69,12 @@ void SkellBossUi::Reset()
 	Utils::SetOrigin(skellBossHp, Origins::MC);
 	skellBossHp.setPosition({ BossHpXpos,BossHpYpos });
 
+	Utils::SetOrigin(bossHpBarBack, Origins::MC);
+	bossHpBarBack.setScale({ 1.06f,0.85 });
+	bossHpBarBack.setPosition({ BossHpXpos,BossHpYpos });
+
 	Utils::SetOrigin(redBar, Origins::ML);
-	redBar.setScale({ 800.f,6.6f });
+	redBar.setScale({ 800.f,8.f });
 float sssss=	BossHpXpos + 77 - redBar.getGlobalBounds().width * 0.5f;
 	redBar.setPosition({ BossHpXpos+77-redBar.getGlobalBounds().width*0.5f,BossHpYpos});
 
@@ -95,7 +100,9 @@ void SkellBossUi::Draw(sf::RenderWindow& window)
 {
 	if (skellBoss != nullptr)
 	{
-		window.draw(skellBossHp);
+		window.draw(bossHpBarBack);
 		window.draw(redBar);
+		window.draw(skellBossHp);
+
 	}
 }
