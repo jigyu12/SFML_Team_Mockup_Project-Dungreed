@@ -36,7 +36,7 @@ void RoomMgr::NextFloor()
 	if (it == floors.end())
 	{
 		floors.insert({ currentFloor,CreateFloor() });
-		floors.insert({ currentFloor+1,CreateBossFloor() });
+		floors.insert({ currentFloor + 1,CreateBossFloor() });
 	}
 
 	scene->ClearTookObject();
@@ -274,6 +274,7 @@ std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateBossFloor()
 	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FBoss"));
 	room->SetActive(false);
 	scene->AddGo(room);
+	room->SetPosition({ 1 * 1000,0 });
 	floor.insert({ {1,0}, room });
 
 	room = new Room("2FExit1L");
@@ -282,6 +283,7 @@ std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateBossFloor()
 	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FExit1L"));
 	room->SetActive(false);
 	scene->AddGo(room);
+	room->SetPosition({ 2 * 1000,0 });
 	floor.insert({ {2,0}, room });
 
 
@@ -386,6 +388,7 @@ void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& 
 		room->SetMapData(normalRooms[s][Utils::RandomRange(0, normalRooms[s].size() - 1)]);
 	}
 	room->SetActive(false);
+	room->SetPosition((sf::Vector2f)(me * 1000));
 	scene->AddGo(room);
 	floor.insert({ me ,room });
 }

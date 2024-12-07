@@ -34,7 +34,7 @@ protected:
 	std::vector<sf::Vector2f> startPositions;
 	std::vector<TextGo*> positionTexts;
 
-	sf::Sprite spawnPoint;
+	sf::RectangleShape spawnPoint;
 
 	sf::RectangleShape* selectedHitBox;
 	std::unordered_map<sf::RectangleShape*, HitBoxData::Type> hitboxes;

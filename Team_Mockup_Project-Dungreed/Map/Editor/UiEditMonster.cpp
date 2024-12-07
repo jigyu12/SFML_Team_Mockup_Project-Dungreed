@@ -116,6 +116,12 @@ void UiEditMonster::Reset()
 		case Monster::MonsterType::Bat:
 			monsterList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "BatIcon"));
 			break;
+		case Monster::MonsterType::Banshee:
+			monsterList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "BansheeIcon"));
+			break;
+		case Monster::MonsterType::Ghost:
+			monsterList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "LittleGhostIcon"));
+			break;
 		case Monster::MonsterType::SkellBoss:
 			monsterList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "SkellBossIcon"));
 			break;
@@ -306,6 +312,16 @@ void UiEditMonster::SetSpawnRect(sf::RectangleShape* shape, const Monster::Monst
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BatIcon")));
 		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
 		Utils::SetOrigin(*shape, Origins::MC);
+		break;
+	case Monster::MonsterType::Banshee:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BansheeIcon")));
+		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
+		Utils::SetOrigin(*shape, Origins::BC);
+		break;
+	case Monster::MonsterType::Ghost:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "LittleGhostIcon")));
+		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
+		Utils::SetOrigin(*shape, Origins::BC);
 		break;
 	case Monster::MonsterType::SkellBoss:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SkellBossIcon")));

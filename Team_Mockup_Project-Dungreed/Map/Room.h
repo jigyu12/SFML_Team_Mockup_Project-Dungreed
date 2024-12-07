@@ -64,6 +64,8 @@ public:
 
 	std::vector<bool> GetConnections() { return mapData.roomData.connection; }
 
+	void SetViewBounds();
+
 	bool isCleared() { return cleared; }
 	void EnterRoom(HitBoxData::Type connection);
 	void ClearMonsters();

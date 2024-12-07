@@ -79,7 +79,17 @@ void MainTitleUi::Reset()
 			SCENE_MGR.ChangeScene(SceneIds::Game);
 		});
 
-	endButton.SetPosition({ mousePosX ,startMousePosY + 200.f });
+
+	editorButton.SetPosition({ mousePosX ,startMousePosY + 200.f });
+	editorButton.Set({ 400.f,100.f }, 50);
+	editorButton.SetString(L"¸Ê ÆíÁý");
+	editorButton.SetOrigin(Origins::MC);
+	editorButton.SetClickedEvent([this]()
+		{
+			SCENE_MGR.ChangeScene(SceneIds::MapEdit);
+		});
+
+	endButton.SetPosition({ mousePosX ,startMousePosY + 300.f });
 	endButton.Set({ 400.f,100.f }, 48);
 	endButton.SetString(L"Á¾·á");
 	endButton.SetOrigin(Origins::MC);
@@ -88,15 +98,6 @@ void MainTitleUi::Reset()
 			FRAMEWORK.GetWindow().close();
 		});
 
-	editorButton.SetPosition({ mousePosX ,startMousePosY + 300.f });
-	editorButton.Set({ 400.f,100.f }, 50);
-	editorButton.SetString(L"¸Ê ÆíÁý");
-	editorButton.SetOrigin(Origins::MC);
-	editorButton.SetClickedEvent([this]()
-		{
-			SCENE_MGR.ChangeScene(SceneIds::MapEdit);
-		});
-	//
 
 
 	animator.SetTarget(&mainbody);
@@ -180,33 +181,33 @@ void MainTitleUi::ButtonUpdate(float dt)
 
 	if (startButton.isMouseOn())
 	{
-		startButton.SetTextFillColor(sf::Color::Red);
+		startButton.SetTextFillColor(sf::Color::White);
 	}
 	else
 	{
-		startButton.SetTextFillColor(sf::Color::White);
+		startButton.SetTextFillColor({145,155,185});
 	}
 	startButton.SetButtonFillColor(sf::Color::Transparent);
 	startButton.SetButtonOutlineColor(sf::Color::Transparent);
 
 	if (editorButton.isMouseOn())
 	{
-		editorButton.SetTextFillColor(sf::Color::Red);
+		editorButton.SetTextFillColor(sf::Color::White);
 	}
 	else
 	{
-		editorButton.SetTextFillColor(sf::Color::White);
+		editorButton.SetTextFillColor({ 145,155,185 });
 	}
 	editorButton.SetButtonFillColor(sf::Color::Transparent);
 	editorButton.SetButtonOutlineColor(sf::Color::Transparent);
 
 	if (endButton.isMouseOn())
 	{
-		endButton.SetTextFillColor(sf::Color::Red);
+		endButton.SetTextFillColor(sf::Color::White);
 	}
 	else
 	{
-		endButton.SetTextFillColor(sf::Color::White);
+		endButton.SetTextFillColor({ 145,155,185 });
 	}
 	endButton.SetButtonFillColor(sf::Color::Transparent);
 	endButton.SetButtonOutlineColor(sf::Color::Transparent);

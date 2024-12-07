@@ -170,6 +170,14 @@
             },
             "rotation": 0.0,
             "type": 12
+        },
+        {
+            "position": {
+                "x": 109.66926574707031,
+                "y": 159.57058715820313
+            },
+            "rotation": 0.0,
+            "type": 2
         }
     ],
     "playerStartPoint": [
