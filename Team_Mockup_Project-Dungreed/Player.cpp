@@ -148,7 +148,7 @@ void Player::SetStatus(Status status)
 void Player::Update(float dt)
 {
 	
-	if (playerStatus.exp > 4)
+	if (playerStatus.exp >= 4)
 	{
 		playerStatus.level + 1;
 		playerStatus.exp = 0;

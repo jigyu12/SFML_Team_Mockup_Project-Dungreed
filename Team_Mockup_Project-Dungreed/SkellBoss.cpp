@@ -401,6 +401,8 @@ void SkellBoss::SetState(SkellBossState state)
 		body.setTexture(texDeath, true);
 
 		gravity = 0.98f;
+
+		target->AddCurrentExp(4);
 	}
 	break;
 	}

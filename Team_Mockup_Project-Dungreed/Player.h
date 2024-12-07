@@ -115,7 +115,7 @@ public:
 	float GetCurrentDashDamage() const { return playerStatus.dashDamage; }
 	float GetCurrentAttackSpeed() const { return playerStatus.attackSpeed; }
 
-	void SetCurrentExp(float exp) 
+	void AddCurrentExp(float exp) 
 	{ 
 		this->playerStatus.exp += exp; 
 	}

@@ -245,6 +245,8 @@ void Ghost::SetState(GhostState state)
 		isDead = true;
 
 		animator.Play("animations/Monster Die.csv");
+
+		target->AddCurrentExp(1);
 	}
 		break;
 	}
