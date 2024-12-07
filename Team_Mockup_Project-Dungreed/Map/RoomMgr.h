@@ -64,7 +64,10 @@ public:
 	Room* GetCurrentRoom();
 	void SetCurrentRoom(int floor, sf::Vector2i coord);
 	int GetCurrentFloor() { return currentFloor; }
+	const sf::Vector2i& GetCurrentRoomCoord() { return currentRoomCoord; }
 	void NextFloor();
+
+	std::unordered_map<sf::Vector2i, RoomData, Vector2iHash> GetFloorData();
 };
 
 #define ROOM_MGR (RoomMgr::Instance())

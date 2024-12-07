@@ -109,6 +109,7 @@
     <ClCompile Include="BansheeBullet.cpp">
       <Filter>Monsters\Monster</Filter>
     </ClCompile>
+    <ClCompile Include="Map\WorldMapUi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -225,6 +226,7 @@
     <ClInclude Include="BansheeBullet.h">
       <Filter>Monsters\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="Map\WorldMapUi.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">

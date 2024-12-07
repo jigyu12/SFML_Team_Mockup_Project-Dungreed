@@ -219,6 +219,7 @@
     <ClCompile Include="SkellBossSword.cpp" />
     <ClCompile Include="Map\Objects\TorchMo.cpp" />
     <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="Map\WorldMapUi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -296,6 +297,7 @@
     <ClInclude Include="SkellBossSword.h" />
     <ClInclude Include="Map\Objects\TorchMo.h" />
     <ClInclude Include="Weapon.h" />
+    <ClInclude Include="Map\WorldMapUi.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Team_Mockup_Project-Dungreed.rc" />

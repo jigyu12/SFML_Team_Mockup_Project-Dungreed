@@ -46,6 +46,18 @@ void RoomMgr::NextFloor()
 	currentRoom->EnterRoom(HitBoxData::Type::PortalDown);
 }
 
+std::unordered_map<sf::Vector2i, RoomData, Vector2iHash> RoomMgr::GetFloorData()
+{
+	std::unordered_map<sf::Vector2i, RoomData, Vector2iHash> floordata;
+
+	for (const auto& room : floors[currentFloor])
+	{
+		floordata.insert({ room.first,room.second->GetRoomData() });
+	}
+
+	return floordata;
+}
+
 void RoomMgr::Init()
 {
 	int count = 0;
@@ -193,6 +205,8 @@ void RoomMgr::Reset()
 
 void RoomMgr::Start()
 {
+	currentFloor = 1;
+
 	scene = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	for (auto& floor : floors)
 	{
