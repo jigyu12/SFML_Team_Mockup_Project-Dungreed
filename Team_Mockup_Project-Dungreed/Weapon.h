@@ -31,7 +31,7 @@ protected:
 	int originalDamageMin;
 	int originalDamageMax;
 
-	
+	float DashDamage;
 
 	float attackSpeedAccumTime;
 	float attackSpeedDelayTime;
@@ -59,7 +59,7 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override = 0;
 	virtual void Release() override = 0;
 
-	virtual sf::FloatRect GetLocalBounds() const 
+	virtual sf::FloatRect GetLocalBounds() const
 	{
 		return sprite.getLocalBounds();
 	}
@@ -68,7 +68,7 @@ public:
 	{
 		return sprite.getGlobalBounds();
 	}
-	
+
 	WeaponType GetWeaponType() const { return weaponType; }
 	int GetOriginalDamageMin() const { return originalDamageMin; }
 	int GetOriginalDamageMax() const { return originalDamageMax; }
@@ -80,9 +80,9 @@ public:
 	void SetIsCurrentWeapon(bool isCurrWeapon) { isCurrentWeapon = isCurrWeapon; }
 	void SetAttackSpeedAccumTime(float accumTime) { attackSpeedAccumTime = accumTime; }
 
-	
-	
-	
+	int GetDashDamage() const { return DashDamage; }
+	int GetAttackDamage() const { return Utils::RandomRange(originalDamageMin, originalDamageMax); }
+
 
 	CollisionState GetCollsionState(const sf::FloatRect& weapon, const sf::FloatRect& stage);
 };

@@ -66,6 +66,7 @@ void UiAbility::Reset()
 	textDashDamagePercent.setFont(font);
 	textDashDamagePercent.setCharacterSize(fontsize);
 	textDashDamagePercent.setFillColor(sf::Color::White);
+	textDashDamagePercent.setPosition({ 465,250 });
 
 	textArmor.setFont(font);
 	textArmor.setCharacterSize(fontsize);
@@ -94,6 +95,7 @@ void UiAbility::Reset()
 	textAttackSpeed.setFont(font);
 	textAttackSpeed.setCharacterSize(fontsize);
 	textAttackSpeed.setFillColor(sf::Color::White);
+	textAttackSpeed.setPosition({ 465,570 });
 
 
 	abilityBase.setTexture(TEXTURE_MGR.Get("graphics/ui/playerAbility.png"));
@@ -122,6 +124,8 @@ void UiAbility::LateUpdate(float dt)
 	SetCriticalPercent(player->GetCurrentCriticalPercent());
 	SetArmor(player->GetCurrentArmor());
 	SetArmorPercent(player->GetCurrentArmorPercent());
+	SetAttackSpeed(player->GetCurrentAttackSpeed());
+	SetDashDamagePercent(player->GetCurrentDashDamage());
 }
 
 void UiAbility::SetAttackDamage(int currentDamage, int maxDamage)
@@ -146,7 +150,11 @@ void UiAbility::SetCriticalPercent(int criticalPercent)
 
 void UiAbility::SetAttackSpeed(float attackSpeed)
 {
-	textAttackSpeed.setString(std::to_string(attackSpeed));
+	std::string str = std::to_string(attackSpeed);
+	int dots = str.find('.');
+	if (dots >= 0)
+		str = str.substr(0, dots + 2);
+	textAttackSpeed.setString(str);
 	Utils::SetOrigin(textAttackSpeed, Origins::TL);
 }
 
@@ -186,5 +194,7 @@ void UiAbility::Draw(sf::RenderWindow& window)
 	window.draw(textCirticalPercent);
 	window.draw(textArmor);
 	window.draw(textArmorPercent);
+	window.draw(textAttackSpeed);
+	window.draw(textDashDamagePercent);
 }
 

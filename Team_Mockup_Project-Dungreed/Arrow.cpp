@@ -85,6 +85,7 @@ void Arrow::LateUpdate(float dt)
 			{
 				int realDamage = owner->CalculationDamage(damage);
 				monster->OnDamaged(realDamage);
+				ownerWeapon->GetDashDamage() == realDamage / 2.f;
 				SCENE_MGR.GetCurrentScene()->RemoveGo(this);
 			}
 		}

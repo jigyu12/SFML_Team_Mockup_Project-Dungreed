@@ -51,4 +51,7 @@ public:
 
 	void OnDamaged(int damage);
 	bool IsDead() const { return isDead; }
+
+	int GetCurrentHp() const { return hp; }
+
 };

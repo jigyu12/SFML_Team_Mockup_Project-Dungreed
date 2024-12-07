@@ -39,7 +39,7 @@ protected:
 	std::string swordId = "graphics/weapon/Sword.png";
 	std::string playerDeadId = "graphics/player/CharDie.png";
 
-
+	std::list<Monster*> DamagedMonster;
 
 	SavePlayerStatus playerStatus;
 
@@ -111,12 +111,15 @@ public:
 	float GetCurrentMovementSpeed() const { return playerStatus.movementSpeed; }
 	float GetCurrentCriticalPercent() const { return playerStatus.criticalPercent; }
 	float GetCurrentDashDamage() const { return playerStatus.dashDamage; }
+	float GetCurrentAttackSpeed() const { return playerStatus.attackSpeed; }
 	//
 
 	int GetCurrentHp() const { return hp; }
 	int GetMaxHp() const { return maxhp; }
 	bool IsDamaged() const { return isDamaged; }
 	bool IsDead() const { return isDead; }
+
+	
 
 	float GetCurrentCoolTime() const { return dashCoolTimer; }
 	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp / maxhp); }
@@ -135,5 +138,7 @@ public:
 	Weapon* GetCurrentWeapon() const ;
 	Weapon* GetWeaponSlot1() const { return weaponSlot1 ;}
 	Weapon* GetWeaponSlot2() const { return weaponSlot2 ;}
+
+	
 	
 };
