@@ -39,6 +39,7 @@ void SceneMapEdit::Enter()
 
 void SceneMapEdit::Exit()
 {
+	ROOM_MGR.Reset();
 	Scene::Exit();
 }
 

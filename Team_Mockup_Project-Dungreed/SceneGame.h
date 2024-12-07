@@ -21,13 +21,16 @@ protected:
 	std::vector<Weapon*> weaponList;
 
 	WorldMapUi* worldMapUi;
+	UiAbility* uiAbility;
 
 	std::list<ParticleGo*> particles;
 	ObjectPool<ParticleGo> particlePool;
 
 	std::list<LightGo*> lights;
 	ObjectPool<LightGo> lightPool;
-	UiAbility* uiAbility;
+
+	sf::Sprite mouseCursor;
+
 public:
 	SceneGame();
 	virtual ~SceneGame() = default;

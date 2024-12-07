@@ -9,8 +9,7 @@ MainTitleScene::MainTitleScene()
 
 void MainTitleScene::Init()
 {
-	mainTitleui = new MainTitleUi();
-	AddGo(mainTitleui);
+	mainTitleui = AddGo(new MainTitleUi());
 
 	Scene::Init();
 }
@@ -24,8 +23,6 @@ void MainTitleScene::Enter()
 {
 	Scene::Enter();
 	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
-	
-
 	uiView.setSize(size);
 	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);
 
@@ -34,16 +31,25 @@ void MainTitleScene::Enter()
 
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
+
+	FRAMEWORK.GetWindow().setMouseCursorVisible(false);
+
+	mouseCursor.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BasicCursor")));
+	mouseCursor.setScale(4.f, 4.f);
+	Utils::SetOrigin(mouseCursor, Origins::MC);
 }
 
 void MainTitleScene::Exit()
 {
 	Scene::Exit();
+	FRAMEWORK.GetWindow().setMouseCursorVisible(true);
 }
 
 void MainTitleScene::Update(float dt)
 {
 	Scene::Update(dt);
+
+	mouseCursor.setPosition(ScreenToUi(InputMgr::GetMousePosition()));
 }
 
 void MainTitleScene::Draw(sf::RenderWindow& window)
@@ -54,4 +60,6 @@ void MainTitleScene::Draw(sf::RenderWindow& window)
 	}
 	
 	Scene::Draw(window);
+
+	window.draw(mouseCursor);
 }
