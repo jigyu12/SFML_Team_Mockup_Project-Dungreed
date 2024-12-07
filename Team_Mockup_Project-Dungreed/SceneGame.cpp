@@ -57,7 +57,7 @@ void SceneGame::Init()
 		}
 	}*/
 	{
-		PlayerUi* playerui = AddGo(new PlayerUi());
+		PlayerUi* playerui = AddGo(new PlayerUi("playerUi"));
 	}
 	/*{
 		Bat* bat = AddGo(new Bat());

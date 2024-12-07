@@ -40,7 +40,7 @@ void UiAbility::SetOrigin(const sf::Vector2f& newOrigin)
 void UiAbility::Init()
 {
 	sortingLayer = SortingLayers::UI;
-	
+
 }
 
 void UiAbility::Release()
@@ -53,12 +53,15 @@ void UiAbility::Reset()
 {
 	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
 
+
 	float fontsize = 50.f;
 	sf::Font& font = FONT_MGR.Get("fonts/french.ttf");
 
 	textDamage.setFont(font);
 	textDamage.setCharacterSize(fontsize);
 	textDamage.setFillColor(sf::Color::White);
+	textDamage.setPosition({ 145,250 });
+
 
 	textDashDamagePercent.setFont(font);
 	textDashDamagePercent.setCharacterSize(fontsize);
@@ -67,19 +70,22 @@ void UiAbility::Reset()
 	textArmor.setFont(font);
 	textArmor.setCharacterSize(fontsize);
 	textArmor.setFillColor(sf::Color::White);
+	textArmor.setPosition({ 200,355 });
 
 	textArmorPercent.setFont(font);
 	textArmorPercent.setCharacterSize(fontsize);
 	textArmorPercent.setFillColor(sf::Color::White);
+	textArmorPercent.setPosition({ 480,460 });
 
 	textCiritcalDamage.setFont(font);
 	textCiritcalDamage.setCharacterSize(fontsize);
 	textCiritcalDamage.setFillColor(sf::Color::White);
+	textCiritcalDamage.setPosition({ 200 , 460 });
 
 	textCirticalPercent.setFont(font);
 	textCirticalPercent.setCharacterSize(fontsize);
 	textCirticalPercent.setFillColor(sf::Color::White);
-
+	textCirticalPercent.setPosition({ 465, 355 });
 
 	textMovementSpeed.setFont(font);
 	textMovementSpeed.setCharacterSize(fontsize);
@@ -88,7 +94,7 @@ void UiAbility::Reset()
 	textAttackSpeed.setFont(font);
 	textAttackSpeed.setCharacterSize(fontsize);
 	textAttackSpeed.setFillColor(sf::Color::White);
-	
+
 
 	abilityBase.setTexture(TEXTURE_MGR.Get("graphics/ui/playerAbility.png"));
 	sf::Vector2f pos = FRAMEWORK.GetWindowSizeF();
@@ -99,26 +105,40 @@ void UiAbility::Reset()
 	Utils::SetOrigin(abilityBase, Origins::MC);
 
 
-	
+
 
 }
 
-void UiAbility::SetAttackDamage(float currentDamage, float maxDamage)
+
+void UiAbility::Update(float dt)
 {
-	/*if(player->GetCurrentWeapon() == )*/
-	currentDamage == player->GetCurrentAttackDamage();
-	maxDamage = player->GetRealSwordMaxDamage();
-	textDamage.setString(std::to_string(currentDamage) + "~" + std::to_string(maxDamage));
+
+}
+
+void UiAbility::LateUpdate(float dt)
+{
+	SetAttackDamage(player->GetCurrentAttackDamage(), player->GetRealDamage());
+	SetCriticalDamage(player->GetCurrentCriticalDamage());
+	SetCriticalPercent(player->GetCurrentCriticalPercent());
+	SetArmor(player->GetCurrentArmor());
+	SetArmorPercent(player->GetCurrentArmorPercent());
+}
+
+void UiAbility::SetAttackDamage(int currentDamage, int maxDamage)
+{
+	textDamage.setString(std::to_string(currentDamage) + " ~ " + std::to_string(maxDamage));
 	Utils::SetOrigin(textDamage, Origins::TL);
 }
 
-void UiAbility::SetCriticalDamage(float criticalDamage)
+
+
+void UiAbility::SetCriticalDamage(int criticalDamage)
 {
 	textCiritcalDamage.setString(std::to_string(criticalDamage));
 	Utils::SetOrigin(textDamage, Origins::TL);
 }
 
-void UiAbility::SetCriticalPercent(float criticalPercent)
+void UiAbility::SetCriticalPercent(int criticalPercent)
 {
 	textCirticalPercent.setString(std::to_string(criticalPercent) + "%");
 	Utils::SetOrigin(textCirticalPercent, Origins::TL);
@@ -136,13 +156,13 @@ void UiAbility::SetMoveMentSpeed(float moveSpeed)
 	Utils::SetOrigin(textMovementSpeed, Origins::TL);
 }
 
-void UiAbility::SetArmor(float armor)
+void UiAbility::SetArmor(int armor)
 {
 	textArmor.setString(std::to_string(armor));
 	Utils::SetOrigin(textArmor, Origins::TL);
 }
 
-void UiAbility::SetArmorPercent(float armorPercent)
+void UiAbility::SetArmorPercent(int armorPercent)
 {
 	textArmorPercent.setString(std::to_string(armorPercent) + "%");
 	Utils::SetOrigin(textArmorPercent, Origins::TL);
@@ -157,13 +177,14 @@ void UiAbility::SetDashDamagePercent(float dashDamage)
 
 
 
-void UiAbility::Update(float dt)
-{
-
-}
 
 void UiAbility::Draw(sf::RenderWindow& window)
 {
 	window.draw(abilityBase);
+	window.draw(textDamage);
+	window.draw(textCiritcalDamage);
+	window.draw(textCirticalPercent);
+	window.draw(textArmor);
+	window.draw(textArmorPercent);
 }
 

@@ -121,7 +121,7 @@ public:
 	float GetCurrentCoolTime() const { return dashCoolTimer; }
 	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp / maxhp); }
 
-	int GetRealSwordMaxDamage();
+	int GetRealDamage();
 	void AddExp();
 
 	int CalculationDamage(int damage);
@@ -133,7 +133,7 @@ public:
 	void SwitchWeaponSlot(sf::Keyboard::Key key);
 
 	Weapon* GetCurrentWeapon() const ;
-	
-
+	Weapon* GetWeaponSlot1() const { return weaponSlot1 ;}
+	Weapon* GetWeaponSlot2() const { return weaponSlot2 ;}
 	
 };

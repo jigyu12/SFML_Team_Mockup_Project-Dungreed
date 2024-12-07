@@ -69,6 +69,8 @@ void Player::Reset()
 	
 	playerStatus.attackDamage = 4;
 	playerStatus.level = 1;
+	playerStatus.armor = 0;
+	playerStatus.armorPercent = 0;
 	//float attackDamage;
 	//int level;
 	//float criticalDamage;
@@ -141,11 +143,8 @@ void Player::SetStatus(Status status)
 
 void Player::Update(float dt)
 {
-	//if (hp <= 0)
-	//{
-	//	return;
-	//}
 
+	
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 	{
@@ -154,6 +153,17 @@ void Player::Update(float dt)
 	else if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
 	{
 		SwitchWeaponSlot(sf::Keyboard::Num2);
+	}
+
+	if (this->GetCurrentWeapon() == weaponSlot1)
+	{
+		playerStatus.criticalPercent = 30;
+		playerStatus.criticalDamage = 2;
+	}
+	if (this->GetCurrentWeapon() == weaponSlot2)
+	{
+		playerStatus.criticalPercent = 20;
+		playerStatus.criticalDamage = 3;
 	}
 
 
@@ -221,16 +231,7 @@ void Player::Update(float dt)
 
 void Player::LateUpdate(float dt)
 {
-	if (weaponSlot1)
-	{
-		playerStatus.criticalPercent = 0.3;
-		playerStatus.criticalDamage = 2;
-	}
-	else
-	{
-		playerStatus.criticalPercent = 0.2;
-		playerStatus.criticalDamage = 1.5;
-	}
+	
 
 	if (status != Status::Dead)
 	{
@@ -339,7 +340,7 @@ void Player::LateUpdate(float dt)
 		{
 			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
-				if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
+				if (status != Status::Dash &&!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
 				{
 					OnDamage(monster->GetOriginalDamage());
 				}
@@ -350,7 +351,7 @@ void Player::LateUpdate(float dt)
 		if (isDamaged)
 		{
 			invincibilityTimer += dt;
-			if (invincibilityTimer > 0.2f)
+			if (invincibilityTimer > 1.f)
 			{
 				invincibilityTimer = 0.f;
 				isDamaged = false;
@@ -447,12 +448,25 @@ void Player::OnDamage(int monsterDamage)
 	{
 		return;
 	}
-	isDamaged = true;
-	invincibilityTimer = 0.f;
-	sf::Color currColor = body.getColor();
-	body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
 
-	hp = Utils::Clamp(hp - monsterDamage, 0, maxhp);
+	if (status == Status::Dash)
+	{
+		isDamaged = false;
+	}
+	else
+	{
+		isDamaged = true;
+		invincibilityTimer = 0.f;
+		sf::Color currColor = body.getColor();
+		body.setColor({ currColor.r, currColor.g, currColor.b, 80 });
+
+		hp = Utils::Clamp(hp - monsterDamage, 0, maxhp);
+	}
+		
+	
+	
+
+
 
 	if (playerui != nullptr)
 		playerui->SetHp(hp, maxhp);
@@ -463,13 +477,17 @@ void Player::OnDamage(int monsterDamage)
 
 
 
-int Player::GetRealSwordMaxDamage()
+int Player::GetRealDamage()
 {
-	playerStatus.criticalDamage *= 2;
-	int realDamage = playerStatus.attackDamage + weaponSlot1->GetOriginalDamageMax() * playerStatus.criticalDamage;
-	return realDamage;
+	if (weaponSlot1->IsCurrentWeapon())
+	{
+		return (playerStatus.attackDamage + weaponSlot1->GetOriginalDamageMax()) * playerStatus.criticalDamage;
+	}
+	else
+	{
+		return (playerStatus.attackDamage + weaponSlot2->GetOriginalDamageMax()) * playerStatus.criticalDamage;
+	}
 }
-
 void Player::AddExp()
 {
 	playerStatus.level += 1;
@@ -478,7 +496,7 @@ void Player::AddExp()
 int Player::CalculationDamage(int damage)
 {
 	damage += Utils::RandomRange(0.f, playerStatus.attackDamage);
-	if (playerStatus.criticalPercent > Utils::RandomValue())
+	if (playerStatus.criticalPercent > Utils::RandomRange(0.f,100.f))
 	{
 		damage *= playerStatus.criticalDamage;
 		std::cout << damage << std::endl;
