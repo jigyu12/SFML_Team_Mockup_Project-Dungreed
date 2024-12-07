@@ -68,9 +68,10 @@ void SkellBossUi::Reset()
 	Utils::SetOrigin(skellBossHp, Origins::MC);
 	skellBossHp.setPosition({ BossHpXpos,BossHpYpos });
 
-	Utils::SetOrigin(redBar, Origins::MC);
-	redBar.setScale({ 6.f,5.5f });
-	redBar.setPosition({ BossHpXpos,BossHpYpos });
+	Utils::SetOrigin(redBar, Origins::ML);
+	redBar.setScale({ 800.f,6.6f });
+float sssss=	BossHpXpos + 77 - redBar.getGlobalBounds().width * 0.5f;
+	redBar.setPosition({ BossHpXpos+77-redBar.getGlobalBounds().width*0.5f,BossHpYpos});
 
 }
 
@@ -87,7 +88,7 @@ void SkellBossUi::Update(float dt)
 		}
 	}
 	if (skellBoss != nullptr)
-		redBar.setScale(skellBoss->GetCurrentHpRatio(), redBar.getScale().y);
+		redBar.setScale(800*skellBoss->GetCurrentHpRatio(), redBar.getScale().y);
 }
 
 void SkellBossUi::Draw(sf::RenderWindow& window)

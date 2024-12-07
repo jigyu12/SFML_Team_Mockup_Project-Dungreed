@@ -104,6 +104,10 @@ void SceneGame::Update(float dt)
 	{
 		uiAbility->SetActive(false);
 	}
+	if (InputMgr::GetKeyUp(sf::Keyboard::F7))
+	{
+		ROOM_MGR.NextFloor();
+	}
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
