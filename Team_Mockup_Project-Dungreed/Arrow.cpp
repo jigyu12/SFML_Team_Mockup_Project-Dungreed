@@ -81,10 +81,12 @@ void Arrow::LateUpdate(float dt)
 	{
 		if (auto* monster = dynamic_cast<Monster*>(gameObject))
 		{
+			
 			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
 				int realDamage = owner->CalculationDamage(damage);
 				monster->OnDamaged(realDamage);
+				
 				SCENE_MGR.GetCurrentScene()->RemoveGo(this);
 			}
 		}

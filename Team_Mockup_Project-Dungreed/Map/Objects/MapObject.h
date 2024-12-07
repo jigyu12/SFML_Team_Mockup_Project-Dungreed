@@ -44,6 +44,6 @@ public:
 
 	virtual void Set(const ObjectData::Type& type);
 	Status GetStatus() { return status; }
-	virtual void SetStatus(const Status& status) {}
+	virtual void SetStatus(const Status& status) { this->status = status; }
 	virtual void OnDamaged(int damage);
 };

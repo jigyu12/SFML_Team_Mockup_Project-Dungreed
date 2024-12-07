@@ -262,6 +262,8 @@ void SkeletonDog::SetState(SkeletonDogState state)
 		SetPosition({ position.x, position.y - GetLocalBounds().height / 2.f });
 
 		animator.Play("animations/Monster Die.csv");
+
+		target->AddCurrentExp(1);
 	}
 		break;
 	}

@@ -125,9 +125,15 @@ void UiEditMonster::Reset()
 		case Monster::MonsterType::SkellBoss:
 			monsterList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "SkellBossIcon"));
 			break;
+		case Monster::MonsterType::SkelBow:
+			monsterList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "SkelBowIcon"));
+			break;
+		case Monster::MonsterType::SkelSword:
+			monsterList[i]->Set({ 90.f,90.f }, RESOURCEID_TABLE->Get("Graphic", "SkelSwordIcon"));
+			break;
 		}
-		monsterList[i]->SetClickedEvent([this,i]() 
-			{ 
+		monsterList[i]->SetClickedEvent([this, i]()
+			{
 				monsterList[(int)selectedType]->SetPressed(false);
 				selectedType = (Monster::MonsterType)i;
 				monsterList[(int)selectedType]->SetPressed(true);
@@ -225,7 +231,7 @@ void UiEditMonster::Update(float dt)
 		}
 	}
 
-	for (auto& datum:spawnData)
+	for (auto& datum : spawnData)
 	{
 		if (selectedMonster == datum.first)
 		{
@@ -301,34 +307,35 @@ void UiEditMonster::SetSpawnData(const std::vector<SpawnData>& data)
 
 void UiEditMonster::SetSpawnRect(sf::RectangleShape* shape, const Monster::MonsterType& type)
 {
+	Origins originpreset = Origins::BC;
+
 	switch (type)
 	{
 	case Monster::MonsterType::SkeletonDog:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SkelDogIcon")));
-		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
-		Utils::SetOrigin(*shape, Origins::BC);
 		break;
 	case Monster::MonsterType::Bat:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BatIcon")));
-		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
-		Utils::SetOrigin(*shape, Origins::MC);
+		originpreset = Origins::MC;
 		break;
 	case Monster::MonsterType::Banshee:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "BansheeIcon")));
-		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
-		Utils::SetOrigin(*shape, Origins::BC);
 		break;
 	case Monster::MonsterType::Ghost:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "LittleGhostIcon")));
-		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
-		Utils::SetOrigin(*shape, Origins::BC);
 		break;
 	case Monster::MonsterType::SkellBoss:
 		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SkellBossIcon")));
-		shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
-		Utils::SetOrigin(*shape, Origins::BC);
+		break;
+	case Monster::MonsterType::SkelSword:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SkelSwordIcon")));
+		break;
+	case Monster::MonsterType::SkelBow:
+		shape->setTexture(&TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "SkelBowIcon")));
 		break;
 	}
+	shape->setSize((sf::Vector2f)(shape->getTexture()->getSize()));
+	Utils::SetOrigin(*shape, originpreset);
 }
 
 void UiEditMonster::ClearSpawnData()
@@ -360,7 +367,7 @@ void UiEditMonster::UpDownSpawnWave(bool up)
 	{
 		++spawnData[selectedMonster].wave;
 	}
-	else if (!up && (exists|| maxWave == spawnData[selectedMonster].wave))
+	else if (!up && (exists || maxWave == spawnData[selectedMonster].wave))
 	{
 		spawnData[selectedMonster].wave = std::max(0, --spawnData[selectedMonster].wave);
 	}

@@ -40,7 +40,7 @@ void SceneGame::Init()
 		uiAbility->SetActive(false);
 	}
 	{
-		PlayerUi* playerui = AddGo(new PlayerUi());
+		PlayerUi* playerui = AddGo(new PlayerUi("playerUi"));
 	}
 
 	worldMapUi = AddGo(new WorldMapUi("WorldMapUi"));
@@ -94,9 +94,13 @@ void SceneGame::Update(float dt)
 	{
 		SCENE_MGR.ChangeScene(SceneIds::Game);
 	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::C))
+	if (InputMgr::GetKey(sf::Keyboard::C))
 	{
 		uiAbility->SetActive(true);
+	}
+	if (InputMgr::GetKeyUp(sf::Keyboard::C))
+	{
+		uiAbility->SetActive(false);
 	}
 }
 

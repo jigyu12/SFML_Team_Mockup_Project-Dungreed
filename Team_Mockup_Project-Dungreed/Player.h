@@ -39,7 +39,7 @@ protected:
 	std::string swordId = "graphics/weapon/Sword.png";
 	std::string playerDeadId = "graphics/player/CharDie.png";
 
-
+	std::list<Monster*> DamagedMonster;
 
 	SavePlayerStatus playerStatus;
 
@@ -53,6 +53,8 @@ protected:
 	float dashTimer;
 	float dashSpeed = 300.f;
 	float downSpeed = 100.f;
+
+	int deadMonsterCount = 0;
 
 	float invincibilityTimer = 0.f;
 
@@ -111,6 +113,12 @@ public:
 	float GetCurrentMovementSpeed() const { return playerStatus.movementSpeed; }
 	float GetCurrentCriticalPercent() const { return playerStatus.criticalPercent; }
 	float GetCurrentDashDamage() const { return playerStatus.dashDamage; }
+	float GetCurrentAttackSpeed() const { return playerStatus.attackSpeed; }
+
+	void AddCurrentExp(float exp) 
+	{ 
+		this->playerStatus.exp += exp; 
+	}
 	//
 
 	int GetCurrentHp() const { return hp; }
@@ -118,11 +126,13 @@ public:
 	bool IsDamaged() const { return isDamaged; }
 	bool IsDead() const { return isDead; }
 
+	
+
 	float GetCurrentCoolTime() const { return dashCoolTimer; }
 	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp / maxhp); }
 
-	int GetRealSwordMaxDamage();
-	void AddExp();
+	int GetRealDamage();
+	
 
 	int CalculationDamage(int damage);
 
@@ -133,7 +143,9 @@ public:
 	void SwitchWeaponSlot(sf::Keyboard::Key key);
 
 	Weapon* GetCurrentWeapon() const ;
-	
+	Weapon* GetWeaponSlot1() const { return weaponSlot1 ;}
+	Weapon* GetWeaponSlot2() const { return weaponSlot2 ;}
 
+	
 	
 };

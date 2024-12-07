@@ -66,9 +66,13 @@ void Player::Reset()
 {
 
 	playerui = dynamic_cast<PlayerUi*>(SCENE_MGR.GetCurrentScene()->FindGo("playerUi"));
-	
+
 	playerStatus.attackDamage = 4;
 	playerStatus.level = 1;
+	playerStatus.armor = 0;
+	playerStatus.armorPercent = 0;
+	playerStatus.movementSpeed = 1;
+	playerStatus.exp = 0;
 	//float attackDamage;
 	//int level;
 	//float criticalDamage;
@@ -94,7 +98,7 @@ void Player::Reset()
 		animator.Play("animations/player Idle.csv");
 		SetOrigin(originPreset);
 		SetStatus(Status::Ground);
-		ROOM_MGR.Reset();
+		ROOM_MGR.Start();
 		});
 
 	originalPlayerColor = body.getColor();
@@ -121,6 +125,7 @@ void Player::SetStatus(Status status)
 	case Player::Status::Jump:
 		break;
 	case Player::Status::Dash:
+		DamagedMonster.clear();
 		velocity = look * dashSpeed;
 		dashTimer = 0.f;
 		dashCoolTimer -= 1.f;
@@ -142,10 +147,13 @@ void Player::SetStatus(Status status)
 
 void Player::Update(float dt)
 {
-	//if (hp <= 0)
-	//{
-	//	return;
-	//}
+
+	if (playerStatus.exp >= 8)
+	{
+		playerStatus.level += 1;
+		playerStatus.attackDamage += 1;
+		playerStatus.exp = 0;
+	}
 
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
@@ -155,6 +163,21 @@ void Player::Update(float dt)
 	else if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
 	{
 		SwitchWeaponSlot(sf::Keyboard::Num2);
+	}
+
+	if (this->GetCurrentWeapon() == weaponSlot1)
+	{
+		playerStatus.criticalPercent = 30;
+		playerStatus.criticalDamage = 2;
+		playerStatus.attackSpeed = weaponSlot1->GetAttackSpeed();
+		playerStatus.dashDamage = 50;
+	}
+	if (this->GetCurrentWeapon() == weaponSlot2)
+	{
+		playerStatus.criticalPercent = 20;
+		playerStatus.criticalDamage = 3;
+		playerStatus.attackSpeed = weaponSlot2->GetAttackSpeed();
+		playerStatus.dashDamage = 50;
 	}
 
 
@@ -193,10 +216,7 @@ void Player::Update(float dt)
 		SetStatus(Player::Status::Dash);
 	}
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::K))
-	{
-		AddExp();
-	}
+
 
 
 	SetPosition(position + velocity * dt);
@@ -222,16 +242,7 @@ void Player::Update(float dt)
 
 void Player::LateUpdate(float dt)
 {
-	if (weaponSlot1)
-	{
-		playerStatus.criticalPercent = 0.3;
-		playerStatus.criticalDamage = 2;
-	}
-	else
-	{
-		playerStatus.criticalPercent = 0.2;
-		playerStatus.criticalDamage = 1.5;
-	}
+
 
 	if (status != Status::Dead)
 	{
@@ -338,20 +349,44 @@ void Player::LateUpdate(float dt)
 		const auto& monsters = ROOM_MGR.GetCurrentRoom()->GetMonsters();
 		for (auto& monster : monsters)
 		{
+
+
+
+			auto it = std::find(DamagedMonster.begin(), DamagedMonster.end(), monster);
+			if (it != DamagedMonster.end())
+				continue;
+
+
 			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
 				if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
 				{
-					//OnDamage(monster->GetOriginalDamage());
+					OnDamage(monster->GetOriginalDamage());
+					if (status == Status::Dash)
+					{
+						if (GetCurrentWeapon() == weaponSlot1)
+						{
+							int swordDashDamage = CalculationDamage(weaponSlot1->GetAttackDamage() / 2);
+							DamagedMonster.push_back(monster);
+							monster->OnDamaged(swordDashDamage);
+						}
+						else
+						{
+							int bowDashDamage = CalculationDamage(weaponSlot2->GetAttackDamage() / 2);
+							DamagedMonster.push_back(monster);
+							monster->OnDamaged(bowDashDamage);
+						}
+					}
 				}
 			}
 		}
+
 
 		/*const auto& bossSwords = dynamic_cast<SkellBossSword*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossSword"));*/
 		if (isDamaged)
 		{
 			invincibilityTimer += dt;
-			if (invincibilityTimer > 0.2f)
+			if (invincibilityTimer > 1.f)
 			{
 				invincibilityTimer = 0.f;
 				isDamaged = false;
@@ -444,10 +479,11 @@ void Player::Jump()
 
 void Player::OnDamage(int monsterDamage)
 {
-	if (isDamaged)
+	if (isDamaged || status == Status::Dash)
 	{
 		return;
 	}
+
 	isDamaged = true;
 	invincibilityTimer = 0.f;
 	sf::Color currColor = body.getColor();
@@ -462,27 +498,26 @@ void Player::OnDamage(int monsterDamage)
 
 
 
-
-
-int Player::GetRealSwordMaxDamage()
+int Player::GetRealDamage()
 {
-	playerStatus.criticalDamage *= 2;
-	int realDamage = playerStatus.attackDamage + weaponSlot1->GetOriginalDamageMax() * playerStatus.criticalDamage;
-	return realDamage;
+	if (weaponSlot1->IsCurrentWeapon())
+	{
+		return (playerStatus.attackDamage + weaponSlot1->GetOriginalDamageMax()) * playerStatus.criticalDamage;
+	}
+	else
+	{
+		return (playerStatus.attackDamage + weaponSlot2->GetOriginalDamageMax()) * playerStatus.criticalDamage;
+	}
 }
 
-void Player::AddExp()
-{
-	playerStatus.level += 1;
-}
 
 int Player::CalculationDamage(int damage)
 {
 	damage += Utils::RandomRange(0.f, playerStatus.attackDamage);
-	if (playerStatus.criticalPercent > Utils::RandomValue())
+	if (playerStatus.criticalPercent > Utils::RandomRange(0.f, 100.f))
 	{
 		damage *= playerStatus.criticalDamage;
-		std::cout << damage << std::endl;
+
 	}
 	return damage;
 }

@@ -230,9 +230,12 @@ void ShortSword::Attack()
 		{
 			if (Utils::CheckCollision(monster->GetHitBox(), attackBoundHitbox))
 			{
-				int realDamage = owner->CalculationDamage(Utils::RandomRange(originalDamageMin, originalDamageMax));
+				int realDamage = owner->CalculationDamage(GetAttackDamage());
 				monster->OnDamaged(realDamage);
+				
 			}
+
+			
 		}
 	}
 	const auto& mapObjects = ROOM_MGR.GetCurrentRoom()->GetBreakableObjects();

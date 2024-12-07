@@ -264,6 +264,8 @@ void SkelBow::SetState(SkelBowState state)
 		animator.Play("animations/Monster Die.csv");
 
 		SetPosition({position.x, position.y - 8.f});
+
+		target->AddCurrentExp(1);
 	}
 		break;
 	}

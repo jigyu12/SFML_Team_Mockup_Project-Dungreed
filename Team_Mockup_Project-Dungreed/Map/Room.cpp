@@ -16,6 +16,8 @@
 #include "SkellBossLeftHand.h"
 #include "Banshee.h"
 #include "Ghost.h"
+#include "SkelBow.h"
+#include "SkelSword.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -473,6 +475,24 @@ void Room::SetMapData(const MapDataVC& mapData)
 			skellBoss->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
 			monsters.push_back({ skellBoss ,spawndatum });
 		}
+		case Monster::MonsterType::SkelBow:
+		{
+			SkelBow* skelBow = scene->AddGo(new SkelBow());
+			skelBow->Init();
+			skelBow->Reset();
+			skelBow->SetActive(false);
+			skelBow->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ skelBow ,spawndatum });
+		}
+		case Monster::MonsterType::SkelSword:
+		{
+			SkelSword* skelSword = scene->AddGo(new SkelSword());
+			skelSword->Init();
+			skelSword->Reset();
+			skelSword->SetActive(false);
+			skelSword->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ skelSword ,spawndatum });
+		}
 		break;
 		}
 	}
@@ -543,13 +563,19 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		{
 			if (mapData.roomData.type == RoomData::Type::Enter)
 			{
-				player->SetPosition(object.first->GetPosition() + sf::Vector2f(0.f,-5.f));
+				player->SetPosition(object.first->GetPosition() + sf::Vector2f(0.f, -7.5f));
 				object.first->SetStatus(MapObject::Status::Close);
 			}
 			if (mapData.roomData.type == RoomData::Type::Exit)
 			{
 				object.first->SetStatus(MapObject::Status::Open);
 			}
+		}
+		if ((object.second.type == ObjectData::Type::Torch)
+			&&(object.first->GetStatus() == MapObject::Status::Idle)
+			&& (ROOM_MGR.GetCurrentFloor() % 2 == 0))
+		{
+			object.first->SetStatus(MapObject::Status::Broken);
 		}
 	}
 

@@ -210,6 +210,8 @@ void Banshee::SetState(BansheeState state)
 		isDead = true;
 
 		animator.Play("animations/Monster Die.csv");
+
+		target->AddCurrentExp(1);
 	}
 		break;
 	}

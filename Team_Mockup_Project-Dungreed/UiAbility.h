@@ -3,6 +3,7 @@
 #include "MainTitleUi.h"
 
 class Player;
+class Weapon;
 
 class UiAbility : public GameObject
 {
@@ -24,10 +25,10 @@ protected:
 	SavePlayerStatus playerStatus;
 
 	Player* player;
-
+	
 public:
 
-	UiAbility(const std::string& name = "playerUi");
+	UiAbility(const std::string& name = "uiAbility");
 	~UiAbility() = default;
 
 	void SetPosition(const sf::Vector2f& pos) override;
@@ -41,17 +42,19 @@ public:
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
+	void LateUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
 	//문자세팅
-	void SetAttackDamage(float currentDamage, float maxDamage);
-	void SetCriticalDamage(float criticalDamage);
-	void SetCriticalPercent(float criticalPercent);
+	void SetAttackDamage(int currentDamage, int maxDamage);
+	
+	void SetCriticalDamage(int criticalDamage);
+	void SetCriticalPercent(int criticalPercent);
 	void SetAttackSpeed(float attackSpeed);
-	void SetMoveMentSpeed(float moveSpeed);
-	void SetArmor(float armor);
-	void SetArmorPercent(float armorPercent);
-	void SetDashDamagePercent(float dashDamage);
+	void SetMoveMentSpeed(int moveSpeed);
+	void SetArmor(int armor);
+	void SetArmorPercent(int armorPercent);
+	void SetDashDamagePercent(int dashDamage);
 };
 /*
 * float attackDamage;
