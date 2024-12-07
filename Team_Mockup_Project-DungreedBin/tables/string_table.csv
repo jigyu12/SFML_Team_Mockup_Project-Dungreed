@@ -33,3 +33,4 @@ ID,string
 "Downable","DOWNABLE"
 "SpawnTrigger","SPAWN\nTRIGGER"
 "Spike","SPIKE"
+"CurrentFloor","현재 층 : "

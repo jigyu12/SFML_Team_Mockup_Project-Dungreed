@@ -8,6 +8,7 @@
 #include "Room.h"
 #include "ParticleGo.h"
 #include "LightGo.h"
+#include "WorldMapUi.h"
 #include "UiAbility.h"
 
 SceneGame::SceneGame()
@@ -20,7 +21,7 @@ void SceneGame::Init()
 	{
 		player = AddGo(new Player("Player"));
 
-		// µÎ ¹«±â Áß¿¡ ÇÏ³ª´Â SetWeaponToWeaponSlot->true·Î ÄÑÁ® ÀÖ¾î¾ß ½ÃÀÛ ¹«±â·Î »ç¿ëµÊ 
+		// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß¿ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ SetWeaponToWeaponSlot->trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 		{
 			ShortSword* shortSword = AddGo(new ShortSword());
 			weaponList.push_back(shortSword);
@@ -42,6 +43,18 @@ void SceneGame::Init()
 		PlayerUi* playerui = AddGo(new PlayerUi());
 	}
 
+	worldMapUi = AddGo(new WorldMapUi("WorldMapUi"));
+
+	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
+
+	uiView.setSize(size);
+	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);
+
+	size.x /= 6.f;
+	size.y /= 6.f;
+	worldView.setSize(size);
+	worldView.setCenter(0.f, 0.f);
+
 	Scene::Init();
 }
 
@@ -56,18 +69,8 @@ void SceneGame::Enter()
 
 
 	Scene::Enter();
-	
-	
-	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
-
-	uiView.setSize(size);
-	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);
-
-	size.x /= 6.f;
-	size.y /= 6.f;
-	worldView.setSize(size);
-	worldView.setCenter(0.f, 0.f);
 	ROOM_MGR.Start();
+	worldMapUi->RefreshData();
 }
 
 void SceneGame::Exit()

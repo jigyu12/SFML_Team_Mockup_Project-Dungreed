@@ -11,6 +11,7 @@ class SkellBoss;
 class SkellBossLeftHand;
 class ParticleGo;
 class LightGo;
+class WorldMapUi;
 class UiAbility;
 
 class SceneGame : public Scene
@@ -18,6 +19,8 @@ class SceneGame : public Scene
 protected:
 	Player* player;
 	std::vector<Weapon*> weaponList;
+
+	WorldMapUi* worldMapUi;
 
 	std::list<ParticleGo*> particles;
 	ObjectPool<ParticleGo> particlePool;

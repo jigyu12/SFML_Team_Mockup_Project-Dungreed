@@ -63,6 +63,9 @@ public:
 	std::vector<MapObject*> GetBreakableObjects() const;
 
 	std::vector<bool> GetConnections() { return mapData.roomData.connection; }
+	const RoomData& GetRoomData() { return mapData.roomData; }
+
+	void SetViewBounds();
 
 	bool isCleared() { return cleared; }
 	void EnterRoom(HitBoxData::Type connection);

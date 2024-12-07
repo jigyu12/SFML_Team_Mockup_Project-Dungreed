@@ -223,6 +223,7 @@
     <ClCompile Include="SkelSword.cpp" />
     <ClCompile Include="UiAbility.cpp" />
     <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="Map\WorldMapUi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -304,6 +305,7 @@
     <ClInclude Include="SkelSword.h" />
     <ClInclude Include="UiAbility.h" />
     <ClInclude Include="Weapon.h" />
+    <ClInclude Include="Map\WorldMapUi.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Team_Mockup_Project-Dungreed.rc" />

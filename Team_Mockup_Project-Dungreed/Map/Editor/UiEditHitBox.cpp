@@ -257,9 +257,13 @@ void UiEditHitBox::Reset()
 		positionTexts[i]->SetString("Position", true);
 	}
 
-	spawnPoint.setTexture(TEXTURE_MGR.Get("graphics/player/CharIdle.png"));
-	spawnPoint.setTextureRect({ 0,0,32,32 });
+	spawnPoint.setTexture(&TEXTURE_MGR.Get("graphics/player/CharIdle.png"));
+	spawnPoint.setTextureRect({ 8,12,16,21 });
+	spawnPoint.setSize({ 16,21 });
 	Utils::SetOrigin(spawnPoint, Origins::BC);
+	spawnPoint.setOutlineColor(sf::Color::Red);
+	spawnPoint.setOutlineThickness(1.f);
+
 
 	hitboxStatus = HitBoxEditStatus::Create;
 	editStatus = EditStatus::Hitbox;
@@ -306,7 +310,7 @@ void UiEditHitBox::Update(float dt)
 			}
 			break;
 		}
-		
+
 	}
 	else
 	{
@@ -473,12 +477,11 @@ void UiEditHitBox::Update(float dt)
 			}
 			break;
 		case UiEditHitBox::EditStatus::StartPosition:
-			if (InputMgr::GetMouseButtonDown(sf::Mouse::Left)
+			if (InputMgr::GetMouseButton(sf::Mouse::Left)
 				&& hitboxType < (HitBoxData::Type)4)
 			{
 				sf::Vector2f worldMousePos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(InputMgr::GetMousePosition());
 				startPositions[(int)hitboxType] = worldMousePos;
-				spawnPoint.setPosition(startPositions[(int)hitboxType]);
 				positionTexts[(int)hitboxType]->SetString("Position"
 					, std::to_wstring(startPositions[(int)hitboxType].x).substr(0, 5)
 					+ L", "
@@ -487,7 +490,10 @@ void UiEditHitBox::Update(float dt)
 			break;
 		}
 	}
-
+	if (editStatus == UiEditHitBox::EditStatus::StartPosition)
+	{
+		spawnPoint.setPosition(startPositions[(int)hitboxType]);
+	}
 }
 
 void UiEditHitBox::Draw(sf::RenderWindow& window)
@@ -658,4 +664,14 @@ void UiEditHitBox::ClearHitBoxData()
 		delete hitbox.first;
 	}
 	hitboxes.clear();
+}
+
+void UiEditHitBox::ClearRoomData()
+{
+	for (int i = 0;i < startPositions.size();++i)
+	{
+		startPositions[i].x = 0.f;
+		startPositions[i].y = 0.f;
+	}
+	selectedRoomType = RoomData::Type::Normal;
 }

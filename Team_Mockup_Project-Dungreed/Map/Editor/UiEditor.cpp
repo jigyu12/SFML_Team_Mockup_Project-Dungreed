@@ -433,6 +433,8 @@ void UiEditor::NewFile()
 		editingTileMaps[i]->Set({ 20,12 }, { 16.f,16.f }, std::vector<std::vector<int>>(1, std::vector<int>(1, 0)));
 	}
 	uiEditHitBox->ClearHitBoxData();
+	uiEditHitBox->ClearRoomData();
+	uiEditMonster->ClearSpawnData();
 	uiEditObject->ClearObjectData();
 }
 
