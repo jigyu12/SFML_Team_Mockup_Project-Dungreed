@@ -39,10 +39,6 @@ void SceneGame::Init()
 		uiAbility = AddGo(new UiAbility());
 		uiAbility->SetActive(false);
 	}
-	// ���� �׽�Ʈ�� ����
-	{
-		//SkelBow* skelbow = AddGo(new SkelBow());
-	}
 	{
 		PlayerUi* playerui = AddGo(new PlayerUi());
 	}
