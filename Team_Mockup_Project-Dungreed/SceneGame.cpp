@@ -38,10 +38,6 @@ void SceneGame::Init()
 		uiAbility = AddGo(new UiAbility());
 		uiAbility->SetActive(false);
 	}
-	// 몬스터 테스트용 공간
-	{
-		//SkelBow* skelbow = AddGo(new SkelBow());
-	}
 	{
 		PlayerUi* playerui = AddGo(new PlayerUi());
 	}
