@@ -49,6 +49,11 @@ void TextGo::Draw(sf::RenderWindow& window)
 	window.draw(text);
 }
 
+void TextGo::Draw(sf::RenderTexture& texture)
+{
+	texture.draw(text);
+}
+
 void TextGo::OnLocalize(Languages lang)
 {
 	text.setString(STRING_TABLE->Get(stringId, lang));

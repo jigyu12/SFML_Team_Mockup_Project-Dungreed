@@ -3,7 +3,6 @@
 #include "Room.h"
 #include "TileMap.h"
 #include "Player.h"
-#include "MapObject.h"
 #include "Monster.h"
 #include "Bat.h"
 #include "SkeletonDog.h"
@@ -12,8 +11,11 @@
 #include "DoorMo.h"
 #include "SealStoneMo.h"
 #include "BreakableMo.h"
+#include "BackgroundMo.h"
 #include "SkellBoss.h"
 #include "SkellBossLeftHand.h"
+#include "Banshee.h"
+#include "Ghost.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -49,6 +51,8 @@ void Room::SetPosition(const sf::Vector2f& pos)
 	{
 		obj.first->SetPosition(transform.transformPoint(obj.second.position));
 	}
+
+	SetViewBounds();
 }
 
 void Room::SetRotation(float angle)
@@ -112,6 +116,16 @@ void Room::SetOrigin(const sf::Vector2f& newOrigin)
 	{
 		hitBox.first->rect.setOrigin(origin);
 	}
+}
+
+sf::FloatRect Room::GetLocalBounds() const
+{
+	return tileMaps[0]->GetLocalBounds();
+}
+
+sf::FloatRect Room::GetGlobalBounds() const
+{
+	return tileMaps[0]->GetGlobalBounds();
 }
 
 void Room::Init()
@@ -197,7 +211,8 @@ void Room::LateUpdate(float dt)
 				break;
 			case HitBoxData::Type::SpawnTrigger:
 				if (Utils::PointInTransformBounds(hitbox.first->rect, hitbox.first->rect.getLocalBounds(), player->GetHitBox().GetCenter())
-					&& wave == -2)
+					&& wave == -2
+					&& !cleared)
 				{
 					++wave;
 					for (const auto& object : objects)
@@ -221,7 +236,8 @@ void Room::LateUpdate(float dt)
 		if (ROOM_MGR.GetCurrentRoom() == this
 			&& !tileMaps[0]->GetGlobalBounds().contains(player->GetHitBox().GetCenter()))
 		{
-			EnterRoom(enteredPortal);
+			player->SetPosition(tileMaps[0]->GetTransform().transformPoint(mapData.playerStartPoint[(int)enteredPortal]));
+			player->SetStatus(Player::Status::Ground);
 		}
 	}
 	int count = 0;
@@ -241,6 +257,7 @@ void Room::LateUpdate(float dt)
 		&& !cleared)
 	{
 		cleared = true;
+		wave = 100;
 		for (const auto& object : objects)
 		{
 			if (object.second.type == ObjectData::Type::SealStone)
@@ -295,9 +312,20 @@ void Room::Draw(sf::RenderWindow& window)
 
 void Room::LoadMapData(const std::string& path)
 {
-	sf::Vector2f worldViewSize = SCENE_MGR.GetCurrentScene()->GetWorldView().getSize();
+	SetMapData(MapDataLoader::Load(path));
+}
+
+void Room::SetMapData(const MapDataVC& mapData)
+{
+	this->mapData = mapData;
 
 	monsters.clear();
+
+	for (auto& object : objects)
+	{
+		delete object.first;
+	}
+	objects.clear();
 
 	for (auto& hitbox : hitBoxes)
 	{
@@ -305,7 +333,8 @@ void Room::LoadMapData(const std::string& path)
 	}
 	hitBoxes.clear();
 
-	mapData = MapDataLoader::Load(path);
+	// 황규영 빈 맵데이터 입력 확인용
+	assert(mapData.tileMapData[0].cellcount.x != 0);
 
 	for (int i = 0; i < tileMaps.size(); ++i)
 	{
@@ -332,6 +361,16 @@ void Room::LoadMapData(const std::string& path)
 			break;
 		case ObjectData::Type::Door:
 			obj = new DoorMo();
+			break;
+		case ObjectData::Type::Cell:
+		case ObjectData::Type::BrokenCell:
+		case ObjectData::Type::UpperCell0:
+		case ObjectData::Type::UpperCell1:
+		case ObjectData::Type::Skull0:
+		case ObjectData::Type::Skull1:
+		case ObjectData::Type::Bone0:
+		case ObjectData::Type::Bone1:
+			obj = new BackgroundMo();
 			break;
 		}
 		if (obj != nullptr)
@@ -405,6 +444,26 @@ void Room::LoadMapData(const std::string& path)
 			monsters.push_back({ skeletonDog ,spawndatum });
 		}
 		break;
+		case Monster::MonsterType::Banshee:
+		{
+			Banshee* banshee = scene->AddGo(new Banshee());
+			banshee->Init();
+			banshee->Reset();
+			banshee->SetActive(false);
+			banshee->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ banshee ,spawndatum });
+		}
+		break;
+		case Monster::MonsterType::Ghost:
+		{
+			Ghost* ghost = scene->AddGo(new Ghost());
+			ghost->Init();
+			ghost->Reset();
+			ghost->SetActive(false);
+			ghost->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ ghost ,spawndatum });
+		}
+		break;
 		case Monster::MonsterType::SkellBoss:
 		{
 			SkellBoss* skellBoss = scene->AddGo(new SkellBoss());
@@ -420,14 +479,14 @@ void Room::LoadMapData(const std::string& path)
 	if (mapData.monsterSpawnData.size() == 0)
 	{
 		cleared = true;
+		wave = 100;
+	}
+	else
+	{
+		cleared = false;
 	}
 
-	viewbounds = tileMaps[0]->GetGlobalBounds();
-
-	viewbounds.left += worldViewSize.x * 0.5f;
-	viewbounds.top += worldViewSize.y * 0.5f;
-	viewbounds.width -= worldViewSize.x;
-	viewbounds.height -= worldViewSize.y;
+	SetViewBounds();
 }
 
 std::vector<std::pair<HitBox*, HitBoxData>> Room::GetHitBoxes() const
@@ -451,6 +510,17 @@ std::vector<std::pair<HitBox*, HitBoxData>> Room::GetHitBoxes() const
 	return data;
 }
 
+void Room::SetViewBounds()
+{
+	viewbounds = tileMaps[0]->GetGlobalBounds();
+	sf::Vector2f worldViewSize = SCENE_MGR.GetCurrentScene()->GetWorldView().getSize();
+
+	viewbounds.left += worldViewSize.x * 0.5f;
+	viewbounds.top += worldViewSize.y * 0.5f;
+	viewbounds.width -= worldViewSize.x;
+	viewbounds.height -= worldViewSize.y;
+}
+
 void Room::EnterRoom(HitBoxData::Type connection)
 {
 	enteredPortal = connection;
@@ -462,7 +532,7 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		}
 		else
 		{
-			player->SetPosition(mapData.playerStartPoint[(int)connection]);
+			player->SetPosition(tileMaps[0]->GetTransform().transformPoint(origin));
 		}
 	}
 
@@ -473,6 +543,7 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		{
 			if (mapData.roomData.type == RoomData::Type::Enter)
 			{
+				player->SetPosition(object.first->GetPosition() + sf::Vector2f(0.f,-5.f));
 				object.first->SetStatus(MapObject::Status::Close);
 			}
 			if (mapData.roomData.type == RoomData::Type::Exit)

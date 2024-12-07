@@ -34,6 +34,7 @@ void Button::SetOrigin(Origins preset)
 	{
 		origin = Utils::SetOrigin(buttonBackground, originPreset);
 		buttonText->SetOrigin(Origins::MC);
+		SetPosition(position);
 	}
 }
 

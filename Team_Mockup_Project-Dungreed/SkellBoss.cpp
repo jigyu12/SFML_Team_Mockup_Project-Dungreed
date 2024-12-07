@@ -87,7 +87,8 @@ void SkellBoss::Reset()
 
 	sortingOrder = target->sortingOrder - 1;
 
-	hp = 80;
+	maxhp = 150 * ((ROOM_MGR.GetCurrentFloor() + 1) / 2);
+	hp = maxhp; 
 	speed = 30.f;
 	originalDamage = 0;
 

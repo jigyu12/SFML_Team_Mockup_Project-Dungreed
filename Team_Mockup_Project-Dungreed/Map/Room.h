@@ -16,7 +16,7 @@ protected:
 
 	std::vector<std::pair<HitBox*, HitBoxData>> hitBoxes;
 	std::vector<std::pair<MapObject*, ObjectData>> objects;
-	std::vector<std::pair<Monster*,SpawnData>> monsters;
+	std::vector<std::pair<Monster*, SpawnData>> monsters;
 
 	sf::FloatRect viewbounds;
 	sf::Vector2f subBGCenter;
@@ -42,6 +42,9 @@ public:
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
 
+	sf::FloatRect GetLocalBounds() const override;
+	sf::FloatRect GetGlobalBounds() const override;
+
 	void Init() override;
 	void Release() override;
 	void Reset() override;
@@ -50,6 +53,7 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void LoadMapData(const std::string& path);
+	void SetMapData(const MapDataVC& mapData);
 
 	const sf::Vector2f& GetSubBGCenter() { return subBGCenter; }
 	const sf::FloatRect& GetViewBounds() { return viewbounds; }
@@ -57,6 +61,11 @@ public:
 	std::vector<std::pair<HitBox*, HitBoxData>> GetHitBoxes() const;
 	std::vector<Monster*> GetMonsters() const;
 	std::vector<MapObject*> GetBreakableObjects() const;
+
+	std::vector<bool> GetConnections() { return mapData.roomData.connection; }
+	const RoomData& GetRoomData() { return mapData.roomData; }
+
+	void SetViewBounds();
 
 	bool isCleared() { return cleared; }
 	void EnterRoom(HitBoxData::Type connection);

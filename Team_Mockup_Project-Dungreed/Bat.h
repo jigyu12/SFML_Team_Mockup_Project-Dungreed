@@ -10,8 +10,8 @@ public:
 		None = -1,
 
 		Idle,
-		Move,
-		//Attack,
+		RandMove,
+		Attack,
 		Death,
 
 		Count
@@ -20,34 +20,38 @@ public:
 protected:
 	BatState state;
 
-	float idleAccumTime;
-	float idleTimeDelay;
-	float idleRandMoveAccumTime;
-	float idleRandMoveTimeDelay;
-	bool isRandMoving;
-	
-	float hitAccumTime;
-	float hitTimeDelay;
+	Animator animator;
 
-	float deathAccumTime;
-	float deathTimeDelay;
+	sf::Shader shader;
+
+	sf::Vector2f direction;
+	float speed;
 
 	sf::CircleShape detectionRange;
 
-	sf::FloatRect movableBound;
+	float hitTimeAccum;
+	float hitTimeDelay;
 
-	sf::Shader shader;
+	float idleTimeAccum;
+	float idleTimeDelay;
+
+	float randMoveTimeAccum;
+	float randMoveTimeDelay;
+
+	float deathTimeAccum;
+	float deathTimeDelay;
+
+	sf::FloatRect movableBound;
 
 public:
 	Bat(const std::string& name = "Bat");
 	virtual ~Bat() = default;
 
+	virtual void SetOrigin(Origins preset) override;
+	virtual void SetOrigin(const sf::Vector2f& newOrigin) override;
 	virtual void SetPosition(const sf::Vector2f& pos) override;
 	virtual void SetRotation(float angle) override;
 	virtual void SetScale(const sf::Vector2f& scale) override;
-
-	virtual void SetOrigin(Origins preset) override;
-	virtual void SetOrigin(const sf::Vector2f& newOrigin) override;
 
 	virtual void Init() override;
 	virtual void Reset() override;
@@ -56,7 +60,13 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
 
-	virtual sf::FloatRect GetLocalBounds() const 
+	void SetState(BatState state);
+	void UpdateIdle(float dt);
+	void UpdateRandMove(float dt);
+	void UpdateAttack(float dt);
+	void UpdateDeath(float dt);
+
+	virtual sf::FloatRect GetLocalBounds() const
 	{
 		return body.getLocalBounds();
 	}

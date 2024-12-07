@@ -11,8 +11,13 @@ public:
 
 		SkeletonDog,
 		Bat,
+		Ghost,
+		Banshee,
 
 		SkellBoss,
+
+		SkelBow,
+		SkelSword,
 
 		Count
 	};
@@ -48,6 +53,8 @@ public:
 
 	MonsterType GetMonsterType() const { return monsterType; }
 	int GetOriginalDamage() const { return originalDamage; }
+	int GetMaxHp() const { return maxhp; }
+	int GetCurrentHp() const { return hp; }
 
 	void OnDamaged(int damage);
 
