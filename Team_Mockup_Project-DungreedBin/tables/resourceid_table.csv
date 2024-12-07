@@ -21,6 +21,8 @@ Type,ID,string
 "Graphic","SkelDogIcon","graphics/monster/SkelDog/SkelDogIdle0.png"
 "Graphic","BansheeIcon","graphics/monster/Banshee/BansheeIdle0.png"
 "Graphic","LittleGhostIcon","graphics/monster/LittleGhost/LittleGhost0.png"
+"Graphic","SkelBowIcon","graphics/monster/Skels/SkelBow.png"
+"Graphic","SkelSwordIcon","graphics/monster/Skels/SkelSword.png"
 "Graphic","SkellBossIcon","graphics/boss/BossIdle/Idle/SkellBossIdle0.png"
 "Graphic","KeyboardEIcon","graphics/ui/Keyboard_E.png"
 "Graphic","RoomIcon","graphics/ui/Room.png"

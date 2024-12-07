@@ -98,7 +98,7 @@ void Player::Reset()
 		animator.Play("animations/player Idle.csv");
 		SetOrigin(originPreset);
 		SetStatus(Status::Ground);
-		ROOM_MGR.Reset();
+		ROOM_MGR.Start();
 		});
 
 	originalPlayerColor = body.getColor();

@@ -16,6 +16,8 @@
 #include "SkellBossLeftHand.h"
 #include "Banshee.h"
 #include "Ghost.h"
+#include "SkelBow.h"
+#include "SkelSword.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -472,6 +474,24 @@ void Room::SetMapData(const MapDataVC& mapData)
 			skellBoss->SetActive(false);
 			skellBoss->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
 			monsters.push_back({ skellBoss ,spawndatum });
+		}
+		case Monster::MonsterType::SkelBow:
+		{
+			SkelBow* skelBow = scene->AddGo(new SkelBow());
+			skelBow->Init();
+			skelBow->Reset();
+			skelBow->SetActive(false);
+			skelBow->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ skelBow ,spawndatum });
+		}
+		case Monster::MonsterType::SkelSword:
+		{
+			SkelSword* skelSword = scene->AddGo(new SkelSword());
+			skelSword->Init();
+			skelSword->Reset();
+			skelSword->SetActive(false);
+			skelSword->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ skelSword ,spawndatum });
 		}
 		break;
 		}
