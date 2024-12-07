@@ -1,17 +1,14 @@
 #include "stdafx.h"
 #include "SceneGame.h"
 #include "TileMap.h"
-#include "Bat.h"
-#include "SkeletonDog.h"
 #include "Weapon.h"
 #include "ShortSword.h"
 #include "HandCrossbow.h"
 #include "PlayerUi.h"
 #include "Room.h"
-#include "SkellBoss.h"
-#include "SkellBossLeftHand.h"
 #include "ParticleGo.h"
 #include "LightGo.h"
+#include "WorldMapUi.h"
 #include "UiAbility.h"
 
 SceneGame::SceneGame()
@@ -24,7 +21,7 @@ void SceneGame::Init()
 	{
 		player = AddGo(new Player("Player"));
 
-		// µÎ ¹«±â Áß¿¡ ÇÏ³ª´Â SetWeaponToWeaponSlot->true·Î ÄÑÁ® ÀÖ¾î¾ß ½ÃÀÛ ¹«±â·Î »ç¿ëµÊ 
+		// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß¿ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ SetWeaponToWeaponSlot->trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 		{
 			ShortSword* shortSword = AddGo(new ShortSword());
 			weaponList.push_back(shortSword);
@@ -42,33 +39,21 @@ void SceneGame::Init()
 		uiAbility = AddGo(new UiAbility());
 		uiAbility->SetActive(false);
 	}
-	/*{
-		skellBoss = AddGo(new SkellBoss());
-		skellBoss->SetPosition({ -7.5f, 50.f });
-
-		{
-			leftHand = AddGo(new SkellBossLeftHand("SkellBossLeftHand"));
-			leftHand->SetPosition({ -107.5f , 50.f });
-		}
-		{
-			rightHand = AddGo(new SkellBossLeftHand("SkellBossRightHand"));
-			rightHand->SetPosition({ 92.5f , -50.f });
-			rightHand->SetScale({ -1.f, 1.f });
-		}
-	}*/
 	{
 		PlayerUi* playerui = AddGo(new PlayerUi("playerUi"));
 	}
-	/*{
-		Bat* bat = AddGo(new Bat());
-		bat->SetPosition({ 140.f, -80.f });
-		batList.push_back(bat);
-	}
-	{
-		SkeletonDog* skeletonDog = AddGo(new SkeletonDog());
-		skeletonDog->SetPosition({ 0.f, 0.f });
-		skeletonDogList.push_back(skeletonDog);
-	}*/
+
+	worldMapUi = AddGo(new WorldMapUi("WorldMapUi"));
+
+	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
+
+	uiView.setSize(size);
+	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);
+
+	size.x /= 6.f;
+	size.y /= 6.f;
+	worldView.setSize(size);
+	worldView.setCenter(0.f, 0.f);
 
 	Scene::Init();
 }
@@ -84,18 +69,8 @@ void SceneGame::Enter()
 
 
 	Scene::Enter();
-	
-	
-	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
-
-	uiView.setSize(size);
-	uiView.setCenter(size.x * 0.5f, size.y * 0.5f);
-
-	size.x /= 6.f;
-	size.y /= 6.f;
-	worldView.setSize(size);
-	worldView.setCenter(0.f, 0.f);
-	ROOM_MGR.Reset();
+	ROOM_MGR.Start();
+	worldMapUi->RefreshData();
 }
 
 void SceneGame::Exit()

@@ -22,6 +22,8 @@ protected:
 
 	sf::RectangleShape editorWindow;
 
+	Button* buttonExit;
+
 	Button* buttonNew;
 	Button* buttonSave;
 	Button* buttonLoad;

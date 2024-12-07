@@ -1,0 +1,10 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Move,10,"1",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/monster/Skels/SkelWalk0.png,0,"0",14,19,0
+graphics/monster/Skels/SkelWalk1.png,0,"0",14,20,0
+graphics/monster/Skels/SkelWalk2.png,0,"0",14,20,0
+graphics/monster/Skels/SkelWalk3.png,0,"0",14,19,0
+graphics/monster/Skels/SkelWalk4.png,0,"0",14,20,0
+graphics/monster/Skels/SkelWalk5.png,0,"0",14,20,0

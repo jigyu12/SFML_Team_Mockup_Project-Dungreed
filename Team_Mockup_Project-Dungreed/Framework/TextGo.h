@@ -24,6 +24,7 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+	void Draw(sf::RenderTexture& texture);
 
 	void Set(int size, const sf::Color& color = sf::Color::White);
 	void SetString(const std::string& id, bool useTable = false);

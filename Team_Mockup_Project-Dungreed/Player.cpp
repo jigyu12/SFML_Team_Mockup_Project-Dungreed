@@ -120,6 +120,7 @@ void Player::SetStatus(Status status)
 	switch (status)
 	{
 	case Player::Status::Ground:
+		velocity.y = 0.f;
 		break;
 	case Player::Status::Jump:
 		break;
