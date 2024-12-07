@@ -55,6 +55,8 @@ Type,ID,string
 "Graphic","TableParticle5","graphics/map/objects/table/TortureTable1_5.png"
 "Graphic","TableParticle6","graphics/map/objects/table/TortureTable1_6.png"
 "Graphic","TableParticle7","graphics/map/objects/table/TortureTable1_7.png"
+"Graphic","BasicCursor","graphics/ui/BasicCursor.png"
+"Graphic","ShootingCursor","graphics/ui/ShootingCursor2.png"
 "Animation","Torch","animations/map/torchidle.csv"
 "Animation","SealStoneClose","animations/map/sealstoneclose.csv"
 "Animation","SealStoneIdle","animations/map/sealstoneidle.csv"

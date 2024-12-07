@@ -65,16 +65,22 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
-	
-
-
 	Scene::Enter();
+
+	FRAMEWORK.GetWindow().setMouseCursorVisible(false);
+	mouseCursor.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "ShootingCursor")));
+	mouseCursor.setScale(4.f, 4.f);
+	Utils::SetOrigin(mouseCursor, Origins::MC);
+
+
 	ROOM_MGR.Start();
+	
 	worldMapUi->RefreshData();
 }
 
 void SceneGame::Exit()
 {
+	FRAMEWORK.GetWindow().setMouseCursorVisible(true);
 	ClearTookObject();
 	Scene::Exit();
 }
@@ -102,6 +108,8 @@ void SceneGame::Update(float dt)
 	{
 		uiAbility->SetActive(false);
 	}
+
+	mouseCursor.setPosition(ScreenToUi(InputMgr::GetMousePosition()));
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
@@ -110,7 +118,7 @@ void SceneGame::Draw(sf::RenderWindow& window)
 	
 	Scene::Draw(window);
 	
-
+	window.draw(mouseCursor);
 }
 
 
