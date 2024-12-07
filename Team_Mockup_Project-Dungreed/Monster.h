@@ -16,6 +16,9 @@ public:
 
 		SkellBoss,
 
+		SkelBow,
+		SkelSword,
+
 		Count
 	};
 

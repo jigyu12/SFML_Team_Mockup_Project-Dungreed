@@ -50,7 +50,7 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 void Player::Init()
 {
 	speed = 100.f;
-	jumpForce = 200.f;
+	jumpForce = 100.f;
 	gravity = 300.f;
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 2;
@@ -66,8 +66,18 @@ void Player::Reset()
 {
 
 	playerui = dynamic_cast<PlayerUi*>(SCENE_MGR.GetCurrentScene()->FindGo("playerUi"));
-
+	
+	playerStatus.attackDamage = 4;
 	playerStatus.level = 1;
+	//float attackDamage;
+	//int level;
+	//float criticalDamage;
+	//float exp;
+	//float armor;
+	//float armorPercent;
+	//float movementSpeed;
+	//float criticalPercent;
+	//float dashDamage;
 
 	animator.SetTarget(&body);
 	animator.Play("animations/player Idle.csv");
@@ -155,7 +165,7 @@ void Player::Update(float dt)
 	//dashCoolTimer = std::max(dashCoolTimer, 0.f);
 
 	dashCoolTimer = Utils::Clamp(dashCoolTimer, 0.f, 2.f);
-	
+
 
 
 	switch (status)
@@ -183,7 +193,10 @@ void Player::Update(float dt)
 		SetStatus(Player::Status::Dash);
 	}
 
-
+	if (InputMgr::GetKeyDown(sf::Keyboard::K))
+	{
+		AddExp();
+	}
 
 
 	SetPosition(position + velocity * dt);
@@ -192,6 +205,14 @@ void Player::Update(float dt)
 	sf::Vector2i mousePos = InputMgr::GetMousePosition();
 	sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
 	look = Utils::GetNormal(mouseworldPos - position);
+
+	if ((look.x > 0.f && scale.x < 0.f)
+		|| (look.x < 0.f && scale.x >0.f))
+	{
+		SetScale({ -scale.x,scale.y });
+	}
+
+	//Utils::Angle(look);
 	SetOrigin(Origins::BC);
 
 
@@ -201,6 +222,17 @@ void Player::Update(float dt)
 
 void Player::LateUpdate(float dt)
 {
+	if (weaponSlot1)
+	{
+		playerStatus.criticalPercent = 0.3;
+		playerStatus.criticalDamage = 2;
+	}
+	else
+	{
+		playerStatus.criticalPercent = 0.2;
+		playerStatus.criticalDamage = 1.5;
+	}
+
 	if (status != Status::Dead)
 	{
 		auto playerGlobalBounds = hitbox.rect.getGlobalBounds();
@@ -351,7 +383,7 @@ void Player::UpdateGrounded(float dt)
 
 		}
 		else
-		Jump();
+			Jump();
 	}
 	if (horizontalInput == 0 && animator.GetCurrentClipId() != "Idle")
 	{
@@ -371,7 +403,7 @@ void Player::UpdateJump(float dt)
 	velocity.x = direction.x * speed;
 	jumpTimer += dt;
 
-	if (jumpTimer > 1.f || !InputMgr::GetKey(sf::Keyboard::Space) || velocity.y > 0.f)
+	if (jumpTimer > 0.5f || !InputMgr::GetKey(sf::Keyboard::Space) || velocity.y > 0.f)
 	{
 		velocity.y += gravity * dt;
 	}
@@ -391,7 +423,7 @@ void Player::UpdateDownJump(float dt)
 void Player::UpdateDash(float dt)
 {
 	dashTimer += dt;
-	if (dashTimer > 0.3f)
+	if (dashTimer > 0.2f)
 	{
 		velocity = { 0.f,0.f };
 		SetStatus(Status::Jump);
@@ -424,9 +456,36 @@ void Player::OnDamage(int monsterDamage)
 	hp = Utils::Clamp(hp - monsterDamage, 0, maxhp);
 
 	if (playerui != nullptr)
-		playerui->SetHp(hp , maxhp);
+		playerui->SetHp(hp, maxhp);
 }
 
+
+
+
+
+
+int Player::GetRealSwordMaxDamage()
+{
+	playerStatus.criticalDamage *= 2;
+	int realDamage = playerStatus.attackDamage + weaponSlot1->GetOriginalDamageMax() * playerStatus.criticalDamage;
+	return realDamage;
+}
+
+void Player::AddExp()
+{
+	playerStatus.level += 1;
+}
+
+int Player::CalculationDamage(int damage)
+{
+	damage += Utils::RandomRange(0.f, playerStatus.attackDamage);
+	if (playerStatus.criticalPercent > Utils::RandomValue())
+	{
+		damage *= playerStatus.criticalDamage;
+		std::cout << damage << std::endl;
+	}
+	return damage;
+}
 
 void Player::SetWeaponToWeaponSlot1(Weapon* weapon, bool isCurrentWeapon)
 {
@@ -463,6 +522,18 @@ void Player::SwitchWeaponSlot(sf::Keyboard::Key key)
 			weaponSlot1->SetIsCurrentWeapon(false);
 		}
 
+	}
+}
+
+Weapon* Player::GetCurrentWeapon() const
+{
+	if (weaponSlot1->IsCurrentWeapon())
+	{
+		return weaponSlot1;
+	}
+	else
+	{
+		return weaponSlot2;
 	}
 }
 

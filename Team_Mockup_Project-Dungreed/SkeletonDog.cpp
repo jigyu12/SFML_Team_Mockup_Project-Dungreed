@@ -62,7 +62,7 @@ void SkeletonDog::Reset()
 	}
 	sortingOrder = target->sortingOrder - 1;
 
-	maxhp = 20;
+	maxhp = 20 * ((ROOM_MGR.GetCurrentFloor() + 1) / 2);
 	hp = maxhp;
 	speed = 50.f;
 	originalDamage = 5;

@@ -12,6 +12,7 @@ class SkellBossLeftHand;
 class ParticleGo;
 class LightGo;
 class WorldMapUi;
+class UiAbility;
 
 class SceneGame : public Scene
 {
@@ -26,7 +27,7 @@ protected:
 
 	std::list<LightGo*> lights;
 	ObjectPool<LightGo> lightPool;
-
+	UiAbility* uiAbility;
 public:
 	SceneGame();
 	virtual ~SceneGame() = default;

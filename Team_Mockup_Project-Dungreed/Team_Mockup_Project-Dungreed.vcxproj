@@ -200,6 +200,8 @@
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="Map\Editor\SceneMapEdit.cpp" />
     <ClCompile Include="ShortSword.cpp" />
+    <ClCompile Include="SkelBow.cpp" />
+    <ClCompile Include="SkelBowArrow.cpp" />
     <ClCompile Include="SkeletonDog.cpp" />
     <ClCompile Include="Map\TileMap.cpp" />
     <ClCompile Include="Framework\HitBox.cpp">
@@ -218,6 +220,8 @@
     <ClCompile Include="SkellBossParticle.cpp" />
     <ClCompile Include="SkellBossSword.cpp" />
     <ClCompile Include="Map\Objects\TorchMo.cpp" />
+    <ClCompile Include="SkelSword.cpp" />
+    <ClCompile Include="UiAbility.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="Map\WorldMapUi.cpp" />
   </ItemGroup>
@@ -279,6 +283,8 @@
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="Map\Editor\SceneMapEdit.h" />
     <ClInclude Include="ShortSword.h" />
+    <ClInclude Include="SkelBow.h" />
+    <ClInclude Include="SkelBowArrow.h" />
     <ClInclude Include="SkeletonDog.h" />
     <ClInclude Include="Map\TileMap.h" />
     <ClInclude Include="Framework\Variables.h" />
@@ -296,6 +302,8 @@
     <ClInclude Include="SkellBossParticle.h" />
     <ClInclude Include="SkellBossSword.h" />
     <ClInclude Include="Map\Objects\TorchMo.h" />
+    <ClInclude Include="SkelSword.h" />
+    <ClInclude Include="UiAbility.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="Map\WorldMapUi.h" />
   </ItemGroup>

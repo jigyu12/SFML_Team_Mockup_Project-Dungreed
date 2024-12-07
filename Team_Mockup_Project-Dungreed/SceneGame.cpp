@@ -9,6 +9,7 @@
 #include "ParticleGo.h"
 #include "LightGo.h"
 #include "WorldMapUi.h"
+#include "UiAbility.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -20,7 +21,7 @@ void SceneGame::Init()
 	{
 		player = AddGo(new Player("Player"));
 
-		// µÎ ¹«±â Áß¿¡ ÇÏ³ª´Â SetWeaponToWeaponSlot->true·Î ÄÑÁ® ÀÖ¾î¾ß ½ÃÀÛ ¹«±â·Î »ç¿ëµÊ 
+		// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß¿ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ SetWeaponToWeaponSlot->trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 		{
 			ShortSword* shortSword = AddGo(new ShortSword());
 			weaponList.push_back(shortSword);
@@ -35,10 +36,12 @@ void SceneGame::Init()
 			handCrossbow->SetOwnerPlayer(player);
 			player->SetWeaponToWeaponSlot2(handCrossbow);
 		}
+		uiAbility = AddGo(new UiAbility());
+		uiAbility->SetActive(false);
 	}
-	// ¸ó½ºÅÍ Å×½ºÆ®¿ë °ø°£
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	{
-		//Banshee* banshee = AddGo(new Banshee());
+		//SkelBow* skelbow = AddGo(new SkelBow());
 	}
 	{
 		PlayerUi* playerui = AddGo(new PlayerUi());
@@ -66,6 +69,9 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
+	
+
+
 	Scene::Enter();
 	ROOM_MGR.Start();
 	worldMapUi->RefreshData();
@@ -92,12 +98,19 @@ void SceneGame::Update(float dt)
 	{
 		SCENE_MGR.ChangeScene(SceneIds::Game);
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::C))
+	{
+		uiAbility->SetActive(true);
+	}
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
 {
 	window.clear({ 51,49,67 });
+	
 	Scene::Draw(window);
+	
+
 }
 
 

@@ -61,7 +61,7 @@ void Banshee::Reset()
 	}
 	sortingOrder = target->sortingOrder - 1;
 
-	maxhp = 40;
+	maxhp = 40 *((ROOM_MGR.GetCurrentFloor() + 1) / 2);
 	hp = maxhp;
 	originalDamage = 0;
 	direction = { Utils::RandomRange(0, 1) < 1 ? -1.f : 1.f , 0.f };
