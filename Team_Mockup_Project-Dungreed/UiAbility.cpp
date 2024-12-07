@@ -66,7 +66,7 @@ void UiAbility::Reset()
 	textDashDamagePercent.setFont(font);
 	textDashDamagePercent.setCharacterSize(fontsize);
 	textDashDamagePercent.setFillColor(sf::Color::White);
-	textDashDamagePercent.setPosition({ 465,250 });
+	textDashDamagePercent.setPosition({ 485,250 });
 
 	textArmor.setFont(font);
 	textArmor.setCharacterSize(fontsize);
@@ -76,7 +76,7 @@ void UiAbility::Reset()
 	textArmorPercent.setFont(font);
 	textArmorPercent.setCharacterSize(fontsize);
 	textArmorPercent.setFillColor(sf::Color::White);
-	textArmorPercent.setPosition({ 480,460 });
+	textArmorPercent.setPosition({ 500,355 });
 
 	textCiritcalDamage.setFont(font);
 	textCiritcalDamage.setCharacterSize(fontsize);
@@ -86,16 +86,17 @@ void UiAbility::Reset()
 	textCirticalPercent.setFont(font);
 	textCirticalPercent.setCharacterSize(fontsize);
 	textCirticalPercent.setFillColor(sf::Color::White);
-	textCirticalPercent.setPosition({ 465, 355 });
+	textCirticalPercent.setPosition({ 485 ,460 });
 
 	textMovementSpeed.setFont(font);
 	textMovementSpeed.setCharacterSize(fontsize);
 	textMovementSpeed.setFillColor(sf::Color::White);
+	textMovementSpeed.setPosition({ 205,570 });
 
 	textAttackSpeed.setFont(font);
 	textAttackSpeed.setCharacterSize(fontsize);
 	textAttackSpeed.setFillColor(sf::Color::White);
-	textAttackSpeed.setPosition({ 465,570 });
+	textAttackSpeed.setPosition({ 490,570 });
 
 
 	abilityBase.setTexture(TEXTURE_MGR.Get("graphics/ui/playerAbility.png"));
@@ -105,9 +106,6 @@ void UiAbility::Reset()
 
 	abilityBase.setPosition({ baseXPos ,baseYpos });
 	Utils::SetOrigin(abilityBase, Origins::MC);
-
-
-
 
 }
 
@@ -126,6 +124,7 @@ void UiAbility::LateUpdate(float dt)
 	SetArmorPercent(player->GetCurrentArmorPercent());
 	SetAttackSpeed(player->GetCurrentAttackSpeed());
 	SetDashDamagePercent(player->GetCurrentDashDamage());
+	SetMoveMentSpeed(player->GetCurrentMovementSpeed());
 }
 
 void UiAbility::SetAttackDamage(int currentDamage, int maxDamage)
@@ -158,7 +157,7 @@ void UiAbility::SetAttackSpeed(float attackSpeed)
 	Utils::SetOrigin(textAttackSpeed, Origins::TL);
 }
 
-void UiAbility::SetMoveMentSpeed(float moveSpeed)
+void UiAbility::SetMoveMentSpeed(int moveSpeed)
 {
 	textMovementSpeed.setString(std::to_string(moveSpeed));
 	Utils::SetOrigin(textMovementSpeed, Origins::TL);
@@ -176,7 +175,7 @@ void UiAbility::SetArmorPercent(int armorPercent)
 	Utils::SetOrigin(textArmorPercent, Origins::TL);
 }
 
-void UiAbility::SetDashDamagePercent(float dashDamage)
+void UiAbility::SetDashDamagePercent(int dashDamage)
 {
 	textDashDamagePercent.setString(std::to_string(dashDamage) + "%");
 	Utils::SetOrigin(textDashDamagePercent, Origins::TL);
@@ -196,5 +195,6 @@ void UiAbility::Draw(sf::RenderWindow& window)
 	window.draw(textArmorPercent);
 	window.draw(textAttackSpeed);
 	window.draw(textDashDamagePercent);
+	window.draw(textMovementSpeed);
 }
 

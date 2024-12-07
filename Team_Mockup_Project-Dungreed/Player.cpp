@@ -71,6 +71,8 @@ void Player::Reset()
 	playerStatus.level = 1;
 	playerStatus.armor = 0;
 	playerStatus.armorPercent = 0;
+	playerStatus.movementSpeed = 1;
+	playerStatus.exp = 0;
 	//float attackDamage;
 	//int level;
 	//float criticalDamage;
@@ -144,7 +146,12 @@ void Player::SetStatus(Status status)
 
 void Player::Update(float dt)
 {
-
+	
+	if (playerStatus.exp > 4)
+	{
+		playerStatus.level + 1;
+		playerStatus.exp = 0;
+	}
 
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
@@ -207,10 +214,7 @@ void Player::Update(float dt)
 		SetStatus(Player::Status::Dash);
 	}
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::K))
-	{
-		AddExp();
-	}
+
 
 
 	SetPosition(position + velocity * dt);
@@ -343,14 +347,19 @@ void Player::LateUpdate(float dt)
 		const auto& monsters = ROOM_MGR.GetCurrentRoom()->GetMonsters();
 		for (auto& monster : monsters)
 		{
+			
+			
+
 			auto it = std::find(DamagedMonster.begin(),DamagedMonster.end(),monster);
 			if (it != DamagedMonster.end())
 				continue;
+
 
 			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
 				if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
 				{
+					
 
 					if (GetCurrentWeapon() == weaponSlot1)
 					{
@@ -495,10 +504,7 @@ int Player::GetRealDamage()
 		return (playerStatus.attackDamage + weaponSlot2->GetOriginalDamageMax()) * playerStatus.criticalDamage;
 	}
 }
-void Player::AddExp()
-{
-	playerStatus.level += 1;
-}
+
 
 int Player::CalculationDamage(int damage)
 {
@@ -506,7 +512,7 @@ int Player::CalculationDamage(int damage)
 	if (playerStatus.criticalPercent > Utils::RandomRange(0.f, 100.f))
 	{
 		damage *= playerStatus.criticalDamage;
-		std::cout << damage << std::endl;
+		
 	}
 	return damage;
 }

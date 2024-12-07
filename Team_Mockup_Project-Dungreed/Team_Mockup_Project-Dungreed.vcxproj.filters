@@ -97,6 +97,11 @@
     <ClCompile Include="SkellBossLaser.cpp">
       <Filter>Monsters\Boss</Filter>
     </ClCompile>
+    <ClCompile Include="Map\Objects\BackgroundMo.cpp" />
+    <ClCompile Include="BirdGo.cpp" />
+    <ClCompile Include="Map\Objects\SealStoneMo.cpp" />
+    <ClCompile Include="UiAbility.cpp" />
+    <ClCompile Include="SkellBossUi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -201,6 +206,11 @@
     <ClInclude Include="SkellBossLaser.h">
       <Filter>Monsters\Boss</Filter>
     </ClInclude>
+    <ClInclude Include="Map\Objects\BackgroundMo.h" />
+    <ClInclude Include="BirdGo.h" />
+    <ClInclude Include="Map\Objects\SealStoneMo.h" />
+    <ClInclude Include="UiAbility.h" />
+    <ClInclude Include="SkellBossUi.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">

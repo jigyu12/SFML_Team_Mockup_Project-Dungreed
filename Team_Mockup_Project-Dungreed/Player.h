@@ -54,6 +54,8 @@ protected:
 	float dashSpeed = 300.f;
 	float downSpeed = 100.f;
 
+	int deadMonsterCount = 0;
+
 	float invincibilityTimer = 0.f;
 
 	bool isDamaged = false;
@@ -112,6 +114,11 @@ public:
 	float GetCurrentCriticalPercent() const { return playerStatus.criticalPercent; }
 	float GetCurrentDashDamage() const { return playerStatus.dashDamage; }
 	float GetCurrentAttackSpeed() const { return playerStatus.attackSpeed; }
+
+	void SetCurrentExp(float exp) 
+	{ 
+		this->playerStatus.exp += exp; 
+	}
 	//
 
 	int GetCurrentHp() const { return hp; }
@@ -125,7 +132,7 @@ public:
 	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp / maxhp); }
 
 	int GetRealDamage();
-	void AddExp();
+	
 
 	int CalculationDamage(int damage);
 

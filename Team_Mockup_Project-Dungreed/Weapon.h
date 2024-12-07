@@ -80,7 +80,7 @@ public:
 	void SetIsCurrentWeapon(bool isCurrWeapon) { isCurrentWeapon = isCurrWeapon; }
 	void SetAttackSpeedAccumTime(float accumTime) { attackSpeedAccumTime = accumTime; }
 
-	int GetDashDamage() const { return DashDamage; }
+
 	int GetAttackDamage() const { return Utils::RandomRange(originalDamageMin, originalDamageMax); }
 
 

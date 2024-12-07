@@ -51,10 +51,10 @@ public:
 	void SetCriticalDamage(int criticalDamage);
 	void SetCriticalPercent(int criticalPercent);
 	void SetAttackSpeed(float attackSpeed);
-	void SetMoveMentSpeed(float moveSpeed);
+	void SetMoveMentSpeed(int moveSpeed);
 	void SetArmor(int armor);
 	void SetArmorPercent(int armorPercent);
-	void SetDashDamagePercent(float dashDamage);
+	void SetDashDamagePercent(int dashDamage);
 };
 /*
 * float attackDamage;

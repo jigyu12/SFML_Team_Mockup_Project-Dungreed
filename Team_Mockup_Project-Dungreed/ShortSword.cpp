@@ -234,6 +234,8 @@ void ShortSword::Attack()
 				monster->OnDamaged(realDamage);
 				DashDamage = realDamage/2;
 			}
+
+			
 		}
 	}
 	const auto& mapObjects = ROOM_MGR.GetCurrentRoom()->GetBreakableObjects();
