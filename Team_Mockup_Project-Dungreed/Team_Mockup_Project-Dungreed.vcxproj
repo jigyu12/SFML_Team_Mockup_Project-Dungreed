@@ -220,6 +220,7 @@
     <ClCompile Include="SkellBossParticle.cpp" />
     <ClCompile Include="SkellBossSword.cpp" />
     <ClCompile Include="Map\Objects\TorchMo.cpp" />
+    <ClCompile Include="SkellBossUi.cpp" />
     <ClCompile Include="SkelSword.cpp" />
     <ClCompile Include="UiAbility.cpp" />
     <ClCompile Include="Weapon.cpp" />
@@ -302,6 +303,7 @@
     <ClInclude Include="SkellBossParticle.h" />
     <ClInclude Include="SkellBossSword.h" />
     <ClInclude Include="Map\Objects\TorchMo.h" />
+    <ClInclude Include="SkellBossUi.h" />
     <ClInclude Include="SkelSword.h" />
     <ClInclude Include="UiAbility.h" />
     <ClInclude Include="Weapon.h" />

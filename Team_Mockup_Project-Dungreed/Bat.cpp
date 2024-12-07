@@ -231,6 +231,8 @@ void Bat::SetState(BatState state)
 		isDead = true;
 
 		animator.Play("animations/Monster Die.csv");
+
+		target->AddCurrentExp(1);
 	}
 		break;
 	}

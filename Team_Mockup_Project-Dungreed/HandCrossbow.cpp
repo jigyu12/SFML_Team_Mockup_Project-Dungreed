@@ -169,5 +169,5 @@ void HandCrossbow::Shoot()
 	Arrow* arrow = arrowPool.Take();
 	SCENE_MGR.GetCurrentScene()->AddGo(arrow);
 
-	arrow->Fire(position, look, 300.f, Utils::RandomRange(originalDamageMin, originalDamageMax));
+	arrow->Fire(position, look, 300.f, GetAttackDamage());
 }

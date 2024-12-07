@@ -66,7 +66,7 @@ void PlayerUi::Reset()
 	level.setFillColor(sf::Color::Black);
 	SetLevel(player->GetCurrentLevel());
 	level.setPosition({ 65.f,18.f });
-	Utils::SetOrigin(level, Origins::TL);
+	
 
 	playerLife.setTexture(TEXTURE_MGR.Get(playerLifeBase));
 	playerLifeBackGround.setTexture(TEXTURE_MGR.Get(playerLifeBack));
@@ -178,6 +178,6 @@ void PlayerUi::SetHp(int hp, int max)
 
 void PlayerUi::SetLevel(int level)
 {
-	level == player->GetCurrentLevel();
 	this->level.setString(std::to_string(level));
+	Utils::SetOrigin(this->level, Origins::TL);
 }
