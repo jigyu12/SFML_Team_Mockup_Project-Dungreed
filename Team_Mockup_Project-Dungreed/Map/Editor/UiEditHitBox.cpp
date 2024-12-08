@@ -266,7 +266,7 @@ void UiEditHitBox::Reset()
 
 
 	hitboxStatus = HitBoxEditStatus::Create;
-	editStatus = EditStatus::Hitbox;
+	SetEditStatus(EditStatus::Hitbox);
 	hitboxType = HitBoxData::Type::Immovable;
 	selectedRoomType = RoomData::Type::Normal;
 }
