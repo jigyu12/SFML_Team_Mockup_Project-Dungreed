@@ -204,6 +204,8 @@ void SkellBossLeftHand::UpdateDeath(float dt)
 
 void SkellBossLeftHand::ShootLaser()
 {
+	SOUND_MGR.PlaySfx("sound/Sfx/boss/FrameWork_resources_sound_enemy_belial_slimeball.wav");
+
 	SkellBossLaser* laser = laserPool.Take();
 	SCENE_MGR.GetCurrentScene()->AddGo(laser);
 	lasers.push_back(laser);

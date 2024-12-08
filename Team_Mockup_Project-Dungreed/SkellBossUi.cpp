@@ -111,7 +111,7 @@ void SkellBossUi::Update(float dt)
 		{
 			isBgmPlaying = false;
 
-			SOUND_MGR.PlayBgm(""); 
+			SOUND_MGR.PlayBgm("sound/Sfx/boss/ambience_prison.wav");
 		}
 	}
 }

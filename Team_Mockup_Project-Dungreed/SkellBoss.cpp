@@ -611,6 +611,8 @@ void SkellBoss::UpdateDeath(float dt)
 
 void SkellBoss::ShootBullet(sf::Vector2f direction)
 {
+	SOUND_MGR.PlaySfx("sound/Sfx/boss/Resources_Audio_BelialBullet.mp3");
+
 	SkellBossBullet* bullet = bulletPool.Take();
 	SCENE_MGR.GetCurrentScene()->AddGo(bullet);
 	bullets.push_back(bullet);
@@ -620,6 +622,8 @@ void SkellBoss::ShootBullet(sf::Vector2f direction)
 
 void SkellBoss::ShootSword(int index)
 {
+	SOUND_MGR.PlaySfx("sound/Sfx/boss/slimeball.wav");
+
 	SkellBossSword* sword = swordPool.Take();
 	SCENE_MGR.GetCurrentScene()->AddGo(sword);
 	swords.push_back(sword);
