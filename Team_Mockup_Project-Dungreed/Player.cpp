@@ -177,6 +177,7 @@ void Player::Update(float dt)
 	}
 	if (playerStatus.exp >= 8)
 	{
+		SOUND_MGR.PlaySfx("sound/Sfx/player/Fantasy_Game_UI_Earth_Select-levelup.wav");
 		LevelUpData();
 		playerStatus.exp = 0;
 	}
@@ -570,9 +571,10 @@ int Player::GetMinDamage()
 
 void Player::LevelUpData()
 {
+
 	playerStatus.level += 1;
 	playerStatus.attackDamage += 1;
-
+	
 }
 
 
