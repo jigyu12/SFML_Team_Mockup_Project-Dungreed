@@ -13,6 +13,7 @@ class ParticleGo;
 class LightGo;
 class WorldMapUi;
 class UiAbility;
+class PortalEffect;
 
 class SceneGame : public Scene
 {
@@ -28,6 +29,9 @@ protected:
 
 	std::list<LightGo*> lights;
 	ObjectPool<LightGo> lightPool;
+
+	std::list<PortalEffect*> portalEffects;
+	ObjectPool<PortalEffect> portalEffectPool;
 
 	sf::Sprite mouseCursor;
 
@@ -47,6 +51,9 @@ public:
 
 	LightGo* TakeObjectLight();
 	void ReturnObjectLight(LightGo* light);
+
+	PortalEffect* TakeObjectPortalEffect();
+	void ReturnObjectPortalEffect(PortalEffect* portalEffect);
 
 	void ClearTookObject();
 };

@@ -10,6 +10,7 @@
 #include "LightGo.h"
 #include "WorldMapUi.h"
 #include "UiAbility.h"
+#include "PortalEffect.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -152,6 +153,21 @@ void SceneGame::ReturnObjectLight(LightGo* light)
 	RemoveGo((GameObject*)light);
 	lights.remove(light);
 	lightPool.Return(light);
+}
+
+PortalEffect* SceneGame::TakeObjectPortalEffect()
+{
+	PortalEffect* portalEffect = portalEffectPool.Take();
+	portalEffects.push_back(portalEffect);
+	AddGo(portalEffect);
+	return portalEffect;
+}
+
+void SceneGame::ReturnObjectPortalEffect(PortalEffect* portalEffect)
+{
+	RemoveGo((GameObject*)portalEffect);
+	portalEffects.remove(portalEffect);
+	portalEffectPool.Return(portalEffect);
 }
 
 void SceneGame::ClearTookObject()
