@@ -11,6 +11,7 @@
 #include "WorldMapUi.h"
 #include "UiAbility.h"
 #include "PortalEffect.h"
+#include "SkellBossUi.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -21,7 +22,8 @@ void SceneGame::Init()
 {
 	{
 		player = AddGo(new Player("Player"));
-
+		//
+		skellBossUi = AddGo(new SkellBossUi("SkellBossUi"));
 		// �� ���� �߿� �ϳ��� SetWeaponToWeaponSlot->true�� ���� �־�� ���� ����� ���� 
 		{
 			ShortSword* shortSword = AddGo(new ShortSword());
@@ -107,6 +109,10 @@ void SceneGame::Update(float dt)
 	if (InputMgr::GetKeyUp(sf::Keyboard::C))
 	{
 		uiAbility->SetActive(false);
+	}
+	if (InputMgr::GetKeyUp(sf::Keyboard::F7))
+	{
+		ROOM_MGR.NextFloor();
 	}
 
 	mouseCursor.setPosition(ScreenToUi(InputMgr::GetMousePosition()));

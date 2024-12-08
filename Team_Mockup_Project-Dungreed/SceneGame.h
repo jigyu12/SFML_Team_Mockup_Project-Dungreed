@@ -13,12 +13,14 @@ class ParticleGo;
 class LightGo;
 class WorldMapUi;
 class UiAbility;
+class SkellBossUi;
 class PortalEffect;
 
 class SceneGame : public Scene
 {
 protected:
 	Player* player;
+	SkellBossUi* skellBossUi;
 	std::vector<Weapon*> weaponList;
 
 	WorldMapUi* worldMapUi;

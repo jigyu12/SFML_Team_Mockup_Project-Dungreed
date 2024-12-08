@@ -106,6 +106,8 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
 
+	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp / maxhp); }
+
 	void SetState(SkellBossState state);
 	void UpdateIdle(float dt);
 	void UpdateAttackLaser(float dt);

@@ -359,9 +359,12 @@ void Player::LateUpdate(float dt)
 
 			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
-				if (!monster->IsDead() && !isDead && monster->GetOriginalDamage() != 0)
+				if (!monster->IsDead() && !isDead)
 				{
-					OnDamage(monster->GetOriginalDamage());
+					if (monster->GetOriginalDamage() != 0)
+					{
+						OnDamage(monster->GetOriginalDamage());
+					}
 					if (status == Status::Dash)
 					{
 						if (GetCurrentWeapon() == weaponSlot1)
