@@ -86,7 +86,7 @@ void Player::Reset()
 	animator.SetTarget(&body);
 	animator.Play("animations/player Idle.csv");
 	/*body.setTexture(TEXTURE_MGR.Get(playerId));*/
-
+	animator.ClearEvent();
 	animator.AddEvent("TP", 0, [this]() {SetOrigin(originPreset); });
 	animator.AddEvent("TP", 1, [this]() {SetOrigin(originPreset); });
 	animator.AddEvent("TP", 2, [this]() {SetOrigin(originPreset); });
@@ -100,8 +100,8 @@ void Player::Reset()
 		//SetStatus(Status::Ground);
 		SCENE_MGR.ChangeScene(SceneIds::MainTitle);
 		});
-
-	originalPlayerColor = body.getColor();
+	
+	originalPlayerColor = sf::Color::White;
 
 	hitbox.SetColor(sf::Color::Blue);
 

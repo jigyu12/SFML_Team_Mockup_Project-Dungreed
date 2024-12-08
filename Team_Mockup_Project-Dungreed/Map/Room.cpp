@@ -588,7 +588,7 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		}
 		else
 		{
-			player->SetPosition(tileMaps[0]->GetTransform().transformPoint(origin));
+			player->SetPosition(tileMaps[0]->GetTransform().transformPoint(tileMaps[0]->GetOrigin()));
 		}
 	}
 
@@ -636,7 +636,7 @@ void Room::EnterRoom(HitBoxData::Type connection)
 	}
 }
 
-void Room::ClearMonsters()
+void Room::ClearTookObjects()
 {
 	for (auto& monster : monsters)
 	{
@@ -645,6 +645,12 @@ void Room::ClearMonsters()
 		delete monster.first;
 	}
 	monsters.clear();
+
+	for (const auto& effect : portalEffects)
+	{
+		sceneGame->ReturnObjectPortalEffect(effect);
+	}
+	portalEffects.clear();
 }
 
 
