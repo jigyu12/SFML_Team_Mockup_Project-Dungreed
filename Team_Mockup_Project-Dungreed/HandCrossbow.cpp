@@ -170,6 +170,7 @@ void HandCrossbow::Release()
 
 void HandCrossbow::Shoot()
 {
+	SOUND_MGR.PlaySfx("sound/Sfx/player/bowsound.wav");
 	Arrow* arrow = arrowPool.Take();
 	SCENE_MGR.GetCurrentScene()->AddGo(arrow);
 

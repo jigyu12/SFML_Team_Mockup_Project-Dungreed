@@ -54,6 +54,7 @@ void SkeletonDog::Init()
 
 void SkeletonDog::Reset()
 {
+	SOUND_MGR.PlaySfx("sound/Sfx/monster/SpawnMonster.wav");
 	if (!(target = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"))))
 	{
 		std::cerr << "target player was nullptr" << std::endl;
@@ -274,6 +275,7 @@ void SkeletonDog::LateUpdate(float dt)
 		}
 		break;
 	case SkeletonDog::SkeletonDogState::Death:
+		SOUND_MGR.PlaySfx("sound/Sfx/monster/MonsterDie.wav");
 		break;
 	case SkeletonDog::SkeletonDogState::Count:
 		break;

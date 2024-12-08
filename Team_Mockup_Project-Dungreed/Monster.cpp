@@ -19,6 +19,7 @@ void Monster::OnDamaged(int damage)
 	SetHpUI(hp, maxhp);
 
 	isDamaged = true;
+	
 }
 
 void Monster::Update(float dt)

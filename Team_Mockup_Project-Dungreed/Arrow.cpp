@@ -85,6 +85,7 @@ void Arrow::LateUpdate(float dt)
 			
 			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
+				SOUND_MGR.PlaySfx("sound/Sfx/player/Hit_Monster.wav");
 				int realDamage = owner->CalculationDamage(damage);
 				monster->OnDamaged(realDamage);
 				

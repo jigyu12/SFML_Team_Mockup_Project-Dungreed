@@ -54,6 +54,7 @@ void Bat::Init()
 
 void Bat::Reset()
 {
+	SOUND_MGR.PlaySfx("sound/Sfx/monster/SpawnMonster.wav");
 	if (!(target = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"))))
 	{
 		std::cerr << "target player was nullptr" << std::endl;
@@ -235,6 +236,8 @@ void Bat::SetState(BatState state)
 		isDead = true;
 
 		animator.Play("animations/Monster Die.csv");
+
+		SOUND_MGR.PlaySfx("sound/Sfx/monster/MonsterDie.wav");
 
 		target->AddCurrentExp(1);
 	}

@@ -124,9 +124,15 @@ void SceneGame::Update(float dt)
 		uiPause->SetActive(!paused);
 		//SCENE_MGR.ChangeScene(SceneIds::Game);
 	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::C))
+	{
+		SOUND_MGR.PlaySfx("sound/Sfx/player/OpenInventory.wav");
+	}
 	if (InputMgr::GetKey(sf::Keyboard::C))
 	{
 		uiAbility->SetActive(true);
+		
+		
 	}
 	if (InputMgr::GetKeyUp(sf::Keyboard::C))
 	{

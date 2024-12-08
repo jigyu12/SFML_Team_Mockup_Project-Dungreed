@@ -227,6 +227,7 @@ void ShortSword::Release()
 
 void ShortSword::Attack()
 {
+	SOUND_MGR.PlaySfx("sound/Sfx/player/shortSwordSwing.wav"); 
 	auto& gameObjects = SCENE_MGR.GetCurrentScene()->GetGameObjects();
 	for (auto& gameObject : gameObjects)
 	{
@@ -234,6 +235,7 @@ void ShortSword::Attack()
 		{
 			if (Utils::CheckCollision(monster->GetHitBox(), attackBoundHitbox))
 			{
+				SOUND_MGR.PlaySfx("sound/Sfx/player/Hit_Monster.wav");
 				int realDamage = owner->CalculationDamage(GetAttackDamage());
 				monster->OnDamaged(realDamage);
 
