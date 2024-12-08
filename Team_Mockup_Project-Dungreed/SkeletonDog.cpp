@@ -176,6 +176,8 @@ void SkeletonDog::Update(float dt)
 	detectionLine.setPosition({ body.getPosition().x + direction.x * 12.f , body.getPosition().y - 8.f });
 
 	animator.Update(dt);
+
+	Monster::Update(dt);
 }
 
 void SkeletonDog::LateUpdate(float dt)
@@ -302,6 +304,8 @@ void SkeletonDog::Draw(sf::RenderWindow& window)
 
 	hitbox.Draw(window);
 	detectionLineHitbox.Draw(window);
+
+	Monster::Draw(window);
 }
 
 void SkeletonDog::Release()

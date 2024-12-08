@@ -89,7 +89,7 @@ void Bat::Reset()
 
 	animator.SetTarget(&body);
 
-	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
 
 	SetState(BatState::Idle);
 
@@ -160,11 +160,13 @@ void Bat::Update(float dt)
 	detectionRange.setPosition(body.getPosition());
 
 	animator.Update(dt);
+
+	Monster::Update(dt);
 }
 
 void Bat::LateUpdate(float dt)
 {
-	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
 }
 
 void Bat::Draw(sf::RenderWindow& window)
@@ -188,6 +190,8 @@ void Bat::Draw(sf::RenderWindow& window)
 	}
 
 	hitbox.Draw(window);
+
+	Monster::Draw(window);
 }
 
 void Bat::Release()
