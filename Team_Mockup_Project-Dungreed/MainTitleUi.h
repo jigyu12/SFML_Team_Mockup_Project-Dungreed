@@ -32,6 +32,7 @@ protected:
 	sf::Sprite mainLogo;
 	
 	Button startButton;
+	Button continueButton;
 	Button editorButton;
 	Button endButton;
 
