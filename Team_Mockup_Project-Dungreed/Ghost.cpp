@@ -54,7 +54,7 @@ void Ghost::Init()
 
 void Ghost::Reset()
 {
-	SOUND_MGR.PlaySfx("sound/Sfx/monster/SpawnMonster.wav");
+	
 	if (!(target = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"))))
 	{
 		std::cerr << "target player was nullptr" << std::endl;
