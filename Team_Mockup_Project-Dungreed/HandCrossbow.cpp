@@ -47,9 +47,6 @@ void HandCrossbow::SetScale(const sf::Vector2f& scale)
 
 void HandCrossbow::Init()
 {
-	SetTextureId("graphics/weapon/Crossbow.png");
-	sprite.setTexture(TEXTURE_MGR.Get(textureId));
-
 	sortingLayer = SortingLayers::Foreground;
 
 	weaponType = WeaponType::Ranged;
@@ -57,6 +54,9 @@ void HandCrossbow::Init()
 
 void HandCrossbow::Reset()
 {
+	SetTextureId("graphics/weapon/Crossbow.png");
+	sprite.setTexture(TEXTURE_MGR.Get(textureId));
+
 	originalDamageMin = 7;
 	originalDamageMax = 9;
 
@@ -71,7 +71,7 @@ void HandCrossbow::Update(float dt)
 	if (!owner)
 	{
 		auto player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
-		if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()) && player->GetHp() > 0)
+		if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()) && player->GetCurrentHp() > 0)
 		{
 			SetOwnerPlayer(player);
 		}
@@ -79,7 +79,7 @@ void HandCrossbow::Update(float dt)
 	else
 	{
 		attackSpeedAccumTime += dt;
-		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButton(sf::Mouse::Left) && isCurrentWeapon && owner->GetHp() > 0)
+		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButton(sf::Mouse::Left) && isCurrentWeapon && owner->GetCurrentHp() > 0)
 		{
 			attackSpeedAccumTime = 0.f;
 
@@ -92,6 +92,10 @@ void HandCrossbow::Update(float dt)
 
 void HandCrossbow::LateUpdate(float dt)
 {
+	if (FRAMEWORK.GetTimeScale() == 0.f)
+	{
+		return;
+	}
 	if (!owner)
 	{
 		sortingOrder = 100;
@@ -99,7 +103,7 @@ void HandCrossbow::LateUpdate(float dt)
 		isOnGround = false;
 
 		auto globalBounds = hitbox.rect.getGlobalBounds();
-		auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+		const auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 		for (auto& roomHitBox : roomHitBoxes)
 		{
 			if (Utils::CheckCollision(*roomHitBox.first, hitbox))
@@ -132,7 +136,7 @@ void HandCrossbow::LateUpdate(float dt)
 	}
 	else
 	{
-		if (owner->GetHp() <= 0)
+		if (owner->GetCurrentHp() <= 0)
 			return;
 
 		sortingOrder = owner->sortingOrder + 1;
@@ -166,8 +170,9 @@ void HandCrossbow::Release()
 
 void HandCrossbow::Shoot()
 {
+	SOUND_MGR.PlaySfx("sound/Sfx/player/bowsound.wav");
 	Arrow* arrow = arrowPool.Take();
 	SCENE_MGR.GetCurrentScene()->AddGo(arrow);
 
-	arrow->Fire(position, look, 300.f, Utils::RandomRange(originalDamageMin, originalDamageMax));
+	arrow->Fire(position, look, 300.f, GetAttackDamage());
 }

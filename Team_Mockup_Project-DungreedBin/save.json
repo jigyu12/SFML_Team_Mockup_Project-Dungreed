@@ -1,0 +1,16 @@
+{
+    "status": {
+        "armor": 0.0,
+        "armorPercent": 0.0,
+        "attackDamage": 4.0,
+        "attackSpeed": 0.0,
+        "criticalDamage": 0.0,
+        "criticalPercent": 0.0,
+        "dashDamage": 9.279566586574658e-39,
+        "exp": 0.0,
+        "lastFloor": 1,
+        "level": 1,
+        "movementSpeed": 1.0
+    },
+    "version": 1
+}

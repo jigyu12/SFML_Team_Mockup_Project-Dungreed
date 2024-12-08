@@ -2,7 +2,6 @@
 #include "SceneMapEdit.h"
 #include "UiEditor.h"
 #include "TileMap.h"
-#include "MapData.h"
 #include "FileDialog.h"
 
 SceneMapEdit::SceneMapEdit() : Scene(SceneIds::MapEdit)
@@ -35,11 +34,12 @@ void SceneMapEdit::Enter()
 	size.x /= 6.f;
 	size.y /= 6.f;
 	worldView.setSize(size);
-	worldView.setCenter(centerpos);
+	worldView.setCenter(0.f,0.f);
 }
 
 void SceneMapEdit::Exit()
 {
+	ROOM_MGR.Reset();
 	Scene::Exit();
 }
 
@@ -55,6 +55,7 @@ void SceneMapEdit::Update(float dt)
 
 	if (InputMgr::GetAxisRaw(Axis::Horizontal) != 0.f || InputMgr::GetAxisRaw(Axis::Vertical) != 0.f)
 	{
+		sf::Vector2f centerpos = worldView.getCenter();
 		centerpos.x += InputMgr::GetAxis(Axis::Horizontal) * speed * dt;
 		centerpos.y += InputMgr::GetAxis(Axis::Vertical) * speed * dt;
 		worldView.setCenter(centerpos);

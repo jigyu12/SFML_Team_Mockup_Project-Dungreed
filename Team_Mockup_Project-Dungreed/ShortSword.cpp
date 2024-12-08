@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ShortSword.h"
 #include "Room.h"
+#include "BreakableMo.h"
 
 ShortSword::ShortSword(const std::string& name)
 	: Weapon(name)
@@ -47,9 +48,6 @@ void ShortSword::SetScale(const sf::Vector2f& scale)
 
 void ShortSword::Init()
 {
-	SetTextureId("graphics/weapon/Sword.png");
-	sprite.setTexture(TEXTURE_MGR.Get(textureId));
-
 	sortingLayer = SortingLayers::Foreground;
 
 	weaponType = WeaponType::Melee;
@@ -57,6 +55,13 @@ void ShortSword::Init()
 
 void ShortSword::Reset()
 {
+	SetTextureId("graphics/weapon/Sword.png");
+	sprite.setTexture(TEXTURE_MGR.Get(textureId));
+
+
+
+
+
 	originalDamageMin = 8;
 	originalDamageMax = 10;
 
@@ -69,6 +74,9 @@ void ShortSword::Reset()
 
 	isUp = true;
 
+	attackBound.setSize({ 40.f, 30.f });
+	attackBound.setOrigin({ attackBound.getSize().x / 2.f, attackBound.getSize().y / 2.f });
+
 	animatorFx.SetTarget(&swordSwingFx);
 
 	Utils::SetOrigin(sprite, Origins::BC);
@@ -79,12 +87,12 @@ void ShortSword::Update(float dt)
 	if (!owner)
 	{
 		auto player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
-		if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()) && player->GetHp() > 0)
+		if (InputMgr::GetKeyDown(sf::Keyboard::F) && sprite.getGlobalBounds().intersects(player->GetGlobalBounds()) && player->GetCurrentHp() > 0)
 		{
 			SetOwnerPlayer(player);
 		}
 	}
-	
+
 	animatorFx.Update(dt);
 
 	hitbox.UpdateTr(sprite, GetLocalBounds());
@@ -92,6 +100,10 @@ void ShortSword::Update(float dt)
 
 void ShortSword::LateUpdate(float dt)
 {
+	if (FRAMEWORK.GetTimeScale() == 0.f)
+	{
+		return;
+	}
 	if (!owner)
 	{
 		sortingOrder = 100;
@@ -99,7 +111,7 @@ void ShortSword::LateUpdate(float dt)
 		isOnGround = false;
 
 		auto globalBounds = hitbox.rect.getGlobalBounds();
-		auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+		const auto& roomHitBoxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 		for (auto& roomHitBox : roomHitBoxes)
 		{
 			if (Utils::CheckCollision(*roomHitBox.first, hitbox))
@@ -137,7 +149,7 @@ void ShortSword::LateUpdate(float dt)
 			swingTimeAccum += dt;
 		}
 
-		if (owner->GetHp() <= 0)
+		if (owner->GetCurrentHp() <= 0)
 			return;
 
 		sortingOrder = owner->sortingOrder + 1;
@@ -147,7 +159,12 @@ void ShortSword::LateUpdate(float dt)
 		sf::Vector2i mousePos = InputMgr::GetMousePosition();
 		sf::Vector2f mouseworldPos = SCENE_MGR.GetCurrentScene()->ScreenToWorld(mousePos);
 		look = Utils::GetNormal(mouseworldPos - sprite.getPosition());
-		
+
+		attackBound.setPosition({ owner->GetPosition().x + owner->GetPlayerLookNormal().x * 30.f, owner->GetPosition().y - 4.f + owner->GetPlayerLookNormal().y * 30.f });
+		attackBound.setRotation(Utils::Angle(look) + 90);
+		attackBoundHitbox.UpdateTr(attackBound, attackBound.getLocalBounds());
+		attackBoundHitbox.SetColor(sf::Color::Black);
+
 		attackSpeedAccumTime += dt;
 		if (attackSpeedAccumTime > attackSpeedDelayTime && InputMgr::GetMouseButtonDown(sf::Mouse::Left) && isCurrentWeapon)
 		{
@@ -156,12 +173,13 @@ void ShortSword::LateUpdate(float dt)
 			Attack();
 
 			isUp = !isUp;
-	
+
+			animatorFx.Play("animations/Sword Swing Fx.csv");
+
 			Utils::SetOrigin(swordSwingFx, Origins::MC);
 			swordSwingFx.setPosition({ owner->GetPosition().x + owner->GetPlayerLookNormal().x * 30.f,owner->GetPosition().y - 4.f + owner->GetPlayerLookNormal().y * 30.f });
 			swordSwingFx.setRotation(Utils::Angle(look) + 90);
 
-			animatorFx.Play("animations/Sword Swing Fx.csv");
 			isSwing = true;
 		}
 
@@ -183,6 +201,7 @@ void ShortSword::Draw(sf::RenderWindow& window)
 		if (isCurrentWeapon)
 		{
 			window.draw(sprite);
+			attackBoundHitbox.Draw(window);
 		}
 
 		if (isSwing)
@@ -208,5 +227,30 @@ void ShortSword::Release()
 
 void ShortSword::Attack()
 {
-	
+	SOUND_MGR.PlaySfx("sound/Sfx/player/shortSwordSwing.wav"); 
+	auto& gameObjects = SCENE_MGR.GetCurrentScene()->GetGameObjects();
+	for (auto& gameObject : gameObjects)
+	{
+		if (auto* monster = dynamic_cast<Monster*>(gameObject))
+		{
+			if (Utils::CheckCollision(monster->GetHitBox(), attackBoundHitbox))
+			{
+				SOUND_MGR.PlaySfx("sound/Sfx/player/Hit_Monster.wav");
+				int realDamage = owner->CalculationDamage(GetAttackDamage());
+				monster->OnDamaged(realDamage);
+
+			}
+
+
+		}
+	}
+	const auto& mapObjects = ROOM_MGR.GetCurrentRoom()->GetBreakableObjects();
+	for (auto& mapObject : mapObjects)
+	{
+		if (mapObject->GetStatus() != MapObject::Status::Broken
+			&& Utils::CheckCollision(mapObject->GetHitBox(), attackBoundHitbox))
+		{
+			mapObject->OnDamaged(1);
+		}
+	}
 }

@@ -2,6 +2,7 @@
 #include "Arrow.h"
 #include "HandCrossbow.h"
 #include "Room.h"
+#include "BreakableMo.h"
 
 Arrow::Arrow(const std::string& name)
 	: SpriteGo(name)
@@ -48,14 +49,14 @@ void Arrow::SetScale(const sf::Vector2f& scale)
 
 void Arrow::Init()
 {
-	SetTextureId("graphics/weapon/Arrow00.png");
-	sprite.setTexture(TEXTURE_MGR.Get(textureId));
-
 	sortingLayer = SortingLayers::Foreground;
 }
 
 void Arrow::Reset()
 {
+	SetTextureId("graphics/weapon/Arrow00.png");
+	sprite.setTexture(TEXTURE_MGR.Get(textureId));
+
 	owner = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
 
 	ownerWeapon = dynamic_cast<HandCrossbow*>(SCENE_MGR.GetCurrentScene()->FindGo("HandCrossbow"));
@@ -81,21 +82,36 @@ void Arrow::LateUpdate(float dt)
 	{
 		if (auto* monster = dynamic_cast<Monster*>(gameObject))
 		{
+			
 			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
-				monster->OnDamaged(damage);
+				SOUND_MGR.PlaySfx("sound/Sfx/player/Hit_Monster.wav");
+				int realDamage = owner->CalculationDamage(damage);
+				monster->OnDamaged(realDamage);
+				
 				SCENE_MGR.GetCurrentScene()->RemoveGo(this);
 			}
 		}
 	}
 
-	auto& roomHitboxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+	const auto& roomHitboxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 	for (auto& roomHitbox : roomHitboxes)
 	{
 		if (Utils::CheckCollision(*roomHitbox.first, hitbox))
 		{
-			if(roomHitbox.second.type != HitBoxData::Type::Downable)
+			if(roomHitbox.second.type == HitBoxData::Type::Immovable)
 				SCENE_MGR.GetCurrentScene()->RemoveGo(this);
+		}
+	}
+
+	const auto& mapObjects = ROOM_MGR.GetCurrentRoom()->GetBreakableObjects();
+	for (auto& mapObject : mapObjects)
+	{
+		if (mapObject->GetStatus() != MapObject::Status::Broken
+			&& Utils::CheckCollision(mapObject->GetHitBox(), hitbox))
+		{
+			mapObject->OnDamaged(1);
+			SCENE_MGR.GetCurrentScene()->RemoveGo(this);
 		}
 	}
 }

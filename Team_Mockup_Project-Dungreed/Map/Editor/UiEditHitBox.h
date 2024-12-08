@@ -1,27 +1,48 @@
 #pragma once
 
-#include "MapData.h"
-
 class TileMap;
 class UiEditor;
+class Button;
+class TextGo;
 
 class UiEditHitBox : public GameObject
 {
 protected:
-	enum class EditStatus
+	enum class HitBoxEditStatus
 	{
 		Create,
-		MoveOld,
-		ResizeOld,
+		Move,
+	};
+	enum class EditStatus
+	{
+		Hitbox,
+		StartPosition,
+		Count,
 	};
 
-	EditStatus status;
+	std::vector<Button*> roomTypeButtons;
+
+	EditStatus editStatus;
+	HitBoxEditStatus hitboxStatus;
+	HitBoxData::Type hitboxType;
 
 	sf::RectangleShape boxWindow;
+
+	std::vector<Button*> editStatusButtons;
+	std::vector<Button*> hitBoxTypeButtons;
+	std::vector<Button*> dirButtons;
+	std::vector<sf::Vector2f> startPositions;
+	std::vector<TextGo*> positionTexts;
+
+	sf::RectangleShape spawnPoint;
+
 	sf::RectangleShape* selectedHitBox;
 	std::unordered_map<sf::RectangleShape*, HitBoxData::Type> hitboxes;
 	UiEditor* uieditor;
-	sf::Vector2f startPos;
+	sf::Vector2f editStartPos;
+
+	RoomData::Type selectedRoomType;
+
 public:
 	UiEditHitBox(const std::string& name = "");
 	~UiEditHitBox() = default;
@@ -32,6 +53,7 @@ public:
 
 	void SetOrigin(Origins preset) override;
 	void SetOrigin(const sf::Vector2f& newOrigin) override;
+	void SetSize(const sf::Vector2f& size);
 
 	void Init() override;
 	void Release() override;
@@ -40,5 +62,12 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	std::vector<HitBoxData> GetHitBoxData() const;
+	RoomData GetRoomData() const;
 	void SetHitBoxData(const std::vector<HitBoxData>& data);
+	void SetRoomData(const RoomData& data);
+	void SetEditStatus(const EditStatus& status);
+	std::vector<sf::Vector2f> GetStartPoints() { return startPositions; }
+	void SetStartPositionData(const std::vector<sf::Vector2f>& points) { startPositions = points; }
+	void ClearHitBoxData();
+	void ClearRoomData();
 };

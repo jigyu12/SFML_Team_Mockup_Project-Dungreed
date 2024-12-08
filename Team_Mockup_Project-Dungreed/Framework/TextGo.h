@@ -19,13 +19,21 @@ public:
 	void SetRotation(float angle) override;
 	void SetScale(const sf::Vector2f& scale) override;
 
-	void Set(int size, const sf::Color& color = sf::Color::White);
-	void SetString(const std::string& id);
 	void Init() override;
 	void Release() override;
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+	void Draw(sf::RenderTexture& texture);
+
+	void Set(int size, const sf::Color& color = sf::Color::White);
+	void SetString(const std::string& id, bool useTable = false);
+	void SetString(const std::wstring& id);
+	void SetString(const std::string& id, const std::wstring& wstr);
+	void SetCharacterSize(int size);
+	void SetFillColor(const sf::Color& color);
+	void SetOutlineColor(const sf::Color& color);
+	void SetOutlineThickness(float thickness);
 
 	void OnLocalize(Languages lang) override;
 };

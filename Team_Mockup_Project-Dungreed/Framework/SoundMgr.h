@@ -37,8 +37,8 @@ public:
 	void PlayBgm(sf::SoundBuffer& buffer, bool loop = true);
 	void StopBgm();
 
-	void PlaySfx(std::string id, bool loop = false);
-	void PlaySfx(sf::SoundBuffer& buffer, bool loop = false);
+	sf::Sound* PlaySfx(std::string id, bool loop = false);
+	sf::Sound* PlaySfx(sf::SoundBuffer& buffer, bool loop = false);
 
 	void StopAllSfx();
 };

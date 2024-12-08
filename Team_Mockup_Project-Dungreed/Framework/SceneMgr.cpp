@@ -5,9 +5,11 @@
 #include "SceneDev3.h"
 #include "SceneGame.h"
 #include "SceneMapEdit.h"
+#include "MainTitleScene.h"
 
 void SceneMgr::Init()
 {
+	scenes.push_back(new MainTitleScene());
 	scenes.push_back(new SceneGame());
 	scenes.push_back(new SceneDev1());	
 	scenes.push_back(new SceneDev2());

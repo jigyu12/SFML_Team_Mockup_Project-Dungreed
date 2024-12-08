@@ -1,0 +1,12 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Particle Idle,10,"0",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/boss/BossIdle/Particle/SkellBossParticle0.png,0,"0",30,30,0
+graphics/boss/BossIdle/Particle/SkellBossParticle1.png,0,"0",30,30,0
+graphics/boss/BossIdle/Particle/SkellBossParticle2.png,0,"0",30,30,0
+graphics/boss/BossIdle/Particle/SkellBossParticle3.png,0,"0",30,30,0
+graphics/boss/BossIdle/Particle/SkellBossParticle4.png,0,"0",30,30,0
+graphics/boss/BossIdle/Particle/SkellBossParticle5.png,0,"0",30,30,0
+graphics/boss/BossIdle/Particle/SkellBossParticle6.png,0,"0",30,30,0
+graphics/boss/BossIdle/Particle/SkellBossParticle7.png,0,"0",30,30,0

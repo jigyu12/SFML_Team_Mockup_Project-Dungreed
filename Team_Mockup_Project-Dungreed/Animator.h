@@ -51,7 +51,7 @@ public:
 
 	void Update(float dt);
 
-	bool IsPlaying() const { return false; }
+	bool IsPlaying() const { return isPlaying; }
 	void SetSpeed(float speed) 
 	{ 
 		this->speed = speed;
@@ -64,6 +64,7 @@ public:
 	void PlayQueue(const std::string& clipId);
 
 	void Stop();
+	void Resume();
 
 	//void Pause(bool pause);
 

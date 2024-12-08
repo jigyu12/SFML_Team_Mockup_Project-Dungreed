@@ -30,6 +30,11 @@ float Utils::RandomValue()
 	return RandomRange(0.f, 1.f);
 }
 
+sf::Vector2f Utils::OnUnitCircle(float angle)
+{
+	return sf::Vector2f(std::cosf(angle), std::sinf(angle));
+}
+
 sf::Vector2f Utils::RandomOnUnitCircle()
 {
 	float angle = RandomRange(0.f, 2.f * PI);
@@ -217,6 +222,16 @@ bool Utils::LineIntersect(const sf::Vector2f& a1, const sf::Vector2f& a2, const 
 	return true;
 }
 
+sf::Vector2f Utils::GetCenter(const sf::FloatRect& rect)
+{
+	return rect.getPosition() + rect.getSize() * 0.5f;
+}
+
+sf::Vector2f Utils::GetCenter(const sf::Transformable& transformable, const sf::FloatRect& localBounds)
+{
+	return transformable.getTransform().transformPoint(GetCenter(localBounds));
+}
+
 bool Utils::CheckCollision(const HitBox& boxA, const HitBox& boxB)
 {
 	return CheckCollision(boxA.rect, boxB.rect);
@@ -257,17 +272,17 @@ bool Utils::CheckCollision(const sf::RectangleShape& shapeA, const sf::Rectangle
 		{
 			sf::FloatRect player = shapeA.getGlobalBounds();
 			sf::FloatRect target = shapeB.getGlobalBounds();
-		
+
 			float playerright = player.left + player.width;
 			float playerbottom = player.top + player.height;
 			float targetright = target.left + target.width;
 			float targetbottom = target.top + target.height;
-		
+
 			collisionState.area.left = std::max(player.left, target.left);
 			collisionState.area.top = std::max(player.top, target.top);
 			collisionState.area.width = std::min(playerright, targetright) - collisionState.area.left;
 			collisionState.area.height = std::min(playerbottom, targetbottom) - collisionState.area.top;
-		
+
 			if (targetbottom > player.top
 				&& playerbottom > targetbottom)
 				collisionState.Up = true;
@@ -297,12 +312,19 @@ bool Utils::CheckCollision(const sf::RectangleShape& shapeA, const sf::Rectangle
 			{
 				sf::Vector2f point = bInverse.transformPoint(aTrans.transformPoint(pointA));
 				bool contain = target.contains(point);
-				containsa.push_back(contain);
 				if (contain)
 				{
 					va.append(pointA);
 				}
 			}
+			std::vector<sf::Vector2f> globalPointsA = GetRectanglePointsFromBounds(shapeA.getGlobalBounds());
+			for (auto& pointA : globalPointsA)
+			{
+				sf::Vector2f point = bInverse.transformPoint(pointA);
+				bool contain = target.contains(point);
+				containsa.push_back(contain);
+			}
+
 			for (auto& pointB : pointsB)
 			{
 				sf::Vector2f point = aInverse.transformPoint(bTrans.transformPoint(pointB));
@@ -312,6 +334,7 @@ bool Utils::CheckCollision(const sf::RectangleShape& shapeA, const sf::Rectangle
 					va.append(point);
 				}
 			}
+
 			collisionState.Up = (containsa[0] || containsa[1]) && !(containsa[2] || containsa[3]);
 			collisionState.Down = !(containsa[0] || containsa[1]) && (containsa[2] || containsa[3]);
 			collisionState.Left = (containsa[0] || containsa[3]) && !(containsa[1] || containsa[2]);

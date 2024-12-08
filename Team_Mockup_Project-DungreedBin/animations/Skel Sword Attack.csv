@@ -1,0 +1,13 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Attack,10,"0",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/monster/Skels/ShortSword000.png,0,"0",19,11,0
+graphics/monster/Skels/ShortSword001.png,0,"0",15,16,0
+graphics/monster/Skels/ShortSword002.png,0,"0",11,19,0
+graphics/monster/Skels/ShortSword003.png,0,"0",11,19,0
+graphics/monster/Skels/ShortSword004.png,0,"0",22,25,0
+graphics/monster/Skels/ShortSword005.png,0,"0",23,26,0
+graphics/monster/Skels/ShortSword006.png,0,"0",25,23,0
+graphics/monster/Skels/ShortSword007.png,0,"0",25,20,0
+graphics/monster/Skels/ShortSword008.png,0,"0",19,11,0

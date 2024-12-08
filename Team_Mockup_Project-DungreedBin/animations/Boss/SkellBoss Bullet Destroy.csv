@@ -1,0 +1,12 @@
+ID,FPS,"LoopType (0: Single, 1: Loop)",,,
+Bullet Destroy,10,"0",,,
+,,,,,
+TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
+graphics/boss/BossAttackBullet/Bullet/Fx/BossBulletFX000.png,0,"0",31,31,0
+graphics/boss/BossAttackBullet/Bullet/Fx/BossBulletFX001.png,0,"0",31,31,0
+graphics/boss/BossAttackBullet/Bullet/Fx/BossBulletFX002.png,0,"0",31,31,0
+graphics/boss/BossAttackBullet/Bullet/Fx/BossBulletFX003.png,0,"0",31,31,0
+graphics/boss/BossAttackBullet/Bullet/Fx/BossBulletFX004.png,0,"0",31,31,0
+graphics/boss/BossAttackBullet/Bullet/Fx/BossBulletFX005.png,0,"0",31,31,0
+graphics/boss/BossAttackBullet/Bullet/Fx/BossBulletFX006.png,0,"0",31,31,0
+graphics/boss/BossAttackBullet/Bullet/Fx/BossBulletFX007.png,0,"0",31,31,0

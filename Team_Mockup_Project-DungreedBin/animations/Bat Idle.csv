@@ -2,9 +2,9 @@ ID,FPS,"LoopType (0: Single, 1: Loop)",,,
 Idle,10,"1",,,
 ,,,,,
 TEXTURE ID,LEFT,"TOP",WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
-graphics/monster/Bat0.png,0,"0",31,11,0
-graphics/monster/Bat1.png,0,"0",31,12,0
-graphics/monster/Bat2.png,0,"0",31,16,0
-graphics/monster/Bat3.png,0,"0",30,17,0
-graphics/monster/Bat4.png,0,"0",28,19,0
-graphics/monster/Bat5.png,0,"0",31,18,0
+graphics/monster/Bat/Bat0.png,0,"0",31,11,0
+graphics/monster/Bat/Bat1.png,0,"0",31,12,0
+graphics/monster/Bat/Bat2.png,0,"0",31,16,0
+graphics/monster/Bat/Bat3.png,0,"0",30,17,0
+graphics/monster/Bat/Bat4.png,0,"0",28,19,0
+graphics/monster/Bat/Bat5.png,0,"0",31,18,0

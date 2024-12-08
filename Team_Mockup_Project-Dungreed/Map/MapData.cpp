@@ -4,7 +4,8 @@
 
 void MapDataLoader::Save(MapDataVC mapData, const std::string& path)
 {
-	Save(mapData, std::wstring().assign(path.begin(), path.end()));
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+	Save(mapData, converter.from_bytes(path));
 }
 
 void MapDataLoader::Save(MapDataVC mapData, const std::wstring& path)
@@ -22,15 +23,17 @@ void MapDataLoader::Save(MapDataVC mapData, const std::wstring& path)
 
 MapDataVC MapDataLoader::Load(const std::string& path)
 {
-	return Load(std::wstring().assign(path.begin(), path.end()));
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+	return Load(converter.from_bytes(path));
 }
 
 MapDataVC MapDataLoader::Load(const std::wstring& path)
 {
-	if (_access(std::string().assign(path.begin(), path.end()).c_str(), 0) == -1)
+	if (_waccess(path.c_str(), 0) == -1)
 	{
 		return MapDataVC();
 	}
+
 	std::ifstream f(path);
 	json j = json::parse(f);
 
@@ -54,6 +57,12 @@ MapDataVC MapDataLoader::Load(const std::wstring& path)
 	{
 		MapDataV3 v3 = j.get<MapDataV3>();
 		saveData = new MapDataV3(v3);
+		break;
+	}
+	case 4:
+	{
+		MapDataV4 v4 = j.get<MapDataV4>();
+		saveData = new MapDataV4(v4);
 		break;
 	}
 	}
@@ -118,9 +127,75 @@ MapData* MapDataV2::VersionUp()
 	return newData;
 }
 
+
+MapData* MapDataV3::VersionUp()
+{
+	MapDataV4* newData = new MapDataV4();
+
+	newData->hitBoxData = hitBoxData;
+	newData->objectData = objectData;
+	newData->playerStartPoint = playerStartPoint;
+	newData->tileMapData = tileMapData;
+	newData->monsterSpawnData = monsterSpawnData;
+
+	return newData;
+}
+
 MapDataV3::MapDataV3()
 {
 	version = 3;
 	tileMapData.resize(TileMapCount);
 	playerStartPoint.resize(StartPointCount);
+}
+
+MapDataV4::MapDataV4()
+{
+	version = 4;
+	tileMapData.resize(TileMapCount);
+	playerStartPoint.resize(StartPointCount);
+}
+
+RoomData::RoomData()
+{
+	connection.resize(4,false);
+}
+
+std::string ObjectData::ToString(const Type& type)
+{
+	switch (type)
+	{
+	case Type::Torch:
+		return "Torch";
+	case Type::SealStone:
+		return "SealStone";
+	case Type::Door:
+		return "Door";
+	case Type::Box:
+		return "Box";
+	case Type::BigBox:
+		return "BigBox";
+	case Type::OakDrum:
+		return "OakDrum";
+	case Type::SkullTable:
+		return "SkullTable";
+	case Type::Table:
+		return "Table";
+	case Type::Cell:
+		return "Cell";
+	case Type::BrokenCell:
+		return "BrokenCell";
+	case Type::UpperCell0:
+		return "UpperCell0";
+	case Type::UpperCell1:
+		return "UpperCell1";
+	case Type::Skull0:
+		return "Skull0";
+	case Type::Skull1:
+		return "Skull1";
+	case Type::Bone0:
+		return "Bone0";
+	case Type::Bone1:
+		return "Bone1";
+	}
+	return std::string();
 }

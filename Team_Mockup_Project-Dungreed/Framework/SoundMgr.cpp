@@ -7,6 +7,10 @@ void SoundMgr::Init(int totalChannels)
 	{
 		waiting.push_back(new sf::Sound());
 	}
+
+	bgmVolume = 60.f;
+	sfxVolume = 40.f;
+	SetBgmVolume(bgmVolume);
 }
 
 void SoundMgr::Release()
@@ -31,13 +35,16 @@ void SoundMgr::Update(float dt)
 		if ((*it)->getStatus() == sf::Sound::Stopped)
 		{
 			waiting.push_back(*it);
-			playing.erase(it);
+			it = playing.erase(it);
 		}
 		else
 		{
 			++it;
 		}
 	}
+
+	SetBgmVolume(bgmVolume);
+	SetSfxVolume(sfxVolume);
 }
 
 void SoundMgr::PlayBgm(std::string id, bool loop)
@@ -59,12 +66,12 @@ void SoundMgr::StopBgm()
 	bgm.stop();
 }
 
-void SoundMgr::PlaySfx(std::string id, bool loop)
+sf::Sound* SoundMgr::PlaySfx(std::string id, bool loop)
 {	
-	PlaySfx(SOUNDBUFFER_MGR.Get(id), loop);
+	return PlaySfx(SOUNDBUFFER_MGR.Get(id), loop);
 }
 
-void SoundMgr::PlaySfx(sf::SoundBuffer& buffer, bool loop)
+sf::Sound* SoundMgr::PlaySfx(sf::SoundBuffer& buffer, bool loop)
 {
 	sf::Sound* sound = nullptr;
 
@@ -85,6 +92,7 @@ void SoundMgr::PlaySfx(sf::SoundBuffer& buffer, bool loop)
 	sound->setLoop(loop);
 	sound->play();
 	playing.push_back(sound);
+	return sound;
 }
 
 void SoundMgr::SetSfxVolume(float v)

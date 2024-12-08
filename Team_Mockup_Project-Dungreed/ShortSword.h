@@ -12,9 +12,13 @@ protected:
 	Animator animatorFx;
 	sf::Sprite swordSwingFx;
 
+
 	bool isSwing;
 	float swingTimeAccum;
 	float swingTimeDelay;
+
+	sf::RectangleShape attackBound;
+	HitBox attackBoundHitbox;
 
 public:
 	ShortSword(const std::string& name = "ShortSword");

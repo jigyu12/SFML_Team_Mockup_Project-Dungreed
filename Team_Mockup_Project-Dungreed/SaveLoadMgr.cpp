@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SaveLoadMgr.h"
+#include <io.h>
 
 void SaveLoadMgr::SaveV1(const SaveDataV1& saveData)
 {
@@ -19,6 +20,12 @@ void SaveLoadMgr::Save(const SaveDataVC& saveData)
 
 SaveDataVC SaveLoadMgr::Load()
 {
+	if (_access(tempSavePath.c_str(), 0) == -1)
+	{
+		return SaveDataVC();
+	}
+
+
 	std::ifstream f(tempSavePath);
 	json j = json::parse(f);
 
@@ -41,7 +48,7 @@ SaveDataVC SaveLoadMgr::Load()
 	}
 	f.close();
 
-	while (saveData->version < 2)
+	while (saveData->version <1)
 	{
 		SaveData* oldData = saveData;
 		saveData = saveData->VersionUp();

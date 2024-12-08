@@ -13,6 +13,7 @@ public:
 	static int RandomRange(int min, int max);
 	static float RandomRange(float min, float max);
 	static float RandomValue();	// 0.0f ~ 1.0f
+	static sf::Vector2f OnUnitCircle(float angle);
 	static sf::Vector2f RandomOnUnitCircle();
 	static sf::Vector2f RandomInUnitCircle();
 	static sf::Color RandomColor(bool opaque = true);
@@ -52,6 +53,9 @@ public:
 	/// </summary>
 	static bool LineIntersect(const sf::Vector2f& a1,const sf::Vector2f& a2, const sf::Vector2f& b1, const sf::Vector2f& b2, sf::Vector2f& result);
 
+	static sf::Vector2f GetCenter(const sf::FloatRect& rect);
+	static sf::Vector2f GetCenter(const sf::Transformable& transformable, const sf::FloatRect& localBounds);
+	
 	// Ãæµ¹
 	static bool CheckCollision(const HitBox& boxA, const HitBox& boxB);
 	static bool CheckCollision(const HitBox& boxA, const HitBox& boxB, CollisionState& collisionState);

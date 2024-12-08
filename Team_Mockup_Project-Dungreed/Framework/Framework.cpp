@@ -8,8 +8,10 @@ void Framework::Init(int width, int height, const std::string& name)
     window.setFramerateLimit(100);
     DATATABLE_MGR.Init();
     Utils::Init();
+    SOUND_MGR.Init();
     SCENE_MGR.Init();
     InputMgr::Init();
+    ROOM_MGR.Init();
 }
 
 void Framework::Do()
@@ -36,11 +38,12 @@ void Framework::Do()
         {
             Variables::isDrawHitBox = !Variables::isDrawHitBox;
         }
-
         SCENE_MGR.Update(deltaTime);
         SCENE_MGR.LateUpdate(deltaTime);
 
         SCENE_MGR.FixedUpdate(deltaTime);
+
+        SOUND_MGR.Update(deltaTime);
 
         window.clear();
         SCENE_MGR.Draw(window);
@@ -53,4 +56,5 @@ void Framework::Release()
     SCENE_MGR.Release();
     FONT_MGR.Unload("fonts/DS-DIGI.ttf");
     DATATABLE_MGR.Release();
+    SOUND_MGR.Release();
 }

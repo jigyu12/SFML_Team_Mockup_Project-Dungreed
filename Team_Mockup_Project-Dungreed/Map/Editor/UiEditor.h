@@ -1,8 +1,12 @@
 #pragma once
 
 class TileMap;
+class Button;
+class TextGo;
 class UiEditTile;
 class UiEditHitBox;
+class UiEditMonster;
+class UiEditObject;
 
 class UiEditor : public GameObject
 {
@@ -11,13 +15,26 @@ protected:
 	{
 		Tile,
 		HitBox,
+		Monster,
+		Object,
 	};
-	GroupBox currentGroupBox;
+	GroupBox selectedGroupBox;
 
 	sf::RectangleShape editorWindow;
 
-	sf::Sprite saveButton;
-	sf::Sprite loadButton;
+	Button* buttonExit;
+
+	Button* buttonNew;
+	Button* buttonSave;
+	Button* buttonLoad;
+	Button* buttonReset;
+
+	Button* buttonTile;
+	Button* buttonHitbox;
+	Button* buttonMonster;
+	Button* buttonObject;
+
+	TextGo* selectedFileName;
 
 	std::vector<TileMap*> editingTileMaps;
 
@@ -25,6 +42,8 @@ protected:
 
 	UiEditTile* uiEditTile;
 	UiEditHitBox* uiEditHitBox;
+	UiEditMonster* uiEditMonster;
+	UiEditObject* uiEditObject;
 
 public:
 	UiEditor(const std::string& name = "");
@@ -49,5 +68,12 @@ public:
 	TileMap* GetSelectedTileMap() { return selectedTile < 0 ? editingTileMaps[0] : editingTileMaps[selectedTile]; }
 
 	void ResizeTileMaps(const sf::Vector2i& size);
+
+	void ChangeGroupbox(const UiEditor::GroupBox& selectedGroupBox);
+
+	void NewFile();
+	void SaveFile();
+	void LoadFile();
+
 };
 

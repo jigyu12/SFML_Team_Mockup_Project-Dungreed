@@ -5,7 +5,7 @@
 class SkeletonDog : public Monster
 {
 public:
-	enum class SkeleDogState
+	enum class SkeletonDogState
 	{
 		None = -1,
 
@@ -17,63 +17,51 @@ public:
 		Count
 	};
 
-	struct CollisionState
-	{
-		bool Up = false;
-		bool Down = false;
-		bool Left = false;
-		bool Right = false;
-	};
-
 protected:
-	SkeleDogState state;
+	SkeletonDogState state;
 
-	float idleAccumTime;
-	float idleTimeDelay;
-	bool isIdle;
-
-	float moveAccumTime;
-	float moveTimeDelay;
-	bool isMoving;
-
-	float attackAccumTime;
-	float attackTimeDelay;
-	bool isAttack;
-
-	float attackMoveAccumTime;
-	float attackMoveTimeDelay;
-	bool isAttackMove;
-
-	float hitAccumTime;
-	float hitTimeDelay;
-
-	float deathAccumTime;
-	float deathTimeDelay;
-	bool isDead;
-
-	sf::RectangleShape detectionRange;
-
-	sf::RectangleShape detectionLine;
-
-	sf::FloatRect movableBound;
+	Animator animator;
 
 	sf::Shader shader;
 
-	float velocityY;
+	sf::Vector2f direction;
+	float speed;
+
 	float gravity;
-	float jumpSpeed;
-	bool isOnGround;
+	float velocityY;
+
+	sf::RectangleShape detectionRange;
+	sf::RectangleShape detectionLine;
+	HitBox detectionLineHitbox;
+
+	float hitTimeAccum;
+	float hitTimeDelay;
+
+	float idleTimeAccum;
+	float idleTimeDelay;
+
+	float moveTimeAccum;
+	float moveTimeDelay;
+
+	float attackMoveTimeAccum;
+	float attackMoveTimeDelay;
+	bool isAttackMove;
+
+	float deathTimeAccum;
+	float deathTimeDelay;
+
+	float colTimeAccum;
+	float colTimeDelay;
 
 public:
 	SkeletonDog(const std::string& name = "SkeletonDog");
 	virtual ~SkeletonDog() = default;
 
+	virtual void SetOrigin(Origins preset) override;
+	virtual void SetOrigin(const sf::Vector2f& newOrigin) override;
 	virtual void SetPosition(const sf::Vector2f& pos) override;
 	virtual void SetRotation(float angle) override;
 	virtual void SetScale(const sf::Vector2f& scale) override;
-
-	virtual void SetOrigin(Origins preset) override;
-	virtual void SetOrigin(const sf::Vector2f& newOrigin) override;
 
 	virtual void Init() override;
 	virtual void Reset() override;
@@ -81,6 +69,12 @@ public:
 	virtual void LateUpdate(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 	virtual void Release() override;
+
+	void SetState(SkeletonDogState state);
+	void UpdateIdle(float dt);
+	void UpdateMove(float dt);
+	void UpdateAttack(float dt);
+	void UpdateDeath(float dt);
 
 	virtual sf::FloatRect GetLocalBounds() const
 	{
@@ -90,17 +84,4 @@ public:
 	{
 		return body.getGlobalBounds();
 	}
-
-	/// <summary>
-	/// 각 Scene의 Scene::Enter(); 의 뒤에 사용해야 적용됨.
-	/// </summary>
-	void SetStartDirectionX(const float dirX)
-	{
-		direction = Utils::GetNormal({ dirX, 0.f });
-		detectionLine.setPosition(body.getPosition() + direction * -10.f);
-	}
-
-	void Jump();
-
-	CollisionState GetCollsionState(const sf::FloatRect& monster, const sf::FloatRect& stage);
 };

@@ -1,5 +1,0 @@
-ID,FPS,"LoopType (0: Single, 1: Loop)"
-platformidle,1,0
-
-TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT,"FLIPX(0:FALSE, 1:TRUE)"
-graphics/map/Map.png,48,288,16,16,0

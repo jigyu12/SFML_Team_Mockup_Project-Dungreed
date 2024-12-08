@@ -27,7 +27,7 @@ public:
 	void SetName(const std::string& n) { name = n; }
 
 	bool IsActive() const { return active; }
-	void SetActive(bool a) { active = a; }
+	virtual void SetActive(bool a) { active = a; }
 
 	sf::Vector2f GetPosition() const { return position; }
 	virtual void SetPosition(const sf::Vector2f& pos) { position = pos; }

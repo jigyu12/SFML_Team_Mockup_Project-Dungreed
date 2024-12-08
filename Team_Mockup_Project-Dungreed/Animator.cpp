@@ -34,6 +34,14 @@ void Animator::Update(float dt)
 			std::string clipId = playeQueue.front();
 			Play(clipId, false);
 			playeQueue.pop();
+			auto find = events.find({ currentClip->id, currentFrame });
+			if (find != events.end())
+			{
+				for (auto& ev : (*find).second)
+				{
+					ev();
+				}
+			}
 			return;
 		}
 
@@ -94,6 +102,11 @@ void Animator::PlayQueue(const std::string& clipId)
 void Animator::Stop()
 {
 	isPlaying = false;
+}
+
+void Animator::Resume()
+{
+	isPlaying = true;
 }
 
 void Animator::SetFrame(const AnimationFrame& frame)
