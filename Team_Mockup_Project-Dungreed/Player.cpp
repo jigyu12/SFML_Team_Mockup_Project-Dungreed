@@ -157,11 +157,6 @@ void Player::Update(float dt)
 		SOUND_MGR.PlaySfx("sound/Sfx/player/Jumping.wav");
 
 	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::LShift))
-	{
-		SOUND_MGR.PlaySfx("sound/Sfx/player/ui-sound-13-dash.wav");
-		
-	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::M))
 	{
@@ -227,7 +222,8 @@ void Player::Update(float dt)
 	if (InputMgr::GetKeyDown(sf::Keyboard::LShift) && dashCoolTimer >= 1.f)
 	{
 		SetStatus(Player::Status::Dash);
-		
+	
+		SOUND_MGR.PlaySfx("sound/Sfx/player/ui-sound-13-dash.wav");
 	}
 
 

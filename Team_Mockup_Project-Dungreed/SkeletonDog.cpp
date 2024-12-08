@@ -275,7 +275,6 @@ void SkeletonDog::LateUpdate(float dt)
 		}
 		break;
 	case SkeletonDog::SkeletonDogState::Death:
-		SOUND_MGR.PlaySfx("sound/Sfx/monster/MonsterDie.wav");
 		break;
 	case SkeletonDog::SkeletonDogState::Count:
 		break;
@@ -363,6 +362,8 @@ void SkeletonDog::SetState(SkeletonDogState state)
 		animator.Play("animations/Monster Die.csv");
 
 		target->AddCurrentExp(1);
+
+		SOUND_MGR.PlaySfx("sound/Sfx/monster/MonsterDie.wav");
 	}
 	break;
 	}
