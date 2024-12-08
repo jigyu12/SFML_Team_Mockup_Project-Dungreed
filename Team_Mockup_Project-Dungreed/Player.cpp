@@ -160,6 +160,7 @@ void Player::Update(float dt)
 	if (InputMgr::GetKeyDown(sf::Keyboard::LShift))
 	{
 		SOUND_MGR.PlaySfx("sound/Sfx/player/ui-sound-13-dash.wav");
+		
 	}
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::M))
@@ -381,6 +382,7 @@ void Player::LateUpdate(float dt)
 					}
 					if (status == Status::Dash)
 					{
+						SOUND_MGR.PlaySfx("sound/Sfx/player/Hit_Monster.wav");
 						if (GetCurrentWeapon() == weaponSlot1)
 						{
 							int swordDashDamage = CalculationDamage(weaponSlot1->GetAttackDamage() / 2);
