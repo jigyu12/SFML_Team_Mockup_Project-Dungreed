@@ -194,6 +194,8 @@ void SkelSword::Update(float dt)
 
 	animator.Update(dt);
 	animatorSword.Update(dt);
+
+	Monster::Update(dt);
 }
 
 void SkelSword::LateUpdate(float dt)
@@ -309,6 +311,8 @@ void SkelSword::Draw(sf::RenderWindow& window)
 
 	hitbox.Draw(window);
 	detectionLineHitbox.Draw(window);
+
+	Monster::Draw(window);
 }
 
 void SkelSword::Release()

@@ -114,6 +114,7 @@ public:
 	float GetCurrentCriticalPercent() const { return playerStatus.criticalPercent; }
 	float GetCurrentDashDamage() const { return playerStatus.dashDamage; }
 	float GetCurrentAttackSpeed() const { return playerStatus.attackSpeed; }
+	const SavePlayerStatus& GetCurrentPlayerStatus() const { return playerStatus; }
 
 	void AddCurrentExp(float exp) 
 	{ 
@@ -126,13 +127,15 @@ public:
 	bool IsDamaged() const { return isDamaged; }
 	bool IsDead() const { return isDead; }
 
-	
+	void SaveLastData();
+	void LoadFile();
 
 	float GetCurrentCoolTime() const { return dashCoolTimer; }
 	float GetCurrentHpRatio() const { return Utils::Clamp01((float)hp / maxhp); }
 
 	int GetRealDamage();
-	
+	int GetMinDamage();
+	void LevelUpData();
 
 	int CalculationDamage(int damage);
 

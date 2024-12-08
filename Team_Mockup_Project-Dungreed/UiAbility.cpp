@@ -113,11 +113,13 @@ void UiAbility::Reset()
 void UiAbility::Update(float dt)
 {
 
+
+		
 }
 
 void UiAbility::LateUpdate(float dt)
 {
-	SetAttackDamage(player->GetCurrentAttackDamage(), player->GetRealDamage());
+	SetAttackDamage(player->GetMinDamage(), player->GetRealDamage());
 	SetCriticalDamage(player->GetCurrentCriticalDamage());
 	SetCriticalPercent(player->GetCurrentCriticalPercent());
 	SetArmor(player->GetCurrentArmor());
