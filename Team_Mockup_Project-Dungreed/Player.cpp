@@ -102,6 +102,7 @@ void Player::Reset()
 		});
 
 	originalPlayerColor = sf::Color::White;
+	body.setColor(originalPlayerColor);
 
 	hitbox.SetColor(sf::Color::Blue);
 
@@ -111,6 +112,8 @@ void Player::Reset()
 	SetStatus(Status::Ground);
 	dashCoolTimer = 0.f;
 	hp = maxhp;
+	isDamaged = false;
+	isDead = false;
 	LoadFile();
 	SwitchWeaponSlot(sf::Keyboard::Num2);
 	SwitchWeaponSlot(sf::Keyboard::Num1);
@@ -123,7 +126,7 @@ void Player::SetStatus(Status status)
 	{
 	case Player::Status::Ground:
 		velocity.y = 0.f;
-		if (walksfx == nullptr)
+		if (walksfx == nullptr && animator.GetCurrentClipId() == "Walk")
 		{
 			walksfx = SOUND_MGR.PlaySfx("sound/Sfx/player/step_lth1.wav", true);
 		}

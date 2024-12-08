@@ -318,6 +318,12 @@ void SkellBoss::Release()
 	{
 		delete hitBox;
 	}
+
+	for (auto& bullet : bullets)
+	{
+		SCENE_MGR.GetCurrentScene()->RemoveGo(bullet);
+	}
+	bullets.clear();
 }
 
 void SkellBoss::SetState(SkellBossState state)
@@ -515,6 +521,7 @@ void SkellBoss::UpdateAttackBullet(float dt)
 		{
 			SCENE_MGR.GetCurrentScene()->RemoveGo(bullet);
 		}
+		bullets.clear();
 
 		SetState(SkellBossState::Death);
 		leftHand->SetState(SkellBossLeftHand::SkellBossLeftHandState::Death);

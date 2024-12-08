@@ -245,7 +245,7 @@ void MainTitleUi::Update(float dt)
 {
 	animator.Update(dt);
 
-	ButtonUpdate(dt);
+	
 
 
 	aniTimer += dt;
@@ -257,6 +257,7 @@ void MainTitleUi::Update(float dt)
 		break;
 	case MainTitleUi::Status::AniStoptime:
 		AniStopTimeUpdate(dt);
+		ButtonUpdate(dt);
 		break;
 	default:
 		break;
