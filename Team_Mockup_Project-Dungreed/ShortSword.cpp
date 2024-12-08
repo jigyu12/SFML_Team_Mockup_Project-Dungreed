@@ -58,9 +58,9 @@ void ShortSword::Reset()
 	SetTextureId("graphics/weapon/Sword.png");
 	sprite.setTexture(TEXTURE_MGR.Get(textureId));
 
-	
 
-	
+
+
 
 	originalDamageMin = 8;
 	originalDamageMax = 10;
@@ -100,6 +100,10 @@ void ShortSword::Update(float dt)
 
 void ShortSword::LateUpdate(float dt)
 {
+	if (FRAMEWORK.GetTimeScale() == 0.f)
+	{
+		return;
+	}
 	if (!owner)
 	{
 		sortingOrder = 100;
@@ -232,16 +236,17 @@ void ShortSword::Attack()
 			{
 				int realDamage = owner->CalculationDamage(GetAttackDamage());
 				monster->OnDamaged(realDamage);
-				
+
 			}
 
-			
+
 		}
 	}
 	const auto& mapObjects = ROOM_MGR.GetCurrentRoom()->GetBreakableObjects();
 	for (auto& mapObject : mapObjects)
 	{
-		if (Utils::CheckCollision(mapObject->GetHitBox(), attackBoundHitbox))
+		if (mapObject->GetStatus() != MapObject::Status::Broken
+			&& Utils::CheckCollision(mapObject->GetHitBox(), attackBoundHitbox))
 		{
 			mapObject->OnDamaged(1);
 		}

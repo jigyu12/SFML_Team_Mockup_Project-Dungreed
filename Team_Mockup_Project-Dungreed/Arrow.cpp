@@ -2,6 +2,7 @@
 #include "Arrow.h"
 #include "HandCrossbow.h"
 #include "Room.h"
+#include "BreakableMo.h"
 
 Arrow::Arrow(const std::string& name)
 	: SpriteGo(name)
@@ -99,6 +100,17 @@ void Arrow::LateUpdate(float dt)
 		{
 			if(roomHitbox.second.type == HitBoxData::Type::Immovable)
 				SCENE_MGR.GetCurrentScene()->RemoveGo(this);
+		}
+	}
+
+	const auto& mapObjects = ROOM_MGR.GetCurrentRoom()->GetBreakableObjects();
+	for (auto& mapObject : mapObjects)
+	{
+		if (mapObject->GetStatus() != MapObject::Status::Broken
+			&& Utils::CheckCollision(mapObject->GetHitBox(), hitbox))
+		{
+			mapObject->OnDamaged(1);
+			SCENE_MGR.GetCurrentScene()->RemoveGo(this);
 		}
 	}
 }

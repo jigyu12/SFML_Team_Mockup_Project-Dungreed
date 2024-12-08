@@ -40,6 +40,7 @@ void MainTitleUi::SetOrigin(const sf::Vector2f& newOrigin)
 void MainTitleUi::Init()
 {
 	startButton.Init();
+	continueButton.Init();
 	editorButton.Init();
 	endButton.Init();
 
@@ -63,6 +64,7 @@ void MainTitleUi::Release()
 void MainTitleUi::Reset()
 {
 	startButton.Reset();
+	continueButton.Reset();
 	editorButton.Reset();
 	endButton.Reset();
 	//
@@ -76,11 +78,20 @@ void MainTitleUi::Reset()
 	startButton.SetOrigin(Origins::MC);
 	startButton.SetClickedEvent([this]()
 		{
+			SAVELOAD_MGR.Save(SaveDataVC());
 			SCENE_MGR.ChangeScene(SceneIds::Game);
 		});
 
+	continueButton.SetPosition({ mousePosX ,startMousePosY + 200.f });
+	continueButton.Set({ 400.f,100.f }, 50);
+	continueButton.SetString(L"이어하기");
+	continueButton.SetOrigin(Origins::MC);
+	continueButton.SetClickedEvent([this]()
+		{
+			SCENE_MGR.ChangeScene(SceneIds::Game);
+		});
 
-	editorButton.SetPosition({ mousePosX ,startMousePosY + 200.f });
+	editorButton.SetPosition({ mousePosX ,startMousePosY + 300.f });
 	editorButton.Set({ 400.f,100.f }, 50);
 	editorButton.SetString(L"맵 편집");
 	editorButton.SetOrigin(Origins::MC);
@@ -89,7 +100,7 @@ void MainTitleUi::Reset()
 			SCENE_MGR.ChangeScene(SceneIds::MapEdit);
 		});
 
-	endButton.SetPosition({ mousePosX ,startMousePosY + 300.f });
+	endButton.SetPosition({ mousePosX ,startMousePosY + 400.f });
 	endButton.Set({ 400.f,100.f }, 48);
 	endButton.SetString(L"종료");
 	endButton.SetOrigin(Origins::MC);
@@ -167,11 +178,15 @@ void MainTitleUi::AniStopTimeUpdate(float dt)
 void MainTitleUi::ButtonUpdate(float dt)
 {
 	startButton.Update(dt);
+	continueButton.Update(dt);
 	editorButton.Update(dt);
 	endButton.Update(dt);
 
 	startButton.SetTextOutlineColor(sf::Color::Black);
 	startButton.SetTextOutlineThickness(3.f);
+
+	continueButton.SetTextOutlineColor(sf::Color::Black);
+	continueButton.SetTextOutlineThickness(3.f);
 
 	editorButton.SetTextOutlineColor(sf::Color::Black);
 	editorButton.SetTextOutlineThickness(3.f);
@@ -189,6 +204,17 @@ void MainTitleUi::ButtonUpdate(float dt)
 	}
 	startButton.SetButtonFillColor(sf::Color::Transparent);
 	startButton.SetButtonOutlineColor(sf::Color::Transparent);
+
+	if (continueButton.isMouseOn())
+	{
+		continueButton.SetTextFillColor(sf::Color::White);
+	}
+	else
+	{
+		continueButton.SetTextFillColor({145,155,185});
+	}
+	continueButton.SetButtonFillColor(sf::Color::Transparent);
+	continueButton.SetButtonOutlineColor(sf::Color::Transparent);
 
 	if (editorButton.isMouseOn())
 	{
@@ -258,6 +284,7 @@ void MainTitleUi::Draw(sf::RenderWindow& window)
 		}
 		window.draw(mainLogo);
 		startButton.Draw(window);
+		continueButton.Draw(window);
 		endButton.Draw(window);
 		editorButton.Draw(window);
 		

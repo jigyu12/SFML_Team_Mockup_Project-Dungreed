@@ -109,6 +109,15 @@ void Button::Draw(sf::RenderWindow& window)
 	}
 }
 
+void Button::Draw(sf::RenderTexture& texture)
+{
+	texture.draw(buttonBackground);
+	if (type == Type::TextButton)
+	{
+		buttonText->Draw(texture);
+	}
+}
+
 void Button::SetPressed(bool pressed)
 {
 	this->pressed = pressed;
@@ -171,6 +180,11 @@ void Button::SetCharSize(float size)
 void Button::SetButtonSize(const sf::Vector2f& size)
 {
 	buttonBackground.setSize(size);
+}
+
+void Button::SetTexture(const std::string& texId)
+{
+	buttonBackground.setTexture(&TEXTURE_MGR.Get(texId));
 }
 
 void Button::SetClickedEvent(const std::function<void()>& event)

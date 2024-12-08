@@ -92,6 +92,10 @@ void HandCrossbow::Update(float dt)
 
 void HandCrossbow::LateUpdate(float dt)
 {
+	if (FRAMEWORK.GetTimeScale() == 0.f)
+	{
+		return;
+	}
 	if (!owner)
 	{
 		sortingOrder = 100;

@@ -224,6 +224,7 @@
     <ClCompile Include="SkellBossUi.cpp" />
     <ClCompile Include="SkelSword.cpp" />
     <ClCompile Include="UiAbility.cpp" />
+    <ClCompile Include="UiPause.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="Map\WorldMapUi.cpp" />
   </ItemGroup>
@@ -308,6 +309,7 @@
     <ClInclude Include="SkellBossUi.h" />
     <ClInclude Include="SkelSword.h" />
     <ClInclude Include="UiAbility.h" />
+    <ClInclude Include="UiPause.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="Map\WorldMapUi.h" />
   </ItemGroup>
