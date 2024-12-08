@@ -45,6 +45,8 @@ protected:
 	float frontCloudSpeed = 100.f;
 	float backCloudSpeed = 250.f;
 
+	bool isBgmPlaying;
+
 public:
 	MainTitleUi(const std::string& name = "MainTitleUi");
 	~MainTitleUi() = default;

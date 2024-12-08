@@ -145,6 +145,8 @@ void MainTitleUi::Reset()
 	{
 		birds[i].Reset();
 	}
+
+	isBgmPlaying = false;
 }
 
 void MainTitleUi::AniplayertimeUpdate(float dt)
@@ -298,6 +300,14 @@ void MainTitleUi::Draw(sf::RenderWindow& window)
 void MainTitleUi::SetStatus(Status status)
 {
 	this->status = (status);
+
+	if (status == MainTitleUi::Status::AniStoptime)
+	{
+		if (!isBgmPlaying)
+		{
+			isBgmPlaying = true;
+			SOUND_MGR.PlayBgm("sound/Bgm/title.wav");
+		}
+		
+	}
 }
-
-
