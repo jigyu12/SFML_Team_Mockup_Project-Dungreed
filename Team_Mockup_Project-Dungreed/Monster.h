@@ -34,6 +34,15 @@ protected:
 	bool isDamaged;
 	bool isDead;
 
+	sf::RectangleShape hpBack;
+	sf::Sprite hpBar;
+	sf::Texture hpBarTexture;
+	bool ishpBarVisible = false;
+	float hpBarVisibleTimeAccum = 0.f;
+	float hpBarVisibleTimeDelay = 0.8f;
+	float hpWidth = 10.f;
+	float hpHeight = 2.5f;
+
 public:
 	Monster(const std::string& name = "");
 	virtual ~Monster() = default;
@@ -48,8 +57,8 @@ public:
 	virtual void Init() override {};
 	virtual void Release() override {};
 	virtual void Reset() override {};
-	virtual void Update(float dt) override {};
-	virtual void Draw(sf::RenderWindow& window) override {};
+	virtual void Update(float dt) override;
+	virtual void Draw(sf::RenderWindow& window) override;
 
 	MonsterType GetMonsterType() const { return monsterType; }
 	int GetOriginalDamage() const { return originalDamage; }
@@ -59,4 +68,6 @@ public:
 	void OnDamaged(int damage);
 
 	bool IsDead() const { return isDead; }
+
+	void SetHpUI(int currentHp, int maxHp);
 };

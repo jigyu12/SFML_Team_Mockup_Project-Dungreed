@@ -133,7 +133,7 @@ void RoomMgr::Start()
 		for (auto& room : floor.second)
 		{
 			scene->RemoveGo(room.second);
-			room.second->ClearMonsters();
+			room.second->ClearTookObjects();
 			room.second->Release();
 			delete room.second;
 		}

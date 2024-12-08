@@ -194,6 +194,8 @@ void SkelSword::Update(float dt)
 
 	animator.Update(dt);
 	animatorSword.Update(dt);
+
+	Monster::Update(dt);
 }
 
 void SkelSword::LateUpdate(float dt)
@@ -208,6 +210,78 @@ void SkelSword::LateUpdate(float dt)
 	attackBound.setPosition({ GetPosition().x + 20.f * direction.x, GetPosition().y - 15.f });
 	attackBoundHitbox.UpdateTr(attackBound, attackBound.getLocalBounds());
 	attackBoundHitbox.SetColor(sf::Color::Black);
+
+	auto roomHitboxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
+	bool lineCollided = false;
+
+	for (auto& roomHitbox : roomHitboxes)
+	{
+		CollisionState state;
+
+		if (Utils::CheckCollision(hitbox, *roomHitbox.first, state))
+		{
+			if (state.Down)
+			{
+				if (state.area.height < 5.f
+					&& (state.AspectRatio() < 1.f || (roomHitbox.first->rect.getRotation() != 0.f || roomHitbox.first->rect.getRotation() != 360.f)))
+				{
+					switch (roomHitbox.second.type)
+					{
+					case HitBoxData::Type::Immovable:
+					case HitBoxData::Type::Downable:
+						position.y = std::min(position.y, state.area.top);
+						break;
+					}
+				}
+			}
+
+			if (state.Right)
+			{
+				if (roomHitbox.second.type == HitBoxData::Type::Immovable
+					&& state.area.height > 5.f
+					&& (state.AspectRatio() > 2.f && state.area.width < 5.f))
+				{
+					position.x = std::min(position.x, position.x - state.area.width);
+					if (direction.x > 0.f)
+					{
+						if (this->state != SkelSwordState::Attack
+							|| beforeAttackTimeAccum < beforeAttackTimeDelay - 0.4f)
+						{
+							direction.x *= -1.f;
+						}
+					}
+				}
+
+			}
+			if (state.Left)
+			{
+				if (roomHitbox.second.type == HitBoxData::Type::Immovable
+					&& state.area.height > 5.f
+					&& (state.AspectRatio() > 2.f && state.area.width < 5.f))
+				{
+					position.x = std::max(position.x, position.x + state.area.width);
+
+					if (direction.x < 0.f)
+					{
+						if (this->state != SkelSwordState::Attack
+							|| beforeAttackTimeAccum < beforeAttackTimeDelay - 0.4f)
+						{
+							direction.x *= -1.f;
+						}
+					}
+				}
+			}
+			SetPosition(position);
+		}
+
+		if (roomHitbox.second.type == HitBoxData::Type::Immovable)
+		{
+			if (Utils::CheckCollision(detectionLineHitbox, *roomHitbox.first))
+			{
+				lineCollided = true;
+			}
+		}
+	}
 }
 
 void SkelSword::Draw(sf::RenderWindow& window)
@@ -237,6 +311,8 @@ void SkelSword::Draw(sf::RenderWindow& window)
 
 	hitbox.Draw(window);
 	detectionLineHitbox.Draw(window);
+
+	Monster::Draw(window);
 }
 
 void SkelSword::Release()
@@ -314,38 +390,8 @@ void SkelSword::UpdateIdle(float dt)
 	}
 	else
 	{
-		auto roomHitboxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
-		bool lineCollided = false;
-
 		sf::Vector2f newPosition = position + direction * speed * dt;
 		SetPosition({ position.x, newPosition.y + gravity * dt });
-
-		for (auto& roomHitbox : roomHitboxes)
-		{
-			CollisionState state;
-
-			if (Utils::CheckCollision(hitbox, *roomHitbox.first, state))
-			{
-				if (state.Down)
-				{
-					position.y = std::min(position.y, state.area.top);
-					SetPosition(position);
-				}
-			}
-
-			if (roomHitbox.second.type == HitBoxData::Type::Immovable)
-			{
-				if (Utils::CheckCollision(detectionLineHitbox, *roomHitbox.first, state))
-				{
-					lineCollided = true;
-				}
-			}
-		}
-
-		if (lineCollided)
-		{
-			direction.x = -direction.x;
-		}
 	}
 }
 
@@ -363,43 +409,11 @@ void SkelSword::UpdateMove(float dt)
 	if (moveTimeAccum >= moveTimeDelay)
 	{
 		SetState(SkelSwordState::Idle);
-
-		return;
 	}
 	else
 	{
-		auto roomHitboxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
-		bool lineCollided = false;
-
 		sf::Vector2f newPosition = position + direction * speed * dt;
 		SetPosition({ newPosition.x, newPosition.y + gravity * dt });
-
-		for (auto& roomHitbox : roomHitboxes)
-		{
-			CollisionState state;
-
-			if (Utils::CheckCollision(hitbox, *roomHitbox.first, state))
-			{
-				if (state.Down)
-				{
-					position.y = std::min(position.y, state.area.top);
-					SetPosition(position);
-				}
-			}
-
-			if (roomHitbox.second.type == HitBoxData::Type::Immovable)
-			{
-				if (Utils::CheckCollision(detectionLineHitbox, *roomHitbox.first, state))
-				{
-					lineCollided = true;
-				}
-			}
-		}
-
-		if (lineCollided)
-		{
-			direction.x = -direction.x;
-		}
 	}
 }
 
@@ -412,35 +426,12 @@ void SkelSword::UpdateAttack(float dt)
 		auto roomHitboxes = ROOM_MGR.GetCurrentRoom()->GetHitBoxes();
 		bool lineCollided = false;
 
-		direction = Utils::GetNormal({ target->GetPosition().x - position.x, 0.f });
-		sf::Vector2f newPosition = position + direction * speed * dt;
-		SetPosition({ newPosition.x, newPosition.y + gravity * dt });
-
-		for (auto& roomHitbox : roomHitboxes)
+		float distance = target->GetPosition().x - position.x;
+		if (std::fabs(distance) > 1.f)
 		{
-			CollisionState state;
-
-			if (Utils::CheckCollision(hitbox, *roomHitbox.first, state))
-			{
-				if (state.Down)
-				{
-					position.y = std::min(position.y, state.area.top);
-					SetPosition(position);
-				}
-			}
-
-			if (roomHitbox.second.type == HitBoxData::Type::Immovable)
-			{
-				if (Utils::CheckCollision(detectionLineHitbox, *roomHitbox.first, state))
-				{
-					lineCollided = true;
-				}
-			}
-		}
-
-		if (lineCollided)
-		{
-			direction.x = -direction.x;
+			direction = Utils::GetNormal({ distance, 0.f });
+			sf::Vector2f newPosition = position + direction * speed * dt;
+			SetPosition({ newPosition.x, newPosition.y + gravity * dt });
 		}
 	}
 	else
