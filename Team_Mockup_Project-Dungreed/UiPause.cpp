@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "UiPause.h"
+#include "Player.h"
 
 UiPause::UiPause(const std::string& name)
 	: GameObject(name)
@@ -67,6 +68,11 @@ void UiPause::Reset()
 		{
 			SCENE_MGR.ChangeScene(SceneIds::MainTitle);
 			FRAMEWORK.SetTimeScale(1.f);
+			Player* player =dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
+			if (player != nullptr)
+			{
+				player->SaveLastData();
+			}
 		});
 }
 

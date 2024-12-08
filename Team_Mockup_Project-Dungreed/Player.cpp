@@ -113,7 +113,7 @@ void Player::Reset()
 	hp = maxhp;
 	SwitchWeaponSlot(sf::Keyboard::Num2);
 	SwitchWeaponSlot(sf::Keyboard::Num1);
-
+	LoadFile();
 }
 
 void Player::SetStatus(Status status)
@@ -505,6 +505,10 @@ void Player::SaveLastData()
 	SaveDataVC saveStatus;
 	saveStatus.status = playerStatus;
 	saveStatus.status.lastFloor = ROOM_MGR.GetCurrentFloor();
+	if (saveStatus.status.lastFloor % 2 == 0)
+	{
+		--saveStatus.status.lastFloor;
+	}
 	SAVELOAD_MGR.Save(saveStatus);
 }
 

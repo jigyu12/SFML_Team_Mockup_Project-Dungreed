@@ -100,6 +100,10 @@ void ShortSword::Update(float dt)
 
 void ShortSword::LateUpdate(float dt)
 {
+	if (FRAMEWORK.GetTimeScale() == 0.f)
+	{
+		return;
+	}
 	if (!owner)
 	{
 		sortingOrder = 100;

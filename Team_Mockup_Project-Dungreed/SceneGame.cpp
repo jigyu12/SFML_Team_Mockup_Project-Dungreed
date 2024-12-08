@@ -80,7 +80,13 @@ void SceneGame::Enter()
 	Utils::SetOrigin(mouseCursor, Origins::MC);
 
 	ROOM_MGR.Start();
-	
+
+	SaveDataVC data = SAVELOAD_MGR.Load();
+
+	while (ROOM_MGR.GetCurrentFloor() <= data.status.lastFloor)
+	{
+		ROOM_MGR.NextFloor();
+	}
 	uiPause->SetActive(false);
 
 	worldMapUi->RefreshData();
