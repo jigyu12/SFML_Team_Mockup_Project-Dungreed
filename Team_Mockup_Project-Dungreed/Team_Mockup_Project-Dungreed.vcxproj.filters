@@ -112,6 +112,15 @@
       <Filter>Monsters\Monster</Filter>
     </ClCompile>
     <ClCompile Include="Map\WorldMapUi.cpp" />
+    <ClCompile Include="SkelBow.cpp">
+      <Filter>Monsters\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="SkelBowArrow.cpp">
+      <Filter>Monsters\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="SkelSword.cpp">
+      <Filter>Monsters\Monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
@@ -231,6 +240,15 @@
       <Filter>Monsters\Monster</Filter>
     </ClInclude>
     <ClInclude Include="Map\WorldMapUi.h" />
+    <ClInclude Include="SkelBow.h">
+      <Filter>Monsters\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="SkelBowArrow.h">
+      <Filter>Monsters\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="SkelSword.h">
+      <Filter>Monsters\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Monsters">
