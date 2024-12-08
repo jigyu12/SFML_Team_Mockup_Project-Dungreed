@@ -12,6 +12,8 @@ protected:
 	sf::Sprite bossHpBarBack;
 
 	SkellBoss* skellBoss;
+
+	bool isBgmPlaying;
 public:
 
 	SkellBossUi(const std::string& name = "SkellBossUi");

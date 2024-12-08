@@ -78,6 +78,7 @@ void SkellBossUi::Reset()
 float sssss=	BossHpXpos + 77 - redBar.getGlobalBounds().width * 0.5f;
 	redBar.setPosition({ BossHpXpos+77-redBar.getGlobalBounds().width*0.5f,BossHpYpos});
 
+	isBgmPlaying = false;
 }
 
 void SkellBossUi::Update(float dt)
@@ -93,7 +94,25 @@ void SkellBossUi::Update(float dt)
 		}
 	}
 	if (skellBoss != nullptr)
-		redBar.setScale(800*skellBoss->GetCurrentHpRatio(), redBar.getScale().y);
+	{
+		if (!isBgmPlaying)
+		{
+			isBgmPlaying = true;
+
+			SOUND_MGR.PlayBgm("sound/Bgm/1.JailBoss.wav");
+		}
+
+		redBar.setScale(800 * skellBoss->GetCurrentHpRatio(), redBar.getScale().y);
+	}
+	else
+	{
+		if (isBgmPlaying)
+		{
+			isBgmPlaying = false;
+
+			SOUND_MGR.PlayBgm(""); 
+		}
+	}
 }
 
 void SkellBossUi::Draw(sf::RenderWindow& window)
