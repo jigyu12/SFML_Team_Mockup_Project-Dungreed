@@ -92,13 +92,13 @@ void Player::Reset()
 	animator.AddEvent("TP", 2, [this]() {SetOrigin(originPreset); });
 	animator.AddEvent("TP", 6, [this]() {SetOrigin(originPreset); });
 	animator.AddEvent("TP", 7, [this]() {
-		hp = maxhp;
-		isDead = false;
-		playerui->SetHp(90, 90);
-		animator.Play("animations/player Idle.csv");
-		SetOrigin(originPreset);
-		SetStatus(Status::Ground);
-		ROOM_MGR.Reset();
+		//hp = maxhp;
+		//isDead = false;
+		//playerui->SetHp(90, 90);
+		//animator.Play("animations/player Idle.csv");
+		//SetOrigin(originPreset);
+		//SetStatus(Status::Ground);
+		SCENE_MGR.ChangeScene(SceneIds::MainTitle);
 		});
 
 	originalPlayerColor = body.getColor();

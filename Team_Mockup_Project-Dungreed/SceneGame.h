@@ -14,6 +14,7 @@ class LightGo;
 class WorldMapUi;
 class UiAbility;
 class SkellBossUi;
+class PortalEffect;
 
 class SceneGame : public Scene
 {
@@ -23,13 +24,19 @@ protected:
 	std::vector<Weapon*> weaponList;
 
 	WorldMapUi* worldMapUi;
+	UiAbility* uiAbility;
 
 	std::list<ParticleGo*> particles;
 	ObjectPool<ParticleGo> particlePool;
 
 	std::list<LightGo*> lights;
 	ObjectPool<LightGo> lightPool;
-	UiAbility* uiAbility;
+
+	std::list<PortalEffect*> portalEffects;
+	ObjectPool<PortalEffect> portalEffectPool;
+
+	sf::Sprite mouseCursor;
+
 public:
 	SceneGame();
 	virtual ~SceneGame() = default;
@@ -46,6 +53,9 @@ public:
 
 	LightGo* TakeObjectLight();
 	void ReturnObjectLight(LightGo* light);
+
+	PortalEffect* TakeObjectPortalEffect();
+	void ReturnObjectPortalEffect(PortalEffect* portalEffect);
 
 	void ClearTookObject();
 };

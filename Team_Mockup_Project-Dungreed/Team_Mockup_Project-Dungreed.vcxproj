@@ -178,6 +178,7 @@
     <ClCompile Include="Map\Objects\ParticleGo.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerUi.cpp" />
+    <ClCompile Include="Map\PortalEffect.cpp" />
     <ClCompile Include="ResourceIdTable.cpp" />
     <ClCompile Include="SaveData.cpp" />
     <ClCompile Include="SaveLoadMgr.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="Map\Objects\ParticleGo.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerUi.h" />
+    <ClInclude Include="Map\PortalEffect.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Map\Room.h" />
     <ClInclude Include="ResourceIdTable.h" />

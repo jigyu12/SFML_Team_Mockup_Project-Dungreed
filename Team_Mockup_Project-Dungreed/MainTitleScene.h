@@ -7,6 +7,7 @@ class MainTitleScene :
 {
 protected:
 	MainTitleUi* mainTitleui;
+	sf::Sprite mouseCursor;
 public:
 	MainTitleScene();
 	virtual ~MainTitleScene() = default;

@@ -46,7 +46,7 @@ void RoomMgr::NextFloor()
 	currentRoom->SetActive(true);
 	currentRoom->EnterRoom(HitBoxData::Type::PortalDown);
 
-	WorldMapUi* ui = dynamic_cast<WorldMapUi*>( scene->FindGo("WorldMapUi"));
+	WorldMapUi* ui = dynamic_cast<WorldMapUi*>(scene->FindGo("WorldMapUi"));
 	if (ui != nullptr)
 	{
 		ui->RefreshData();
@@ -116,98 +116,11 @@ void RoomMgr::Init()
 
 void RoomMgr::Reset()
 {
-	scene = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
-	for (auto& floor : floors)
-	{
-		for (auto& room : floor.second)
-		{
-			scene->RemoveGo(room.second);
-			room.second->ClearMonsters();
-			room.second->Release();
-			delete room.second;
-		}
-		floor.second.clear();
-	}
-	scene->ApplyRemoveGO();
-	scene->ClearTookObject();
-	floors.clear();
+	entranceRooms.clear();
+	normalRooms.clear();
+	exitRooms.clear();
 
-	Room* room = new Room("1FEnterLR");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FEnterLR"));
-	scene->AddGo(room);
-	room->SetActive(true);
-	floors[1].insert({ {0,0}, room });
-
-	room = new Room("1FExitL");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FExitL"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[1].insert({ {1,0}, room });
-
-	room = new Room("2FEnter1R");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FEnter1R"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[2].insert({ {0,0}, room });
-
-	room = new Room("2FBoss");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "2FBoss"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[2].insert({ {1,0}, room });
-
-	room = new Room("1FRoom2DLR");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom2DLR"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[1].insert({ {1,-1}, room });
-
-	room = new Room("1FRoom4ULR");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom4ULR"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[1].insert({ {0,-1}, room });
-
-	room = new Room("1FRoom5LR");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom5LR"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[1].insert({ {-1,0}, room });
-
-	room = new Room("1FRoom3UDLR");
-	room->Init();
-	room->Reset();
-	room->LoadMapData(RESOURCEID_TABLE->Get("Map", "1FRoom3UDLR"));
-	room->SetActive(false);
-	scene->AddGo(room);
-	floors[1].insert({ {-2,0}, room });
-
-
-	SetCurrentRoom(1, { 0,0 });
-
-	FloorData floorData;
-	floorData.maxCount = 20;
-	floorData.minDepth = 4;
-	json j = floorData;
-	std::ofstream f(RESOURCEID_TABLE->Get("Map", "FloorData"));
-	f << j.dump(4) << std::endl;
-	f.close();
-
-	currentRoom->EnterRoom(HitBoxData::Type::PortalDown);
+	Init();
 }
 
 void RoomMgr::Start()
@@ -314,7 +227,7 @@ std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateBossFloor()
 std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateFloor()
 {
 	std::unordered_map<sf::Vector2i, Room*, Vector2iHash> floor;
-	std::queue<std::pair<sf::Vector2i, int>> createQueue;
+	std::list<std::pair<sf::Vector2i, int>> createQueue;
 	std::vector<std::pair<sf::Vector2i, int>> deadends;
 	Room* room = new Room();
 	room->Init();
@@ -329,7 +242,7 @@ std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateFloor()
 	{
 		if (mapdata.roomData.connection[i])
 		{
-			createQueue.push({ {0,0} ,i });
+			createQueue.push_back({ {0,0} ,i });
 		}
 	}
 
@@ -337,7 +250,7 @@ std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateFloor()
 	{
 		const auto& pair = createQueue.front();
 		CreateRoom(floor, createQueue, pair.first, pair.second);
-		createQueue.pop();
+		createQueue.pop_front();
 	}
 
 	for (const auto& room : floor)
@@ -365,7 +278,7 @@ std::unordered_map<sf::Vector2i, Room*, Vector2iHash> RoomMgr::CreateFloor()
 	return floor;
 }
 
-void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& floor, std::queue<std::pair<sf::Vector2i, int>>& queue, const sf::Vector2i& mother, int dir)
+void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& floor, std::list<std::pair<sf::Vector2i, int>>& queue, const sf::Vector2i& mother, int dir)
 {
 	sf::Vector2i me = mother + dirVector[dir];
 	dir = dirFlip[dir];
@@ -378,11 +291,17 @@ void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& 
 			continue;
 		}
 		auto it = floor.find(me + dirVector[i]);
-		if (it != floor.end() || Utils::RandomRange(0, 1) == 0)
+		if (it == floor.end() && Utils::RandomRange(0, 1) == 1)
 		{
-			continue;
+			for (const auto& queueitem : queue)
+			{
+				if (queueitem.first + dirVector[queueitem.second] == me + dirVector[i])
+				{
+					createroom[i] = true;
+				}
+			}
+			createroom[i] = !createroom[i];
 		}
-		createroom[i] = true;
 	}
 
 	Room* room = new Room();
@@ -398,14 +317,11 @@ void RoomMgr::CreateRoom(std::unordered_map<sf::Vector2i, Room*, Vector2iHash>& 
 		{
 			if (createroom[i])
 			{
-				queue.push({ me,i });
+				queue.push_back({ me,i });
 			}
 		}
 		int s = (int)createroom.to_ulong() | (0x01 << dir);
-		if (s == 0)
-		{
-			std::cout << "?" << std::endl;
-		}
+		assert(s != 0);
 		room->SetMapData(normalRooms[s][Utils::RandomRange(0, normalRooms[s].size() - 1)]);
 	}
 	room->SetActive(false);

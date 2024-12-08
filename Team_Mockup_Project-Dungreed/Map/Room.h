@@ -4,6 +4,7 @@ class TileMap;
 class Player;
 class MapObject;
 class Monster;
+class PortalEffect;
 
 class Room : public GameObject
 {
@@ -22,9 +23,11 @@ protected:
 	sf::Vector2f subBGCenter;
 
 	Player* player;
-	Scene* scene;
+	SceneGame* sceneGame;
 
 	HitBoxData::Type enteredPortal;
+
+	std::vector< PortalEffect*> portalEffects;
 
 	int wave;
 	bool cleared;

@@ -10,6 +10,7 @@
 #include "LightGo.h"
 #include "WorldMapUi.h"
 #include "UiAbility.h"
+#include "PortalEffect.h"
 #include "SkellBossUi.h"
 
 SceneGame::SceneGame()
@@ -67,16 +68,21 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
-	
-
-
 	Scene::Enter();
+
+	FRAMEWORK.GetWindow().setMouseCursorVisible(false);
+	mouseCursor.setTexture(TEXTURE_MGR.Get(RESOURCEID_TABLE->Get("Graphic", "ShootingCursor")));
+	mouseCursor.setScale(4.f, 4.f);
+	Utils::SetOrigin(mouseCursor, Origins::MC);
+
 	ROOM_MGR.Start();
+	
 	worldMapUi->RefreshData();
 }
 
 void SceneGame::Exit()
 {
+	FRAMEWORK.GetWindow().setMouseCursorVisible(true);
 	ClearTookObject();
 	Scene::Exit();
 }
@@ -108,6 +114,8 @@ void SceneGame::Update(float dt)
 	{
 		ROOM_MGR.NextFloor();
 	}
+
+	mouseCursor.setPosition(ScreenToUi(InputMgr::GetMousePosition()));
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
@@ -116,7 +124,7 @@ void SceneGame::Draw(sf::RenderWindow& window)
 	
 	Scene::Draw(window);
 	
-
+	window.draw(mouseCursor);
 }
 
 
@@ -151,6 +159,21 @@ void SceneGame::ReturnObjectLight(LightGo* light)
 	RemoveGo((GameObject*)light);
 	lights.remove(light);
 	lightPool.Return(light);
+}
+
+PortalEffect* SceneGame::TakeObjectPortalEffect()
+{
+	PortalEffect* portalEffect = portalEffectPool.Take();
+	portalEffects.push_back(portalEffect);
+	AddGo(portalEffect);
+	return portalEffect;
+}
+
+void SceneGame::ReturnObjectPortalEffect(PortalEffect* portalEffect)
+{
+	RemoveGo((GameObject*)portalEffect);
+	portalEffects.remove(portalEffect);
+	portalEffectPool.Return(portalEffect);
 }
 
 void SceneGame::ClearTookObject()

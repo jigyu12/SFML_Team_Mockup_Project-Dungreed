@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Scene.h"
+#include "SceneGame.h"
 #include "Room.h"
 #include "TileMap.h"
 #include "Player.h"
@@ -16,6 +16,9 @@
 #include "SkellBossLeftHand.h"
 #include "Banshee.h"
 #include "Ghost.h"
+#include "SkelBow.h"
+#include "SkelSword.h"
+#include "PortalEffect.h"
 
 Room::Room(const std::string& name)
 	: GameObject(name)
@@ -29,9 +32,13 @@ void Room::SetActive(bool active)
 	{
 		tileMap->SetActive(active);
 	}
-	for (auto& obj : objects)
+	for (const auto& obj : objects)
 	{
 		obj.first->SetActive(active);
+	}
+	for (const auto& effect : portalEffects)
+	{
+		effect->SetActive(active);
 	}
 }
 
@@ -46,6 +53,13 @@ void Room::SetPosition(const sf::Vector2f& pos)
 	for (auto& hitBox : hitBoxes)
 	{
 		hitBox.first->rect.setPosition(transform.transformPoint(hitBox.second.position));
+		for (const auto& effect : portalEffects)
+		{
+			if ((int)hitBox.second.type == effect->GetDir())
+			{
+				effect->Set(hitBox.first->rect.getGlobalBounds());
+			}
+		}
 	}
 	for (auto& obj : objects)
 	{
@@ -166,7 +180,7 @@ void Room::Release()
 void Room::Reset()
 {
 	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
-	scene = SCENE_MGR.GetCurrentScene();
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	subBackground.setTexture(TEXTURE_MGR.Get("graphics/map/SubBG.png"));
 	SetOrigin(Origins::MC);
 	Scene* scene = SCENE_MGR.GetCurrentScene();
@@ -286,6 +300,12 @@ void Room::LateUpdate(float dt)
 			monster.first->SetPosition(tileMaps[0]->GetTransform().transformPoint(monster.second.position));
 		}
 	}
+
+	bool showeffect = (cleared || wave == -2) && active;
+	for (const auto& effect : portalEffects)
+	{
+		effect->SetActive(showeffect);
+	}
 }
 
 void Room::Draw(sf::RenderWindow& window)
@@ -332,6 +352,15 @@ void Room::SetMapData(const MapDataVC& mapData)
 		delete hitbox.first;
 	}
 	hitBoxes.clear();
+
+	for (const auto& effect : portalEffects)
+	{
+		if (sceneGame != nullptr)
+		{
+			sceneGame->ReturnObjectPortalEffect(effect);
+		}
+	}
+	portalEffects.clear();
 
 	// 황규영 빈 맵데이터 입력 확인용
 	assert(mapData.tileMapData[0].cellcount.x != 0);
@@ -396,6 +425,15 @@ void Room::SetMapData(const MapDataVC& mapData)
 		case HitBoxData::Type::PortalDown:
 		case HitBoxData::Type::PortalLeft:
 		case HitBoxData::Type::PortalRight:
+			if (sceneGame != nullptr)
+			{
+				for (int i = 0;i < 8;++i)
+				{
+					PortalEffect* effect = sceneGame->TakeObjectPortalEffect();
+					portalEffects.push_back(effect);
+					effect->Set(hitbox->rect.getGlobalBounds(), (int)hitBoxDatum.type);
+				}
+			}
 			hitbox->rect.setOutlineColor(sf::Color::Cyan);
 			break;
 		case HitBoxData::Type::Immovable:
@@ -418,15 +456,13 @@ void Room::SetMapData(const MapDataVC& mapData)
 	SetOrigin(originPreset);
 	SetPosition(position);
 
-	Scene* scene = SCENE_MGR.GetCurrentScene();
-
 	for (const SpawnData& spawndatum : mapData.monsterSpawnData)
 	{
 		switch (spawndatum.type)
 		{
 		case Monster::MonsterType::Bat:
 		{
-			Bat* bat = scene->AddGo(new Bat());
+			Bat* bat = sceneGame->AddGo(new Bat());
 			bat->Init();
 			bat->Reset();
 			bat->SetActive(false);
@@ -436,7 +472,7 @@ void Room::SetMapData(const MapDataVC& mapData)
 		break;
 		case Monster::MonsterType::SkeletonDog:
 		{
-			SkeletonDog* skeletonDog = scene->AddGo(new SkeletonDog());
+			SkeletonDog* skeletonDog = sceneGame->AddGo(new SkeletonDog());
 			skeletonDog->Init();
 			skeletonDog->Reset();
 			skeletonDog->SetActive(false);
@@ -446,7 +482,7 @@ void Room::SetMapData(const MapDataVC& mapData)
 		break;
 		case Monster::MonsterType::Banshee:
 		{
-			Banshee* banshee = scene->AddGo(new Banshee());
+			Banshee* banshee = sceneGame->AddGo(new Banshee());
 			banshee->Init();
 			banshee->Reset();
 			banshee->SetActive(false);
@@ -456,7 +492,7 @@ void Room::SetMapData(const MapDataVC& mapData)
 		break;
 		case Monster::MonsterType::Ghost:
 		{
-			Ghost* ghost = scene->AddGo(new Ghost());
+			Ghost* ghost = sceneGame->AddGo(new Ghost());
 			ghost->Init();
 			ghost->Reset();
 			ghost->SetActive(false);
@@ -466,12 +502,32 @@ void Room::SetMapData(const MapDataVC& mapData)
 		break;
 		case Monster::MonsterType::SkellBoss:
 		{
-			SkellBoss* skellBoss = scene->AddGo(new SkellBoss());
+			SkellBoss* skellBoss = sceneGame->AddGo(new SkellBoss());
 			skellBoss->Init();
 			skellBoss->Reset();
 			skellBoss->SetActive(false);
 			skellBoss->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
 			monsters.push_back({ skellBoss ,spawndatum });
+		}
+		break;
+		case Monster::MonsterType::SkelBow:
+		{
+			SkelBow* skelBow = sceneGame->AddGo(new SkelBow());
+			skelBow->Init();
+			skelBow->Reset();
+			skelBow->SetActive(false);
+			skelBow->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ skelBow ,spawndatum });
+		}
+		break;
+		case Monster::MonsterType::SkelSword:
+		{
+			SkelSword* skelSword = sceneGame->AddGo(new SkelSword());
+			skelSword->Init();
+			skelSword->Reset();
+			skelSword->SetActive(false);
+			skelSword->SetPosition(tileMaps[0]->GetTransform().transformPoint(spawndatum.position));
+			monsters.push_back({ skelSword ,spawndatum });
 		}
 		break;
 		}
@@ -543,13 +599,19 @@ void Room::EnterRoom(HitBoxData::Type connection)
 		{
 			if (mapData.roomData.type == RoomData::Type::Enter)
 			{
-				player->SetPosition(object.first->GetPosition() + sf::Vector2f(0.f,-5.f));
+				player->SetPosition(object.first->GetPosition() + sf::Vector2f(0.f, -7.5f));
 				object.first->SetStatus(MapObject::Status::Close);
 			}
 			if (mapData.roomData.type == RoomData::Type::Exit)
 			{
 				object.first->SetStatus(MapObject::Status::Open);
 			}
+		}
+		if ((object.second.type == ObjectData::Type::Torch)
+			&& (object.first->GetStatus() == MapObject::Status::Idle)
+			&& (ROOM_MGR.GetCurrentFloor() % 2 == 0))
+		{
+			object.first->SetStatus(MapObject::Status::Broken);
 		}
 	}
 
@@ -579,7 +641,7 @@ void Room::ClearMonsters()
 	for (auto& monster : monsters)
 	{
 		monster.first->SetActive(false);
-		scene->RemoveGo(monster.first);
+		sceneGame->RemoveGo(monster.first);
 		delete monster.first;
 	}
 	monsters.clear();
