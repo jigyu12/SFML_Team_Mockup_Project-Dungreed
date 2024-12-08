@@ -234,7 +234,7 @@ void MainTitleUi::Update(float dt)
 		break;
 	}
 
-	if (aniTimer > 3.f)
+	if (aniTimer > 4.5f)
 	{
 		SetStatus(MainTitleUi::Status::AniStoptime);
 	}

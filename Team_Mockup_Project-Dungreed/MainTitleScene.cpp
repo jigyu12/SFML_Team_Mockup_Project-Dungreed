@@ -12,6 +12,8 @@ void MainTitleScene::Init()
 	mainTitleui = AddGo(new MainTitleUi());
 
 	Scene::Init();
+
+	SOUND_MGR.PlaySfx("sound/Bgm/IntroSound.wav");
 }
 
 void MainTitleScene::Release()
