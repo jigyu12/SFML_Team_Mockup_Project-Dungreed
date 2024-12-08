@@ -93,7 +93,7 @@ void Ghost::Reset()
 
 	animator.SetTarget(&body);
 
-	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
 
 	SetState(GhostState::Idle);
 
@@ -167,11 +167,13 @@ void Ghost::Update(float dt)
 	detectionRange.setPosition(body.getPosition());
 
 	animator.Update(dt);
+
+	Monster::Update(dt);
 }
 
 void Ghost::LateUpdate(float dt)
 {
-	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height  });
 }
 
 void Ghost::Draw(sf::RenderWindow& window)
@@ -195,6 +197,8 @@ void Ghost::Draw(sf::RenderWindow& window)
 	}
 
 	hitbox.Draw(window);
+
+	Monster::Draw(window);
 }
 
 void Ghost::Release()

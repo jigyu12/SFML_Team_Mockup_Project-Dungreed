@@ -87,7 +87,7 @@ void Banshee::Reset()
 
 	animator.SetTarget(&body);
 
-	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
 
 	SetState(BansheeState::Idle);
 
@@ -147,11 +147,13 @@ void Banshee::Update(float dt)
 	detectionRange.setPosition(body.getPosition());
 
 	animator.Update(dt);
+
+	Monster::Update(dt);
 }
 
 void Banshee::LateUpdate(float dt)
 {
-	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height / 2.f });
+	SetOrigin({ GetLocalBounds().width / 2.f , GetLocalBounds().height });
 }
 
 void Banshee::Draw(sf::RenderWindow& window)
@@ -175,6 +177,8 @@ void Banshee::Draw(sf::RenderWindow& window)
 	}
 
 	hitbox.Draw(window);
+
+	Monster::Draw(window);
 }
 
 void Banshee::Release()
@@ -267,6 +271,6 @@ void Banshee::Shoot()
 	{
 		BansheeBullet* bullet = bulletPool.Take();
 		SCENE_MGR.GetCurrentScene()->AddGo(bullet);
-		bullet->Fire( position, Utils::OnUnitCircle(angle / (float)shootBulletNumber * (i + 1)));
+		bullet->Fire({ position.x , position.y - body.getLocalBounds().width / 2.f}, Utils::OnUnitCircle(angle / (float)shootBulletNumber * (i + 1)));
 	}
 }

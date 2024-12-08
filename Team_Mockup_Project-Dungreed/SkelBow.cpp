@@ -170,6 +170,8 @@ void SkelBow::Update(float dt)
 
 	animator.Update(dt);
 	animatorBow.Update(dt);
+
+	Monster::Update(dt);
 }
 
 void SkelBow::LateUpdate(float dt)
@@ -226,6 +228,8 @@ void SkelBow::Draw(sf::RenderWindow& window)
 	}
 
 	hitbox.Draw(window);
+
+	Monster::Draw(window);
 }
 
 void SkelBow::Release()

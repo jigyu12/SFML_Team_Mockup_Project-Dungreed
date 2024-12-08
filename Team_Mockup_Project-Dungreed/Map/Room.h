@@ -72,6 +72,6 @@ public:
 
 	bool isCleared() { return cleared; }
 	void EnterRoom(HitBoxData::Type connection);
-	void ClearMonsters();
+	void ClearTookObjects();
 
 };
