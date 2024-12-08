@@ -7,6 +7,10 @@ void SoundMgr::Init(int totalChannels)
 	{
 		waiting.push_back(new sf::Sound());
 	}
+
+	bgmVolume = 60.f;
+	sfxVolume = 40.f;
+	SetBgmVolume(bgmVolume);
 }
 
 void SoundMgr::Release()
@@ -38,6 +42,9 @@ void SoundMgr::Update(float dt)
 			++it;
 		}
 	}
+
+	SetBgmVolume(bgmVolume);
+	SetSfxVolume(sfxVolume);
 }
 
 void SoundMgr::PlayBgm(std::string id, bool loop)

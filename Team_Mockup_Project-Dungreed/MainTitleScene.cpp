@@ -13,7 +13,7 @@ void MainTitleScene::Init()
 
 	Scene::Init();
 
-	SOUND_MGR.PlaySfx("sound/Bgm/IntroSound.wav");
+	SOUND_MGR.PlayBgm("sound/Bgm/IntroSound.wav", false);
 }
 
 void MainTitleScene::Release()
