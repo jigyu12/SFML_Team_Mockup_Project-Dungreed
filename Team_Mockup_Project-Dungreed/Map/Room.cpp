@@ -229,6 +229,7 @@ void Room::LateUpdate(float dt)
 					&& !cleared)
 				{
 					++wave;
+					SOUND_MGR.PlaySfx("sound/Sfx/monster/SpawnMonster.wav");
 					for (const auto& object : objects)
 					{
 						if (object.second.type == ObjectData::Type::SealStone)
@@ -617,6 +618,7 @@ void Room::EnterRoom(HitBoxData::Type connection)
 
 	if (wave == 0 && !cleared)
 	{
+		SOUND_MGR.PlaySfx("sound/Sfx/monster/SpawnMonster.wav");
 		for (const auto& object : objects)
 		{
 			if (object.second.type == ObjectData::Type::SealStone

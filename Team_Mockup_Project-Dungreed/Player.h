@@ -61,6 +61,7 @@ protected:
 	bool isDamaged = false;
 	bool isDead = false;
 
+	sf::Sound* walksfx;
 
 	float dashCoolTimer = 1.f;
 	sf::Vector2f dashDirection = look;
@@ -149,6 +150,6 @@ public:
 	Weapon* GetWeaponSlot1() const { return weaponSlot1 ;}
 	Weapon* GetWeaponSlot2() const { return weaponSlot2 ;}
 
-	
+	void StopWalkSfx();
 	
 };

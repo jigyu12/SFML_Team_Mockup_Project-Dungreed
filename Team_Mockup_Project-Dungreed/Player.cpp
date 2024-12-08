@@ -111,9 +111,9 @@ void Player::Reset()
 	SetStatus(Status::Ground);
 	dashCoolTimer = 0.f;
 	hp = maxhp;
+	LoadFile();
 	SwitchWeaponSlot(sf::Keyboard::Num2);
 	SwitchWeaponSlot(sf::Keyboard::Num1);
-	LoadFile();
 }
 
 void Player::SetStatus(Status status)
@@ -123,9 +123,13 @@ void Player::SetStatus(Status status)
 	{
 	case Player::Status::Ground:
 		velocity.y = 0.f;
+		if (walksfx == nullptr)
+		{
+			walksfx = SOUND_MGR.PlaySfx("sound/Sfx/player/step_lth1.wav", true);
+		}
 		break;
 	case Player::Status::Jump:
-		
+		StopWalkSfx();
 		break;
 	case Player::Status::Dash:
 		DamagedMonster.clear();
@@ -133,14 +137,17 @@ void Player::SetStatus(Status status)
 		dashTimer = 0.f;
 		dashCoolTimer -= 1.f;
 		animator.Play("animations/player Dash.csv");
-		
+		StopWalkSfx();
+
 		break;
 	case Player::Status::DownJump:
 		velocity.y = downSpeed;
+		StopWalkSfx();
 		break;
 	case Player::Status::Dead:
 		animator.Play("animations/player Dead.csv");
 		animator.PlayQueue("animations/player TelePort.csv");
+		StopWalkSfx();
 		SOUND_MGR.PlaySfx("sound/Sfx/player/dead.wav");
 		isDead = true;
 		break;
@@ -152,7 +159,7 @@ void Player::SetStatus(Status status)
 
 void Player::Update(float dt)
 {
-	if (InputMgr::GetKeyDown(sf::Keyboard::Space)&& status == Status::Ground)
+	if (InputMgr::GetKeyDown(sf::Keyboard::Space) && status == Status::Ground)
 	{
 		SOUND_MGR.PlaySfx("sound/Sfx/player/Jumping.wav");
 
@@ -222,7 +229,7 @@ void Player::Update(float dt)
 	if (InputMgr::GetKeyDown(sf::Keyboard::LShift) && dashCoolTimer >= 1.f)
 	{
 		SetStatus(Player::Status::Dash);
-	
+
 		SOUND_MGR.PlaySfx("sound/Sfx/player/ui-sound-13-dash.wav");
 	}
 
@@ -369,13 +376,13 @@ void Player::LateUpdate(float dt)
 
 			if (Utils::CheckCollision(monster->GetHitBox(), hitbox))
 			{
-				
+
 				if (!monster->IsDead() && !isDead)
 				{
 					if (monster->GetOriginalDamage() != 0)
 					{
 						OnDamage(monster->GetOriginalDamage());
-						
+
 					}
 					if (status == Status::Dash)
 					{
@@ -397,7 +404,7 @@ void Player::LateUpdate(float dt)
 			}
 		}
 
-		
+
 
 		/*const auto& bossSwords = dynamic_cast<SkellBossSword*>(SCENE_MGR.GetCurrentScene()->FindGo("SkellBossSword"));*/
 		if (isDamaged)
@@ -414,7 +421,7 @@ void Player::LateUpdate(float dt)
 		if (hp <= 0)
 		{
 			SetStatus(Status::Dead);
-			
+
 		}
 	}
 }
@@ -433,7 +440,7 @@ void Player::UpdateGrounded(float dt)
 		if (InputMgr::GetKey(sf::Keyboard::S))
 		{
 			SetStatus(Player::Status::DownJump);
-			
+
 		}
 		else
 			Jump();
@@ -441,12 +448,13 @@ void Player::UpdateGrounded(float dt)
 	if (horizontalInput == 0 && animator.GetCurrentClipId() != "Idle")
 	{
 		animator.Play("animations/player Idle.csv");
+		StopWalkSfx();
 	}
 
 	if (horizontalInput != 0 && animator.GetCurrentClipId() != "Walk")
 	{
 		animator.Play("animations/player Walk.csv");
-		SOUND_MGR.PlaySfx("sound/Sfx/player/step_lth1.wav");
+		walksfx = SOUND_MGR.PlaySfx("sound/Sfx/player/step_lth1.wav", true);
 	}
 }
 
@@ -459,7 +467,7 @@ void Player::UpdateJump(float dt)
 
 	if (jumpTimer > 0.5f || !InputMgr::GetKey(sf::Keyboard::Space) || velocity.y > 0.f)
 	{
-		
+
 		velocity.y += gravity * dt;
 	}
 }
@@ -494,7 +502,7 @@ void Player::UpdateDead(float dt)
 
 void Player::Jump()
 {
-	
+
 	velocity.y = -jumpForce;
 	jumpTimer = 0.f;
 	SetStatus(Status::Jump);
@@ -570,7 +578,7 @@ void Player::LevelUpData()
 
 	playerStatus.level += 1;
 	playerStatus.attackDamage += 1;
-	
+
 }
 
 
@@ -640,6 +648,15 @@ Weapon* Player::GetCurrentWeapon() const
 	else
 	{
 		return weaponSlot2;
+	}
+}
+
+void Player::StopWalkSfx()
+{
+	if (walksfx != nullptr)
+	{
+		walksfx->stop();
+		walksfx = nullptr;
 	}
 }
 
