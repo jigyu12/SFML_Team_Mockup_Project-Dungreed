@@ -87,6 +87,16 @@ void SceneGame::Enter()
 	{
 		ROOM_MGR.NextFloor();
 	}
+
+	if (ROOM_MGR.GetCurrentFloor() % 2 == 1)
+	{
+		SOUND_MGR.PlayBgm("sound/Bgm/1.JailField.wav");
+	}
+	else
+	{
+
+	}
+
 	uiPause->SetActive(false);
 
 	worldMapUi->RefreshData();
