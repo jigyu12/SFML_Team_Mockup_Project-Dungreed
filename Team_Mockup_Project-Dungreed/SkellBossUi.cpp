@@ -99,6 +99,7 @@ void SkellBossUi::Update(float dt)
 		{
 			isBgmPlaying = true;
 
+			SOUND_MGR.PlaySfx("sound/Sfx/boss/Resources_Audio_beliallaugh_rev.mp3");
 			SOUND_MGR.PlayBgm("sound/Bgm/1.JailBoss.wav");
 		}
 

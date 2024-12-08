@@ -94,7 +94,7 @@ void SceneGame::Enter()
 	}
 	else
 	{
-		SOUND_MGR.PlayBgm(""); 
+		SOUND_MGR.PlayBgm("");
 	}
 
 	uiPause->SetActive(false);

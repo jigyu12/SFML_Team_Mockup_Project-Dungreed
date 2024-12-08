@@ -51,6 +51,15 @@ void RoomMgr::NextFloor()
 	{
 		ui->RefreshData();
 	}
+
+	if (ROOM_MGR.GetCurrentFloor() % 2 == 1)
+	{
+		SOUND_MGR.PlayBgm("sound/Bgm/1.JailField.wav");
+	}
+	else
+	{
+		SOUND_MGR.PlayBgm("");
+	}
 }
 
 std::unordered_map<sf::Vector2i, RoomData, Vector2iHash> RoomMgr::GetFloorData()
