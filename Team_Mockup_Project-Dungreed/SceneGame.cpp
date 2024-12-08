@@ -12,6 +12,7 @@
 #include "UiAbility.h"
 #include "PortalEffect.h"
 #include "SkellBossUi.h"
+#include "UiPause.h"
 
 SceneGame::SceneGame()
 	: Scene(SceneIds::Game)
@@ -47,6 +48,8 @@ void SceneGame::Init()
 	}
 
 	worldMapUi = AddGo(new WorldMapUi("WorldMapUi"));
+	uiPause = AddGo(new UiPause("uiPause"));
+	uiPause->SetActive(false);
 
 	sf::Vector2f size = FRAMEWORK.GetWindowSizeF();
 
@@ -57,6 +60,7 @@ void SceneGame::Init()
 	size.y /= 6.f;
 	worldView.setSize(size);
 	worldView.setCenter(0.f, 0.f);
+
 
 	Scene::Init();
 }
@@ -77,6 +81,8 @@ void SceneGame::Enter()
 
 	ROOM_MGR.Start();
 	
+	uiPause->SetActive(false);
+
 	worldMapUi->RefreshData();
 }
 
@@ -100,7 +106,17 @@ void SceneGame::Update(float dt)
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
 	{
-		SCENE_MGR.ChangeScene(SceneIds::Game);
+		bool paused = uiPause->IsActive();
+		if (paused)
+		{
+			FRAMEWORK.SetTimeScale(1.f);
+		}
+		else
+		{
+			FRAMEWORK.SetTimeScale(0.f);
+		}
+		uiPause->SetActive(!paused);
+		//SCENE_MGR.ChangeScene(SceneIds::Game);
 	}
 	if (InputMgr::GetKey(sf::Keyboard::C))
 	{

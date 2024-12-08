@@ -15,6 +15,7 @@ class WorldMapUi;
 class UiAbility;
 class SkellBossUi;
 class PortalEffect;
+class UiPause;
 
 class SceneGame : public Scene
 {
@@ -25,6 +26,7 @@ protected:
 
 	WorldMapUi* worldMapUi;
 	UiAbility* uiAbility;
+	UiPause* uiPause;
 
 	std::list<ParticleGo*> particles;
 	ObjectPool<ParticleGo> particlePool;

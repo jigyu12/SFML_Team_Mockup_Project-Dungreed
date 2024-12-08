@@ -39,6 +39,7 @@ public:
 	void Reset() override;
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+	void Draw(sf::RenderTexture& texture);
 
 	void SetPressed(bool pressed);
 	bool isMouseOn() { return mouseon; }
@@ -50,6 +51,7 @@ public:
 	void SetString(const std::wstring& id) { buttonText->SetString(id); }
 	void SetCharSize(float size);
 	void SetButtonSize(const sf::Vector2f& size);
+	void SetTexture(const std::string& texId);
 
 	void SetButtonFillColor(const sf::Color& color) { buttonBackground.setFillColor(color); }
 	void SetButtonOutlineColor(const sf::Color& color) { buttonBackground.setOutlineColor(color); }
