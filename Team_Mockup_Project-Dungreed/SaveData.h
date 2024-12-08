@@ -12,14 +12,15 @@ struct SavePlayerStatus
 	float criticalPercent;
 	float dashDamage;
 	float attackSpeed;
-	
+	int lastFloor;
+
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE
 	(SavePlayerStatus, 
 		attackDamage, level,
 		criticalDamage, criticalPercent,
 		exp, armor,armorPercent,
 		movementSpeed,criticalPercent,
-		dashDamage,attackSpeed);
+		dashDamage,attackSpeed, lastFloor);
 };
 
 struct SaveData

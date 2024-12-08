@@ -19,3 +19,4 @@ public:
 	SaveDataVC Load();
 };
 
+#define SAVELOAD_MGR (SaveLoadMgr::Instance())

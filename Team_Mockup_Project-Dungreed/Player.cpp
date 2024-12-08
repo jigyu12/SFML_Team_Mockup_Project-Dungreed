@@ -111,6 +111,8 @@ void Player::Reset()
 	SetStatus(Status::Ground);
 	dashCoolTimer = 0.f;
 	hp = maxhp;
+	SwitchWeaponSlot(sf::Keyboard::Num2);
+	SwitchWeaponSlot(sf::Keyboard::Num1);
 
 }
 
@@ -148,10 +150,21 @@ void Player::SetStatus(Status status)
 void Player::Update(float dt)
 {
 
+	if (InputMgr::GetKeyDown(sf::Keyboard::M))
+	{
+		SaveLastData();
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::N))
+	{
+		LoadFile();
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::K))
+	{
+		LevelUpData();
+	}
 	if (playerStatus.exp >= 8)
 	{
-		playerStatus.level += 1;
-		playerStatus.attackDamage += 1;
+		LevelUpData();
 		playerStatus.exp = 0;
 	}
 
@@ -165,20 +178,6 @@ void Player::Update(float dt)
 		SwitchWeaponSlot(sf::Keyboard::Num2);
 	}
 
-	if (this->GetCurrentWeapon() == weaponSlot1)
-	{
-		playerStatus.criticalPercent = 30;
-		playerStatus.criticalDamage = 2;
-		playerStatus.attackSpeed = weaponSlot1->GetAttackSpeed();
-		playerStatus.dashDamage = 50;
-	}
-	if (this->GetCurrentWeapon() == weaponSlot2)
-	{
-		playerStatus.criticalPercent = 20;
-		playerStatus.criticalDamage = 3;
-		playerStatus.attackSpeed = weaponSlot2->GetAttackSpeed();
-		playerStatus.dashDamage = 50;
-	}
 
 
 	animator.Update(dt);
@@ -501,6 +500,22 @@ void Player::OnDamage(int monsterDamage)
 
 
 
+void Player::SaveLastData()
+{
+	SaveDataVC saveStatus;
+	saveStatus.status = playerStatus;
+	saveStatus.status.lastFloor = ROOM_MGR.GetCurrentFloor();
+	SAVELOAD_MGR.Save(saveStatus);
+}
+
+void Player::LoadFile()
+{
+	SaveDataVC saveStatus = SAVELOAD_MGR.Load();
+	playerStatus = saveStatus.status;
+	
+	SwitchWeaponSlot(sf::Keyboard::Num1);
+}
+
 int Player::GetRealDamage()
 {
 	if (weaponSlot1->IsCurrentWeapon())
@@ -511,6 +526,25 @@ int Player::GetRealDamage()
 	{
 		return (playerStatus.attackDamage + weaponSlot2->GetOriginalDamageMax()) * playerStatus.criticalDamage;
 	}
+}
+
+int Player::GetMinDamage()
+{
+	if (weaponSlot1->IsCurrentWeapon())
+	{
+		return (weaponSlot1->GetOriginalDamageMin());
+	}
+	else
+	{
+		return (weaponSlot2->GetOriginalDamageMin());
+	}
+}
+
+void Player::LevelUpData()
+{
+	playerStatus.level += 1;
+	playerStatus.attackDamage += 1;
+
 }
 
 
@@ -549,6 +583,10 @@ void Player::SwitchWeaponSlot(sf::Keyboard::Key key)
 			weaponSlot1->SetIsCurrentWeapon(true);
 			weaponSlot1->SetAttackSpeedAccumTime(weaponSlot1->GetAttackSpeed() - 0.5f);
 			weaponSlot2->SetIsCurrentWeapon(false);
+			playerStatus.criticalPercent = 30;
+			playerStatus.criticalDamage = 2;
+			playerStatus.attackSpeed = weaponSlot1->GetAttackSpeed();
+			playerStatus.dashDamage = 50;
 		}
 	}
 	else
@@ -558,6 +596,10 @@ void Player::SwitchWeaponSlot(sf::Keyboard::Key key)
 			weaponSlot2->SetIsCurrentWeapon(true);
 			weaponSlot2->SetAttackSpeedAccumTime(weaponSlot2->GetAttackSpeed() - 0.5f);
 			weaponSlot1->SetIsCurrentWeapon(false);
+			playerStatus.criticalPercent = 20;
+			playerStatus.criticalDamage = 3;
+			playerStatus.attackSpeed = weaponSlot2->GetAttackSpeed();
+			playerStatus.dashDamage = 50;
 		}
 
 	}
