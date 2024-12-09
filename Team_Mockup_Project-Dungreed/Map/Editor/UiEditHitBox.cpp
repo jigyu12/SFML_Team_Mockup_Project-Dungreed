@@ -633,7 +633,8 @@ void UiEditHitBox::SetEditStatus(const EditStatus& status)
 	switch (status)
 	{
 	case EditStatus::Hitbox:
-		dirButtons[(int)hitboxType]->SetPressed(false);
+		if ((int)hitboxType < 4)
+			dirButtons[(int)hitboxType]->SetPressed(false);
 		editStatus = status;
 		hitboxType = HitBoxData::Type::Immovable;
 		hitBoxTypeButtons[(int)hitboxType]->SetPressed(true);
