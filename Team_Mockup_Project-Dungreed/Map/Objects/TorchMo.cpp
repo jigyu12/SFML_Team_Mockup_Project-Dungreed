@@ -11,19 +11,24 @@ TorchMo::TorchMo(const std::string& name)
 void TorchMo::SetActive(bool active)
 {
 	GameObject::SetActive(active);
+	SceneGame* scene = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
+	if (scene == nullptr)
+	{
+		return;
+	}
 	if (active && light == nullptr)
 	{
-		SceneGame* scene = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
-		if (scene == nullptr)
-		{
-			return;
-		}
 		light = scene->TakeObjectLight();
 		light->Init();
 		light->Reset();
 		light->SetOrigin(Origins::MC);
 		light->SetOrigin(light->GetOrigin() + sf::Vector2f(0.f, 13.f));
 		SetPosition(position);
+	}
+	else if (!active && light != nullptr)
+	{
+		scene->ReturnObjectLight(light);
+		light = nullptr;
 	}
 }
 
