@@ -12,17 +12,6 @@
 
  - 개발 : 민지규, 박지광, 황규영
 
-
 로그라이트 플랫포머 액션 게임 던그리드를 모작한 프로젝트입니다.
+
 **던그리드**의 리소스를 활용했습니다.
-
----
-
-## 📷 스크린샷
-
-
-<img src="./ScreenShots/ScreenShot1.png"/>
-<img src="./ScreenShots/ScreenShot2.png"/>
-<img src="./ScreenShots/ScreenShot3.png"/>
-<img src="./ScreenShots/ScreenShot4.png"/>
-<img src="./ScreenShots/ScreenShot5.png"/>
