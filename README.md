@@ -24,8 +24,8 @@ SFML로 제작한 PC 2D 로그라이트 액션 게임 모작 프로젝트입니�
     <td align="center"><strong>일반 몬스터</strong></td>
   </tr>
   <tr>
-    <td><img src="./Screenshot/가챠화면.png" width="260"/><img src="./Screenshot/가챠결과.png" width="255"/></td>
-    <td><img src="./Screenshot/동물강화화면.png" width="250"/></td>
+    <td><img src="./Screenshots/다음 스테이지 전환 1.png" width="260"/><img src="./Screenshots/다음 스테이지 전환 2.png" width="255"/></td>
+    <td><img src="./Screenshots/일반 몬스터 1.png" width="260"/><img src="./Screenshots/일반 몬스터 2.png" width="255"/></td>
   </tr>
  
 </table>
@@ -35,7 +35,7 @@ SFML로 제작한 PC 2D 로그라이트 액션 게임 모작 프로젝트입니�
     <td align="center"><strong>플레이어-몬스터 전투</strong></td>
   </tr>
   <tr>
-    <td><img src="./Screenshot/설정화면.png" width="250"/></td>
-    <td><img src="./Screenshot/광고.jpg" width="500"/></td>
+    <td><img src="./Screenshots/보스.png" width="260"/><img src="./Screenshots/프로젝트 소 2.png" width="255"/></td>
+    <td><img src="./Screenshots/플레이어 전투 1.png" width="260"/><img src="./Screenshots/플레이어 전투 2.png" width="255"/></td>
   </tr>
 </table>
