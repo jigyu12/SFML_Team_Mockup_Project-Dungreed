@@ -45,7 +45,17 @@ SFML로 제작한 PC 2D 로그라이트 액션 게임 모작 프로젝트입니�
     <td align="center"><strong>플레이어-몬스터 전투</strong></td>
   </tr>
   <tr>
-    <td><img src="./Screenshots/보스.png" width="250"/><img src="./Screenshots/프로젝트 소개 2.png" width="250"/></td>
-    <td><img src="./Screenshots/플레이어 전투 1.png" width="250"/><img src="./Screenshots/플레이어 전투 2.png" width="250"/></td>
+    <td align="center">
+      <p align="center">
+        <img src="./Screenshots/보스.png" width="250"/><br/>
+        <img src="./Screenshots/프로젝트 소개 2.png" width="250"/>
+      </p>
+    </td>
+    <td align="center">
+      <p align="center">
+        <img src="./Screenshots/플레이어 전투 1.png" width="250"/><br/>
+        <img src="./Screenshots/플레이어 전투 2.png" width="250"/>
+      </p>
+    </td>
   </tr>
 </table>
