@@ -21,7 +21,7 @@ SFML로 제작한 PC 2D 로그라이트 액션 게임 모작 프로젝트입니�
 <table>
   <tr>
     <td align="center"><strong>무한 스테이지</strong></td>
-    <td align="center"><strong>일반 몬스터</strong></td>
+    <td align="center"><strong>다양한 일반 몬스터</strong></td>
   </tr>
   <tr>
     <td align="center">
@@ -42,7 +42,7 @@ SFML로 제작한 PC 2D 로그라이트 액션 게임 모작 프로젝트입니�
 <table>
   <tr>
     <td align="center"><strong>보스</strong></td>
-    <td align="center"><strong>플레이어-몬스터 전투</strong></td>
+    <td align="center"><strong>플레이어-몬스터 간 전투</strong></td>
   </tr>
   <tr>
     <td align="center">
