@@ -20,21 +20,8 @@ SFML로 제작한 PC 2D 로그라이트 액션 게임 모작 프로젝트입니�
 ## 🛠️ 주요 구현 요소
 <table>
   <tr>
-    <td align="center"><strong>스와이프로 레인 이동, 점프</strong></td>
-    <td align="center"><strong>스킬 선택</strong></td>
-    <td align="center"><strong>보스 전투</strong></td>
-  </tr>
-  <tr>
-    <td><img src="./Screenshot/플레이화면.png" width="250"/></td>
-    <td><img src="./Screenshot/스킬선택화면.png" width="250"/></td>
-    <td><img src="./Screenshot/스킬과보스전화면.png" width="250"/></td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td align="center"><strong>동물 캐릭터 가챠</strong></td>
-    <td align="center"><strong>동물 강화</strong></td>
+    <td align="center"><strong>무한 스테이지</strong></td>
+    <td align="center"><strong>일반 몬스터</strong></td>
   </tr>
   <tr>
     <td><img src="./Screenshot/가챠화면.png" width="260"/><img src="./Screenshot/가챠결과.png" width="255"/></td>
@@ -44,8 +31,8 @@ SFML로 제작한 PC 2D 로그라이트 액션 게임 모작 프로젝트입니�
 </table>
 <table>
   <tr>
-    <td align="center"><strong>로컬라이제이션</strong></td>
-    <td align="center"><strong>애드몹 보상 광고</strong></td>
+    <td align="center"><strong>보스</strong></td>
+    <td align="center"><strong>플레이어-몬스터 전투</strong></td>
   </tr>
   <tr>
     <td><img src="./Screenshot/설정화면.png" width="250"/></td>
