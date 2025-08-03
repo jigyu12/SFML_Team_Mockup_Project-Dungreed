@@ -1,7 +1,7 @@
 #  🗡️ Dungreed (모작)
 
 🛠️ **개발 도구**
-  <img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white"/> <img src="https://img.shields.io/badge/Discord-%235865F2?style=flat-square&logo=discord&logoColor=FFFFFF"/>
+  <img src="https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=white"/> <img src="https://img.shields.io/badge/SFML-8CC445?style=flat-square&logo=sfml&logoColor=white"/>
 
 📅 **개발 기간**
  24.11.26 ~ 24.12.09 (2주)
