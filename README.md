@@ -26,14 +26,14 @@ SFML로 제작한 PC 2D 로그라이트 액션 게임 모작 프로젝트입니�
   <tr>
     <td align="center">
       <p align="center">
-        <img src="./Screenshots/다음 스테이지 전환 1.png" width="250"/><br/>
-        <img src="./Screenshots/다음 스테이지 전환 2.png" width="250"/>
+        <img src="./Screenshots/다음 스테이지 전환 1.png" width="300"/><br/>
+        <img src="./Screenshots/다음 스테이지 전환 2.png" width="300"/>
       </p>
     </td>
     <td align="center">
       <p align="center">
-        <img src="./Screenshots/일반 몬스터 1.png" width="250"/><br/>
-        <img src="./Screenshots/일반 몬스터 2.png" width="250"/>
+        <img src="./Screenshots/일반 몬스터 1.png" width="300"/><br/>
+        <img src="./Screenshots/일반 몬스터 2.png" width="300"/>
       </p>
     </td>
   </tr>
