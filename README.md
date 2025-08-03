@@ -16,7 +16,7 @@
 
 **던그리드**의 리소스를 활용했습니다.
 
-#  🍀Lucky Chess Defense
+#  🗡️ Dungreed (모작)
 
 🛠️ **개발 도구**
  <img src="https://img.shields.io/badge/C%23-80247B?style=flat-square&logo=csharp&logoColor=white"/> <img src="https://img.shields.io/badge/Unity-000000?style=flat-square&logo=unity&logoColor=white"/>
