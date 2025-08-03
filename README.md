@@ -1,33 +1,15 @@
-# 던그리드 모작
-
-🛠️ **개발 도구**
-
-<img src="https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=white"/> <img src="https://img.shields.io/badge/SFML-8CC445?style=flat-square&logo=sfml&logoColor=white"/>
-
-📅 **개발 기간**
-
-2024.11.26 ~ 2024.12.09 (2주)
-
-💂‍♂️ **팀 구성**
-
- - 개발 : 민지규, 박지광, 황규영
-
-로그라이트 플랫포머 액션 게임 던그리드를 모작한 프로젝트입니다.
-
-**던그리드**의 리소스를 활용했습니다.
-
 #  🗡️ Dungreed (모작)
 
 🛠️ **개발 도구**
- <img src="https://img.shields.io/badge/C%23-80247B?style=flat-square&logo=csharp&logoColor=white"/> <img src="https://img.shields.io/badge/Unity-000000?style=flat-square&logo=unity&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white"/> <img src="https://img.shields.io/badge/Discord-%235865F2?style=flat-square&logo=discord&logoColor=FFFFFF"/>
 
 📅 **개발 기간**
- 25.01.21 ~ 25.02.14 (4주)
+ 24.11.26 ~ 24.12.09 (2주)
 
 🧑‍💻 **개발진**
- <img src="https://img.shields.io/badge/민지규-80247B?style=flat-square&logo=&logoColor=white"/> <img src="https://img.shields.io/badge/정희재-005E9D?style=flat-square&logo=&logoColor=white"/> 
+ <img src="https://img.shields.io/badge/민지규, 황규영, 박지광-80247B?style=flat-square&logo=&logoColor=white"/>
 
-유니티로 제작한 모바일 2D 타워디펜스 게임 프로젝트입니다.
+SFML로 제작한 PC 2D 로그라이트 액션 게임 모작 프로젝트입니다.
 
 > 영웅을 소환하고, 몰려오는 몬스터를 물리치세요.  
 > 다양한 등급의 영웅을 배치하고, 합성할 수 있습니다.  
